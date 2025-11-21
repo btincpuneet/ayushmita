@@ -1,5 +1,6 @@
 import React from "react";
 import hero from "../assets/hero-medical.jpg";
+import Container from "./Container";
 
 const HeroImage: React.FC = () => {
   return (
@@ -37,7 +38,7 @@ const HeroImage: React.FC = () => {
 
       {/* Foreground text */}
       <div className="relative z-10 w-full h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-6 w-full">
+        <Container className="w-full px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             
             {/* Left Content */}
@@ -79,7 +80,8 @@ const HeroImage: React.FC = () => {
             {/* Right side empty (image visible) */}
             <div className="hidden md:block" />
           </div>
-        </div>
+         </Container>
+
       </div>
     </section>
   );

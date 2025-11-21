@@ -31,7 +31,7 @@ export default function FaqWithImage({
         </svg>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <h2 className="text-center text-3xl sm:text-4xl font-extrabold text-gray-800 mb-12">
           Frequently Asked Questions
         </h2>
@@ -116,7 +116,8 @@ export default function FaqWithImage({
                         onClick={() => toggle(f.id)}
                         aria-expanded={isOpen}
                         aria-controls={`faq-panel-${f.id}`}
-                        className="w-full text-left flex items-center justify-between gap-4 py-6 px-6 bg-white rounded-xl shadow-[0_8px_30px_rgba(2,6,23,0.04)] hover:shadow-[0_10px_40px_rgba(2,6,23,0.06)] transition"
+                        //  shadow-[0_8px_30px_rgba(2,6,23,0.04)] hover:shadow-[0_10px_40px_rgba(2,6,23,0.06)] transition
+                        className="w-full text-left flex items-center justify-between gap-4 py-6 px-6 bg-white rounded-xl"
                       >
                         <span className="text-gray-800 font-semibold lg:text-lg">{f.q}</span>
                         <span className={`flex-shrink-0 w-8 h-8 rounded-full bg-white border border-amber-200 flex items-center justify-center text-amber-500 transition-transform ${isOpen ? "rotate-45" : ""}`}>

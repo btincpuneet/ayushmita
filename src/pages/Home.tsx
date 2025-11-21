@@ -11,6 +11,7 @@ import FaqWithImage from '../components/FaqWithImage'
 import DoctorCareSlider from '../components/DoctorCareSlider'
 import PromoSlider from '../components/PromoSlider'
 import TestimonialSlider from '../components/TestimonialSlider'
+import { StatsSection } from '../components/StatsSection'
 
 const Home: React.FC = () => {
     const jsonLd = {
@@ -30,6 +31,8 @@ const Home: React.FC = () => {
                 <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
             </Helmet>
 
+
+
             <div className="min-h-screen flex flex-col">
                 <Header />
                 <main className="flex-1">
@@ -38,15 +41,16 @@ const Home: React.FC = () => {
                     <MedicalTourism />
                     <FindBySpecialisation />
                     <TopPartnerHospitals />
-                    <OurFamilies />
+                    <StatsSection />
                     <FaqWithImage />
                     <DoctorCareSlider />
                     <TestimonialSlider />
+                    <FaqWithImage />
+
                 </main>
                 <Footer />
+
             </div>
-
-
         </>
     )
 }

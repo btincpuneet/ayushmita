@@ -1,5 +1,10 @@
 @import "tailwindcss";
 /* ---- dots: big center ring with inner dot like reference ---- */
+body {
+  font-family: "Ubuntu";
+  font-weight: 400;
+}
+
 .dots-wrapper {
   margin-top: 26px; /* distance from slider */
 }

@@ -4,6 +4,11 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}"
   ],
-  theme: { extend: {} },
+  theme: { 
+      fontFamily: {
+    sans: ['Ubuntu', 'sans-serif'], 
+    alt: ['Roboto', 'sans-serif'],   
+  },
+   },
   plugins: []
 }

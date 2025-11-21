@@ -72,8 +72,8 @@ export default function DoctorCareSlider({ items = providers }) {
     autoplay: true,
     autoplaySpeed: 4200,
     pauseOnHover: true,
-    // nextArrow: <Arrow direction="next" />,
-    // prevArrow: <Arrow direction="prev" />,
+    nextArrow: <Arrow direction="next" />,
+    prevArrow: <Arrow direction="prev" />,
     responsive: [
       // large desktop
       { breakpoint: 1600, settings: { slidesToShow: 4 } },
@@ -98,7 +98,7 @@ export default function DoctorCareSlider({ items = providers }) {
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-5 text-center">
+      <div className="container max-w-7xl mx-auto px-5 text-center">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
           Professional Care Provider
         </h2>
@@ -110,7 +110,7 @@ export default function DoctorCareSlider({ items = providers }) {
           <Slider {...settings}>
             {items.map((d, i) => (
               <div key={i} className="px-3 flex justify-center">
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-[320px]">
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px]">
                   {/* Image container: use fixed height and object-position top so face isn't cut */}
                   <div className="w-full h-64 overflow-hidden rounded-t-2xl bg-gray-100">
                     <img

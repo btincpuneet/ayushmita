@@ -5,10 +5,6 @@ import { Star } from "lucide-react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-/*
-  Reference image (you provided):
-  /mnt/data/0b80bbfc-2d79-4d55-87a5-90fd546c0a97.png
-*/
 
 const testimonials = [
   {
@@ -112,7 +108,7 @@ export default function TestimonialSlider() {
 
   return (
     <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto relative">
+      <div className="container max-w-7xl mx-auto relative">
         <h2 className="text-center text-4xl font-bold text-gray-800 mb-10">
           Customer Happiness Guaranteed
         </h2>
@@ -132,7 +128,7 @@ export default function TestimonialSlider() {
                   <img
                     src={t.avatar}
                     alt={t.name}
-                    className="w-24 h-24 rounded-full object-cover mb-4 shadow-md"
+                    className="w-24 h-24 rounded-full object-cover mb-4 "
                     loading="lazy"
                   />
 

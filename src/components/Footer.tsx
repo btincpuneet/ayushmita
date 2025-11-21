@@ -141,6 +141,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import Container from "./Container";
 
 const Footer = () => {
   const quickLinks = [
@@ -169,7 +170,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#333333] text-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <Container className="py-12 px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
 
           {/* LEFT — LOGO + ADDRESS + CONTACT + SOCIALS */}
@@ -191,21 +192,21 @@ const Footer = () => {
               {/* Facebook */}
               <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                 <svg className="w-4 h-4 text-[#ff8a00]" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-3h2.5V9.5c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12H20l-1 3.9h-2.3v7A10 10 0 0022 12z"/>
+                  <path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-3h2.5V9.5c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12H20l-1 3.9h-2.3v7A10 10 0 0022 12z" />
                 </svg>
               </a>
 
               {/* Twitter */}
               <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                 <svg className="w-4 h-4 text-[#ff8a00]" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M22 5.9c-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.5-1.8-.7.4-1.5.7-2.3.9A4.1 4.1 0 0015.5 5c-2.3 0-4.2 1.9-4.2 4.3 0 .3 0 .6.1.8C7.7 10 4.1 8 1.7 5.1c-.4.7-.6 1.6-.6 2.5 0 1.5.8 2.8 2 3.6-.6 0-1.3-.2-1.8-.5v.1c0 2.2 1.5 4 3.5 4.4-.4.1-.9.2-1.3.2-.3 0-.6 0-.9-.1.6 1.8 2.4 3.1 4.5 3.1A8.3 8.3 0 012 19.1c1.7 1 3.7 1.6 5.9 1.6 7.1 0 11-6 11-11.2v-.5c.8-.6 1.4-1.2 1.9-2z"/>
+                  <path d="M22 5.9c-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.5-1.8-.7.4-1.5.7-2.3.9A4.1 4.1 0 0015.5 5c-2.3 0-4.2 1.9-4.2 4.3 0 .3 0 .6.1.8C7.7 10 4.1 8 1.7 5.1c-.4.7-.6 1.6-.6 2.5 0 1.5.8 2.8 2 3.6-.6 0-1.3-.2-1.8-.5v.1c0 2.2 1.5 4 3.5 4.4-.4.1-.9.2-1.3.2-.3 0-.6 0-.9-.1.6 1.8 2.4 3.1 4.5 3.1A8.3 8.3 0 012 19.1c1.7 1 3.7 1.6 5.9 1.6 7.1 0 11-6 11-11.2v-.5c.8-.6 1.4-1.2 1.9-2z" />
                 </svg>
               </a>
 
               {/* YouTube */}
               <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                 <svg className="w-4 h-4 text-[#ff8a00]" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23 7.1s-.2-1.7-.8-2.4c-.8-.8-1.7-.8-2.1-.9C16.4 3.5 12 3.5 12 3.5h-.1s-4.4 0-7.9.3C3 3.9 2 3.9 1.2 4.8.6 5.5.4 7.1.4 7.1S.2 9 .2 10.9v.2c0 1.9.2 3.8.2 3.8s.2 1.7.8 2.4c.6.7 1.3.7 1.7.8 1.3.1 5.4.3 8.4.3s6.9-.2 8.4-.3c.4 0 1.2 0 1.7-.8.6-.7.8-2.4.8-2.4s.2-1.9.2-3.8v-.2c0-1.9-.2-3.8-.2-3.8zM9.8 15.1V8.9l6 3.1-6 3.1z"/>
+                  <path d="M23 7.1s-.2-1.7-.8-2.4c-.8-.8-1.7-.8-2.1-.9C16.4 3.5 12 3.5 12 3.5h-.1s-4.4 0-7.9.3C3 3.9 2 3.9 1.2 4.8.6 5.5.4 7.1.4 7.1S.2 9 .2 10.9v.2c0 1.9.2 3.8.2 3.8s.2 1.7.8 2.4c.6.7 1.3.7 1.7.8 1.3.1 5.4.3 8.4.3s6.9-.2 8.4-.3c.4 0 1.2 0 1.7-.8.6-.7.8-2.4.8-2.4s.2-1.9.2-3.8v-.2c0-1.9-.2-3.8-.2-3.8zM9.8 15.1V8.9l6 3.1-6 3.1z" />
                 </svg>
               </a>
 
@@ -273,7 +274,8 @@ const Footer = () => {
         <div className="mt-6 text-center text-gray-300">
           <p>Copyright ©{new Date().getFullYear()} ayushm.com. All Rights Reserved</p>
         </div>
-      </div>
+      </Container>
+
     </footer>
   );
 };

@@ -55,18 +55,22 @@ export default function PromoSlider() {
     arrows: false,
     autoplay:true,
     afterChange: (index: any) => setCurrent(index),
-    responsive: [
+   responsive: [
       {
         breakpoint: 1280,
-        settings: { slidesToShow: 3, centerPadding: "0px" },
+        settings: { slidesToShow: Math.min(3, promos.length), centerPadding: "0px" },
       },
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 2, centerPadding: "0px" },
+        settings: { slidesToShow: Math.min(2, promos.length), centerPadding: "0px" },
+      },
+      {
+        breakpoint: 768,
+        settings: { slidesToShow: 1, centerPadding: "40px", arrows: false },
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 1, centerPadding: "0px", arrows: false },
+        settings: { slidesToShow: 1, centerPadding: "24px", arrows: false },
       },
     ],
     appendDots: (dots) => (
@@ -117,7 +121,7 @@ export default function PromoSlider() {
                       )}
                     </div>
 
-                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden ml-4 flex-shrink-0 border-4 border-white shadow">
+                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden ml-4 flex-shrink-0 border-4 border-white ">
                       <img
                         src={p.image}
                         alt={p.title}
@@ -135,11 +139,11 @@ export default function PromoSlider() {
       <style>{`
         .slick-center > div > div {
           transform: scale(1.03);
-          box-shadow: 0 16px 40px rgba(13,30,68,0.12);
+          // box-shadow: 0 16px 40px rgba(13,30,68,0.12);
           z-index: 20;
         }
         .slick-slide > div > div {
-          transition: transform 300ms ease, box-shadow 300ms ease;
+          transition: transform 300ms ease,  ;
         }
         .slick-dots li button { display: none; }
         .slick-prev { left: -28px; z-index: 30; }
@@ -151,28 +155,3 @@ export default function PromoSlider() {
     </section>
   );
 }
-
-// function PrevArrow({ onClick }) {
-//   return (
-//     <button
-//       onClick={onClick}
-//       aria-label="Previous"
-//       className="slick-arrow flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md"
-//       style={{ border: "none" }}
-//     >
-//       <ChevronLeft className="w-5 h-5 text-gray-700" />
-//     </button>
-//   );
-// }
-// function NextArrow({ onClick }) {
-//   return (
-//     <button
-//       onClick={onClick}
-//       aria-label="Next"
-//       className="slick-arrow flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 shadow-md"
-//       style={{ border: "none" }}
-//     >
-//       <ChevronRight className="w-5 h-5 text-white" />
-//     </button>
-//   );
-// }
