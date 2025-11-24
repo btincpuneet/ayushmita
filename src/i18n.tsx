@@ -9,92 +9,16 @@ i18n
   .init({
     fallbackLng: "en",
     debug: true,
-    interpolation: { escapeValue: false },
-
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
-      en: {
-        translation: {
-          header: {
-            find_doctors: "Find Doctors",
-            hospitals: "Hospitals",
-            medicines: "Medicines",
-            surgeries: "Surgeries",
-            software: "Software for Provider",
-            facilities: "Facilities",
-            get_quote: "Get a FREE quote"
-          }
-        }
-      },
-
-      fr: {
-        translation: {
-          header: {
-            find_doctors: "Trouvez un médecin",
-            hospitals: "Hôpitaux",
-            medicines: "Médicaments",
-            surgeries: "Chirurgies",
-            software: "Logiciel pour fournisseurs",
-            facilities: "Installations",
-            get_quote: "Obtenir un devis GRATUIT"
-          }
-        }
-      },
-
-      de: {
-        translation: {
-          header: {
-            find_doctors: "Ärzte finden",
-            hospitals: "Krankenhäuser",
-            medicines: "Medikamente",
-            surgeries: "Chirurgien",
-            software: "Software für Anbieter",
-            facilities: "Einrichtungen",
-            get_quote: "Erhalten Sie ein KOSTENLOSES Angebot"
-          }
-        }
-      },
-
-      es: {
-        translation: {
-          header: {
-            find_doctors: "Buscar médicos",
-            hospitals: "Hospitales",
-            medicines: "Medicamentos",
-            surgeries: "Cirugías",
-            software: "Software para proveedores",
-            facilities: "Instalaciones",
-            get_quote: "Obtén una cotización GRATIS"
-          }
-        }
-      },
-
-      ar: {
-        translation: {
-          header: {
-            find_doctors: "ابحث عن أطباء",
-            hospitals: "المستشفيات",
-            medicines: "الأدوية",
-            surgeries: "العمليات الجراحية",
-            software: "برنامج لمقدمي الخدمة",
-            facilities: "المرافق",
-            get_quote: "احصل على عرض مجاني"
-          }
-        }
-      },
-
-      yo: {
-        translation: {
-          header: {
-            find_doctors: "Wa awọn dokita",
-            hospitals: "Ile-iwosan",
-            medicines: "Oògùn",
-            surgeries: "Ìṣẹ́ abẹ",
-            software: "Sọfitiwia fun Olùpèsè",
-            facilities: "Awọn ohun elo",
-            get_quote: "Gba agbasọ Ọfẹ"
-          }
-        }
-      }
+      en: { translation: {} },
+      fr: { translation: {} },
+      de: { translation: {} },
+      es: { translation: {} },
+      ar: { translation: {} },
+      yo: { translation: {} }
     }
   });
 
