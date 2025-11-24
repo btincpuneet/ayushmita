@@ -1,0 +1,57 @@
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Create React App / Vite / Next cache
+.cache/
+.next/
+.vercel/
+.nuxt/
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+*.log
+
+# Coverage
+coverage/
+
+# Static uploads or runtime files
+uploads/
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Lockfiles (optional to commit depending on policy)
+# If you want consistent installs across environments, keep `package-lock.json`/`yarn.lock`; otherwise ignore them.
+# package-lock.json
+yarn.lock
+
+# Misc
+public/static/
+
+# Keep src, public, and config files tracked
+# If you have local secrets or config files
+config/local.js
+
+# Ignore local environment overrides
+local.env
