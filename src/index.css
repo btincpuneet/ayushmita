@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* ---- dots: big center ring with inner dot like reference ---- */
 body {
   font-family: "Ubuntu";
@@ -84,4 +86,15 @@ body {
   .dots-wrapper { margin-top: 18px; }
   .slick-dots li .dot-outer { width: 16px; height: 16px; }
   .slick-dots li .dot-inner { width: 8px; height: 8px; }
+}
+
+.promoslider-sections .slick-dots {
+    position: absolute;
+    bottom: -50px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
 }

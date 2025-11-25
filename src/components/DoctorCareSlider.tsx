@@ -47,18 +47,18 @@ function NextArrow({ onClick }) {
       className="doctor-arrow absolute top-1/2 -translate-y-1/2 right-[-28px] bg-white shadow-lg border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center z-30"
     >
       <svg
-        className="w-5 h-5 text-amber-500"
+        width="34"
+        height="18"
+        viewBox="0 0 34 18"
         fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          strokeWidth="2"
-          d="M9 5l7 7-7 7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          d="M26.95 10.4811L22.65 15.0054L25 17.4685L33.3333 8.73424L25 0L22.65 2.46305L26.95 6.98739H0V10.4811H26.95Z"
+          fill="#F0A324"
         />
       </svg>
+
     </button>
   );
 }

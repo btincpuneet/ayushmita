@@ -212,11 +212,13 @@ const stats = [
 
 export const StatsSection: React.FC = () => {
   return (
-    <section className="bg-[#FCF7F2]">
-      <Container className="py-16 lg:py-20">
+    <section className="bg-[#F8EFBC80]">
+      <Container className="py-12 md:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left text */}
-          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+          {/* ---------------------- */}
+          {/* Left Text Content     */}
+          {/* ---------------------- */}
+          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left px-4 lg:px-0">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
               Our Families
             </h2>
@@ -229,31 +231,32 @@ export const StatsSection: React.FC = () => {
             </p>
           </div>
 
-          {/* Right stats cards – 2x2 staggered like Figma */}
-          <div className="grid grid-cols-2 gap-6 md:gap-8">
+          {/* ---------------------- */}
+          {/* Right Stats Cards     */}
+          {/* ---------------------- */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 px-4 lg:px-0">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
-              const stagger =
-                index === 1 || index === 3 ? "md:translate-y-6" : "";
+              const stagger = index === 1 || index === 3 ? "md:translate-y-6" : "";
 
               return (
                 <div
                   key={stat.label}
-                  className={`${stagger} bg-white rounded-2xl shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 md:p-7 flex flex-col items-center text-center space-y-4`}
+                  className={`${stagger} w-full max-w-xs sm:max-w-none mx-auto bg-white rounded-sm shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 md:p-7 flex flex-col items-center text-center space-y-4`}
                 >
+                  {/* Icon Circle */}
                   <div
-                    className={`${stat.bg} w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center`}
+                    className={`${stat.bg} w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center`}
                   >
-                    <Icon
-                      className={`w-10 h-10 md:w-12 md:h-12 ${stat.iconColor}`}
-                    />
+                    <Icon className={`w-8 h-8 md:w-10 md:h-10 ${stat.iconColor}`} />
                   </div>
 
+                  {/* Text Content */}
                   <div>
-                    <div className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <div className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                       {stat.count}
                     </div>
-                    <div className="mt-1 text-sm md:text-base font-medium text-gray-500">
+                    <div className="mt-1 text-xs md:text-sm lg:text-base font-medium text-gray-500">
                       {stat.label}
                     </div>
                   </div>
@@ -261,8 +264,10 @@ export const StatsSection: React.FC = () => {
               );
             })}
           </div>
+
         </div>
       </Container>
     </section>
   );
 };
+

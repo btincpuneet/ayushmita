@@ -68,7 +68,7 @@ const countries = [
 const MedicalTourism: React.FC = () => {
   return (
     <section className="bg-white">
-      <Container className="py-12 md:py-20">
+      <Container className="lg:px-8 py-8 md:py-8">
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800">
