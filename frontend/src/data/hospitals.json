@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Acıbadem Hospitals Group, Istanbul, Turkey",
+    "image": "https://images.unsplash.com/photo-1585432952375-9d4c0d6f82e5?w=800",
+    "address": "Altunizade Mah. Yurtcan Sok. No: 1 Üsküdar Istanbul 34662 Turkey",
+    "founded": 1991,
+    "beds": 610,
+    "country": "Turkey",
+    "city": "Istanbul"
+  },
+  {
+    "id": 2,
+    "name": "Derindere Hospital, Istanbul",
+    "image": "https://images.unsplash.com/photo-1576765607924-b7b1e9e1e815?w=800",
+    "address": "Altunizade Mah. Yurtcan Sok. No: 1 Istanbul 34662 Turkey",
+    "founded": 1991,
+    "beds": 610,
+    "country": "Turkey",
+    "city": "Istanbul"
+  }
+]

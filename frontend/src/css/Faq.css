@@ -1,0 +1,9 @@
+.faq-section-medical {
+    padding: 0px 157px 0px 1px;
+}
+@media (max-width: 768px) {
+  /* Your styles for devices 768px and below */
+ .faq-section-medical {
+    padding: 0px;
+}
+}

@@ -1,0 +1,61 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Runtime env files
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+
+# Coverage
+coverage/
+
+# Optional npm cache
+.npm/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploaded files / temporary storage
+uploads/
+tmp/
+
+# Misc
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# If you have local secrets or config files
+config/local.js
+
+# Ignore local environment overrides
+local.env
+
+# Keep migrations and seeders tracked (usually committed)
+# If you intentionally want to ignore them uncomment below
+# migrations/
+# seeders/

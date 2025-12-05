@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ---- dots: big center ring with inner dot like reference ---- */
+body {
+  font-family: "Ubuntu";
+  font-weight: 400;
+}
+
+.dots-wrapper {
+  margin-top: 26px; /* distance from slider */
+}
+
+/* each li contains our custom node from customPaging */
+.slick-dots li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+/* outer ring */
+.slick-dots li .dot-outer {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 146, 60, 0.12); /* pale orange ring fill */
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+/* inner dot */
+.slick-dots li .dot-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: rgba(251, 146, 60, 0.6); /* default medium orange */
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+/* hover */
+.slick-dots li:hover .dot-outer {
+  transform: scale(1.05);
+}
+
+/* active state (current) -> brighter ring & larger inner dot */
+.slick-dots li.slick-active .dot-outer {
+  background: rgba(251, 146, 60, 0.18);
+  transform: scale(1.18);
+}
+
+.slick-dots li.slick-active .dot-inner {
+  width: 14px;
+  height: 14px;
+  background: #fb923c; /* bright orange */
+  transform: scale(1.08);
+}
+
+/* remove default :before */
+.slick-dots li button:before {
+  content: none;
+}
+
+/* keep dots centered and spaced (we already used appendDots with a ul) */
+.slick-dots {
+  padding: 0;
+  margin: 0;
+}
+
+/* ensure the overlapping next arrow is visually aligned like reference */
+/* the OverlapNextArrow component sits at right-6; if you need it more to the right use right-8 */
+.slick-slide {
+  /* allow transform without affecting surrounding slides */
+  will-change: transform;
+}
+
+/* ensure slides have same height even before images load */
+.slick-slide img { display: block; }
+
+/* small tweak to ensure arrows appear above slides */
+.slick-arrow { z-index: 25; }
+
+/* Responsive tweak: on mobile keep arrows hidden and dots smaller */
+@media (max-width: 768px) {
+  .dots-wrapper { margin-top: 18px; }
+  .slick-dots li .dot-outer { width: 16px; height: 16px; }
+  .slick-dots li .dot-inner { width: 8px; height: 8px; }
+}
+
+.promoslider-sections .slick-dots {
+    position: absolute;
+    bottom: -50px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+}
