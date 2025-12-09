@@ -1,15 +1,11 @@
 const { TopPartnerHospital } = require("../models/topPartnerHospital");
 
-// ===============================
-// CREATE HOSPITAL
-// ===============================
+
 const createHospital = async (req, res) => {
   try {
     const { name, country, city, description } = req.body;
     console.log("njnj" ,  name, country, city, description);
     
-
-    // Validations
     if (!name || !country || !city) {
       return res.status(400).json({
         success: false,
@@ -24,7 +20,6 @@ const createHospital = async (req, res) => {
       });
     }
 
-    // Image buffer
     const imageBuffer = req.file.buffer;
 
     const newHospital = await TopPartnerHospital.create({
@@ -49,9 +44,7 @@ const createHospital = async (req, res) => {
   }
 };
 
-// ===============================
-// GET ALL HOSPITALS
-// ===============================
+
 const getAllHospitals = async (req, res) => {
   try {
     const hospitals = await TopPartnerHospital.findAll();
@@ -70,9 +63,6 @@ const getAllHospitals = async (req, res) => {
   }
 };
 
-// ===============================
-// GET HOSPITAL BY ID
-// ===============================
 const getHospitalById = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
@@ -98,9 +88,6 @@ const getHospitalById = async (req, res) => {
   }
 };
 
-// ===============================
-// UPDATE HOSPITAL
-// ===============================
 const updateHospital = async (req, res) => {
   try {
     const { name, country, city, description } = req.body;
@@ -114,7 +101,6 @@ const updateHospital = async (req, res) => {
       });
     }
 
-    // If new image provided → use it, else keep old one
     const updatedImage = req.file ? req.file.buffer : hospital.image_url;
 
     await hospital.update({
@@ -140,9 +126,6 @@ const updateHospital = async (req, res) => {
   }
 };
 
-// ===============================
-// DELETE HOSPITAL
-// ===============================
 const deleteHospital = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);

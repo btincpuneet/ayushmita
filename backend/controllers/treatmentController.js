@@ -1,9 +1,7 @@
 const { Treatment } = require("../models/treatment");
 const { Disease } = require("../models/disease");
 
-// =========================
-// CREATE TREATMENT
-// =========================
+
 const createTreatment = async (req, res) => {
   try {
     const {
@@ -19,10 +17,35 @@ const createTreatment = async (req, res) => {
       status
     } = req.body;
 
+    // Validate Required Fields
+    const requiredFields = {
+      disease_id,
+      name,
+      slug,
+      short_description,
+      description_html,
+      seo_title,
+      seo_description,
+      seo_keywords,
+      canonical_url,
+      status
+    };
+
+    for (const field in requiredFields) {
+      if (!requiredFields[field]) {
+        return res.status(400).json({
+          success: false,
+          message: `${field} is required`
+        });
+      }
+    }
+
+    // Image Upload (Optional)
     const image = req.file ? `/uploads/treatments/${req.file.filename}` : null;
 
+    // Create Treatment
     const treatment = await Treatment.create({
-      disease_id,
+      disease_id: Number(disease_id),
       name,
       slug,
       image,
@@ -32,17 +55,24 @@ const createTreatment = async (req, res) => {
       seo_description,
       seo_keywords,
       canonical_url,
-      status,
+      status: Number(status)
     });
 
-    return res.json({ success: true, treatment });
+    return res.json({
+      success: true,
+      message: "Treatment created successfully",
+      treatment
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
-// =========================
-// GET TREATMENT BY SLUG
+
 const getTreatmentBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -69,10 +99,6 @@ const getTreatmentBySlug = async (req, res) => {
   }
 };
 
-
-// =========================
-// ALL TREATMENTS OF ONE DISEASE
-// =========================
 const getTreatmentsByDisease = async (req, res) => {
   try {
     const { diseaseId } = req.params;
@@ -88,9 +114,6 @@ const getTreatmentsByDisease = async (req, res) => {
   }
 };
 
-// =========================
-// UPDATE TREATMENT
-// =========================
 const updateTreatment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -110,9 +133,6 @@ const updateTreatment = async (req, res) => {
   }
 };
 
-// =========================
-// DELETE TREATMENT
-// =========================
 const deleteTreatment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -129,9 +149,7 @@ const deleteTreatment = async (req, res) => {
   }
 };
 
-// =========================
-// EXPORT ALL CONTROLLER FUNCTIONS
-// =========================
+
 module.exports = {
   createTreatment,
   getTreatmentBySlug,

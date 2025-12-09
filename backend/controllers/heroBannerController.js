@@ -2,9 +2,7 @@ const { HeroBanner } = require("../models/heroBanner");
 const { sequelize } = require("../models/index");
 const { Op } = require("sequelize");
 
-// =========================
-// CREATE HERO BANNER
-// =========================
+
 const createHeroBanner = async (req, res) => {
   try {
     const {
@@ -17,7 +15,6 @@ const createHeroBanner = async (req, res) => {
       sort_order,
     } = req.body;
 
-    // File uploaded?
     const image = req.file ? `/uploads/hero-banners/${req.file.filename}` : null;
 
     if (!title || !image) {
@@ -62,10 +59,6 @@ const createHeroBanner = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
-// =========================
-// GET ALL HERO BANNERS
-// =========================
 const getAllHeroBanners = async (req, res) => {
   try {
     const heroes = await HeroBanner.findAll({
@@ -82,9 +75,6 @@ const getAllHeroBanners = async (req, res) => {
   }
 };
 
-// =========================
-// GET HERO BANNER BY ID
-// =========================
 const getHeroBannerById = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -105,9 +95,6 @@ const getHeroBannerById = async (req, res) => {
   }
 };
 
-// =========================
-// UPDATE HERO BANNER
-// =========================
 const updateHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -128,7 +115,6 @@ const updateHeroBanner = async (req, res) => {
       sort_order,
     } = req.body;
 
-    // New upload?
     const newImage = req.file
       ? `/uploads/hero-banners/${req.file.filename}`
       : hero.image;
@@ -179,9 +165,7 @@ const updateHeroBanner = async (req, res) => {
   }
 };
 
-// =========================
-// DELETE HERO BANNER
-// =========================
+
 const deleteHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -203,9 +187,7 @@ const deleteHeroBanner = async (req, res) => {
   }
 };
 
-// =========================
-// EXPORTS
-// =========================
+
 module.exports = {
   createHeroBanner,
   getAllHeroBanners,

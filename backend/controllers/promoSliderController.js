@@ -1,43 +1,5 @@
 const { PromoSlider } = require("../models/promoSlider");
 
-// CREATE
-// const createPromoSlider = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ success: false, message: "Image required" });
-//     }
-
-//     const {
-//       title,
-//       subtitle,
-//       description,
-//       discount_text,
-//       code_text,
-//       button_text,
-//       status,
-//     } = req.body;
-
-//     const promo = await PromoSlider.create({
-//       title,
-//       subtitle,
-//       description,
-//       discount_text,
-//       code_text,
-//       button_text,
-//       status,
-//       image_url: req.file.buffer, // Store binary
-//     });
-
-//     const data = promo.get();
-//     data.image_base64 = data.image_url.toString("base64");
-
-//     res.json({ success: true, data });
-//   } catch (err) {
-//     console.error("Create Error:", err);
-//     res.status(500).json({ success: false });
-//   }
-// };
-// promoSliderController.js
 const fs = require("fs");
 const path = require("path");
 
@@ -50,17 +12,15 @@ const createPromoSlider = async (req, res) => {
     if (req.file) {
       const imageName = `promo_${Date.now()}.jpg`;
 
-      // uploads folder path
+      
       const uploadDir = path.join(__dirname, "../uploads");
 
-      // ✅ If uploads folder does NOT exist — create it
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
       const uploadPath = path.join(uploadDir, imageName);
 
-      // Save the image file
       fs.writeFileSync(uploadPath, req.file.buffer);
 
       imageUrl = `/uploads/${imageName}`;
@@ -90,7 +50,6 @@ const createPromoSlider = async (req, res) => {
 };
 
 
-// GET ALL
 const getPromoSliders = async (req, res) => {
   try {
     const items = await PromoSlider.findAll();
@@ -110,7 +69,6 @@ const getPromoSliders = async (req, res) => {
   }
 };
 
-// GET BY ID
 const getPromoSliderById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -134,7 +92,7 @@ const getPromoSliderById = async (req, res) => {
   }
 };
 
-// UPDATE
+
 const updatePromoSlider = async (req, res) => {
   try {
     const id = req.params.id;
@@ -166,7 +124,6 @@ const updatePromoSlider = async (req, res) => {
       status,
     };
 
-    // ⭐ FIXED: Save image to /uploads (same as CREATE)
     if (req.file) {
       const imageName = `promo_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads");
@@ -196,7 +153,6 @@ const updatePromoSlider = async (req, res) => {
 
 
 
-// DELETE
 const deletePromoSlider = async (req, res) => {
   try {
     const id = req.params.id;

@@ -1,18 +1,14 @@
-// controllers/testimonialController.js
 
 const { Testimonial } = require("../models/testimonial");
 
-// Convert Blob → Base64
 function serializeTestimonial(t) {
   const plain = t.toJSON ? t.toJSON() : t;
 
   if (plain.image_url) {
     let buffer = null;
 
-    // For Sequelize BLOB
     if (Buffer.isBuffer(plain.image_url)) buffer = plain.image_url;
 
-    // For MySQL BLOB stored as {data: []}
     else if (plain.image_url?.data) buffer = Buffer.from(plain.image_url.data);
 
     if (buffer) {
@@ -24,7 +20,6 @@ function serializeTestimonial(t) {
   return plain;
 }
 
-// CREATE
 const createTestimonial = async (req, res) => {
   try {
     const { name, role, rating, message, status } = req.body;
@@ -58,7 +53,6 @@ const createTestimonial = async (req, res) => {
   }
 };
 
-// GET ALL
 const getAllTestimonials = async (req, res) => {
   try {
     const testimonials = await Testimonial.findAll({
@@ -75,7 +69,6 @@ const getAllTestimonials = async (req, res) => {
   }
 };
 
-// GET BY ID
 const getTestimonialById = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
@@ -93,8 +86,6 @@ const getTestimonialById = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-// UPDATE
 const updateTestimonial = async (req, res) => {
   try {
     const { name, role, rating, message, status } = req.body;
@@ -129,7 +120,6 @@ const updateTestimonial = async (req, res) => {
   }
 };
 
-// DELETE
 const deleteTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
