@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require("path");
-
+console.log("Starting server...");
 const authRoutes = require('./routes/auth/index.js');
 const { sequelize } = require('./models/index.js');
 
@@ -19,8 +19,10 @@ const testimonialRoutes = require('./routes/testimonial/index.js');
 const diseaseRoutes = require("./routes/disease/diseaseRoutes.js");
 const treatmentRoutes = require("./routes/treatment/treatmentRoutes.js");
 
-// ✅ NEW: FAQ Routes
+// FAQ Routes
 const faqRoutes = require("./routes/faq/index.js");
+
+const blogRoutes = require("./routes/blog/index.js");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -55,8 +57,11 @@ app.use("/api", topPartnerHospitalRoutes);
 app.use("/api", testimonialRoutes);
 app.use("/api/diseases", diseaseRoutes);
 app.use("/api/treatments", treatmentRoutes);
-
 app.use("/api", faqRoutes);
+
+// ✅ Register Blog Routes
+app.use("/api", blogRoutes);
+
 sequelize
   .sync()
   .then(() => console.log('Database synced successfully'))
