@@ -1,116 +1,120 @@
-import React, { useRef } from "react";
-import Breadcrumb from "../components/Treatment/TreatmentHeader";
-import TreatmentTabs from "../components/Treatment/BreadCrumb";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Breadcrumb from "../components/Treatment/TreatmentHeader";
+import TreatmentTabs from "../components/Treatment/BreadCrumb";
 
-import { useNavigate } from "react-router-dom";
-import cancerImg from "../assets/treatment.jpg"; 
+interface Treatment {
+  id: number;
+  name: string;
+  slug: string;
+}
 
-export default function TreatmentsLandlingPage() {
+interface Disease {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+  short_description: string;
+  description_html: string;
+  treatments: Treatment[];
+}
+
+export default function TreatmentsLandingPage() {
   const navigate = useNavigate();
+  const cancerRef = useRef<HTMLDivElement | null>(null);
 
-  const items = [
-    [
-      "Anal Cancer Treatment",
-      "Bile Duct Cancer Treatment",
-      "Bladder Cancer Treatment",
-      "Blood Cancer Treatment",
-      "Gallbladder Cancer Treatment",
-      "Head and Neck Cancer Treatment",
-      "Liver Cancer Treatment",
-      "Lung Cancer Treatment",
-      "Nasopharyngeal Cancer Treatment",
-      "Oral Cancer Treatment",
-    ],
-    [
-      "Bone Cancer Treatment",
-      "Brain Cancer Treatment",
-      "Breast Cancer Treatment",
-      "Car T-Cell Therapy",
-      "Ovarian Cancer Treatment",
-      "Pancreatic Cancer Treatment",
-      "Penile Cancer Treatment",
-      "Primary Bone Cancer Treatment",
-      "Prostate Cancer Treatment",
-      "Salivary Gland Cancer Treatment",
-    ],
-    [
-      "Cervical Cancer Treatment",
-      "Chemotherapy Treatment",
-      "Colon Cancer Treatment",
-      "Esophagus Cancer Treatment",
-      "Skin Cancer Treatment",
-      "Stomach Cancer Treatment",
-      "Thyroid Cancer Treatment",
-      "Uterine Cancer Treatment",
-      "Vaginal Cancer Treatment",
-      "Vulvar Cancer Treatment",
-    ],
-  ];
+  const [diseases, setDiseases] = useState<Disease[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleNavigate = (item) => {
-    const slug = item
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/--+/g, "-");
-
-    navigate(`/treatment-details/${slug}`);
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://127.0.0.1:5001/api/diseases");
+      if (res.data?.success) {
+        setDiseases(res.data.data);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("API Error:", error);
+      setLoading(false);
+    }
   };
 
-  const cancerRef = useRef(null);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const handleTabClick = (tab) => {
-    if (tab === "Cancer" && cancerRef.current) {
-      cancerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  const handleNavigate = (slug: string) => {
+    navigate(`/treatment-details/${slug}`);
+  };
+  const handleDiseaseNavigate = (slug: string) => {
+    navigate(`/disease/${slug}`);
+  };
+
+
+  const handleTabClick = (tab: string) => {
+    if (tab.toLowerCase() === "cancer" && cancerRef.current) {
+      cancerRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
     <div>
       <Header />
-
-      <Breadcrumb title="Treatments In India at Low Coast" />
+      <Breadcrumb title="Treatments In India at Low Cost" />
       <TreatmentTabs onTabClick={handleTabClick} />
 
-      <div ref={cancerRef} className="w-full bg-white py-14">
+      <div className="w-full bg-white py-14">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="rounded-xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
-              {/* IMAGE */}
-              <div className="flex justify-center lg:justify-start">
-                <img
-                  src={cancerImg}
-                  alt="Cancer Treatment"
-                  className="rounded-xl w-full max-w-[420px] object-cover"
-                />
-              </div>
+          {loading ? (
+            <p className="text-center text-lg font-semibold">Loading...</p>
+          ) : (
+            diseases.map((disease) => (
+              <div
+                key={disease.id}
+                ref={disease.slug === "cancer" ? cancerRef : null}
+                className="mb-20"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 items-start">
 
-              {/* TEXT LIST */}
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Cancer</h2>
+                  <div className="flex justify-center lg:justify-start">
+                    <img
+                      src={`http://127.0.0.1:5001${disease.image}`}
+                      alt={disease.name}
+                      className="rounded-xl w-full max-w-[420px] object-cover shadow-md"
+                    />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-gray-700">
-                  {items.map((col, i) => (
-                    <div key={i}>
-                      {col.map((item) => (
+                  </div>
+
+                  <div>
+                    <h2
+                      className="text-3xl font-bold mb-3 cursor-pointer hover:text-orange-500"
+                      onClick={() => handleDiseaseNavigate(disease.slug)}
+                    >
+                      {disease.name}
+                    </h2>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {disease.treatments.map((treat) => (
                         <p
-                          key={item}
-                          onClick={() => handleNavigate(item)}
-                          className="mb-2 cursor-pointer hover:text-orange-500"
+                          key={treat.id}
+                          onClick={() => handleNavigate(treat.slug)}
+                          className="cursor-pointer hover:text-orange-500 text-gray-700"
                         >
-                          {item}
+                          {treat.name}
                         </p>
                       ))}
                     </div>
-                  ))}
+                  </div>
+
                 </div>
               </div>
-
-            </div>
-          </div>
+            ))
+          )}
         </div>
       </div>
 
