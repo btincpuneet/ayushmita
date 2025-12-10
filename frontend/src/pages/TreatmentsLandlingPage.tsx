@@ -1,116 +1,152 @@
-import React, { useRef } from "react";
-import Breadcrumb from "../components/Treatment/TreatmentHeader";
-import TreatmentTabs from "../components/Treatment/BreadCrumb";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import BreadCrumb from "../components/Treatment/BreadCrumb";
 
-import { useNavigate } from "react-router-dom";
-import cancerImg from "../assets/treatment.jpg"; 
+interface Treatment {
+  id: number;
+  name: string;
+  slug: string;
+}
 
-export default function TreatmentsLandlingPage() {
+interface Disease {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+  short_description: string;
+  description_html: string;
+  treatments: Treatment[];
+}
+
+export default function TreatmentsLandingPage() {
   const navigate = useNavigate();
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [diseases, setDiseases] = useState<Disease[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("Cancer");
 
-  const items = [
-    [
-      "Anal Cancer Treatment",
-      "Bile Duct Cancer Treatment",
-      "Bladder Cancer Treatment",
-      "Blood Cancer Treatment",
-      "Gallbladder Cancer Treatment",
-      "Head and Neck Cancer Treatment",
-      "Liver Cancer Treatment",
-      "Lung Cancer Treatment",
-      "Nasopharyngeal Cancer Treatment",
-      "Oral Cancer Treatment",
-    ],
-    [
-      "Bone Cancer Treatment",
-      "Brain Cancer Treatment",
-      "Breast Cancer Treatment",
-      "Car T-Cell Therapy",
-      "Ovarian Cancer Treatment",
-      "Pancreatic Cancer Treatment",
-      "Penile Cancer Treatment",
-      "Primary Bone Cancer Treatment",
-      "Prostate Cancer Treatment",
-      "Salivary Gland Cancer Treatment",
-    ],
-    [
-      "Cervical Cancer Treatment",
-      "Chemotherapy Treatment",
-      "Colon Cancer Treatment",
-      "Esophagus Cancer Treatment",
-      "Skin Cancer Treatment",
-      "Stomach Cancer Treatment",
-      "Thyroid Cancer Treatment",
-      "Uterine Cancer Treatment",
-      "Vaginal Cancer Treatment",
-      "Vulvar Cancer Treatment",
-    ],
-  ];
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://127.0.0.1:5001/api/diseases");
+      if (res.data?.success) {
+        setDiseases(res.data.data);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("API Error:", error);
+      setLoading(false);
+    }
+  };
 
-  const handleNavigate = (item) => {
-    const slug = item
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/--+/g, "-");
+  useEffect(() => {
+    fetchData();
+  }, []);
 
+  const handleNavigate = (slug: string) => {
     navigate(`/treatment-details/${slug}`);
   };
 
-  const cancerRef = useRef(null);
+  const handleDiseaseNavigate = (slug: string) => {
+    navigate(`/disease/${slug}`);
+  };
 
-  const handleTabClick = (tab) => {
-    if (tab === "Cancer" && cancerRef.current) {
-      cancerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    const match = diseases.find(
+      (d) => d.name.toLowerCase() === tab.toLowerCase()
+    );
+    if (match && sectionRefs.current[match.slug]) {
+      sectionRefs.current[match.slug]?.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    if (!diseases.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.find((e) => e.isIntersecting);
+        if (visible) {
+          const slug = visible.target.getAttribute("data-slug");
+          const found = diseases.find((d) => d.slug === slug);
+          if (found) setActiveTab(found.name);
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    Object.values(sectionRefs.current).forEach((sec) => {
+      if (sec) observer.observe(sec);
+    });
+
+    return () => observer.disconnect();
+  }, [diseases]);
 
   return (
     <div>
       <Header />
+      <TreatmentHeader title="Treatments In India at Low Cost" />
 
-      <Breadcrumb title="Treatments In India at Low Coast" />
-      <TreatmentTabs onTabClick={handleTabClick} />
+      <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
 
-      <div ref={cancerRef} className="w-full bg-white py-14">
+      <div className="w-full bg-white py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="rounded-xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {loading ? (
+            <p className="text-center text-lg font-semibold">Loading...</p>
+          ) : (
+            diseases.map((disease, index) => (
+              <div
+                key={disease.id}
+                ref={(el) => (sectionRefs.current[disease.slug] = el)}
+                data-slug={disease.slug}
+                className="mb-24 py-16 rounded-2xl"
+                // className={`mb-24 py-16 rounded-2xl ${
+                //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
+                // }`}
+              >
+                <div
+                  className={`flex flex-col-reverse lg:flex-row items-center gap-12 ${
+                    index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-full lg:w-1/2 flex justify-center">
+                    <img
+                      src={`http://127.0.0.1:5001${disease.image}`}
+                      alt={disease.name}
+                      className="rounded-2xl w-full max-w-[430px] object-cover shadow-lg"
+                    />
+                  </div>
 
-              {/* IMAGE */}
-              <div className="flex justify-center lg:justify-start">
-                <img
-                  src={cancerImg}
-                  alt="Cancer Treatment"
-                  className="rounded-xl w-full max-w-[420px] object-cover"
-                />
-              </div>
+                  <div className="w-full lg:w-1/2">
+                    <h2
+                      className="text-3xl font-bold mb-4 cursor-pointer hover:text-orange-500"
+                      onClick={() => handleDiseaseNavigate(disease.slug)}
+                    >
+                      {disease.name}
+                    </h2>
 
-              {/* TEXT LIST */}
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Cancer</h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-gray-700">
-                  {items.map((col, i) => (
-                    <div key={i}>
-                      {col.map((item) => (
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-3 gap-x-4">
+                      {disease.treatments.map((treat) => (
                         <p
-                          key={item}
-                          onClick={() => handleNavigate(item)}
-                          className="mb-2 cursor-pointer hover:text-orange-500"
+                          key={treat.id}
+                          onClick={() => handleNavigate(treat.slug)}
+                          className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
                         >
-                          {item}
+                          {treat.name}
                         </p>
                       ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-
-            </div>
-          </div>
+            ))
+          )}
         </div>
       </div>
 

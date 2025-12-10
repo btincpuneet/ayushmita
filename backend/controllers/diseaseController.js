@@ -84,38 +84,37 @@ const getDiseaseById = async (req, res) => {
 };
 
 // GET ALL DISEASES
-const getAllDiseases = async (req, res) => {
+const getAllDiseasesWithTreatments = async (req, res) => {
   try {
-    const { page = 1, limit = 20, status, q } = req.query;
-
-    const where = {};
-    if (status !== undefined && status !== "") where.status = Number(status);
-    if (q) where.name = { [Op.like]: `%${q}%` };
-
-    const offset = (Number(page) - 1) * Number(limit);
-
-    const { rows, count } = await Disease.findAndCountAll({
-      where,
-      order: [["id", "DESC"]],
-      limit: Number(limit),
-      offset,
+    const diseases = await Disease.findAll({
+      where: { status: 1 },
+      include: [
+        {
+          model: Treatment,
+          as: "treatments",
+          attributes: ["id", "name", "slug"]
+        }
+      ],
+      order: [
+        ["id", "ASC"],
+        [{ model: Treatment, as: "treatments" }, "id", "ASC"]
+      ]
     });
 
-    res.json({
+    return res.json({
       success: true,
-      data: rows,
-      total: count,
-      page: Number(page),
-      limit: Number(limit),
+      data: diseases,
     });
-
   } catch (error) {
-    console.error("GET ALL ERROR:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Disease API Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
-// GET BY SLUG WITH TREATMENTS
+
 const getDiseaseWithTreatments = async (req, res) => {
   try {
     const disease = await Disease.findOne({
@@ -207,7 +206,7 @@ const deleteDisease = async (req, res) => {
 
 module.exports = {
   createDisease,
-  getAllDiseases,
+  getAllDiseasesWithTreatments,
   getDiseaseWithTreatments,
   getDiseaseById,
   updateDisease,

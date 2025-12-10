@@ -8,7 +8,7 @@ import Footer from "../components/Footer";
 import PromoSlider from "../components/PromoSlider";
 import MedicalTourism from "../components/MedicalTourism";
 import FindBySpecialisation from "../components/FindBySpecialisation";
-import TopPartnerHospitals from "../components/TopPartnerHospitals "; // ⬅️ remove space
+import TopPartnerHospitals from "../components/TopPartnerHospitals ";
 import { StatsSection } from "../components/StatsSection";
 import DoctorCareSlider from "../components/DoctorCareSlider";
 import TestimonialSlider from "../components/TestimonialSlider";
@@ -32,35 +32,18 @@ const Home: React.FC = () => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-white">
+      <div className="min-h-screen flex-col flex bg-white">
         <Header />
 
         <main className="flex-1">
-          {/* Hero section (already has pt-20 inside to clear fixed header) */}
           <HeroImage />
-
-          {/* Coupon / promo slider */}
           <PromoSlider />
-
-          {/* Top Medical Tourism */}
           <MedicalTourism />
-
-          {/* Find By Specialisation */}
           <FindBySpecialisation />
-
-          {/* Top Partner Hospitals */}
           <TopPartnerHospitals />
-
-          {/* Our Families stats (yellow section) */}
           <StatsSection />
-
-          {/* Professional Care Provider (doctors slider) */}
           <DoctorCareSlider />
-
-          {/* Customer Happiness Guaranteed (testimonials slider) */}
           <TestimonialSlider />
-
-          {/* Frequently Asked Questions with image */}
           <FaqWithImage />
         </main>
 

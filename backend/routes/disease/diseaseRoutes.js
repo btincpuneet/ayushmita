@@ -10,6 +10,7 @@ const {
   getDiseaseById,
   updateDisease,
   deleteDisease,
+  getAllDiseasesWithTreatments,
 } = require("../../controllers/diseaseController");
 
 const upload = multer({
@@ -23,8 +24,8 @@ const upload = multer({
 
 router.post("/", upload.single("image"), createDisease);
 
-router.get("/", getAllDiseases);
-router.get("/slug/:slug", getDiseaseWithTreatments);
+router.get("/", getAllDiseasesWithTreatments);
+router.get("/:slug", getDiseaseWithTreatments);
 router.get("/:id", getDiseaseById);
 
 router.put("/:id", upload.single("image"), updateDisease);

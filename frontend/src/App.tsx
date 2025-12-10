@@ -8,6 +8,7 @@ import { Hospital } from "lucide-react";
 import HospitalPage from "./pages/HospitalPage";
 import TreatmentsLandlingPage from "./pages/TreatmentsLandlingPage";
 import TreatMentDetailsPage from "./pages/TreatMentDetailsPage";
+import DiseaseDetailsPage from "./pages/DiseaseDetailsPage";
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,8 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />
         <Route path="/treatment-details/:slug" element={<TreatMentDetailsPage />} />
+        <Route path="/disease/:slug" element={<DiseaseDetailsPage />} />
+
         {/* <Route path="/about-us" element={<AboutPage />} /> */}
         <Route path="/hospital" element={<HospitalPage />} />
 
