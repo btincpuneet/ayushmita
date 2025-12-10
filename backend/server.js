@@ -6,6 +6,8 @@ const path = require("path");
 
 const authRoutes = require('./routes/auth/index.js');
 const { sequelize } = require('./models/index.js');
+// Register model relationships (Disease ↔ Treatment)
+require('./models/relations');
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
 const promoSliderRoutes = require('./routes/promoSlider/index.js');
@@ -32,7 +34,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -44,8 +47,8 @@ app.use('/api', promoSliderRoutes);
 app.use('/api', doctorRoutes);
 app.use("/api", topPartnerHospitalRoutes);
 app.use("/api", testimonialRoutes);
-app.use("/api", diseaseRoutes);
-app.use("/api", treatmentRoutes);
+app.use("/api/diseases", diseaseRoutes);
+app.use("/api/treatments", treatmentRoutes);
 
 sequelize.sync()
   .then(() => console.log('Database synced successfully'))
