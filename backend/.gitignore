@@ -41,7 +41,7 @@ Thumbs.db
 *.db
 
 # Uploaded files / temporary storage
-uploads/
+
 tmp/
 
 # Misc
