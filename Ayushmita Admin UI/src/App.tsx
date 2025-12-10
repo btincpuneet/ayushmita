@@ -15,6 +15,8 @@ import ManageHeroBanner from "./pages/admin/ManageHeroBanner";
 import ManageDoctors from "./pages/admin/ManageDoctors";
 import ManageTopPartnerHospitals from "./pages/admin/ManageTopPartnerHospitals";
 import ManageTestimonials from "./pages/admin/ManageTestimonials";
+import ManageDiseases from "./pages/admin/ManageDisease";
+import ManageTreatments from "./pages/admin/ManageTreatments";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +45,8 @@ const App = () => (
               <Route path="manage-doctor" element={<ManageDoctors />} />
               <Route path="topartnerDetails" element={<ManageTopPartnerHospitals />} />
               <Route path="testimonials" element={<ManageTestimonials />} />
+              <Route path="manage-disease" element={<ManageDiseases />} />
+              <Route path="manage-treatment" element={<ManageTreatments/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

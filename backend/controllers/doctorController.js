@@ -1,8 +1,6 @@
 const { Doctor } = require("../models/doctor");
 
-// ==============================
-// CREATE DOCTOR
-// ==============================
+
 const createDoctor = async (req, res) => {
   try {
     const {
@@ -47,9 +45,7 @@ const createDoctor = async (req, res) => {
 };
 
 
-// ==============================
-// GET ALL DOCTORS
-// ==============================
+
 const getDoctors = async (req, res) => {
   try {
     const list = await Doctor.findAll();
@@ -77,9 +73,7 @@ const getDoctors = async (req, res) => {
 };
 
 
-// ==============================
-// GET SINGLE DOCTOR
-// ==============================
+
 const getDoctorById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -108,9 +102,6 @@ const getDoctorById = async (req, res) => {
 };
 
 
-// ==============================
-// UPDATE DOCTOR
-// ==============================
 const updateDoctor = async (req, res) => {
   try {
     const id = req.params.id;
@@ -163,9 +154,6 @@ const updateDoctor = async (req, res) => {
 };
 
 
-// ==============================
-// DELETE DOCTOR
-// ==============================
 const deleteDoctor = async (req, res) => {
   try {
     const id = req.params.id;

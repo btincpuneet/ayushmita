@@ -47,7 +47,7 @@ export default function CancerSection() {
 
   const handleNavigate = (item) => {
     if (item === "Bile Duct Cancer Treatment") {
-      navigate("/bile-duct-cancer-treatment"); 
+      navigate("/treatment-details"); 
     }
   };
 

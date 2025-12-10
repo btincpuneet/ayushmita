@@ -140,7 +140,7 @@ const BileDuctCancerTreatment = () => {
           </div>
 
 
-          <div className="mt-16 space-y-16">
+          {/* <div className="mt-16 space-y-16">
             {data.sections.map((section, index) => (
               <div key={index}>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
@@ -174,7 +174,7 @@ const BileDuctCancerTreatment = () => {
                 </ul>
               </div>
             ))}
-          </div>
+          </div> */}
 
 
         </div>

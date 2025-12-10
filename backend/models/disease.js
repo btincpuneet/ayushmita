@@ -65,6 +65,10 @@ const Disease = sequelize.define(
     tableName: "diseases",
     timestamps: true,
     underscored: true,
+    indexes: [
+      { unique: true, fields: ["slug"] },
+      { fields: ["status"] },
+    ],
   }
 );
 

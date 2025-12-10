@@ -13,6 +13,12 @@ const Treatment = sequelize.define(
     disease_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "diseases",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
 
     name: {
@@ -70,6 +76,11 @@ const Treatment = sequelize.define(
     tableName: "treatments",
     timestamps: true,
     underscored: true,
+    indexes: [
+      { fields: ["disease_id"] },
+      { unique: true, fields: ["slug"] },
+      { fields: ["status"] },
+    ],
   }
 );
 
