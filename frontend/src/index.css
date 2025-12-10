@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* ---- dots: big center ring with inner dot like reference ---- */
 body {
   font-family: "Ubuntu";
   font-weight: 400;
@@ -10,7 +9,7 @@ body {
 .dots-wrapper {
   margin-top: 26px; /* distance from slider */
 }
-
+/* 
 /* each li contains our custom node from customPaging */
 .slick-dots li {
   display: inline-block;
@@ -97,4 +96,4 @@ body {
     margin: 0;
     list-style: none;
     text-align: center;
-}
+} 

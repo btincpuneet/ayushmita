@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Breadcrumb({
+export default function TreatmentHeader({
   title = "Page Title",
   homeText = "Home",
   parentName = "Treatment",

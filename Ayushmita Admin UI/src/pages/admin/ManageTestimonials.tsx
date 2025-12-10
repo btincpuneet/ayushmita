@@ -4,10 +4,10 @@ import axios from "axios";
 interface Testimonial {
   id: number;
   name: string;
-  role: string;
-  rating: number;
   message: string;
-  image_base64?: string | null;
+  rating: number;
+  image_url?: string | null;
+  status?: string;
 }
 
 const ManageTestimonials: React.FC = () => {
@@ -18,7 +18,6 @@ const ManageTestimonials: React.FC = () => {
   const [form, setForm] = useState({
     id: null as number | null,
     name: "",
-    role: "",
     rating: 5,
     message: "",
     image: null as File | null,
@@ -57,7 +56,6 @@ const ManageTestimonials: React.FC = () => {
     setForm({
       id: null,
       name: "",
-      role: "",
       rating: 5,
       message: "",
       image: null,
@@ -71,14 +69,13 @@ const ManageTestimonials: React.FC = () => {
     setForm({
       id: t.id,
       name: t.name,
-      role: t.role,
       rating: t.rating,
       message: t.message,
       image: null,
     });
 
-    if (t.image_base64) {
-      setPreviewImage(`data:image/jpeg;base64,${t.image_base64}`);
+    if (t.image_url) {
+      setPreviewImage(`http://localhost:5001${t.image_url}`);
     }
 
     setModalOpen(true);
@@ -98,7 +95,6 @@ const ManageTestimonials: React.FC = () => {
 
     const fd = new FormData();
     fd.append("name", form.name);
-    fd.append("role", form.role);
     fd.append("rating", String(form.rating));
     fd.append("message", form.message);
     if (form.image) fd.append("image", form.image);
@@ -134,7 +130,6 @@ const ManageTestimonials: React.FC = () => {
             <tr>
               <th className="p-3 border">Image</th>
               <th className="p-3 border">Name</th>
-              <th className="p-3 border">Role</th>
               <th className="p-3 border">Rating</th>
               <th className="p-3 border">Message</th>
               <th className="p-3 border">Actions</th>
@@ -153,9 +148,9 @@ const ManageTestimonials: React.FC = () => {
             {testimonials.map((t) => (
               <tr key={t.id} className="border">
                 <td className="p-3 border">
-                  {t.image_base64 ? (
+                  {t.image_url ? (
                     <img
-                      src={`data:image/jpeg;base64,${t.image_base64}`}
+                      src={`http://localhost:5001${t.image_url}`}
                       className="w-16 h-16 object-cover rounded"
                     />
                   ) : (
@@ -164,7 +159,6 @@ const ManageTestimonials: React.FC = () => {
                 </td>
 
                 <td className="p-3 border">{t.name}</td>
-                <td className="p-3 border">{t.role}</td>
                 <td className="p-3 border">{t.rating}</td>
                 <td className="p-3 border w-[300px]">{t.message}</td>
 
@@ -206,15 +200,6 @@ const ManageTestimonials: React.FC = () => {
                 placeholder="Name"
                 className="border p-2 w-full"
                 required
-              />
-
-              <input
-                type="text"
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-                placeholder="Role"
-                className="border p-2 w-full"
               />
 
               <input

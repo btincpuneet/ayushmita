@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { IoChevronForward } from "react-icons/io5";
 import Container from "../Container";
 
 interface Props {
   onTabClick: (tab: string) => void;
+  activeTab: string;
   tabs?: string[];
-  initialActive?: string;
 }
 
 const DEFAULT_TABS = [
   "Cancer",
-  "Cardiology Treatment",
+  "Cardiology",
   "Cosmetic Surgery",
   "Cosmetology",
   "Dental Care",
@@ -21,14 +21,8 @@ const DEFAULT_TABS = [
   "Gender Reassignment Surgery",
 ];
 
-export default function TreatmentTabs({ onTabClick, tabs, initialActive }: Props) {
-  const resolvedTabs = useMemo(() => (tabs && tabs.length ? tabs : DEFAULT_TABS), [tabs]);
-  const [activeTab, setActiveTab] = useState<string>(initialActive || resolvedTabs[0] || "");
-
-  const handleClick = (tab: string) => {
-    setActiveTab(tab);
-    onTabClick(tab);
-  };
+export default function BreadCrumb({ onTabClick, activeTab, tabs }: Props) {
+  const resolvedTabs = tabs && tabs.length ? tabs : DEFAULT_TABS;
 
   return (
     <div className="bg-[#1c2b08] text-white w-full">
@@ -37,7 +31,7 @@ export default function TreatmentTabs({ onTabClick, tabs, initialActive }: Props
           {resolvedTabs.map((tab) => (
             <button
               key={tab}
-              onClick={() => handleClick(tab)}
+              onClick={() => onTabClick(tab)}
               className={`whitespace-nowrap transition ${
                 activeTab === tab ? "text-yellow-300 font-semibold" : "hover:text-yellow-300"
               }`}

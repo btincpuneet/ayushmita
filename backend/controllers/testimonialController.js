@@ -1,142 +1,125 @@
-
+const fs = require("fs");
+const path = require("path");
 const { Testimonial } = require("../models/testimonial");
 
-function serializeTestimonial(t) {
-  const plain = t.toJSON ? t.toJSON() : t;
-
-  if (plain.image_url) {
-    let buffer = null;
-
-    if (Buffer.isBuffer(plain.image_url)) buffer = plain.image_url;
-
-    else if (plain.image_url?.data) buffer = Buffer.from(plain.image_url.data);
-
-    if (buffer) {
-      plain.image_base64 = buffer.toString("base64");
-    }
-  }
-
-  delete plain.image_url;
-  return plain;
-}
-
+// ---------------------- CREATE ----------------------
 const createTestimonial = async (req, res) => {
   try {
-    const { name, role, rating, message, status } = req.body;
+    const { name, message, rating } = req.body;
+    let imageUrl = null;
 
-    if (!name || !message) {
-      return res.status(400).json({
-        success: false,
-        message: "Name and message are required",
-      });
+    if (req.file) {
+      const imageName = `testimonial_${Date.now()}.jpg`;
+
+      const uploadDir = path.join(__dirname, "../uploads/testimonials");
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const uploadPath = path.join(uploadDir, imageName);
+      fs.writeFileSync(uploadPath, req.file.buffer);
+
+      imageUrl = `/uploads/testimonials/${imageName}`;
     }
 
-    const imageBuffer = req.file ? req.file.buffer : null;
-
-    const newTestimonial = await Testimonial.create({
+    const testimonial = await Testimonial.create({
       name,
-      role,
-      rating,
       message,
-      status,
-      image_url: imageBuffer,
+      rating,
+      image_url: imageUrl,
     });
 
-    return res.status(201).json({
-      success: true,
-      data: serializeTestimonial(newTestimonial),
-    });
-
+    res.status(201).json({ success: true, data: testimonial });
   } catch (err) {
     console.error("Create Testimonial Error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+// ---------------------- GET ALL ----------------------
 const getAllTestimonials = async (req, res) => {
   try {
-    const testimonials = await Testimonial.findAll({
-      order: [["id", "DESC"]],
+    const data = await Testimonial.findAll({
+      order: [["created_at", "DESC"]],
     });
 
-    return res.status(200).json({
-      success: true,
-      data: testimonials.map(serializeTestimonial),
-    });
+    res.json({ success: true, data });
   } catch (err) {
     console.error("Get All Error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+// ---------------------- GET ONE ----------------------
 const getTestimonialById = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
 
-    if (!testimonial) {
+    if (!testimonial)
       return res.status(404).json({ success: false, message: "Not found" });
-    }
 
-    return res.status(200).json({
-      success: true,
-      data: serializeTestimonial(testimonial),
-    });
+    res.json({ success: true, data: testimonial });
   } catch (err) {
     console.error("Get Error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// ---------------------- UPDATE ----------------------
 const updateTestimonial = async (req, res) => {
   try {
-    const { name, role, rating, message, status } = req.body;
-
     const testimonial = await Testimonial.findByPk(req.params.id);
 
-    if (!testimonial) {
+    if (!testimonial)
       return res.status(404).json({ success: false, message: "Not found" });
-    }
 
-    const imageBuffer = req.file ? req.file.buffer : testimonial.image_url;
+    const { name, message, rating, status } = req.body;
+
+    let imageUrl = testimonial.image_url;
+
+    if (req.file) {
+      const imageName = `testimonial_${Date.now()}.jpg`;
+      const uploadDir = path.join(__dirname, "../uploads/testimonials");
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const uploadPath = path.join(uploadDir, imageName);
+      fs.writeFileSync(uploadPath, req.file.buffer);
+
+      imageUrl = `/uploads/testimonials/${imageName}`;
+    }
 
     await testimonial.update({
       name,
-      role,
-      rating,
       message,
+      rating,
       status,
-      image_url: imageBuffer,
+      image_url: imageUrl,
     });
 
-    await testimonial.reload();
-
-    return res.status(200).json({
-      success: true,
-      message: "Updated",
-      data: serializeTestimonial(testimonial),
-    });
+    res.json({ success: true, data: testimonial });
   } catch (err) {
     console.error("Update Error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+// ---------------------- DELETE ----------------------
 const deleteTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
 
-    if (!testimonial) {
+    if (!testimonial)
       return res.status(404).json({ success: false, message: "Not found" });
-    }
 
     await testimonial.destroy();
-
-    return res.status(200).json({
-      success: true,
-      message: "Deleted",
-    });
+    res.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
     console.error("Delete Error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

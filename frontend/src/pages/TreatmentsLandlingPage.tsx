@@ -4,8 +4,8 @@ import axios from "axios";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Breadcrumb from "../components/Treatment/TreatmentHeader";
-import TreatmentTabs from "../components/Treatment/BreadCrumb";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import BreadCrumb from "../components/Treatment/BreadCrumb";
 
 interface Treatment {
   id: number;
@@ -25,10 +25,10 @@ interface Disease {
 
 export default function TreatmentsLandingPage() {
   const navigate = useNavigate();
-  const cancerRef = useRef<HTMLDivElement | null>(null);
-
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [diseases, setDiseases] = useState<Disease[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("Cancer");
 
   const fetchData = async () => {
     try {
@@ -50,67 +50,99 @@ export default function TreatmentsLandingPage() {
   const handleNavigate = (slug: string) => {
     navigate(`/treatment-details/${slug}`);
   };
+
   const handleDiseaseNavigate = (slug: string) => {
     navigate(`/disease/${slug}`);
   };
 
-
   const handleTabClick = (tab: string) => {
-    if (tab.toLowerCase() === "cancer" && cancerRef.current) {
-      cancerRef.current.scrollIntoView({ behavior: "smooth" });
+    setActiveTab(tab);
+    const match = diseases.find(
+      (d) => d.name.toLowerCase() === tab.toLowerCase()
+    );
+    if (match && sectionRefs.current[match.slug]) {
+      sectionRefs.current[match.slug]?.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    if (!diseases.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.find((e) => e.isIntersecting);
+        if (visible) {
+          const slug = visible.target.getAttribute("data-slug");
+          const found = diseases.find((d) => d.slug === slug);
+          if (found) setActiveTab(found.name);
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    Object.values(sectionRefs.current).forEach((sec) => {
+      if (sec) observer.observe(sec);
+    });
+
+    return () => observer.disconnect();
+  }, [diseases]);
 
   return (
     <div>
       <Header />
-      <Breadcrumb title="Treatments In India at Low Cost" />
-      <TreatmentTabs onTabClick={handleTabClick} />
+      <TreatmentHeader title="Treatments In India at Low Cost" />
 
-      <div className="w-full bg-white py-14">
+      <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
+
+      <div className="w-full bg-white py-16">
         <div className="max-w-7xl mx-auto px-4">
-
           {loading ? (
             <p className="text-center text-lg font-semibold">Loading...</p>
           ) : (
-            diseases.map((disease) => (
+            diseases.map((disease, index) => (
               <div
                 key={disease.id}
-                ref={disease.slug === "cancer" ? cancerRef : null}
-                className="mb-20"
+                ref={(el) => (sectionRefs.current[disease.slug] = el)}
+                data-slug={disease.slug}
+                className="mb-24 py-16 rounded-2xl"
+                // className={`mb-24 py-16 rounded-2xl ${
+                //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
+                // }`}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 items-start">
-
-                  <div className="flex justify-center lg:justify-start">
+                <div
+                  className={`flex flex-col-reverse lg:flex-row items-center gap-12 ${
+                    index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-full lg:w-1/2 flex justify-center">
                     <img
                       src={`http://127.0.0.1:5001${disease.image}`}
                       alt={disease.name}
-                      className="rounded-xl w-full max-w-[420px] object-cover shadow-md"
+                      className="rounded-2xl w-full max-w-[430px] object-cover shadow-lg"
                     />
-
                   </div>
 
-                  <div>
+                  <div className="w-full lg:w-1/2">
                     <h2
-                      className="text-3xl font-bold mb-3 cursor-pointer hover:text-orange-500"
+                      className="text-3xl font-bold mb-4 cursor-pointer hover:text-orange-500"
                       onClick={() => handleDiseaseNavigate(disease.slug)}
                     >
                       {disease.name}
                     </h2>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-3 gap-x-4">
                       {disease.treatments.map((treat) => (
                         <p
                           key={treat.id}
                           onClick={() => handleNavigate(treat.slug)}
-                          className="cursor-pointer hover:text-orange-500 text-gray-700"
+                          className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
                         >
                           {treat.name}
                         </p>
                       ))}
                     </div>
                   </div>
-
                 </div>
               </div>
             ))
