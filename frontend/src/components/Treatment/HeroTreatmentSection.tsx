@@ -14,30 +14,10 @@ const HeroTreatmentSection = () => {
         
           <div className="flex flex-col items-center md:items-start justify-center">
 
-            <p
-  className="mb-2"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "100%",
-    letterSpacing: "0%",
-    color: "#87898C",
-  }}
->
+            <p className="text-sm text-gray-500 mb-2">
               Home /
               <span
-                className="cursor-pointer hover:underline"
-                 style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "100%",
-    letterSpacing: "0%",
-    color: "#F0A324",
-  }}
+                className="text-[#F0A324] font-medium cursor-pointer hover:underline"
                 onClick={() => navigate("/treatmentdetails")}
               >
                 {" "}Treatment

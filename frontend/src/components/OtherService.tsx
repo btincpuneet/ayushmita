@@ -43,24 +43,10 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
   if (!services.length) return null;
 
   return (
-<<<<<<< HEAD
     <section className="bg-white py-3">
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-xl md:text-2xl font-semibold text-left text-[#1a1a1a] mb-10 font-poppins">
           Our Other Services
-=======
-    <section className="bg-[#F6F7F9] py-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-left mb-10" style={{
-          fontFamily: "Ubuntu",
-          fontWeight: 700,
-          fontStyle: "normal",
-          fontSize: "28px",
-          lineHeight: "100%",
-          letterSpacing: "0%",
-        }}>
-          Other Related Treatments
->>>>>>> 6bda36e (changes in design)
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -70,37 +56,29 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
               to={`/treatment/${service.slug}`}
               className="
                 flex items-center gap-3 p-4 
-                bg-white rounded-lg 
-                hover:shadow-md 
+                bg-white border border-gray-200 rounded-lg 
+                hover:shadow-md hover:border-gray-300 
                 transition-all duration-200
               "
             >
               <div
                 className="
-     flex items-center justify-center 
+    w-10 h-10 flex items-center justify-center 
     bg-[#f5f9f7] rounded-lg overflow-hidden
   "
               >
                 <img
                   src={`http://127.0.0.1:5001${service.image}`}
                   alt={service.name}
-                  className="w-[60px] h-[60px] rounded-lg object-cover"
+                  className="w-full h-full object-cover"
                 />
               </div>
 
               <span
                 className="
-                 leading-tight
+                  text-gray-700 text-sm font-medium 
+                  font-poppins leading-tight
                 "
-                style={{
-                  fontFamily: "Ubuntu",
-                  fontWeight: 500,
-                  fontStyle: "normal",
-                  fontSize: "16px",
-                  lineHeight: "27px",
-                  letterSpacing: "0%",
-                  textAlign: "center",
-                }}
               >
                 {service.name}
               </span>
