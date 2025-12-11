@@ -1,41 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
+import axios from "axios";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-const providers = [
-  {
-
-    name: "Chriss Taylor",
-    specialty: "Internal Medicine",
-    image:
-      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&h=400&fit=crop",
-  },
-  {
-    name: "Jonshon Aliven",
-    specialty: "Internal Medicine",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop",
-  },
-  {
-    name: "Trikien Munaska",
-    specialty: "Internal Medicine",
-    image:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop",
-  },
-  {
-    name: "Khabian Jerry",
-    specialty: "Internal Medicine",
-    image:
-      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=400&fit=crop",
-  },
-  {
-    name: "Khabian Jerry",
-    specialty: "Internal Medicine",
-    image:
-      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=400&fit=crop",
-  },
-];
 
 function NextArrow({ onClick }) {
   return (
@@ -57,19 +25,35 @@ function NextArrow({ onClick }) {
           fill="#F0A324"
         />
       </svg>
-
     </button>
   );
 }
 
-export default function DoctorCareSlider({ items = providers }) {
+export default function DoctorCareSlider() {
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:5001/api/doctors")
+      .then((res) => {
+        if (res.data.success) {
+          const mapped = res.data.data.map((d) => ({
+            name: d.name,
+            specialty: d.specialty,
+            image: `http://127.0.0.1:5001${d.image_url}`,
+          }));
+          setDoctors(mapped);
+        }
+      })
+      .catch((err) => console.error("Error fetching doctors:", err));
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 550,
-    slidesToShow: 4, 
+    slidesToShow: 4,
     slidesToScroll: 1,
-    centerMode: false,
     autoplay: true,
     autoplaySpeed: 4200,
     pauseOnHover: true,
@@ -87,7 +71,6 @@ export default function DoctorCareSlider({ items = providers }) {
         <ul className="flex justify-center gap-2 mt-8">{dots}</ul>
       </div>
     ),
-   
     customPaging: () => (
       <div className="dot-outer flex items-center justify-center mt-5">
         <div className="dot-inner" />
@@ -101,36 +84,31 @@ export default function DoctorCareSlider({ items = providers }) {
         <h2 className="Professional"
           style={{
             fontFamily: 'Ubuntu',
-            fontWeight: 700,          
-            fontStyle: 'normal',      
+            fontWeight: 700,
             fontSize: '32px',
             lineHeight: '100%',
-            letterSpacing: '0%',
             textAlign: 'center',
           }}>
           Professional Care Provider
         </h2>
+
         <p className="mt-2 mb-10"
           style={{
             fontFamily: 'Ubuntu',
-            fontWeight: 400,          
-            fontStyle: 'normal',     
+            fontWeight: 400,
             fontSize: '16px',
             lineHeight: '100%',
-            letterSpacing: '0%',
             textAlign: 'center',
-          }}
-        >
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          }}>
+          Meet our expert doctors providing world-class medical care.
         </p>
 
         <div className="relative">
           <Slider {...settings}>
-            {items.map((d, i) => (
+            {doctors.map((d, i) => (
               <div key={i} className="px-3 flex justify-center">
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px] ">
-                  {/* Image */}
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px]">
+                  
                   <div className="w-full h-64 overflow-hidden bg-gray-100">
                     <img
                       src={d.image}
@@ -140,18 +118,16 @@ export default function DoctorCareSlider({ items = providers }) {
                   </div>
 
                   <div className="p-5 text-center">
-                    <h3 className="doctor-name"
+                    <h3
                       style={{
                         fontFamily: 'Inter',
-                        fontWeight: 600,          
-                        fontStyle: 'normal',      
-                        fontSize: '25.05px',
+                        fontWeight: 600,
+                        fontSize: '25px',
                         lineHeight: '150%',
-                        letterSpacing: '0.5%',
-                        textAlign: 'center',
                       }}>
                       {d.name}
                     </h3>
+
                     <p className="text-amber-500 font-medium mt-1 uppercase text-sm tracking-wide">
                       {d.specialty}
                     </p>
@@ -164,7 +140,6 @@ export default function DoctorCareSlider({ items = providers }) {
       </div>
 
       <style>{`
-        /* stretch inner slide to card height */
         .slick-slide > div {
           height: 100%;
           display: flex;
@@ -172,12 +147,7 @@ export default function DoctorCareSlider({ items = providers }) {
           justify-content: center;
         }
 
-        /* dots base */
-        .slick-dots { margin: 0; padding: 0; }
-        .slick-dots li { display: inline-block; margin: 0 4px; }
         .slick-dots li button { display: none; }
-
-        /* inactive dot = small filled circle */
         .slick-dots li .dot-outer {
           width: 10px;
           height: 10px;
@@ -192,13 +162,11 @@ export default function DoctorCareSlider({ items = providers }) {
           background: #f59e0b;
         }
 
-        /* active dot = ring + filled center */
         .slick-dots li.slick-active .dot-outer {
           width: 14px;
           height: 14px;
           background: transparent;
           border: 2px solid #f59e0b;
-          opacity: 1;
         }
         .slick-dots li.slick-active .dot-inner {
           width: 6px;
@@ -206,7 +174,6 @@ export default function DoctorCareSlider({ items = providers }) {
           background: #f59e0b;
         }
 
-        /* arrow visibility */
         .doctor-arrow { display: flex !important; }
         @media (max-width: 768px) {
           .doctor-arrow { display: none !important; }
