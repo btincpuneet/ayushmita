@@ -31,22 +31,44 @@ const ConsultationForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex justify-center py-10">
+    <div className="max-w-7xl mx-auto flex justify-center py-10 px-4">
       <div
-        className="w-[70%] rounded-lg grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl"
+        className="w-[100%] rounded-lg grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl"
         style={{
-          background: "linear-gradient(90deg, #1f5f0b 0%, #397d17 100%)",
+           background: "linear-gradient(180deg, #2A6506 100%)",
         }}
       >
         <div className="relative">
           <img
             src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=280&fit=crop"
             alt="Consultation"
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full object-cover opacity-50"
           />
           <div className="absolute top-10 left-8 text-white pr-10">
-            <h2 className="text-2xl font-bold">Book Your Free Consultation</h2>
-            <p className="text-sm mt-2">
+            <h2
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 700,
+    fontStyle: "normal",
+    fontSize: "28px",
+    lineHeight: "32px",
+    letterSpacing: "0%",
+  }}
+>
+  Book Your Free Consultation
+</h2>
+
+            <p
+  className="mt-2"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "18px",
+    letterSpacing: "0%",
+  }}
+>
               Submit the form and our health expert will reach out within 24 hours.
             </p>
           </div>
@@ -55,7 +77,17 @@ const ConsultationForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-4 text-white">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 text-sm font-medium">Full Name</label>
+              <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>Full Name</label>
               <input
                 type="text"
                 name="fullName"
@@ -66,7 +98,17 @@ const ConsultationForm: React.FC = () => {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm font-medium">Phone Number</label>
+              <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>Phone Number</label>
               <input
                 type="text"
                 name="phoneNumber"
@@ -79,7 +121,17 @@ const ConsultationForm: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 text-sm font-medium">Email ID</label>
+              <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>Email ID</label>
               <input
                 type="email"
                 name="email"
@@ -90,7 +142,17 @@ const ConsultationForm: React.FC = () => {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm font-medium">Country</label>
+              <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>Country</label>
               <select
                 name="country"
                 value={formData.country}
@@ -107,7 +169,17 @@ const ConsultationForm: React.FC = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">
+            <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>
               Which Treatment Are You Looking For?
             </label>
             <input
@@ -120,7 +192,17 @@ const ConsultationForm: React.FC = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">Treatment Requirements</label>
+            <label
+  className="block mb-1"
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 400,
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "140%",
+    letterSpacing: "0%",
+  }}
+>Treatment Requirements</label>
             <textarea
               name="requirements"
               value={formData.requirements}
@@ -129,10 +211,22 @@ const ConsultationForm: React.FC = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition"
-          >
+         <button
+  type="submit"
+  style={{
+    background: "#F0A324",
+    padding: "12px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    transition: "0.3s",
+    fontFamily: "Open Sans",
+    fontWeight: 600,
+    fontSize: "18px",
+    lineHeight: "100%",
+    color: "#333333",
+    letterSpacing: "0%",
+  }}
+>
             Send Message
           </button>
         </form>

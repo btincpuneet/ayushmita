@@ -25,7 +25,7 @@ const blogPosts = [
 const BlogSection = () => {
   return (
     <section style={{ backgroundColor: "#ffffff", padding: "60px 0" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 20px" }}>
+      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-12">
         <div style={{ 
           display: "flex", 
           justifyContent: "space-between", 

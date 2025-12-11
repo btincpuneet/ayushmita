@@ -53,43 +53,96 @@ export default function TreatmentDetailsPage() {
         <article className="max-w-6xl mx-auto px-4 py-12">
 
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-20">
+      <div className="max-w-7xl mx-auto px-4 py-12">
 
-            <figure>
-              <img
-                src={`http://127.0.0.1:5001${treatment.image}`}
-                alt={treatment.name}
-                className="rounded-xl shadow-lg w-full max-w-md"
-              />
-            </figure>
+        {/* STATIC OVERVIEW SECTION (MATCHING YOUR SCREENSHOT) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-20">
+          <div>
+           <img
+              src={`http://127.0.0.1:5001${treatment.image}`}
+              alt={treatment.name}
+              className="rounded-xl shadow-lg w-full max-w-md"
+            />
+          </div>
 
-            <section>
-              <h1 className="text-3xl font-bold text-gray-900">Overview</h1>
-              <hr className="w-12 h-1 bg-green-500 rounded mt-2 mb-6" />
+          <div className="w-full lg:w-[100%]">
+            <h2 
+                style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 700,
+                fontStyle: "bold",
+                fontSize: "28px",
+                lineHeight: "100%",
+                letterSpacing: "0%"
+              }}
+            >Overview</h2>
+ <span
+              style={{
+                width: "32px",
+                height: "4px",
+                background: "linear-gradient(to right, #f1a339, #7ac142)",
+                borderRadius: "5px",
+                display: "inline-block"
+              }}
+            ></span>
+<p
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 300,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "27px",
+    letterSpacing: "0%",
+  }}
+>
+              Having cancer is one of the biggest fears for humans because most
+              people lose their lives to cancer. In cancer disease, the body
+              develops abnormal cells that spread to other parts of the body.
+              When a patient suffers from cancer, the patient experiences
+              various symptoms including unexplained weight loss, fatigue,
+              severe pain, and many more. So, patients must seek cancer
+              treatment.
+            </p>
+<br />
+<p
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 300,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "27px",
+    letterSpacing: "0%",
+  }}
+>
+              We know that receiving a cancer diagnosis can be enormous. So, if
+              people face these diseases, they have to choose the best
+              healthcare provider. At Aushmita, we have partnered with the best
+              cancer treatment hospitals and oncologists around the world. Our
+              medical network team provides cancer treatment options according
+              to the patient’s needs.
+            </p>
+              <div className="flex gap-4 mt-8">
+              <button
+                onClick={() => setOpenModal(true)}
+                className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"
+                style={{
+                     fontFamily: "Ubuntu",
+    fontWeight: 500,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "100%",
+    letterSpacing: "2%",
+                }}
+              >
+                Book An Appointment
+              </button>
 
-              <p className="text-gray-700 leading-relaxed text-lg mb-4">
-                Having cancer is one of the biggest fears for humans because most
-                people lose their lives to cancer. In cancer disease...
-              </p>
-
-              <p className="text-gray-700 leading-relaxed text-lg">
-                We know that receiving a cancer diagnosis can be enormous...
-              </p>
-
-              <aside className="flex gap-4 mt-8">
-                <button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-[#F0A324] hover:bg-orange-500 text-black font-semibold px-6 py-2 rounded-lg transition"
-                >
-                  Book An Appointment
-                </button>
-
-                <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
-                  Chat Now
-                </button>
-              </aside>
-            </section>
-
-          </section>
+              <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
+                Chat Now
+              </button>
+            </div>
+          </div>
+        </div>
 
           <section className="text-gray-800 space-y-8">
 
