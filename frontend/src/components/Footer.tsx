@@ -215,13 +215,12 @@ const Footer: React.FC = () => {
         <p className="mt-6 text-start sm:text-center text-gray-300 text-sm"
           style={{
             fontFamily: 'Poppins',
-            fontWeight: 400,          // Regular weight
-            fontStyle: 'normal',      // Regular corresponds to normal
+            fontWeight: 400,
+            fontStyle: 'normal',
             fontSize: '16px',
             lineHeight: '28px',
             letterSpacing: '0%',
             verticalAlign: 'middle',
-            // leading-trim: NONE is not standard CSS, so it's ignored
           }}>
           © {new Date().getFullYear()} ayushm.com. All Rights Reserved
         </p>
