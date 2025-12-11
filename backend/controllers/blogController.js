@@ -65,25 +65,7 @@ exports.updateBlog = async (req, res) => {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
-    const {
-      category_id,
-      title,
-      slug,
-      image,
-      short_description,
-      description_html,
-      is_global
-    } = req.body;
-
-    blog.category_id = category_id || blog.category_id;
-    blog.title = title || blog.title;
-    blog.slug = slug || blog.slug;
-    blog.image = image !== undefined ? image : blog.image;
-    blog.short_description = short_description || blog.short_description;
-    blog.description_html = description_html || blog.description_html;
-    blog.is_global = typeof is_global === 'boolean' ? is_global : blog.is_global;
-
-    await blog.save();
+    await blog.update(req.body);
 
     res.status(200).json({
       message: 'Blog updated successfully',
@@ -109,5 +91,5 @@ exports.deleteBlog = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
+      }
 };
