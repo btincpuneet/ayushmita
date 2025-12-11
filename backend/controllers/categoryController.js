@@ -2,8 +2,7 @@ const { Category } = require('../models/category');
 
 exports.createCategory = async (req, res) => {
   try {
-    console.log('Request Body:', req.body);
-    const { name, description, status, image, url, is_include_top_nav } = req.body;
+   const { name, description, status, image, url, is_include_top_nav } = req.body;
     const newCategory = await Category.create({ name, description, status, image, url, is_include_top_nav });
     res.status(201).json({ message: 'Category created successfully', category: newCategory });
   } catch (err) {
