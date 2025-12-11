@@ -33,13 +33,9 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', heroBannerRoutes);

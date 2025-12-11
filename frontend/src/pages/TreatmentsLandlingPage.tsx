@@ -88,69 +88,74 @@ export default function TreatmentsLandingPage() {
   }, [diseases]);
 
   return (
-    <div>
-      <Header />
-      <TreatmentHeader title="Treatments In India at Low Cost" />
+  <>
+  <header>
+    <Header />
+    <TreatmentHeader title="Treatments In India at Low Cost" />
+  </header>
 
-      <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
+  <nav>
+    <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
+  </nav>
 
-      <div className="w-full bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          {loading ? (
-            <p className="text-center text-lg font-semibold">Loading...</p>
-          ) : (
-            diseases.map((disease, index) => (
-              <div
-                key={disease.id}
-                ref={(el) => (sectionRefs.current[disease.slug] = el)}
-                data-slug={disease.slug}
-                className="mb-24 py-16 rounded-2xl"
-                // className={`mb-24 py-16 rounded-2xl ${
-                //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
-                // }`}
-              >
-                <div
-                  className={`flex flex-col-reverse lg:flex-row items-center gap-12 ${
-                    index % 2 !== 0 ? "lg:flex-row-reverse" : ""
-                  }`}
+  <main className="w-full bg-white py-2">
+    <section className="max-w-7xl mx-auto px-4">
+
+      {loading ? (
+        <p className="text-center text-lg font-semibold">Loading...</p>
+      ) : (
+        diseases.map((disease, index) => (
+          <article
+            key={disease.id}
+            ref={(el) => (sectionRefs.current[disease.slug] = el)}
+            data-slug={disease.slug}
+            className="mb-2 py-4 rounded-2xl"
+          >
+            <section
+              className={`flex flex-col-reverse lg:flex-row items-center gap-12 ${
+                index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+              }`}
+            >
+              <figure className="w-full lg:w-1/2 flex justify-center">
+                <img
+                  src={`http://127.0.0.1:5001${disease.image}`}
+                  alt={disease.name}
+                  className="rounded-2xl w-full max-w-[430px] object-cover shadow-lg"
+                />
+              </figure>
+
+              <section className="w-full lg:w-1/2">
+                <h2
+                  className="text-3xl font-bold mb-4 cursor-pointer hover:text-orange-500"
+                  onClick={() => handleDiseaseNavigate(disease.slug)}
                 >
-                  <div className="w-full lg:w-1/2 flex justify-center">
-                    <img
-                      src={`http://127.0.0.1:5001${disease.image}`}
-                      alt={disease.name}
-                      className="rounded-2xl w-full max-w-[430px] object-cover shadow-lg"
-                    />
-                  </div>
+                  {disease.name}
+                </h2>
 
-                  <div className="w-full lg:w-1/2">
-                    <h2
-                      className="text-3xl font-bold mb-4 cursor-pointer hover:text-orange-500"
-                      onClick={() => handleDiseaseNavigate(disease.slug)}
+                <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-3 gap-x-4">
+                  {disease.treatments.map((treat) => (
+                    <p
+                      key={treat.id}
+                      onClick={() => handleNavigate(treat.slug)}
+                      className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
                     >
-                      {disease.name}
-                    </h2>
+                      {treat.name}
+                    </p>
+                  ))}
+                </section>
+              </section>
+            </section>
+          </article>
+        ))
+      )}
 
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-3 gap-x-4">
-                      {disease.treatments.map((treat) => (
-                        <p
-                          key={treat.id}
-                          onClick={() => handleNavigate(treat.slug)}
-                          className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
-                        >
-                          {treat.name}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+    </section>
+  </main>
 
-      <Footer />
-    </div>
+  <footer>
+    <Footer />
+  </footer>
+</>
+
   );
 }

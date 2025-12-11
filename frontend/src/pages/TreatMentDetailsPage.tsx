@@ -40,115 +40,135 @@ export default function TreatmentDetailsPage() {
   return (
     <div className="bg-white">
       <Header />
+      <main className="bg-white">
 
-      <div className="w-full">
-        <Breadcrumb title={treatment?.name} />
-      </div>
+        <header>
+          <Header />
+        </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+        <nav className="w-full">
+          <Breadcrumb title={treatment?.name} />
+        </nav>
 
-        {/* STATIC OVERVIEW SECTION (MATCHING YOUR SCREENSHOT) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-20">
-          <div>
-           <img
-              src={`http://127.0.0.1:5001${treatment.image}`}
-              alt={treatment.name}
-              className="rounded-xl shadow-lg w-full max-w-md"
-            />
-          </div>
+        <article className="max-w-6xl mx-auto px-4 py-12">
 
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900">Overview</h2>
-            <div className="w-12 h-1 bg-green-500 rounded mt-2 mb-6"></div>
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-20">
 
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              Having cancer is one of the biggest fears for humans because most
-              people lose their lives to cancer. In cancer disease, the body
-              develops abnormal cells that spread to other parts of the body.
-              When a patient suffers from cancer, the patient experiences
-              various symptoms including unexplained weight loss, fatigue,
-              severe pain, and many more. So, patients must seek cancer
-              treatment.
-            </p>
+            <figure>
+              <img
+                src={`http://127.0.0.1:5001${treatment.image}`}
+                alt={treatment.name}
+                className="rounded-xl shadow-lg w-full max-w-md"
+              />
+            </figure>
 
-            <p className="text-gray-700 leading-relaxed text-lg">
-              We know that receiving a cancer diagnosis can be enormous. So, if
-              people face these diseases, they have to choose the best
-              healthcare provider. At Aushmita, we have partnered with the best
-              cancer treatment hospitals and oncologists around the world. Our
-              medical network team provides cancer treatment options according
-              to the patient’s needs.
-            </p>
-              <div className="flex gap-4 mt-8">
-              <button
-                onClick={() => setOpenModal(true)}
-                className="bg-[#F0A324] hover:bg-orange-500 text-black font-semibold px-6 py-2 rounded-lg transition"
-              >
-                Book An Appointment
-              </button>
+            <section>
+              <h1 className="text-3xl font-bold text-gray-900">Overview</h1>
+              <hr className="w-12 h-1 bg-green-500 rounded mt-2 mb-6" />
 
-              <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
-                Chat Now
-              </button>
-            </div>
-          </div>
-        </div>
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                Having cancer is one of the biggest fears for humans because most
+                people lose their lives to cancer. In cancer disease...
+              </p>
 
-        {/* OTHER STATIC SECTIONS */}
-        <div className="text-gray-800 space-y-8">
+              <p className="text-gray-700 leading-relaxed text-lg">
+                We know that receiving a cancer diagnosis can be enormous...
+              </p>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-3">Types of Bile Duct Cancer</h2>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Intrahepatic bile duct cancer</li>
-              <li>Extrahepatic bile duct cancer</li>
-            </ul>
+              <aside className="flex gap-4 mt-8">
+                <button
+                  onClick={() => setOpenModal(true)}
+                  className="bg-[#F0A324] hover:bg-orange-500 text-black font-semibold px-6 py-2 rounded-lg transition"
+                >
+                  Book An Appointment
+                </button>
+
+                <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
+                  Chat Now
+                </button>
+              </aside>
+            </section>
+
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-3">Symptoms of Bile Duct Cancer</h2>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Jaundice (yellowing of skin)</li>
-              <li>Dark-colored urine</li>
-              <li>Unexplained weight loss</li>
-              <li>Abdominal pain</li>
-              <li>Fever</li>
-              <li>Nausea and vomiting</li>
-            </ul>
+          <section className="text-gray-800 space-y-8">
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">Types of Bile Duct Cancer</h2>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>Intrahepatic bile duct cancer</li>
+                <li>Extrahepatic bile duct cancer</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">Symptoms of Bile Duct Cancer</h2>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>Jaundice (yellowing of skin)</li>
+                <li>Dark-colored urine</li>
+                <li>Unexplained weight loss</li>
+                <li>Abdominal pain</li>
+                <li>Fever</li>
+                <li>Nausea and vomiting</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">Diagnosis</h2>
+              <p className="leading-relaxed text-lg">
+                Diagnosis may include imaging tests, blood tests, biopsies...
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">Treatment Options</h2>
+              <p className="leading-relaxed text-lg mb-3">
+                The treatment plan depends on the type and stage of cancer...
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>Surgery</li>
+                <li>Radiation therapy</li>
+                <li>Chemotherapy</li>
+                <li>Targeted therapy</li>
+                <li>Palliative care</li>
+              </ul>
+            </section>
+
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-3">Diagnosis</h2>
-            <p className="leading-relaxed text-lg">
-              Diagnosis may include imaging tests, blood tests, biopsies and
-              other clinical evaluations to understand the stage and severity
-              of the disease.
-            </p>
-          </section>
+        </article>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-3">Treatment Options</h2>
-            <p className="leading-relaxed text-lg mb-3">
-              The treatment plan depends on the type and stage of cancer.
-              Common treatments include:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Surgery</li>
-              <li>Radiation therapy</li>
-              <li>Chemotherapy</li>
-              <li>Targeted therapy</li>
-              <li>Palliative care</li>
-            </ul>
-          </section>
+        <aside>
+          <OtherServices
+            diseaseId={treatment.disease_id}
+            currentSlug={treatment.slug}
+          />
+        </aside>
 
-        </div>
-      </div>
+        <section>
+          <ConsultationForm />
+        </section>
 
-      <OtherServices diseaseId={treatment.disease_id} currentSlug={treatment.slug} />
-      <ConsultationForm />
-      <TestimonialSlider />
-      <BlogSection />
-      <Footer />
+        <section>
+          <TestimonialSlider />
+        </section>
+
+        <section>
+          <BlogSection />
+        </section>
+
+        <footer>
+          <Footer />
+        </footer>
+
+        <ModalAppointment
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+        />
+
+      </main>
+
+     
 
       <ModalAppointment
         isOpen={openModal}

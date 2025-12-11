@@ -77,6 +77,8 @@ const DiseaseDetailsPage = () => {
 
           <div>
             <h2 className="text-2xl font-semibold mb-3">Overview</h2>
+            {/* <div dangerouslySetInnerHTML={{ __html: disease.description_html }} /> */}
+
             <p className="text-gray-700 leading-relaxed mb-4">
               Having cancer is one of the biggest fears for humans because most people lose their lives to cancer. In cancer disease, the body develops abnormal cells that spread to other parts of the body. When a patient suffers from cancer, the patient experiences various symptoms including unexplained weight loss, fatigue, severe pain, and many more. So, patients must seek cancer treatment.
               We know that receiving a cancer diagnosis can be enormous. So, if people face these diseases, they have to choose the best healthcare provider. At Aushmita, we have partnered with the best cancer treatment hospitals and oncologists around the world. Our medical network team provides cancer treatment options according to the patient’s needs.

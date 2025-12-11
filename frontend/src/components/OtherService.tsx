@@ -43,10 +43,10 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
   if (!services.length) return null;
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-3">
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-xl md:text-2xl font-semibold text-left text-[#1a1a1a] mb-10 font-poppins">
-          Other Related Treatments
+          Our Other Services
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
