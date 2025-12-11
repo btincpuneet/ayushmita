@@ -12,7 +12,6 @@ const {
 
 const router = express.Router();
 
-// Store file in memory so we get binary data
 const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {

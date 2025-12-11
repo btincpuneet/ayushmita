@@ -147,10 +147,12 @@ const TestimonialSlider: React.FC = () => {
 
                       <h3
                         style={{
-                          fontFamily: "Inter",
-                          fontWeight: 600,
-                          fontSize: "25px",
+                          fontFamily: "Ubuntu",
+                          fontWeight: 700,
+                          fontStyle: "normal",
+                          fontSize: "20px",
                           lineHeight: "150%",
+                          letterSpacing: "0.5%",
                           textAlign: "center",
                         }}
                       >
@@ -167,8 +169,10 @@ const TestimonialSlider: React.FC = () => {
                         style={{
                           fontFamily: "Inter",
                           fontWeight: 400,
+                          fontStyle: "normal",
                           fontSize: "20px",
                           lineHeight: "150%",
+                          letterSpacing: "0%",
                           textAlign: "center",
                         }}
                       >

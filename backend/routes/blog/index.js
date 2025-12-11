@@ -1,20 +1,32 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const blogController = require('../../controllers/blogController');
+const blogController = require("../../controllers/blogController");
+const multer = require("multer");
 
-// Create Blog
-router.post('/blogs', blogController.createBlog);
+// Multer setup (same as doctor)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only images allowed"), false);
+    }
+    cb(null, true);
+  },
+});
+
+// Create Blog with image
+router.post("/blogs", upload.single("image"), blogController.createBlog);
 
 // Get all Blogs
-router.get('/blogs', blogController.getAllBlogs);
+router.get("/blogs", blogController.getAllBlogs);
 
-// Get single Blog
-router.get('/blogs/:id', blogController.getBlogById);
+// Get Blog by ID
+router.get("/blogs/:id", blogController.getBlogById);
 
-// Update Blog
-router.put('/blogs/:id', blogController.updateBlog);
+// Update Blog (with image optional)
+router.put("/blogs/:id", upload.single("image"), blogController.updateBlog);
 
 // Delete Blog
-router.delete('/blogs/:id', blogController.deleteBlog);
+router.delete("/blogs/:id", blogController.deleteBlog);
 
 module.exports = router;

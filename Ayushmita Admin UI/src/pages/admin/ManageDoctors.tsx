@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-const API_URL = "http://127.0.0.1:5001/api/doctors"; 
+const API_URL = "http://127.0.0.1:5001/api/doctors";
 const BASE_URL = "http://127.0.0.1:5001";
 
 const ManageDoctors = () => {
@@ -76,9 +76,8 @@ const ManageDoctors = () => {
       image: null,
     });
 
-    // Convert blob → base64 URL
-    if (item.image_base64) {
-      setPreview(`data:image/png;base64,${item.image_base64}`);
+    if (item.image_url) {
+      setPreview(`${BASE_URL}${item.image_url}`);
     }
 
     setOpen(true);
@@ -93,10 +92,14 @@ const ManageDoctors = () => {
 
     try {
       if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, formData);
+        await axios.put(`${API_URL}/${editing.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Doctor updated!");
       } else {
-        await axios.post(API_URL, formData);
+        await axios.post(API_URL, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Doctor created!");
       }
 
@@ -147,11 +150,11 @@ const ManageDoctors = () => {
             {doctors.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className="p-3">
-                  {item.image_base64 ? (
+                  {item.image_url ? (
                     <img
-                      src={`data:image/png;base64,${item.image_base64}`}
+                      src={`${BASE_URL}${item.image_url}`}
                       className="w-20 h-20 object-cover rounded"
-                      alt=""
+                      alt={item.name}
                     />
                   ) : (
                     <div className="w-20 h-20 bg-gray-200 rounded" />
@@ -195,9 +198,7 @@ const ManageDoctors = () => {
         </table>
 
         {doctors.length === 0 && (
-          <p className="text-center py-6 text-gray-600">
-            No doctors found.
-          </p>
+          <p className="text-center py-6 text-gray-600">No doctors found.</p>
         )}
       </div>
 
@@ -260,8 +261,7 @@ const ManageDoctors = () => {
                   setForm({ ...form, image: file });
 
                   if (file) {
-                    const url = URL.createObjectURL(file);
-                    setPreview(url);
+                    setPreview(URL.createObjectURL(file));
                   }
                 }}
               />

@@ -29,17 +29,17 @@ export function AdminSidebar() {
         </button>
       </div>
 
-      {/* ONLY MENU ITEM */}
+      {/* MENU ITEMS */}
       <nav className="flex-1 space-y-1 p-4">
+
+        {/* Manage Categories */}
         <NavLink
           to="/admin"
           end
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -48,14 +48,13 @@ export function AdminSidebar() {
           {!collapsed && <span>Manage Categories</span>}
         </NavLink>
 
+        {/* Promo Slider */}
         <NavLink
           to="/admin/promo-slider"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -63,14 +62,14 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Promo Slider</span>}
         </NavLink>
+
+        {/* Hero Banner */}
         <NavLink
           to="/admin/hero-banner"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -78,14 +77,14 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Hero Banner</span>}
         </NavLink>
-         <NavLink
+
+        {/* Doctors */}
+        <NavLink
           to="/admin/manage-doctor"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -93,29 +92,29 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Doctors</span>}
         </NavLink>
+
+        {/* Partner Hospitals */}
         <NavLink
           to="/admin/topartnerDetails"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
         >
           <FolderOpen size={20} />
-          {!collapsed && <span>Manage Hospitals</span>}
+          {!collapsed && <span>Manage Partner Hospitals</span>}
         </NavLink>
-         <NavLink
+
+        {/* Testimonials */}
+        <NavLink
           to="/admin/testimonials"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -123,14 +122,14 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Testimonials</span>}
         </NavLink>
-         <NavLink
+
+        {/* Disease */}
+        <NavLink
           to="/admin/manage-disease"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -138,14 +137,14 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Disease</span>}
         </NavLink>
-         <NavLink
+
+        {/* Treatment */}
+        <NavLink
           to="/admin/manage-treatment"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-300 hover:bg-white/10",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
               collapsed && "justify-center"
             )
           }
@@ -153,11 +152,23 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Treatment</span>}
         </NavLink>
+
+          <NavLink
+          to="/admin/manage-blogs"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Blogs</span>}
+        </NavLink>
       </nav>
 
-
-
-      {/* BOTTOM USER & LOGOUT */}
+      {/* USER PANEL + LOGOUT */}
       <div className="p-4 border-t border-white/10">
         {!collapsed && user && (
           <div className="mb-3">

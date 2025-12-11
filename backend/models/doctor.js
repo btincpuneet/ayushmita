@@ -24,16 +24,11 @@ const Doctor = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // experience_years: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true,
-    // },
 
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
 
     image_url: {
       type: DataTypes.STRING,

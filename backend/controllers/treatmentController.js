@@ -119,19 +119,27 @@ const updateTreatment = async (req, res) => {
     const { id } = req.params;
 
     const treatment = await Treatment.findByPk(id);
-    if (!treatment)
+    if (!treatment) {
       return res.status(404).json({ success: false, message: "Not found" });
+    }
 
     const data = req.body;
-    if (req.file) data.image = `/uploads/treatments/${req.file.filename}`;
+
+    if (req.file) {
+      data.image = `/uploads/treatments/${req.file.filename}`;
+    } else {
+      delete data.image; 
+    }
 
     await treatment.update(data);
 
     return res.json({ success: true, treatment });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
 
 const deleteTreatment = async (req, res) => {
   try {

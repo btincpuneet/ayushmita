@@ -104,40 +104,65 @@ export default function TreatmentsLandingPage() {
                 key={disease.id}
                 ref={(el) => (sectionRefs.current[disease.slug] = el)}
                 data-slug={disease.slug}
-                className="mb-24 py-16 rounded-2xl"
-                // className={`mb-24 py-16 rounded-2xl ${
-                //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
-                // }`}
+                className="mb-20 rounded-2xl"
+              // className={`mb-24 py-16 rounded-2xl ${
+              //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
+              // }`}
               >
                 <div
-                  className={`flex flex-col-reverse lg:flex-row items-center gap-12 ${
-                    index % 2 !== 0 ? "lg:flex-row-reverse" : ""
-                  }`}
+                  className={`flex flex-col-reverse lg:flex-row items-center ${index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-full lg:w-1/2 flex justify-center">
                     <img
                       src={`http://127.0.0.1:5001${disease.image}`}
                       alt={disease.name}
-                      className="rounded-2xl w-full max-w-[430px] object-cover shadow-lg"
+                      className="rounded-xl w-full max-w-[370px] h-[370px] object-cover"
                     />
                   </div>
 
-                  <div className="w-full lg:w-1/2">
+                  <div className="w-full lg:w-[100%]">
                     <h2
-                      className="text-3xl font-bold mb-4 cursor-pointer hover:text-orange-500"
+                      className="heading-main"
+                       style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 700,
+    fontStyle: "bold",
+    fontSize: "32px",
+    lineHeight: "100%",
+    letterSpacing: "0%",
+  }}
                       onClick={() => handleDiseaseNavigate(disease.slug)}
                     >
                       {disease.name}
                     </h2>
+<span
+  style={{
+    width: "32px",
+    height: "4px",
+    background: "linear-gradient(to right, #f1a339, #7ac142)",
+    borderRadius: "5px",
+    display: "inline-block",
+  }}
+></span>
 
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-3 gap-x-4">
+
+                    <div className="grid grid-cols-3 grid-flow-row">
+
                       {disease.treatments.map((treat) => (
                         <p
                           key={treat.id}
                           onClick={() => handleNavigate(treat.slug)}
                           className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
-                        >
+                          style={{
+                            fontFamily: "Ubuntu",
+                            fontWeight: 400,
+                            fontStyle: "normal",
+                            fontSize: "14px",
+                            lineHeight: "30px",
+                            letterSpacing: "0%"
+                          }}
+                        ><span className="text-[18px] mx-2 leading-[0]">•</span>
                           {treat.name}
                         </p>
                       ))}

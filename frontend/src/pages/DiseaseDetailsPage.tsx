@@ -65,19 +65,50 @@ const DiseaseDetailsPage = () => {
         <Breadcrumb title={disease?.name} />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div>
+      <div className="max-w-7xl mx-auto px-4 mt-10">
+        <div className="flex flex-col-reverse lg:flex-row items-center ">
+          <div class="w-full lg:w-1/2 flex justify-center">
             <img
               src={`http://127.0.0.1:5001${disease.image}`}
               alt={disease.name}
-              className="rounded-xl w-full shadow-md object-cover"
+              className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
           </div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">Overview</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
+          <div className="w-full lg:w-[100%]">
+            <h2
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 700,
+                fontStyle: "bold",
+                fontSize: "28px",
+                lineHeight: "100%",
+                letterSpacing: "0%"
+              }}
+            >
+              Overview
+            </h2>
+            <span
+              style={{
+                width: "32px",
+                height: "4px",
+                background: "linear-gradient(to right, #f1a339, #7ac142)",
+                borderRadius: "5px",
+                display: "inline-block"
+              }}
+            ></span>
+
+            <p
+              className="mb-4"
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 300,
+                fontStyle: "normal",
+                fontSize: "16px",
+                lineHeight: "27px",
+                letterSpacing: "0%",
+              }}
+            >
               Having cancer is one of the biggest fears for humans because most people lose their lives to cancer. In cancer disease, the body develops abnormal cells that spread to other parts of the body. When a patient suffers from cancer, the patient experiences various symptoms including unexplained weight loss, fatigue, severe pain, and many more. So, patients must seek cancer treatment.
               We know that receiving a cancer diagnosis can be enormous. So, if people face these diseases, they have to choose the best healthcare provider. At Aushmita, we have partnered with the best cancer treatment hospitals and oncologists around the world. Our medical network team provides cancer treatment options according to the patient’s needs.
             </p>
@@ -101,14 +132,25 @@ const DiseaseDetailsPage = () => {
                 />
               </div>
 
-              <p className="mt-3 text-[15px] leading-tight font-medium text-gray-800">
+              <p
+                className="mt-3"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: 500,
+                  fontStyle: "normal",
+                  fontSize: "16px",
+                  lineHeight: "27px",
+                  letterSpacing: "0%",
+                  textAlign: "center",
+                }}
+              >
                 {t.name}
               </p>
             </Link>
           ))}
         </div>
       </div>
-      <div className="max-w-6xl mx-auto px-4 mt-16">
+      <div className="max-w-7xl mx-auto px-4 mt-16">
         <h2 className="text-[22px] font-semibold mb-3">Top Destination for Cancer Treatment Abroad</h2>
         <p className="text-gray-700 leading-7 mb-4">
           We work with top hospitals and cancer centers in the world. Here is the list of the best countries for cancer treatments:

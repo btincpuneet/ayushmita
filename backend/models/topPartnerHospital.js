@@ -12,14 +12,14 @@ const TopPartnerHospital = sequelize.define(
     description: { type: DataTypes.TEXT, allowNull: true },
 
     image_url: {
-      type: DataTypes.BLOB("long"), // Store only 1 image
+      type: DataTypes.STRING,
       allowNull: true,
     },
 
     status: {
       type: DataTypes.STRING,
       defaultValue: "active",
-    }
+    },
   },
   {
     timestamps: false,

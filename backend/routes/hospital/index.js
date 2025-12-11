@@ -18,27 +18,22 @@ const upload = multer({
       return cb(new Error("Only image files allowed"), false);
     }
     cb(null, true);
-  }
+  },
 });
 
-// ===============================
-// BASE ROUTE (from server.js): /api
-// Final endpoint becomes: /api/hospitals
-// ===============================
-
-// CREATE hospital
+// CREATE
 router.post("/hospitals", upload.single("image"), createHospital);
 
-// GET all hospitals
+// GET ALL
 router.get("/hospitals", getAllHospitals);
 
-// GET hospital by id
+// GET BY ID
 router.get("/hospitals/:id", getHospitalById);
 
-// UPDATE hospital
+// UPDATE
 router.put("/hospitals/:id", upload.single("image"), updateHospital);
 
-// DELETE hospital
+// DELETE
 router.delete("/hospitals/:id", deleteHospital);
 
 module.exports = router;
