@@ -40,135 +40,174 @@ export default function TreatmentDetailsPage() {
   return (
     <div className="bg-white">
       <Header />
-      <main className="bg-white">
 
-        <header>
-          <Header />
-        </header>
+      <div className="w-full">
+        <Breadcrumb title={treatment?.name} />
+      </div>
 
-        <nav className="w-full">
-          <Breadcrumb title={treatment?.name} />
-        </nav>
+      <div className="max-w-7xl mx-auto px-4 py-12">
 
-        <article className="max-w-6xl mx-auto px-4 py-12">
+        {/* STATIC OVERVIEW SECTION (MATCHING YOUR SCREENSHOT) */}
+        <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
+          <div className="w-full lg:w-1/2 flex justify-center">
+           <img
+              src={`http://127.0.0.1:5001${treatment.image}`}
+              alt={treatment.name}
+              className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
+            />
+          </div>
 
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-20">
+          <div className="w-full lg:w-[100%]">
+            <h2 
+                style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 700,
+                fontStyle: "bold",
+                fontSize: "28px",
+                lineHeight: "100%",
+                letterSpacing: "0%"
+              }}
+            >Overview</h2>
+ <span
+              style={{
+                width: "32px",
+                height: "4px",
+                background: "linear-gradient(to right, #f1a339, #7ac142)",
+                borderRadius: "5px",
+                display: "inline-block"
+              }}
+            ></span>
+<p
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 300,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "27px",
+    letterSpacing: "0%",
+  }}
+>
+              Having cancer is one of the biggest fears for humans because most
+              people lose their lives to cancer. In cancer disease, the body
+              develops abnormal cells that spread to other parts of the body.
+              When a patient suffers from cancer, the patient experiences
+              various symptoms including unexplained weight loss, fatigue,
+              severe pain, and many more. So, patients must seek cancer
+              treatment.
+            </p>
+<br />
+<p
+  style={{
+    fontFamily: "Ubuntu",
+    fontWeight: 300,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "27px",
+    letterSpacing: "0%",
+  }}
+>
+              We know that receiving a cancer diagnosis can be enormous. So, if
+              people face these diseases, they have to choose the best
+              healthcare provider. At Aushmita, we have partnered with the best
+              cancer treatment hospitals and oncologists around the world. Our
+              medical network team provides cancer treatment options according
+              to the patient’s needs.
+            </p>
+              <div className="flex gap-4 mt-8">
+              <button
+                onClick={() => setOpenModal(true)}
+                className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"
+                style={{
+                     fontFamily: "Ubuntu",
+    fontWeight: 500,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "100%",
+    letterSpacing: "2%",
+                }}
+              >
+                Book An Appointment
+              </button>
 
-            <figure>
-              <img
-                src={`http://127.0.0.1:5001${treatment.image}`}
-                alt={treatment.name}
-                className="rounded-xl shadow-lg w-full max-w-md"
-              />
-            </figure>
+              <button
+  className="bg-[#25CB68] hover:bg-green-600 text-[#FFFFFF]  px-[24px] py-[12px] rounded-lg transition"
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+  }}
+>
+              <span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1226_557)">
+<path d="M7.00001 0C10.8661 0 14 3.1339 14 6.99999C14 10.8661 10.8661 14 7.00001 14C5.76293 14.0021 4.54761 13.6747 3.47901 13.0515L0.00281082 14L0.94921 10.5224C0.325481 9.45344 -0.00215714 8.23761 1.06881e-05 6.99999C1.06881e-05 3.1339 3.13391 0 7.00001 0ZM4.61441 3.71L4.47441 3.7156C4.38389 3.72183 4.29545 3.74561 4.21401 3.7856C4.13811 3.82865 4.0688 3.88241 4.00821 3.9452C3.92421 4.0243 3.87661 4.0929 3.82551 4.1594C3.56659 4.49603 3.42719 4.90932 3.42931 5.334C3.43071 5.677 3.52031 6.0109 3.66031 6.32309C3.94661 6.95449 4.41771 7.62299 5.03931 8.24249C5.18911 8.39159 5.33611 8.54139 5.49431 8.68069C6.26671 9.36067 7.1871 9.85107 8.1823 10.1129L8.5799 10.1738C8.7094 10.1808 8.8389 10.171 8.9691 10.1647C9.17293 10.1539 9.37195 10.0988 9.5522 10.003C9.6438 9.95563 9.73325 9.90425 9.8203 9.84899C9.8203 9.84899 9.84994 9.82893 9.9078 9.78599C10.0023 9.71599 10.0604 9.66629 10.1388 9.58439C10.1976 9.52373 10.2466 9.45326 10.2858 9.37299C10.3404 9.25889 10.395 9.04119 10.4174 8.85989C10.4342 8.72129 10.4293 8.64569 10.4272 8.59879C10.4244 8.52389 10.3621 8.44619 10.2942 8.41329L9.8868 8.23059C9.8868 8.23059 9.2778 7.96529 8.9054 7.79589C8.86642 7.77892 8.82467 7.7692 8.7822 7.76719C8.73431 7.76218 8.68589 7.76753 8.64024 7.78287C8.59458 7.7982 8.55276 7.82318 8.5176 7.85609C8.5141 7.85469 8.4672 7.89459 7.9611 8.50779C7.93206 8.54683 7.89204 8.57633 7.84617 8.59253C7.80029 8.60874 7.75063 8.61092 7.7035 8.59879C7.65788 8.58663 7.6132 8.57119 7.5698 8.55259C7.48301 8.51619 7.45291 8.50219 7.3934 8.47699C6.99152 8.30193 6.61951 8.06503 6.29091 7.77489C6.20271 7.69789 6.12081 7.61389 6.03681 7.53269C5.76143 7.26894 5.52143 6.97058 5.32281 6.64509L5.28151 6.57859C5.25229 6.53365 5.22833 6.4855 5.21011 6.43509C5.18351 6.33219 5.25281 6.2496 5.25281 6.2496C5.25281 6.2496 5.42291 6.0634 5.50201 5.96259C5.57901 5.86459 5.64411 5.7694 5.68611 5.7015C5.76871 5.5685 5.79461 5.432 5.75121 5.3263C5.55521 4.8475 5.35267 4.37126 5.14361 3.8976C5.10231 3.8038 4.97981 3.7366 4.86851 3.7233C4.83071 3.71863 4.79291 3.7149 4.75511 3.7121C4.66112 3.70671 4.56687 3.70764 4.47301 3.7149L4.61441 3.71Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_1226_557">
+<rect width="14" height="14" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</span>  Chat Now
+              </button>
+            </div>
+          </div>
+        </div>
 
-            <section>
-              <h1 className="text-3xl font-bold text-gray-900">Overview</h1>
-              <hr className="w-12 h-1 bg-green-500 rounded mt-2 mb-6" />
+        {/* OTHER STATIC SECTIONS */}
+        <div className="text-gray-800 space-y-8">
 
-              <p className="text-gray-700 leading-relaxed text-lg mb-4">
-                Having cancer is one of the biggest fears for humans because most
-                people lose their lives to cancer. In cancer disease...
-              </p>
-
-              <p className="text-gray-700 leading-relaxed text-lg">
-                We know that receiving a cancer diagnosis can be enormous...
-              </p>
-
-              <aside className="flex gap-4 mt-8">
-                <button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-[#F0A324] hover:bg-orange-500 text-black font-semibold px-6 py-2 rounded-lg transition"
-                >
-                  Book An Appointment
-                </button>
-
-                <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
-                  Chat Now
-                </button>
-              </aside>
-            </section>
-
+          <section>
+            <h2 className="text-2xl font-semibold mb-3">Types of Bile Duct Cancer</h2>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Intrahepatic bile duct cancer</li>
+              <li>Extrahepatic bile duct cancer</li>
+            </ul>
           </section>
 
-          <section className="text-gray-800 space-y-8">
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">Types of Bile Duct Cancer</h2>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Intrahepatic bile duct cancer</li>
-                <li>Extrahepatic bile duct cancer</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">Symptoms of Bile Duct Cancer</h2>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Jaundice (yellowing of skin)</li>
-                <li>Dark-colored urine</li>
-                <li>Unexplained weight loss</li>
-                <li>Abdominal pain</li>
-                <li>Fever</li>
-                <li>Nausea and vomiting</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">Diagnosis</h2>
-              <p className="leading-relaxed text-lg">
-                Diagnosis may include imaging tests, blood tests, biopsies...
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">Treatment Options</h2>
-              <p className="leading-relaxed text-lg mb-3">
-                The treatment plan depends on the type and stage of cancer...
-              </p>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Surgery</li>
-                <li>Radiation therapy</li>
-                <li>Chemotherapy</li>
-                <li>Targeted therapy</li>
-                <li>Palliative care</li>
-              </ul>
-            </section>
-
+          <section>
+            <h2 className="text-2xl font-semibold mb-3">Symptoms of Bile Duct Cancer</h2>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Jaundice (yellowing of skin)</li>
+              <li>Dark-colored urine</li>
+              <li>Unexplained weight loss</li>
+              <li>Abdominal pain</li>
+              <li>Fever</li>
+              <li>Nausea and vomiting</li>
+            </ul>
           </section>
 
-        </article>
+          <section>
+            <h2 className="text-2xl font-semibold mb-3">Diagnosis</h2>
+            <p className="leading-relaxed text-lg">
+              Diagnosis may include imaging tests, blood tests, biopsies and
+              other clinical evaluations to understand the stage and severity
+              of the disease.
+            </p>
+          </section>
 
-        <aside>
-          <OtherServices
-            diseaseId={treatment.disease_id}
-            currentSlug={treatment.slug}
-          />
-        </aside>
+          <section>
+            <h2 className="text-2xl font-semibold mb-3">Treatment Options</h2>
+            <p className="leading-relaxed text-lg mb-3">
+              The treatment plan depends on the type and stage of cancer.
+              Common treatments include:
+            </p>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Surgery</li>
+              <li>Radiation therapy</li>
+              <li>Chemotherapy</li>
+              <li>Targeted therapy</li>
+              <li>Palliative care</li>
+            </ul>
+          </section>
 
-        <section>
-          <ConsultationForm />
-        </section>
+        </div>
+      </div>
 
-        <section>
-          <TestimonialSlider />
-        </section>
-
-        <section>
-          <BlogSection />
-        </section>
-
-        <footer>
-          <Footer />
-        </footer>
-
-        <ModalAppointment
-          isOpen={openModal}
-          onClose={() => setOpenModal(false)}
-        />
-
-      </main>
-
-     
+      <OtherServices diseaseId={treatment.disease_id} currentSlug={treatment.slug} />
+      <ConsultationForm />
+      <TestimonialSlider />
+      <BlogSection />
+      <Footer />
 
       <ModalAppointment
         isOpen={openModal}
