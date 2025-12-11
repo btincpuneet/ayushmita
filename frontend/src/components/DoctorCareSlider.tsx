@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const providers = [
   {
+
     name: "Chriss Taylor",
     specialty: "Internal Medicine",
     image:
