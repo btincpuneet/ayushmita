@@ -25,16 +25,27 @@ export default function BreadCrumb({ onTabClick, activeTab, tabs }: Props) {
   const resolvedTabs = tabs && tabs.length ? tabs : DEFAULT_TABS;
 
   return (
-    <div className="bg-[#1c2b08] text-white w-full">
+    <div className="bg-[#2A6506] w-full">
       <Container>
-        <div className="flex items-center gap-8 overflow-x-auto py-3 text-sm font-medium">
+        <div
+          className="flex items-center gap-8 py-3"
+          style={{
+            fontFamily: "Ubuntu",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "13px",
+            lineHeight: "30px",
+            letterSpacing: "0%",
+            color: "#FFFFFF",
+          }}
+        >
+
           {resolvedTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => onTabClick(tab)}
-              className={`whitespace-nowrap transition ${
-                activeTab === tab ? "text-yellow-300 font-semibold" : "hover:text-yellow-300"
-              }`}
+              className={`whitespace-nowrap transition ${activeTab === tab ? "text-yellow-300 font-semibold" : "hover:text-yellow-300"
+                }`}
             >
               {tab}
             </button>
