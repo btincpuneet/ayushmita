@@ -95,7 +95,7 @@ export function AdminSidebar() {
 
         {/* Partner Hospitals */}
         <NavLink
-          to="/admin/partner-hospitals"
+          to="/admin/topartnerDetails"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",

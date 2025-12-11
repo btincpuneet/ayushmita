@@ -168,12 +168,13 @@ export default function ManageTopPartnerHospitals() {
                   <td className="p-2 border">
                     {h.image_url ? (
                       <img
-                        src={convertImage(h.image_url)}
+                        src={`http://127.0.0.1:5001${h.image_url}`}
                         className="h-12 rounded"
                       />
                     ) : (
                       "No Image"
                     )}
+
                   </td>
 
                   <td className="p-2 border">{h.name}</td>
