@@ -1,65 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import ReactQuill from "react-quill";
 
-import axios from "axios";
-
-interface Hospital {
-  id?: number;
-  name: string;
-  country: string;
-  city: string;
-  description?: string;
-  status: string;
-  image_url?: any;
-}
+const API_URL = "http://127.0.0.1:5001/api/hospitals";
 
 export default function ManageTopPartnerHospitals() {
-  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [hospitals, setHospitals] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<number | null>(null);
 
   const [form, setForm] = useState<any>({
     name: "",
     country: "",
     city: "",
-    description: "",
-    status: "active",
-    image: null,
+    address: "",
+    founded_year: "",
+    hospital_beds: "",
+    description_html: "",
   });
 
-  const [editId, setEditId] = useState<number | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
-  const API = "http://127.0.0.1:5001/api/hospitals";
-
-  // ===============================
-  // LOAD HOSPITALS
-  // ===============================
+  // Fetch list
   const fetchHospitals = async () => {
     try {
-      const res = await axios.get(API);
-      let list = res?.data?.data;
-
-      // ensure array format
-      if (list && !Array.isArray(list)) list = [list];
-
-      setHospitals(list || []);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      setHospitals([]);
+      const res = await axios.get(API_URL);
+      setHospitals(res.data.data || []);
+    } catch {
+      toast.error("Failed to load hospitals");
     }
   };
 
@@ -67,202 +45,178 @@ export default function ManageTopPartnerHospitals() {
     fetchHospitals();
   }, []);
 
-  // ===============================
-  // OPEN CREATE
-  // ===============================
-  const openCreate = () => {
-    setEditId(null);
+  // Input handler
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Open create modal
+  const handleCreate = () => {
+    setEditing(null);
     setForm({
       name: "",
       country: "",
       city: "",
-      description: "",
-      status: "active",
-      image: null,
+      address: "",
+      founded_year: "",
+      hospital_beds: "",
+      description_html: "",
     });
+    setFile(null);
     setOpen(true);
   };
 
-  // ===============================
-  // SUBMIT CREATE / UPDATE
-  // ===============================
-  const handleSubmit = async () => {
-    const fd = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      if (value) fd.append(key, value as any);
-    });
-
-    if (editId) {
-      await axios.put(`${API}/${editId}`, fd);
-    } else {
-      await axios.post(API, fd);
-    }
-
-    setOpen(false);
-    fetchHospitals();
-  };
-
-  // ===============================
-  // DELETE
-  // ===============================
-  const handleDelete = async (id: number) => {
-    await axios.delete(`${API}/${id}`);
-    fetchHospitals();
-  };
-
-  // ===============================
-  // OPEN EDIT
-  // ===============================
-  const handleEdit = (h: Hospital) => {
-    setEditId(h.id!);
+  // Edit existing hospital
+  const handleEdit = (item: any) => {
+    setEditing(item.id);
     setForm({
-      name: h.name,
-      country: h.country,
-      city: h.city,
-      description: h.description,
-      status: h.status,
-      image: null,
+      name: item.name,
+      country: item.country,
+      city: item.city,
+      address: item.address,
+      founded_year: item.founded_year || "",
+      hospital_beds: item.hospital_beds || "",
+      description_html: item.description_html || "",
     });
+    setFile(null);
     setOpen(true);
   };
 
-  // Convert buffer → base64
-  const convertImage = (buffer: any) => {
-    if (!buffer) return null;
-    if (typeof buffer === "string") return buffer;
+  // Delete
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      toast.success("Deleted successfully");
+      fetchHospitals();
+    } catch {
+      toast.error("Failed to delete");
+    }
+  };
 
-    const base64String = btoa(
-      new Uint8Array(buffer.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ""
-      )
-    );
+  // Submit (create/update)
+  const handleSubmit = async () => {
+    try {
+      const fd = new FormData();
+      Object.entries(form).forEach(([key, value]) =>
+        fd.append(key, value as string)
+      );
 
-    return `data:image/png;base64,${base64String}`;
+      if (file) fd.append("image", file);
+
+      if (editing) {
+        await axios.put(`${API_URL}/${editing}`, fd);
+        toast.success("Updated successfully");
+      } else {
+        await axios.post(API_URL, fd);
+        toast.success("Created successfully");
+      }
+
+      setOpen(false);
+      fetchHospitals();
+    } catch {
+      toast.error("Failed to save data");
+    }
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Manage Top Partner Hospitals</h1>
-        <Button onClick={openCreate}>+ Add Hospital</Button>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-bold">Manage Top Partner Hospitals</h1>
+        <Button onClick={handleCreate}>Add Hospital</Button>
       </div>
 
-      <Card>
-        <CardContent className="p-4">
-          <table className="w-full text-left border">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 border">Image</th>
-                <th className="p-2 border">Name</th>
-                <th className="p-2 border">Country</th>
-                <th className="p-2 border">City</th>
-                <th className="p-2 border">Status</th>
-                <th className="p-2 border">Actions</th>
-              </tr>
-            </thead>
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2 border">Image</th>
+              <th className="p-2 border">Name</th>
+              <th className="p-2 border">Location</th>
+              <th className="p-2 border">Beds</th>
+              <th className="p-2 border">Founded</th>
+              <th className="p-2 border">Actions</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {hospitals.map((h) => (
+          <tbody>
+            {hospitals.length > 0 ? (
+              hospitals.map((h) => (
                 <tr key={h.id} className="border">
                   <td className="p-2 border">
-                    {h.image_url ? (
-                      <img
-                        src={`http://127.0.0.1:5001${h.image_url}`}
-                        className="h-12 rounded"
-                      />
-                    ) : (
-                      "No Image"
-                    )}
-
+                    <img
+                      src={`http://127.0.0.1:5001${h.image_url}`}
+                      className="w-16 h-16 object-cover rounded"
+                    />
                   </td>
 
-                  <td className="p-2 border">{h.name}</td>
-                  <td className="p-2 border">{h.country}</td>
-                  <td className="p-2 border">{h.city}</td>
-                  <td className="p-2 border">{h.status}</td>
+                  <td className="p-2 border font-semibold">{h.name}</td>
+                  <td className="p-2 border">{h.city}, {h.country}</td>
+                  <td className="p-2 border text-center">{h.hospital_beds || "-"}</td>
+                  <td className="p-2 border text-center">{h.founded_year || "-"}</td>
 
-                  <td className="p-2 border flex gap-2">
-                    <Button size="sm" onClick={() => handleEdit(h)}>
-                      Edit
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDelete(h.id!)}
-                    >
-                      Delete
-                    </Button>
+                  <td className="p-2 border">
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={() => handleEdit(h)}>Edit</Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(h.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="p-4 text-center text-gray-500">
+                  No hospitals found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
+      {/* Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editId ? "Edit Hospital" : "Add Hospital"}</DialogTitle>
+            <DialogTitle>{editing ? "Edit Hospital" : "Add Hospital"}</DialogTitle>
           </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              placeholder="Hospital Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+          <div className="space-y-4">
+            <Input name="name" placeholder="Hospital Name" value={form.name} onChange={handleChange} />
 
-            <Input
-              placeholder="Country"
-              value={form.country}
-              onChange={(e) => setForm({ ...form, country: e.target.value })}
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <Input name="country" placeholder="Country" value={form.country} onChange={handleChange} />
+              <Input name="city" placeholder="City" value={form.city} onChange={handleChange} />
+            </div>
 
-            <Input
-              placeholder="City"
-              value={form.city}
-              onChange={(e) => setForm({ ...form, city: e.target.value })}
-            />
+            <Input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
 
-            <Textarea
-              placeholder="Description"
-              className="col-span-2"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-            />
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium">Image</label>
-              <Input
-                type="file"
-                onChange={(e) =>
-                  setForm({ ...form, image: e.target.files?.[0] || null })
-                }
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <Input name="founded_year" placeholder="Founded Year" value={form.founded_year} onChange={handleChange} />
+              <Input name="hospital_beds" placeholder="Beds" value={form.hospital_beds} onChange={handleChange} />
             </div>
 
             <div>
-              <Select
-                value={form.status}
-                onValueChange={(v) => setForm({ ...form, status: v })}
-              >
-                <SelectTrigger>Status</SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium">Description</label>
+              <ReactQuill
+                value={form.description_html}
+                onChange={(v) => setForm({ ...form, description_html: v })}
+              />
             </div>
+
+            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </div>
 
-          <div className="flex justify-end mt-4">
-            <Button onClick={handleSubmit}>
-              {editId ? "Update" : "Create"}
-            </Button>
-          </div>
+          <DialogFooter>
+            <Button onClick={handleSubmit}>{editing ? "Update" : "Create"}</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

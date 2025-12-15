@@ -6,16 +6,18 @@ import {
   ChevronRight,
   MessageCircle,
 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Hospital {
   id: number;
   name: string;
   country: string;
   city: string;
-  image: string;
+  image_url: string;
   address: string;
-  founded: number;
-  beds: number;
+  founded_year: number;
+  hospital_beds: number;
+  slug: string;
 }
 
 interface HospitalCardProps {
@@ -23,14 +25,18 @@ interface HospitalCardProps {
 }
 
 const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
+  const navigate = useNavigate();
+
+
+  function handleViewMore() {
+    navigate('/hospitals');
+  }  
   return (
     <article className="bg-white rounded-xl shadow-md border border-transparent hover:border-blue-400 transition duration-200 p-4">
       <div className="flex flex-col md:flex-row gap-4">
-
-        {/* Image */}
         <div className="md:w-48 lg:w-52 flex-shrink-0">
           <img
-            src={hospital.image}
+            src={hospital.image_url}
             alt={hospital.name}
             className="w-full h-40 md:h-full object-cover rounded-lg"
             onError={(e) => {
@@ -40,8 +46,8 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
           />
         </div>
 
-        {/* Content */}
         <div className="flex-1">
+          {/* Title */}
           <h3 className="text-xl font-bold text-gray-900 mb-1">
             {hospital.name}, {hospital.city}, {hospital.country}
           </h3>
@@ -52,45 +58,40 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
             <p>{hospital.address}</p>
           </div>
 
-          {/* Stats */}
+         
           <div className="space-y-1 text-sm text-gray-700">
             <div className="flex items-center gap-2">
               <Calendar size={18} className="text-orange-500" />
               <span>
-                <strong>Founded in:</strong> {hospital.founded}
+                <strong>Founded in:</strong> {hospital.founded_year}
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <Bed size={18} className="text-orange-500" />
               <span>
-                <strong>Hospital Beds:</strong> {hospital.beds}
+                <strong>Hospital Beds:</strong> {hospital.hospital_beds}
               </span>
             </div>
           </div>
 
-          {/* Buttons */}
           <div className="flex items-center gap-3 mt-4 flex-wrap">
-
-            {/* Book Appointment */}
             <button className="px-5 py-2 rounded-md bg-yellow-500 text-white font-medium hover:bg-yellow-600 transition">
               Book Appointment
             </button>
 
-            {/* Chat Now */}
             <button className="px-5 py-2 rounded-md bg-green-500 text-white font-medium flex items-center gap-2 hover:bg-green-600 transition">
               <MessageCircle size={16} />
               Chat Now
             </button>
 
-            {/* View more */}
-            <a
-              href={`/hospital/${hospital.id}`}
-              className="ml-auto px-4 py-2 border border-yellow-500 text-yellow-600 rounded-md font-medium flex items-center gap-2 hover:bg-yellow-50 transition"
+           <Link
+              to={`/hospitals/${hospital.slug}`}
+              className="px-4 py-2 border border-orange-400 text-orange-500 rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
             >
               View more
               <ChevronRight size={16} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
