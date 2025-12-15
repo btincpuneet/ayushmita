@@ -1,30 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const doctorController = require("../../controllers/doctorController");
 const multer = require("multer");
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Only images allowed"), false);
-    }
-    cb(null, true);
-  },
-});
+const {
+  createDoctor,
+  getDoctors,
+  getDoctorBySlug,
+  updateDoctor,
+  deleteDoctor,
+} = require("../../controllers/doctorController");
 
-router.post("/doctors", upload.single("image"), doctorController.createDoctor);
+const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/doctors", doctorController.getDoctors);
-
-router.get("/doctors/:id", doctorController.getDoctorById);
-
-router.put(
-  "/doctors/:id",
-  upload.single("image"),
-  doctorController.updateDoctor
-);
-
-router.delete("/doctors/:id", doctorController.deleteDoctor);
+router.post("/doctors", upload.single("image"), createDoctor);
+router.get("/doctors", getDoctors);
+router.get("/doctors/:slug", getDoctorBySlug);
+router.put("/doctors/:id", upload.single("image"), updateDoctor);
+router.delete("/doctors/:id", deleteDoctor);
 
 module.exports = router;
