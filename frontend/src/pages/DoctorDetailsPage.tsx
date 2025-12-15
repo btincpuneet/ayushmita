@@ -8,6 +8,7 @@ import {
     Stethoscope,
     ChevronRight,
 } from "lucide-react";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -148,8 +149,15 @@ const DoctorDetailsPage: React.FC = () => {
     return (
         <>
             <Header />
-
-            <main className="mt-[70px] bg-gray-50">
+            <TreatmentHeader
+                title={doctor.name}
+                breadcrumbs={[
+                    { label: "Home", link: "/" },
+                    { label: "Hospitals", link: "/hospitals" },
+                    { label: doctor.name },
+                ]}
+            />
+            <main className=" bg-gray-50">
                 <section className="py-10">
                     <Container>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
