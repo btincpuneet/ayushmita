@@ -42,7 +42,7 @@ function NextArrow({ onClick }) {
       onClick={onClick}
       aria-label="Next"
       type="button"
-      className="doctor-arrow absolute top-1/2 -translate-y-1/2 right-[-28px] bg-white shadow-lg border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center z-30"
+      className="doctor-arrow absolute top-1/2 -translate-y-1/2 right-[-28px] rounded-full w-12 h-12 flex items-center justify-center z-30"
     >
       <svg
         width="34"
@@ -95,8 +95,8 @@ export default function DoctorCareSlider({ items = providers }) {
   };
 
   return (
-    <section className="py-10 bg-white">
-      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-16 text-center">
+    <section className="py-10 bg-white mb-8">
+      <div className="max-w-7xl mx-auto px-5 text-center">
         <h2 className="Professional"
           style={{
             fontFamily: 'Ubuntu',

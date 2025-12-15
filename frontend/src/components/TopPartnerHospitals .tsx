@@ -52,24 +52,7 @@ const NextArrow = ({ onClick }) => (
 );
 
 const PrevArrow = ({ onClick }) => (
-  <div
-    onClick={onClick}
-    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg items-center justify-center cursor-pointer z-10"
-  >
-   
-    <svg
-      width="34"
-      height="18"
-      viewBox="0 0 34 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M7.05 7.5189L11.35 2.99464L9 0.531544L0.666687 9.26576L9 18L11.35 15.5369L7.05 11.0126H34V7.5189H7.05Z"
-        fill="#F0A324"
-      />
-    </svg>
-  </div>
+<span></span>
 );
 
 const TopPartnerHospitals = () => {
