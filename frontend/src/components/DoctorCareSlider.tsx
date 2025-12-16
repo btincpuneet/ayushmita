@@ -4,6 +4,7 @@ import axios from "axios";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 
 function NextArrow({ onClick }) {
   return (
@@ -30,7 +31,15 @@ function NextArrow({ onClick }) {
 }
 
 export default function DoctorCareSlider() {
+  const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
   const [doctors, setDoctors] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -107,8 +116,11 @@ export default function DoctorCareSlider() {
           <Slider {...settings}>
             {doctors.map((d, i) => (
               <div key={i} className="px-3 flex justify-center">
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px]">
-                  
+                <div 
+                  onClick={() => navigate(`/doctor/${slugify(d.name)}`)}
+
+                className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px]">
+
                   <div className="w-full h-64 overflow-hidden bg-gray-100">
                     <img
                       src={d.image}

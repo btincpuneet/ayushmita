@@ -20,7 +20,6 @@ const upload = multer({
   }
 });
 
-// ROUTES
 router.post("/testimonials", upload.single("image"), createTestimonial);
 router.get("/testimonials", getAllTestimonials);
 router.get("/testimonials/:id", getTestimonialById);

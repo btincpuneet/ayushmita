@@ -1,10 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-
 import Header from "../components/Header";
 import HeroImage from "../components/HeroImage";
 import Footer from "../components/Footer";
-
 import PromoSlider from "../components/PromoSlider";
 import MedicalTourism from "../components/MedicalTourism";
 import FindBySpecialisation from "../components/FindBySpecialisation";

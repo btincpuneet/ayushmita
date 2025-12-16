@@ -17,7 +17,7 @@ const createTreatment = async (req, res) => {
       status
     } = req.body;
 
-    // Validate Required Fields
+    
     const requiredFields = {
       disease_id,
       name,
@@ -40,10 +40,10 @@ const createTreatment = async (req, res) => {
       }
     }
 
-    // Image Upload (Optional)
+    
     const image = req.file ? `/uploads/treatments/${req.file.filename}` : null;
 
-    // Create Treatment
+   
     const treatment = await Treatment.create({
       disease_id: Number(disease_id),
       name,

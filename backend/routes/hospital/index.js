@@ -11,7 +11,6 @@ const {
   getHospitalBySlug,
 } = require("../../controllers/topPartnerHospitalController");
 
-// Multer Setup
 const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {

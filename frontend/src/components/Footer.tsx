@@ -129,7 +129,7 @@ const Footer: React.FC = () => {
                     />
                   </svg>
                   <Link
-                    to={item.to}
+                    to="/"
                     className="text-sm hover:text-white transition"
                     style={{
                       fontFamily: 'Roboto',
@@ -200,7 +200,7 @@ const Footer: React.FC = () => {
                     />
                   </svg>
                   <Link
-                    to={item.to}
+                    to="/"
                     className="text-sm hover:text-white transition"
                   >
                     {item.label}

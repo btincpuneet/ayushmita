@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Container from "../components/Container";
 import DoctorPageHeader from "../components/Doctors/DoctorPageHeader";
 import DoctorCard from "../components/Doctors/DoctorCard";
-import BookingForm from "../components/Hospital/BookingForm";
+import BookingForm from "../components/BookingForm";
 
 const countries: string[] = ["India", "Turkey", "UAE"];
 
