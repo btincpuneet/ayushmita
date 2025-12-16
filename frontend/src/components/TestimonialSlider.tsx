@@ -28,7 +28,7 @@ const OverlapNextArrow: React.FC<ArrowProps> = ({ onClick }) => (
   <button
     aria-label="Next"
     onClick={onClick}
-    className="absolute top-1/2 -right-2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+    className="absolute top-1/2 -right-8 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
     style={{ zIndex: 30 }}
   >
     <svg width="34" height="18" viewBox="0 0 34 18" fill="none">
