@@ -17,176 +17,189 @@ const BASE_URL = "http://127.0.0.1:5001";
 
 const ManageDoctors = () => {
   const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
     title: "",
     specialty: "",
+    country: "",
+    city: "",
+    experience: "",
+    short_description: "",
     description: "",
-    status: "active",
+    description_html: "",
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+    canonical_url: "",
+    status: 1,
     image: null,
   });
 
-  const [preview, setPreview] = useState(null);
-
-  // Load all doctors
+  /* ================= LOAD ================= */
   const loadDoctors = async () => {
-    setLoading(true);
     try {
       const res = await axios.get(API_URL);
-      setDoctors(res.data.data);
-    } catch (err) {
+      setDoctors(res.data.data || []);
+    } catch {
       toast.error("Failed to load doctors");
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     loadDoctors();
   }, []);
 
-  // Open Add Doctor
+  /* ================= ADD ================= */
   const handleAdd = () => {
     setEditing(null);
+    setPreview(null);
     setForm({
       name: "",
       title: "",
       specialty: "",
+      country: "",
+      city: "",
+      experience: "",
+      short_description: "",
       description: "",
-      status: "active",
+      description_html: "",
+      seo_title: "",
+      seo_description: "",
+      seo_keywords: "",
+      canonical_url: "",
+      status: 1,
       image: null,
     });
-    setPreview(null);
     setOpen(true);
   };
 
-  // Open Edit Doctor
+  /* ================= EDIT ================= */
   const handleEdit = (item) => {
     setEditing(item);
     setForm({
-      name: item.name,
-      title: item.title,
-      specialty: item.specialty,
-      description: item.description,
-      status: item.status,
+      name: item.name || "",
+      title: item.title || "",
+      specialty: item.specialty || "",
+      country: item.country || "",
+      city: item.city || "",
+      experience: item.experience || "",
+      short_description: item.short_description || "",
+      description: item.description || "",
+      description_html: item.description_html || "",
+      seo_title: item.seo_title || "",
+      seo_description: item.seo_description || "",
+      seo_keywords: item.seo_keywords || "",
+      canonical_url: item.canonical_url || "",
+      status: item.status ?? 1,
       image: null,
     });
 
-    if (item.image_url) {
-      setPreview(`${BASE_URL}${item.image_url}`);
-    }
-
+    setPreview(item.image_url ? `${BASE_URL}${item.image_url}` : null);
     setOpen(true);
   };
 
-  // Submit form (Create or Update)
+  /* ================= SAVE ================= */
   const handleSubmit = async () => {
-    const formData = new FormData();
-    Object.keys(form).forEach((key) => {
-      if (form[key] !== null) formData.append(key, form[key]);
+    const fd = new FormData();
+    Object.entries(form).forEach(([key, value]) => {
+      if (value !== null) fd.append(key, value);
     });
 
     try {
       if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        toast.success("Doctor updated!");
+        await axios.put(`${API_URL}/${editing.id}`, fd);
+        toast.success("Doctor updated");
       } else {
-        await axios.post(API_URL, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        toast.success("Doctor created!");
+        await axios.post(API_URL, fd);
+        toast.success("Doctor created");
       }
-
       setOpen(false);
       loadDoctors();
-    } catch (err) {
-      console.log(err);
+    } catch {
       toast.error("Save failed");
     }
   };
 
-  // Delete doctor
+  /* ================= DELETE ================= */
   const handleDelete = async (id) => {
     if (!confirm("Delete this doctor?")) return;
-
     try {
       await axios.delete(`${API_URL}/${id}`);
-      toast.success("Doctor deleted!");
+      toast.success("Doctor deleted");
       loadDoctors();
-    } catch (err) {
+    } catch {
       toast.error("Delete failed");
     }
   };
 
   return (
     <div className="p-6">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Doctors</h1>
         <Button onClick={handleAdd}>+ Add Doctor</Button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow">
-        <table className="w-full text-left">
+      {/* TABLE */}
+      <div className="bg-white rounded shadow overflow-x-auto">
+        <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-3">Image</th>
               <th className="p-3">Name</th>
-              <th className="p-3">Title</th>
               <th className="p-3">Specialty</th>
+              <th className="p-3">Location</th>
+              <th className="p-3">Experience</th>
               <th className="p-3">Status</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            {doctors.map((item) => (
-              <tr key={item.id} className="border-b">
+            {doctors.map((d) => (
+              <tr key={d.id} className="border-b">
                 <td className="p-3">
-                  {item.image_url ? (
+                  {d.image_url ? (
                     <img
-                      src={`${BASE_URL}${item.image_url}`}
-                      className="w-20 h-20 object-cover rounded"
-                      alt={item.name}
+                      src={`${BASE_URL}${d.image_url}`}
+                      className="w-16 h-16 rounded object-cover"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-gray-200 rounded" />
+                    <div className="w-16 h-16 bg-gray-200 rounded" />
                   )}
                 </td>
-
-                <td className="p-3">{item.name}</td>
-                <td className="p-3">{item.title}</td>
-                <td className="p-3">{item.specialty}</td>
-
+                <td className="p-3">
+                  <div className="font-medium">{d.name}</div>
+                  <div className="text-xs text-gray-500">{d.title}</div>
+                </td>
+                <td className="p-3">{d.specialty}</td>
+                <td className="p-3">
+                  {d.city}, {d.country}
+                </td>
+                <td className="p-3">{d.experience} yrs</td>
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 text-sm rounded ${
-                      item.status === "active"
+                    className={`px-2 py-1 rounded text-xs ${
+                      d.status === 1
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
-                    {item.status}
+                    {d.status === 1 ? "Active" : "Inactive"}
                   </span>
                 </td>
-
                 <td className="p-3 text-right">
                   <button
-                    onClick={() => handleEdit(item)}
-                    className="text-blue-600 mr-4"
+                    onClick={() => handleEdit(d)}
+                    className="text-blue-600 mr-3"
                   >
                     Edit
                   </button>
-
                   <button
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(d.id)}
                     className="text-red-600"
                   >
                     Delete
@@ -198,86 +211,63 @@ const ManageDoctors = () => {
         </table>
 
         {doctors.length === 0 && (
-          <p className="text-center py-6 text-gray-600">No doctors found.</p>
+          <p className="text-center py-6 text-gray-500">No doctors found</p>
         )}
       </div>
 
-      {/* Form Modal */}
+      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editing ? "Edit Doctor" : "Add New Doctor"}
+              {editing ? "Edit Doctor" : "Add Doctor"}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-3">
-            <Input
-              placeholder="Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <Input placeholder="Name" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})}/>
+            <Input placeholder="Title" value={form.title} onChange={(e)=>setForm({...form,title:e.target.value})}/>
+            <Input placeholder="Specialty" value={form.specialty} onChange={(e)=>setForm({...form,specialty:e.target.value})}/>
+            <Input placeholder="Country" value={form.country} onChange={(e)=>setForm({...form,country:e.target.value})}/>
+            <Input placeholder="City" value={form.city} onChange={(e)=>setForm({...form,city:e.target.value})}/>
+            <Input placeholder="Experience (years)" value={form.experience} onChange={(e)=>setForm({...form,experience:e.target.value})}/>
 
-            <Input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <Textarea placeholder="Short Description" value={form.short_description} onChange={(e)=>setForm({...form,short_description:e.target.value})}/>
+            <Textarea placeholder="Description" value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/>
 
-            <Input
-              placeholder="Specialty"
-              value={form.specialty}
-              onChange={(e) =>
-                setForm({ ...form, specialty: e.target.value })
-              }
-            />
-
-            <Textarea
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-            />
+            <Textarea className="col-span-2" placeholder="Description HTML" value={form.description_html} onChange={(e)=>setForm({...form,description_html:e.target.value})}/>
+            <Input placeholder="SEO Title" value={form.seo_title} onChange={(e)=>setForm({...form,seo_title:e.target.value})}/>
+            <Textarea placeholder="SEO Description" value={form.seo_description} onChange={(e)=>setForm({...form,seo_description:e.target.value})}/>
+            <Textarea placeholder="SEO Keywords" value={form.seo_keywords} onChange={(e)=>setForm({...form,seo_keywords:e.target.value})}/>
+            <Input className="col-span-2" placeholder="Canonical URL" value={form.canonical_url} onChange={(e)=>setForm({...form,canonical_url:e.target.value})}/>
 
             <select
               className="border p-2 rounded"
               value={form.status}
-              onChange={(e) =>
-                setForm({ ...form, status: e.target.value })
-              }
+              onChange={(e)=>setForm({...form,status:Number(e.target.value)})}
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
             </select>
 
-            {/* Image Upload */}
-            <div>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  setForm({ ...form, image: file });
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e)=>{
+                const file = e.target.files[0];
+                setForm({...form,image:file});
+                if(file) setPreview(URL.createObjectURL(file));
+              }}
+            />
 
-                  if (file) {
-                    setPreview(URL.createObjectURL(file));
-                  }
-                }}
-              />
-
-              {preview && (
-                <img
-                  src={preview}
-                  className="w-40 h-28 mt-3 rounded object-cover"
-                />
-              )}
-            </div>
+            {preview && (
+              <img src={preview} className="col-span-2 h-40 rounded object-cover"/>
+            )}
           </div>
 
           <DialogFooter>
             <Button onClick={handleSubmit}>
-              {editing ? "Update" : "Create"}
+              {editing ? "Update Doctor" : "Create Doctor"}
             </Button>
           </DialogFooter>
         </DialogContent>

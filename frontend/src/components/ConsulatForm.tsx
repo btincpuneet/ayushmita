@@ -35,7 +35,7 @@ const ConsultationForm: React.FC = () => {
       <div
         className="w-[100%] rounded-lg grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl"
         style={{
-           background: "linear-gradient(180deg, #2A6506 100%)",
+          background: "linear-gradient(180deg, #2A6506 100%)",
         }}
       >
         <div className="relative">
@@ -46,29 +46,29 @@ const ConsultationForm: React.FC = () => {
           />
           <div className="absolute top-10 left-8 text-white pr-10">
             <h2
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 700,
-    fontStyle: "normal",
-    fontSize: "28px",
-    lineHeight: "32px",
-    letterSpacing: "0%",
-  }}
->
-  Book Your Free Consultation
-</h2>
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 700,
+                fontStyle: "normal",
+                fontSize: "28px",
+                lineHeight: "32px",
+                letterSpacing: "0%",
+              }}
+            >
+              Book Your Free Consultation
+            </h2>
 
             <p
-  className="mt-2"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "18px",
-    letterSpacing: "0%",
-  }}
->
+              className="mt-2"
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "18px",
+                letterSpacing: "0%",
+              }}
+            >
               Submit the form and our health expert will reach out within 24 hours.
             </p>
           </div>
@@ -78,16 +78,16 @@ const ConsultationForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->Full Name</label>
+                className="block mb-1"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: 400,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "140%",
+                  letterSpacing: "0%",
+                }}
+              >Full Name</label>
               <input
                 type="text"
                 name="fullName"
@@ -99,16 +99,16 @@ const ConsultationForm: React.FC = () => {
 
             <div>
               <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->Phone Number</label>
+                className="block mb-1"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: 400,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "140%",
+                  letterSpacing: "0%",
+                }}
+              >Phone Number</label>
               <input
                 type="text"
                 name="phoneNumber"
@@ -122,16 +122,16 @@ const ConsultationForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->Email ID</label>
+                className="block mb-1"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: 400,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "140%",
+                  letterSpacing: "0%",
+                }}
+              >Email ID</label>
               <input
                 type="email"
                 name="email"
@@ -143,16 +143,16 @@ const ConsultationForm: React.FC = () => {
 
             <div>
               <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->Country</label>
+                className="block mb-1"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: 400,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "140%",
+                  letterSpacing: "0%",
+                }}
+              >Country</label>
               <select
                 name="country"
                 value={formData.country}
@@ -170,16 +170,16 @@ const ConsultationForm: React.FC = () => {
 
           <div>
             <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->
+              className="block mb-1"
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "140%",
+                letterSpacing: "0%",
+              }}
+            >
               Which Treatment Are You Looking For?
             </label>
             <input
@@ -193,16 +193,16 @@ const ConsultationForm: React.FC = () => {
 
           <div>
             <label
-  className="block mb-1"
-  style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 400,
-    fontStyle: "normal",
-    fontSize: "14px",
-    lineHeight: "140%",
-    letterSpacing: "0%",
-  }}
->Treatment Requirements</label>
+              className="block mb-1"
+              style={{
+                fontFamily: "Ubuntu",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "140%",
+                letterSpacing: "0%",
+              }}
+            >Treatment Requirements</label>
             <textarea
               name="requirements"
               value={formData.requirements}
@@ -211,22 +211,22 @@ const ConsultationForm: React.FC = () => {
             />
           </div>
 
-         <button
-  type="submit"
-  style={{
-    background: "#F0A324",
-    padding: "12px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    transition: "0.3s",
-    fontFamily: "Open Sans",
-    fontWeight: 600,
-    fontSize: "18px",
-    lineHeight: "100%",
-    color: "#333333",
-    letterSpacing: "0%",
-  }}
->
+          <button
+            type="submit"
+            style={{
+              background: "#F0A324",
+              padding: "12px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              transition: "0.3s",
+              fontFamily: "Open Sans",
+              fontWeight: 600,
+              fontSize: "18px",
+              lineHeight: "100%",
+              color: "#333333",
+              letterSpacing: "0%",
+            }}
+          >
             Send Message
           </button>
         </form>

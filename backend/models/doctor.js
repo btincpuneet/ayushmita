@@ -15,6 +15,12 @@ const Doctor = sequelize.define(
       allowNull: false,
     },
 
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+
     title: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -25,18 +31,66 @@ const Doctor = sequelize.define(
       allowNull: false,
     },
 
+    experience: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    short_description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
 
+    description_html: {
+      type: DataTypes.TEXT("long"),
+      allowNull: true,
+    },
+
+    
     image_url: {
       type: DataTypes.STRING,
       allowNull: true,
     },
 
+    
+    seo_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    seo_description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    seo_keywords: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    canonical_url: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+
+    /* STATUS */
     status: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       defaultValue: 1,
     },
   },

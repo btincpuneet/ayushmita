@@ -8,6 +8,7 @@ const {
   getHospitalById,
   updateHospital,
   deleteHospital,
+  getHospitalBySlug,
 } = require("../../controllers/topPartnerHospitalController");
 
 // Multer Setup
@@ -21,19 +22,11 @@ const upload = multer({
   },
 });
 
-// CREATE
 router.post("/hospitals", upload.single("image"), createHospital);
-
-// GET ALL
 router.get("/hospitals", getAllHospitals);
-
-// GET BY ID
+router.get("/hospitals/:slug", getHospitalBySlug);
 router.get("/hospitals/:id", getHospitalById);
-
-// UPDATE
 router.put("/hospitals/:id", upload.single("image"), updateHospital);
-
-// DELETE
 router.delete("/hospitals/:id", deleteHospital);
 
 module.exports = router;

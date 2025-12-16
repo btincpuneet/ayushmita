@@ -1,34 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
+import axios from "axios";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const hospitals = [
-  {
-    name: "Medanta",
-    city: "Gurgaon",
-    image:
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&h=800&fit=crop",
-  },
-  {
-    name: "Indraprastha Apollo",
-    city: "New Delhi",
-    image:
-      "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=1200&h=800&fit=crop",
-  },
-  {
-    name: "SGR",
-    city: "New Delhi",
-    image:
-      "https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?w=1200&h=800&fit=crop",
-  },
-  {
-    name: "SGR",
-    city: "New Delhi",
-    image:
-      "https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?w=1200&h=800&fit=crop",
-  },
-];
+const API = "http://127.0.0.1:5001/api/hospitals"; 
 
 const NextArrow = ({ onClick }) => (
   <div
@@ -47,15 +24,46 @@ const NextArrow = ({ onClick }) => (
         fill="#F0A324"
       />
     </svg>
-
   </div>
 );
 
 const PrevArrow = ({ onClick }) => (
-<span></span>
+  <div
+    onClick={onClick}
+    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg items-center justify-center cursor-pointer z-10"
+  >
+    <svg
+      width="34"
+      height="18"
+      viewBox="0 0 34 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7.05 7.5189L11.35 2.99464L9 0.531544L0.666687 9.26576L9 18L11.35 15.5369L7.05 11.0126H34V7.5189H7.05Z"
+        fill="#F0A324"
+      />
+    </svg>
+  </div>
 );
 
 const TopPartnerHospitals = () => {
+  const [hospitals, setHospitals] = useState([]);
+
+  // Fetch hospital data
+  const fetchHospitals = async () => {
+    try {
+      const res = await axios.get(API);
+      setHospitals(res.data.data || []);
+    } catch (err) {
+      console.error("Error fetching hospitals:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchHospitals();
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -66,7 +74,6 @@ const TopPartnerHospitals = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
 
-    // 🔶 Figma-style dots
     customPaging: () => (
       <div className="dot-outer flex items-center justify-center">
         <div className="dot-inner" />
@@ -80,14 +87,8 @@ const TopPartnerHospitals = () => {
     ),
 
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } },
     ],
   };
 
@@ -102,17 +103,23 @@ const TopPartnerHospitals = () => {
             className="mt-3 text-gray-600 max-w-md mx-auto"
             style={{ fontFamily: "Ubuntu", fontSize: "16px" }}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Explore our trusted partner hospitals across India.
           </p>
         </div>
 
         <div className="relative">
           <Slider {...settings}>
-            {hospitals.map((h, index) => (
-              <div key={index} className="px-4">
+            {hospitals.map((h) => (
+              <div key={h.id} className="px-4">
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
                   <div className="h-48 overflow-hidden rounded-xl">
-                    <img src={h.image} alt={h.name} className="w-full h-full object-cover" />
+                    
+                    <img
+                      src={`http://127.0.0.1:5001${h.image_url}`}
+                      alt={h.name}
+                      className="w-full h-full object-cover"
+                    />
+
                   </div>
 
                   <div className="p-4">
@@ -123,7 +130,7 @@ const TopPartnerHospitals = () => {
                       className="text-gray-500 text-[13px]"
                       style={{ fontFamily: "Ubuntu" }}
                     >
-                      {h.city}
+                      {h.city}, {h.country}
                     </p>
                   </div>
                 </div>
@@ -133,8 +140,8 @@ const TopPartnerHospitals = () => {
         </div>
       </div>
 
+      {/* Dots Styling */}
       <style>{`
-        /* stretch inner slide to card height */
         .slick-slide > div {
           height: 100%;
           display: flex;
@@ -142,44 +149,33 @@ const TopPartnerHospitals = () => {
           justify-content: center;
         }
 
-        /* dots base */
-        .slick-dots { margin: 0; padding: 0; }
-        .slick-dots li { display: inline-block; margin: 0 4px; }
         .slick-dots li button { display: none; }
+        .slick-dots li { margin: 0 4px; }
 
-        /* inactive dot = small filled circle */
-        .slick-dots li .dot-outer {
+        .dot-outer {
           width: 10px;
           height: 10px;
           border-radius: 9999px;
           background: #fbbf24;
           opacity: 0.7;
         }
-        .slick-dots li .dot-inner {
+        .dot-inner {
           width: 4px;
           height: 4px;
           border-radius: 9999px;
           background: #f59e0b;
         }
 
-        /* active dot = ring + filled center */
         .slick-dots li.slick-active .dot-outer {
           width: 14px;
           height: 14px;
           background: transparent;
           border: 2px solid #be7c0bff;
-          opacity: 1;
         }
         .slick-dots li.slick-active .dot-inner {
           width: 6px;
           height: 6px;
           background: #f59e0b;
-        }
-
-        /* arrow visibility */
-        .doctor-arrow { display: flex !important; }
-        @media (max-width: 768px) {
-          .doctor-arrow { display: none !important; }
         }
       `}</style>
     </section>

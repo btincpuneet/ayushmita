@@ -60,7 +60,7 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
           {services.map((service) => (
             <Link
               key={service.id}
-              to={`/treatment/${service.slug}`}
+              to={`/treatment-details/${service.slug}`}
               className="
                 flex items-center gap-3 p-4 
                 bg-white rounded-lg 
