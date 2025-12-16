@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
-import BookingForm from "../components/Hospital/BookingForm";
+import BookingForm from "../components/BookingForm";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 import {
@@ -107,9 +107,8 @@ function ContentSection({ title, html }: any) {
   if (!html) return null;
   return (
     <div>
-      <h2 className="text-xl font-bold mb-3">{title}</h2>
       <div
-        className="text-sm text-gray-600 leading-relaxed"
+        className="text-sm  leading-relaxed"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -365,10 +364,10 @@ export default function HospitalDetailsPage() {
 
         <div className="max-w-[860px] space-y-12">
           <ContentSection
-            title="About Hospital"
+          
             html={hospital.description_html}
           />
-          <FacilitiesSection facilities={facilities} />
+          {/* <FacilitiesSection facilities={facilities} /> */}
         </div>
 
         <SimilarHospitals hospitals={similarHospitals} />

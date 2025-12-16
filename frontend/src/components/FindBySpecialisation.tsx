@@ -1,5 +1,6 @@
 import React from "react";
-import Container from "./Container";
+import { Link } from "react-router-dom";
+
 
 const SPECIALISATIONS = [
   {
@@ -127,6 +128,7 @@ const FindBySpecialisation: React.FC = () => {
     <section className="bg-gray-50">
       <div className="relative w-full max-w-7xl mx-auto px-4">
         {/* Header */}
+        <div className="text-center mb-10">
         <div className="text-center mb-6">
           <h2
             className="Specialisation text-center capitalize"
@@ -166,7 +168,8 @@ const FindBySpecialisation: React.FC = () => {
 
               <span className="text-gray-700 font-medium text-lg"
                 style={{
-                  fontFamily: 'Ubuntu',
+                          // Medium weight
+                  fontStyle: 'normal',      // Medium corresponds to weight, fontStyle is normal
                   fontWeight: 500,
                   fontStyle: 'normal',
                   fontSize: '18px',
@@ -180,7 +183,7 @@ const FindBySpecialisation: React.FC = () => {
           ))}
         </div>
 
-        {/* View All button */}
+
         <div className="mt-10 flex justify-center">
           <button className="bg-amber-400 hover:bg-amber-500 py-3 px-8 rounded-lg shadow-md transition"
             style={{

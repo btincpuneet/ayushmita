@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 const { Disease } = require("../models/disease");
 const { Treatment } = require("../models/treatment");
 
-// CREATE DISEASE
 const createDisease = async (req, res) => {
   try {
     const {
@@ -22,7 +21,6 @@ const createDisease = async (req, res) => {
 
     let imageUrl = null;
 
-    // IMAGE UPLOAD
     if (req.file) {
       const imageName = `disease_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads/diseases");
@@ -63,7 +61,6 @@ const createDisease = async (req, res) => {
   }
 };
 
-// GET BY ID
 const getDiseaseById = async (req, res) => {
   try {
     const disease = await Disease.findByPk(req.params.id, {
@@ -83,7 +80,6 @@ const getDiseaseById = async (req, res) => {
   }
 };
 
-// GET ALL DISEASES
 const getAllDiseasesWithTreatments = async (req, res) => {
   try {
     const diseases = await Disease.findAll({
@@ -140,7 +136,6 @@ const getDiseaseWithTreatments = async (req, res) => {
   }
 };
 
-// UPDATE DISEASE
 const updateDisease = async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -187,7 +182,6 @@ const updateDisease = async (req, res) => {
   }
 };
 
-// DELETE DISEASE
 const deleteDisease = async (req, res) => {
   try {
     const disease = await Disease.findByPk(req.params.id);

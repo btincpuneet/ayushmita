@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Slider from "react-slick";
-import {
-    MapPin,
-    Briefcase,
-    Stethoscope,
-    ChevronRight,
-} from "lucide-react";
+import { Briefcase, Stethoscope, MapPin, Building2, Globe, ChevronRight } from "lucide-react";
+
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
-import ConsultationForm from "../components/Hospital/ConsultationForm";
-import BookingForm from "../components/Hospital/BookingForm";
+import BookingForm from "../components/BookingForm";
 
 /* -------------------- TYPES -------------------- */
 interface Doctor {
@@ -160,109 +155,69 @@ const DoctorDetailsPage: React.FC = () => {
             <main className=" bg-gray-50">
                 <section className="py-10">
                     <Container>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2  p-6 ">
-                                <div className="flex gap-6">
-                                    <img
-                                        src={image}
-                                        className="w-40 h-40 object-cover rounded-xl"
-                                    />
+                                <div className="flex flex-col md:flex-row gap-6 items-start">
 
-                                    <div>
-                                        <h1 className="text-2xl font-bold">{doctor.name}</h1>
-                                        <p className="text-gray-600 mb-3">{doctor.specialty}</p>
+                                    <div className="flex-shrink-0">
+                                        <img
+                                            src={image}
+                                            alt={doctor.name}
+                                            className="w-[320px] h-[320px] object-cover rounded-2xl"
+                                        />
+                                    </div>
 
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Briefcase size={16} className="text-orange-500" />
-                                            {doctor.experience}+ years experience
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3  text-sm">
+                                            <Briefcase className="text-yellow-500 w-5 h-5" />
+                                            <span className="font-medium">
+                                                Experience: <strong>{doctor.experience}+ years of experience</strong>
+                                            </span>
                                         </div>
 
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Stethoscope size={16} className="text-orange-500" />
-                                            {doctor.specialty}
+
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Stethoscope className="text-yellow-500 w-5 h-5" />
+                                            <span>
+                                                Specialty: <strong>{doctor.specialty}</strong>
+                                            </span>
                                         </div>
 
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <MapPin size={16} className="text-orange-500" />
-                                            {doctor.city}, {doctor.country}
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Building2 className="text-yellow-500 w-5 h-5" />
+                                            <span>
+                                                Hospital: <strong>{doctor.hospital || "Medanta"}</strong>
+                                            </span>
                                         </div>
 
-                                        <button className="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-md">
-                                            Book Appointment
+                                        {/* CITY */}
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <MapPin className="text-yellow-500 w-5 h-5" />
+                                            <span>
+                                                City: <strong>{doctor.city}</strong>
+                                            </span>
+                                        </div>
+
+                                        {/* COUNTRY */}
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Globe className="text-yellow-500 w-5 h-5" />
+                                            <span>
+                                                Country: <strong>{doctor.country}</strong>
+                                            </span>
+                                        </div>
+
+                                        {/* BUTTON */}
+                                        <button className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
+                                            Book An Appointment
                                         </button>
                                     </div>
                                 </div>
-                                <div className="mt-10 space-y-8">
+                                <div className="mt-10 ">
+                                    <div
+                                        className="mt-10  space-y-8 prose prose-sm max-w-none"
+                                        dangerouslySetInnerHTML={{ __html: doctor.description_html }}
+                                    />
 
-                                    <section>
-                                        <h3 className="text-lg font-semibold mb-2 border-b pb-2">
-                                            About Dr. Bhavin Dharani
-                                        </h3>
-                                        <p className="text-gray-700 leading-relaxed text-sm">
-                                            Dr. Bhavin Dharani, an Ophthalmology expert with 9 years of experience,
-                                            is presently practicing at Insure Eye Institute in Ahmedabad. With a
-                                            deep understanding of the medical field, he has successfully managed
-                                            various intricate cases, providing precise diagnoses and compassionate
-                                            care to his patients. Schedule your appointment with Dr. Bhavin Dharani
-                                            through Medsurge India for a seamless and prioritized experience.
-                                        </p>
-                                    </section>
-
-                                    <section>
-                                        <h3 className="text-lg font-semibold mb-2 border-b pb-2">
-                                            Education
-                                        </h3>
-                                        <p className="text-gray-700 text-sm">
-                                            MBBS (K.G Medical College, Lucknow, U.P, India, 1968) <br />
-                                            Diplomate (American Board of Surgery, U.S.A, 1977) <br />
-                                            Diplomate (American Board of Cardiothoracic Surgery, 1979)
-                                        </p>
-                                    </section>
-
-                                    <section>
-                                        <h3 className="text-lg font-semibold mb-2 border-b pb-2">
-                                            Special Interest
-                                        </h3>
-                                        <p className="text-gray-700 text-sm">
-                                            Cardiomyoplasty, myocardial total arterial revascularization,
-                                            transmyocardial laser revascularization
-                                        </p>
-                                    </section>
-
-                                    <section>
-                                        <h3 className="text-lg font-semibold mb-2  pb-2">
-                                            Registrations
-                                        </h3>
-                                        <p className="text-gray-700 text-sm">
-                                            7603 Delhi Medical Council, 2000
-                                        </p>
-                                    </section>
-
-                                    <section>
-                                        <h3 className="text-lg font-semibold mb-4  pb-2">
-                                            List of Treatments
-                                        </h3>
-
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 text-sm text-gray-700">
-                                            <ul className="list-disc list-inside space-y-1">
-                                                <li>Squint Surgery</li>
-                                                <li>Cornea Transplant</li>
-                                                <li>Lasik</li>
-                                                <li>Ptosis Correction</li>
-                                                <li>Pterygium Excision</li>
-                                                <li>Trabeculoplasty</li>
-                                            </ul>
-
-                                            <ul className="list-disc list-inside space-y-1">
-                                                <li>Keratoplasty</li>
-                                                <li>Vitrectomy</li>
-                                                <li>Orbital Decompression Surgery</li>
-                                                <li>Cataract Surgery</li>
-                                                <li>Amblyopia Surgery</li>
-                                                <li>Iridotomy</li>
-                                            </ul>
-                                        </div>
-                                    </section>
 
                                 </div>
 
@@ -283,14 +238,14 @@ const DoctorDetailsPage: React.FC = () => {
                             <Slider {...doctorSlider}>
                                 {similarDoctors.map((d) => (
                                     <div key={d.id} className="px-3">
-                                        <div className="bg-white rounded-xl shadow p-4 text-center">
+                                        <div className="bg-white rounded-xl shadow text-center">
                                             <img
                                                 src={
                                                     d.image_url
                                                         ? `http://127.0.0.1:5001${d.image_url}`
                                                         : image
                                                 }
-                                                className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
+                                                className=""
                                             />
                                             <h3 className="font-semibold text-sm">{d.name}</h3>
                                             <p className="text-xs text-gray-500">{d.specialty}</p>

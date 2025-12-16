@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Container from "../components/Container";
 import HospitalPageHeader from "../components/Hospital/HospitalPageHeader";
 import HospitalCard from "../components/Hospital/HospitalCard";
-import BookingForm from "../components/Hospital/BookingForm";
+import BookingForm from "../components/BookingForm";
 
 const countries = ["Turkey", "India", "UAE"];
 

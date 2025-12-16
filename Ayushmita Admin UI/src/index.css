@@ -4,6 +4,35 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+
+.cms-content h2 {
+  @apply text-2xl font-bold mt-6 mb-2;
+}
+
+.cms-content h3 {
+  @apply text-xl font-semibold mt-4 mb-2;
+}
+
+.cms-content p {
+  @apply text-base leading-7 mb-4;
+}
+
+.cms-content ul {
+  @apply list-disc pl-6 mb-4;
+}
+
+.cms-content li {
+  @apply mb-2;
+}
+
+.cms-content strong {
+  @apply font-semibold;
+}
+
+.cms-content img {
+  @apply rounded-lg my-4 max-w-full;
+}
+
 @layer base {
   :root {
     --background: 0 0% 98%;

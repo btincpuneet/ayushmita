@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const { Testimonial } = require("../models/testimonial");
 
-// ---------------------- CREATE ----------------------
 const createTestimonial = async (req, res) => {
   try {
     const { name, message, rating } = req.body;
@@ -37,7 +36,6 @@ const createTestimonial = async (req, res) => {
   }
 };
 
-// ---------------------- GET ALL ----------------------
 const getAllTestimonials = async (req, res) => {
   try {
     const data = await Testimonial.findAll({
@@ -51,7 +49,6 @@ const getAllTestimonials = async (req, res) => {
   }
 };
 
-// ---------------------- GET ONE ----------------------
 const getTestimonialById = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
@@ -66,7 +63,6 @@ const getTestimonialById = async (req, res) => {
   }
 };
 
-// ---------------------- UPDATE ----------------------
 const updateTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
@@ -107,7 +103,6 @@ const updateTestimonial = async (req, res) => {
   }
 };
 
-// ---------------------- DELETE ----------------------
 const deleteTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByPk(req.params.id);
