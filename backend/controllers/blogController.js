@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const { Blog } = require('../models/blog');
 
 exports.createBlog = async (req, res) => {
@@ -93,3 +94,5 @@ exports.deleteBlog = async (req, res) => {
     res.status(500).json({ error: err.message });
       }
 };
+=======
+>>>>>>> Stashed changes
