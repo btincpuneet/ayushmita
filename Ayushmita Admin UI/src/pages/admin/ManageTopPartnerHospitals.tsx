@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 import {
   Dialog,
   DialogContent,
@@ -10,28 +11,29 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import ReactQuill from "react-quill";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const API_URL = "http://127.0.0.1:5001/api/hospitals";
+
+const emptyForm = {
+  name: "",
+  country: "",
+  city: "",
+  address: "",
+  founded_year: "",
+  hospital_beds: "",
+  description_html: "",
+};
 
 export default function ManageTopPartnerHospitals() {
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);
-
-  const [form, setForm] = useState<any>({
-    name: "",
-    country: "",
-    city: "",
-    address: "",
-    founded_year: "",
-    hospital_beds: "",
-    description_html: "",
-  });
-
+  const [form, setForm] = useState<any>(emptyForm);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch list
+  // ---------------- FETCH ----------------
   const fetchHospitals = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -45,28 +47,21 @@ export default function ManageTopPartnerHospitals() {
     fetchHospitals();
   }, []);
 
-  // Input handler
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // ---------------- INPUT ----------------
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
-  // Open create modal
+  // ---------------- CREATE ----------------
   const handleCreate = () => {
     setEditing(null);
-    setForm({
-      name: "",
-      country: "",
-      city: "",
-      address: "",
-      founded_year: "",
-      hospital_beds: "",
-      description_html: "",
-    });
+    setForm(emptyForm);
     setFile(null);
     setOpen(true);
   };
 
-  // Edit existing hospital
+  // ---------------- EDIT ----------------
   const handleEdit = (item: any) => {
     setEditing(item.id);
     setForm({
@@ -82,8 +77,9 @@ export default function ManageTopPartnerHospitals() {
     setOpen(true);
   };
 
-  // Delete
+  // ---------------- DELETE ----------------
   const handleDelete = async (id: number) => {
+    if (!confirm("Delete this hospital?")) return;
     try {
       await axios.delete(`${API_URL}/${id}`);
       toast.success("Deleted successfully");
@@ -93,14 +89,15 @@ export default function ManageTopPartnerHospitals() {
     }
   };
 
-  // Submit (create/update)
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async () => {
     try {
-      const fd = new FormData();
-      Object.entries(form).forEach(([key, value]) =>
-        fd.append(key, value as string)
-      );
+      setLoading(true);
 
+      const fd = new FormData();
+      Object.entries(form).forEach(([k, v]) =>
+        fd.append(k, v as string)
+      );
       if (file) fd.append("image", file);
 
       if (editing) {
@@ -115,18 +112,20 @@ export default function ManageTopPartnerHospitals() {
       fetchHospitals();
     } catch {
       toast.error("Failed to save data");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold">Manage Top Partner Hospitals</h1>
         <Button onClick={handleCreate}>Add Hospital</Button>
       </div>
 
-      {/* Table */}
+      {/* TABLE */}
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm">
           <thead className="bg-gray-100">
@@ -141,13 +140,13 @@ export default function ManageTopPartnerHospitals() {
           </thead>
 
           <tbody>
-            {hospitals.length > 0 ? (
+            {hospitals.length ? (
               hospitals.map((h) => (
-                <tr key={h.id} className="border">
+                <tr key={h.id}>
                   <td className="p-2 border">
                     <img
                       src={`http://127.0.0.1:5001${h.image_url}`}
-                      className="w-16 h-16 object-cover rounded"
+                      className="w-16 h-16 rounded object-cover"
                     />
                   </td>
 
@@ -158,7 +157,9 @@ export default function ManageTopPartnerHospitals() {
 
                   <td className="p-2 border">
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => handleEdit(h)}>Edit</Button>
+                      <Button size="sm" onClick={() => handleEdit(h)}>
+                        Edit
+                      </Button>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -181,11 +182,13 @@ export default function ManageTopPartnerHospitals() {
         </table>
       </div>
 
-      {/* Modal */}
+      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit Hospital" : "Add Hospital"}</DialogTitle>
+            <DialogTitle>
+              {editing ? "Edit Hospital" : "Add Hospital"}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -203,19 +206,43 @@ export default function ManageTopPartnerHospitals() {
               <Input name="hospital_beds" placeholder="Beds" value={form.hospital_beds} onChange={handleChange} />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">Description</label>
-              <ReactQuill
-                value={form.description_html}
-                onChange={(v) => setForm({ ...form, description_html: v })}
-              />
-            </div>
+            {/* RICH TEXT */}
+            <RichTextEditor
+              label="Hospital Description"
+              value={form.description_html}
+              onChange={(html) =>
+                setForm({ ...form, description_html: html })
+              }
+              minHeight={250}
+              showWordCount
+            />
 
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+            {/* PREVIEW */}
+            {form.description_html && (
+              <div className="border rounded-lg p-4">
+                <p className="text-xs font-semibold mb-2 text-gray-500">
+                  Live Preview
+                </p>
+                <div
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: form.description_html,
+                  }}
+                />
+              </div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+            />
           </div>
 
           <DialogFooter>
-            <Button onClick={handleSubmit}>{editing ? "Update" : "Create"}</Button>
+            <Button disabled={loading} onClick={handleSubmit}>
+              {loading ? "Saving..." : editing ? "Update" : "Create"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
