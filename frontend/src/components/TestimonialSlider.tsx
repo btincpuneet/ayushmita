@@ -21,26 +21,14 @@ interface ArrowProps {
 const API = "http://127.0.0.1:5001/api/testimonials";
 
 const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
-  <button
-    aria-label="Previous"
-    onClick={onClick}
-    className="absolute top-1/2 -left-2 -translate-y-1/2 w-14 h-14 rounded-full shadow-2xl bg-white flex items-center justify-center hover:scale-105 transition-transform"
-    style={{ zIndex: 30 }}
-  >
-    <svg width="34" height="18" viewBox="0 0 34 18" fill="none">
-      <path
-        d="M7.05 10.4811H34V6.98739H7.05L11.35 2.46305L9 0L0.666667 8.73424L9 17.4685L11.35 15.0054L7.05 10.4811Z"
-        fill="#F0A324"
-      />
-    </svg>
-  </button>
+ <span></span>
 );
 
 const OverlapNextArrow: React.FC<ArrowProps> = ({ onClick }) => (
   <button
     aria-label="Next"
     onClick={onClick}
-    className="absolute top-1/2 -right-2 -translate-y-1/2 w-14 h-14 rounded-full shadow-2xl bg-white flex items-center justify-center hover:scale-105 transition-transform"
+    className="absolute top-1/2 -right-8 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
     style={{ zIndex: 30 }}
   >
     <svg width="34" height="18" viewBox="0 0 34 18" fill="none">
@@ -90,7 +78,7 @@ const TestimonialSlider: React.FC = () => {
     ),
     appendDots: (dots: React.ReactNode) => (
       <div className="dots-wrapper">
-        <ul className="flex items-center justify-center gap-0">{dots}</ul>
+        <ul className="flex items-center justify-center">{dots}</ul>
       </div>
     ),
     responsive: [
@@ -108,7 +96,7 @@ const TestimonialSlider: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-12">
         <div className="container max-w-7xl mx-auto relative">
           <h2
-            className="text-center mb-10"
+            className="text-center mb-6"
             style={{
               fontFamily: "Ubuntu",
               fontWeight: 700,

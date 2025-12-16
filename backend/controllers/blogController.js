@@ -1,7 +1,6 @@
-const { Blog } = require("../models/blog");
+const { Blog } = require('../models/blog');
 const fs = require("fs");
 const path = require("path");
-
 const createBlog = async (req, res) => {
   try {
     const {
