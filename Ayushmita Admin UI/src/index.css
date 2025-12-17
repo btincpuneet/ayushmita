@@ -33,6 +33,51 @@
   @apply rounded-lg my-4 max-w-full;
 }
 
+/* CKEditor custom styles */
+.ckeditor-container .ck-editor__editable {
+  min-height: 200px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.ckeditor-container .ck.ck-editor__main > .ck-editor__editable {
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.ckeditor-container .ck.ck-editor__main > .ck-editor__editable:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+}
+
+.ckeditor-container .ck.ck-toolbar {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+
+.ckeditor-container .ck.ck-button {
+  color: hsl(var(--foreground));
+}
+
+.ckeditor-container .ck.ck-button:hover {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.ckeditor-container .ck.ck-button.ck-on {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.ckeditor-container .ck.ck-dropdown__panel {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+.ckeditor-container .ck.ck-list__item .ck-button:hover {
+  background-color: hsl(var(--muted));
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 98%;
