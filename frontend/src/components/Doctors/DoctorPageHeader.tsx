@@ -24,8 +24,18 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       {/* TITLE */}
       <div className="text-center mb-8">
-        <p className="text-sm text-gray-500">
-          Home <span className="text-yellow-500">/ Doctors</span>
+        <p className="text-[#87898C]"
+        style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+
+        >
+          Home <span className="text-[#F0A324]">/ Doctors</span>
         </p>
 
         <h1 className="text-3xl font-bold text-gray-900 mt-2">
@@ -35,14 +45,23 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
 
       {/* FILTER BAR */}
       <div className="flex justify-center">
-        <div className="bg-[#7CB342] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl">
+        <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl">
 
           {/* COUNTRY */}
           <div className="relative w-1/2">
             <select
               value={selectedCountry}
               onChange={onCountryChange}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md appearance-none outline-none cursor-pointer pr-10 text-sm"
+              className="w-full px-3 py-2 bg-white border border-[#E7E6E6]rounded-md appearance-none outline-none cursor-pointer pr-10"
+            style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
             >
               <option value="">Select Country</option>
               {countries.map((country) => (
@@ -64,7 +83,16 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
               value={selectedCity}
               onChange={onCityChange}
               disabled={!selectedCountry}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md appearance-none outline-none cursor-pointer pr-10 text-sm disabled:bg-gray-100"
+              className="w-full px-3 py-2 bg-white border border-[#E7E6E6]rounded-md appearance-none outline-none cursor-pointer pr-10 disabled:bg-gray-100"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
             >
               <option value="">Select City</option>
               {cities.map((city) => (

@@ -206,6 +206,7 @@ const FindBySpecialisation: React.FC = () => {
           </button>
         </div>
       </div>
+       </div>
     </section>
   );
 };

@@ -323,7 +323,7 @@ const Header: React.FC = () => {
               {/* Quote Button */}
               <Link
                 to={quoteItem.url}
-                className="px-5 py-2 rounded-lg bg-[#ff8a00] text-white text-sm font-semibold"
+                className="px-5 py-2 rounded-lg bg-[#ff8a00] text-sm font-semibold"
               >
                 {getLabel(quoteItem)}
               </Link>

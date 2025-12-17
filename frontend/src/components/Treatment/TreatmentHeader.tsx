@@ -65,15 +65,13 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
         <p className={`text-sm ${breadcrumbColor} mb-2`}>
           {breadcrumbs.map((item, index) => (
             <span key={index}>
-              <span
-                className={`cursor-pointer ${
-                  item.link ? "hover:underline" : ""
-                }`}
-                style={{
-                  color: item.link ? highlightColor : undefined,
-                }}
-                onClick={() => item.link && navigate(item.link)}
-              >
+             <span
+  className={`cursor-pointer ${
+    item.link ? "hover:underline" : ""
+  } ${index === 0 ? "text-inherit" : ""}`}
+  style={index === 0 ? {} : { color: highlightColor }}
+  onClick={() => item.link && navigate(item.link)}
+>
                 {item.label}
               </span>
               {index !== breadcrumbs.length - 1 && " / "}

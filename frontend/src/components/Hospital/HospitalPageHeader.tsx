@@ -24,17 +24,42 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       <div className="text-center mb-8">
         {/* Breadcrumb */}
-        <p className="text-sm text-gray-500">
-          Home <span className="text-yellow-500">/ Hospitals</span>
+        <p className="text-[#87898C]"
+          style={{
+            fontFamily: "Ubuntu, sans-serif",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "14px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+          }}>
+          Home <span className="text-[#F0A324]" style={{
+            fontFamily: "Ubuntu, sans-serif",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "14px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+          }}>/ Hospitals</span>
         </p>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 mt-2">{title}</h1>
+        <h1 className="mt-2"
+        style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "48px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+
+        >{title}</h1>
       </div>
 
       {/* Filter Bar */}
       <div className="flex justify-center">
-        <div className="bg-[#7CB342] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl">
+        <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl">
 
           {/* Country */}
           <div className="relative w-1/2">
