@@ -27,7 +27,7 @@ function NextArrow({ onClick }: any) {
       onClick={onClick}
       className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
     >
-      <ArrowRight size={18} className="text-orange-500" />
+      <ArrowRight size={20} className="text-[#F0A324]" />
     </button>
   );
 }
@@ -309,7 +309,7 @@ function SimilarHospitals({ hospitals }: any) {
               <img
                 src={h.image}
                 alt={h.name}
-                className="h-[280px] w-[369px] object-cover"
+                className="h-[280px] w-full object-cover rounded-2xl"
               />
               <div className="p-4">
                 <h4 style={{
@@ -321,7 +321,15 @@ function SimilarHospitals({ hospitals }: any) {
   letterSpacing: "0%",
 }}
 >{h.name}</h4>
-                <p className="text-sm text-gray-500">
+                <p className="mt-3" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "10px",
+  letterSpacing: "0%",
+}}
+>
                   {h.city}, {h.country}
                 </p>
               </div>
@@ -356,15 +364,34 @@ function DoctorsSection({ doctors }: any) {
 
       <Slider {...settings}>
         {doctors.map((d: any) => (
-          <div key={d.name} className="px-3">
-            <div className="bg-white shadow rounded-lg p-6 text-center">
+          <div key={d.name} className="px-3 mb-20">
+            <div className="bg-white shadow rounded-lg text-center">
               <img
                 src={d.image}
                 alt={d.name}
-                className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
+                className="w-[272px] h-[233px]  object-cover mb-3"
               />
-              <h4 className="font-semibold text-sm">{d.name}</h4>
-              <p className="text-xs text-orange-500">{d.dept}</p>
+              <div >
+                <h4 style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontSize: "20px",
+  lineHeight: "55px",
+  letterSpacing: "0px",
+  textAlign: "center",
+}}
+>{d.name}</h4>
+              <p style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontSize: "15px",
+  lineHeight: "55px",
+  letterSpacing: "0px",
+  textAlign: "center",
+  color: "#F0A324",
+}}
+>{d.dept}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -502,7 +529,7 @@ export default function HospitalDetailsPage() {
         ]}
       />
 
-      <Container className="py-10 mt-10">
+      <div className="relative w-full max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           <div className="lg:col-span-2">
             <HospitalInfoCard hospital={hospital} />
@@ -522,7 +549,7 @@ export default function HospitalDetailsPage() {
 
         <SimilarHospitals hospitals={similarHospitals} />
         <DoctorsSection doctors={doctors} />
-      </Container>
+      </div>
 
       <Footer />
     </>

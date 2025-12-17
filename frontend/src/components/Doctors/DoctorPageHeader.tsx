@@ -52,7 +52,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
             <select
               value={selectedCountry}
               onChange={onCountryChange}
-              className="w-full px-3 py-2 bg-white border border-[#E7E6E6]rounded-md appearance-none outline-none cursor-pointer pr-10"
+              className="w-full px-3 py-2 bg-white border border-[#E7E6E6] rounded-md appearance-none outline-none cursor-pointer pr-10"
             style={{
   fontFamily: "Ubuntu, sans-serif",
   fontWeight: 400,
@@ -83,7 +83,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
               value={selectedCity}
               onChange={onCityChange}
               disabled={!selectedCountry}
-              className="w-full px-3 py-2 bg-white border border-[#E7E6E6]rounded-md appearance-none outline-none cursor-pointer pr-10 disabled:bg-gray-100"
+              className="w-full px-3 py-2 bg-white border border-[#E7E6E6] rounded-md appearance-none outline-none cursor-pointer pr-10 disabled:bg-gray-100"
               style={{
   fontFamily: "Ubuntu, sans-serif",
   fontWeight: 400,

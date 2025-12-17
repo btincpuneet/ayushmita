@@ -77,7 +77,15 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 className={`text-4xl font-bold mt-2 ${titleColor}`}>
+        <h1 style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "48px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+ className={`mt-2 ${titleColor}`}>
           {title}
         </h1>
       </div>
