@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Slider from "react-slick";
+import ModalAppointment from "../components/Treatment/ModalAppointment"
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -90,7 +91,7 @@ function HospitalInfoCard({ hospital }: any) {
           </ul>
 
           <div className="flex gap-4 mt-6">
-            <button className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold">
+            <button onClick={() => setIsModalOpen(true)} className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold">
               Book Appointment
             </button>
             <button className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold">
@@ -226,6 +227,7 @@ function DoctorsSection({ doctors }: any) {
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
   const [hospital, setHospital] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -364,7 +366,7 @@ export default function HospitalDetailsPage() {
 
         <div className="max-w-[860px] space-y-12">
           <ContentSection
-          
+
             html={hospital.description_html}
           />
           {/* <FacilitiesSection facilities={facilities} /> */}
@@ -375,6 +377,10 @@ export default function HospitalDetailsPage() {
       </Container>
 
       <Footer />
+      <ModalAppointment
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 }

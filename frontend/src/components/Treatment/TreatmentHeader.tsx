@@ -24,14 +24,12 @@ interface TreatmentHeaderProps {
   highlightColor?: string;
 }
 
-/* ---------------------------------------
-   COMPONENT
---------------------------------------- */
+
 const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   title,
   breadcrumbs = [
-    { label: "Home", link: "/" },
-    { label: "Treatment", link: "/treatments" },
+    { label: "Home" },
+    { label: "Treatment", link: "/treatment" },
   ],
 
   /* Background */

@@ -5,11 +5,12 @@ import axios from "axios";
 import Breadcrumb from "../components/Treatment/TreatmentHeader";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ModalAppointment from "../components/Treatment/TreatmentDeatilsAllPages/ModalAppointment";
+import ModalAppointment from "../components/Treatment/ModalAppointment";
 import BlogSection from "../components/BlogSection";
 import TestimonialSlider from "../components/TestimonialSlider";
 import ConsultationForm from "../components/ConsulatForm";
 import OtherServices from "../components/OtherService";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 export default function TreatmentDetailsPage() {
   const { slug } = useParams();
@@ -22,6 +23,7 @@ export default function TreatmentDetailsPage() {
       const res = await axios.get(
         `http://127.0.0.1:5001/api/treatments/single/${slug}`
       );
+      console.log("resss",res.data.treatment?.disease.name)
       if (res.data?.success) setTreatment(res.data.treatment);
       setLoading(false);
     } catch (err) {
@@ -41,13 +43,19 @@ export default function TreatmentDetailsPage() {
     <div className="bg-white">
       <Header />
 
-      <div className="w-full">
-        <Breadcrumb title={treatment?.name} />
+     <div className="w-full">
+        <TreatmentHeader
+          title={treatment?.name}
+          breadcrumbs={[
+            { label: "Home" },
+            { label: treatment?.disease?.name || "Treatment"  },
+            { label: treatment?.name || "Treatment" ,link: "/" },
+          ]}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
 
-        {/* STATIC OVERVIEW SECTION (MATCHING YOUR SCREENSHOT) */}
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
@@ -152,12 +160,12 @@ export default function TreatmentDetailsPage() {
             </div>
           </div>
         </div>
-      <div
-  className="prose max-w-none"
-  dangerouslySetInnerHTML={{
-    __html: treatment?.description_html || "",
-  }}
-/>
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{
+            __html: treatment?.description_html || "",
+          }}
+        />
 
       </div>
 
