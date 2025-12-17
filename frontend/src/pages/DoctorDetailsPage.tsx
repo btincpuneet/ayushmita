@@ -42,7 +42,7 @@ const NextArrow = ({ onClick }: any) => (
 );
 
 const PrevArrow = ({ onClick }: any) => (
-   <span></span>
+    <span></span>
 );
 
 /* -------------------- PAGE -------------------- */
@@ -144,9 +144,9 @@ const DoctorDetailsPage: React.FC = () => {
             <TreatmentHeader
                 title={doctor.name}
                 breadcrumbs={[
-                    { label: "Home", link: "/" },
-                    { label: "Hospitals", link: "/hospitals" },
-                    { label: doctor.name },
+                    { label: "Home" },
+                    { label: "Hospitals"},
+                    { label: doctor.name ,link: "/"},
                 ]}
             />
             <main className=" bg-gray-50">
@@ -282,7 +282,14 @@ const DoctorDetailsPage: React.FC = () => {
                                         </div>
 
                                         {/* BUTTON */}
-                                        <button className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
+                                        <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-[#F0A324] hover:bg-yellow-600 transition px-4 py-2 rounded-lg" style={{
+                                            fontFamily: '"Open Sans", sans-serif',
+                                            fontWeight: 600,
+                                            fontStyle: "normal",
+                                            fontSize: "12px",
+                                            lineHeight: "100%",
+                                            letterSpacing: "0%",
+                                        }}>
                                             Book An Appointment
                                         </button>
                                     </div>
@@ -306,14 +313,14 @@ const DoctorDetailsPage: React.FC = () => {
                 <section className="py-10">
                     <Container>
                         <h2 className="mb-6" style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontStyle: "normal",
-  fontSize: "28px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
->
+                            fontFamily: "Ubuntu, sans-serif",
+                            fontWeight: 700,
+                            fontStyle: "normal",
+                            fontSize: "28px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                        }}
+                        >
                             Similar Doctors in {doctor.city}
                         </h2>
 
@@ -343,10 +350,10 @@ const DoctorDetailsPage: React.FC = () => {
                                                 fontFamily: "Ubuntu, sans-serif",
                                                 fontWeight: 700,
                                                 fontSize: "15px",
-
                                                 letterSpacing: "0px",
                                                 textAlign: "center",
                                                 color: "#F0A324",
+                                                paddingBottom: "10px",
                                             }}
                                             >{d.specialty}</p>
 
@@ -361,14 +368,14 @@ const DoctorDetailsPage: React.FC = () => {
                 <section className="py-10 bg-white">
                     <Container>
                         <h2 className="mb-6" style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontStyle: "normal",
-  fontSize: "28px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
->
+                            fontFamily: "Ubuntu, sans-serif",
+                            fontWeight: 700,
+                            fontStyle: "normal",
+                            fontSize: "28px",
+                            lineHeight: "100%",
+                            letterSpacing: "0%",
+                        }}
+                        >
                             Similar Hospitals in {doctor.city}
                         </h2>
 

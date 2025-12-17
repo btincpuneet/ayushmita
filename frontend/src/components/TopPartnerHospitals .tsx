@@ -83,7 +83,7 @@ const TopPartnerHospitals = () => {
 
     appendDots: (dots) => (
       <div>
-        <ul className="flex items-center justify-center mt-8">{dots}</ul>
+        <ul className="flex items-center justify-center mt-20">{dots}</ul>
       </div>
     ),
 

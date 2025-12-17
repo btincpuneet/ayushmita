@@ -25,7 +25,6 @@ export default function Index() {
 
   const cities = selectedCountry ? citiesByCountry[selectedCountry] || [] : [];
 
-  // Fetch hospitals from API
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -56,7 +55,6 @@ export default function Index() {
     loadData();
   }, []);
 
-  // Filter hospitals by country + city
   const filteredHospitals = hospitals.filter((h) => {
     return (
       (!selectedCountry || h.country === selectedCountry) &&
@@ -94,14 +92,14 @@ export default function Index() {
                 ) : (
                   <>
                     <h2 className="text-md text-[#454D5D] mb-4"
-                    style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 400,
-  fontStyle: "normal",
-  fontSize: "14px",
-  lineHeight: "140%",
-  letterSpacing: "0%",
-}}
+                      style={{
+                        fontFamily: "Ubuntu, sans-serif",
+                        fontWeight: 400,
+                        fontStyle: "normal",
+                        fontSize: "14px",
+                        lineHeight: "140%",
+                        letterSpacing: "0%",
+                      }}
 
                     >
                       Listing {filteredHospitals.length} Hospitals
@@ -130,16 +128,15 @@ export default function Index() {
                 )}
               </div>
 
-              {/* RIGHT SIDE FORM */}
               <div className="lg:col-span-1">
-                 <BookingForm />
+                <BookingForm />
               </div>
 
             </div>
           </Container>
         </section>
       </main>
-
+       
       <Footer />
     </>
   );

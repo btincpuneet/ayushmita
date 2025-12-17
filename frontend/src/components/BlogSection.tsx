@@ -32,7 +32,7 @@ const BlogSection = () => {
 
   return (
     <section style={{ backgroundColor: "#ffffff", padding: "60px 0" }}>
-      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-12">
+      <div className="max-w-7xl mx-auto px-5 py-10 md:py-10 lg:py-10">
         
         <div
           style={{

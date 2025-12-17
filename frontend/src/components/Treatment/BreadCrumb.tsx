@@ -26,7 +26,7 @@ export default function BreadCrumb({ onTabClick, activeTab, tabs }: Props) {
 
   return (
     <div className="bg-[#2A6506] w-full">
-      <Container>
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div
           className="flex items-center gap-8 py-3"
           style={{
@@ -52,7 +52,7 @@ export default function BreadCrumb({ onTabClick, activeTab, tabs }: Props) {
           ))}
           <IoChevronForward className="text-yellow-400 text-lg flex-shrink-0" />
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

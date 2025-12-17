@@ -20,6 +20,7 @@ import {
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
+import ModalAppointment from "../components/Treatment/ModalAppointment";
 
 function NextArrow({ onClick }: any) {
   return (
@@ -371,7 +372,7 @@ function DoctorsSection({ doctors }: any) {
               <img
                 src={d.image}
                 alt={d.name}
-                className="w-[272px] h-[233px]  object-cover mb-3"
+                className="w-full h-[233px]  object-cover mb-3 rounded-2xl"
               />
               <div >
                 <h4 style={{
@@ -405,6 +406,7 @@ function DoctorsSection({ doctors }: any) {
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
   const [hospital, setHospital] = useState<any>(null);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -527,7 +529,7 @@ export default function HospitalDetailsPage() {
       />
 
       <div className="relative w-full max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12 mb-12">
           <div className="lg:col-span-2">
             <HospitalInfoCard
               hospital={hospital}
@@ -546,8 +548,11 @@ export default function HospitalDetailsPage() {
         <SimilarHospitals hospitals={similarHospitals} />
         <DoctorsSection doctors={doctors} />
       </div>
-
-    <Footer />
+      <ModalAppointment
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <Footer />
     </>
   );
 }

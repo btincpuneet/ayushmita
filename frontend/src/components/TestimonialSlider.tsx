@@ -93,7 +93,7 @@ const TestimonialSlider: React.FC = () => {
       className="px-4 customer-happiness-sections"
       style={{ backgroundColor: "#F6F7F9" }}
     >
-      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-12">
+      <div className="max-w-7xl mx-auto px-5 py-14 md:py-14 lg:py-14">
         <div className="container max-w-7xl mx-auto relative">
           <h2
             className="text-center mb-6"

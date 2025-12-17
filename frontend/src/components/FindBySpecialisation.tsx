@@ -128,7 +128,7 @@ const FindBySpecialisation: React.FC = () => {
     <section className="bg-gray-50">
       <div className="relative w-full max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 py-10">
         <div className="text-center mb-6">
           <h2
             className="Specialisation text-center capitalize"
