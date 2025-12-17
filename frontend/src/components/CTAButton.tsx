@@ -6,7 +6,7 @@ const CTAButton: React.FC = () => (
     className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium bg-primary text-white shadow hover:brightness-95 transition"
     aria-label="Get a free quote"
   >
-    Get a FREE quote
+    Get a FREEs quote
   </a>
 )
 

@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import ConsultationForm from "../components/ConsulatForm";
 import TestimonialSlider from "../components/TestimonialSlider";
 import BlogSection from "../components/BlogSection";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 interface Treatment {
   id: number;
@@ -60,9 +61,14 @@ const DiseaseDetailsPage = () => {
   return (
     <div className="bg-[#f8f9fa] pb-20">
       <Header />
-
       <div className="w-full">
-        <Breadcrumb title={disease?.name} />
+        <TreatmentHeader
+          title={disease?.name}
+          breadcrumbs={[
+            { label: "Home" },
+            { label: disease?.name || "Treatment" ,link: "/" },
+          ]}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 mt-10">

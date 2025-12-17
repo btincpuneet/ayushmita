@@ -124,27 +124,27 @@ export default function TreatmentsLandingPage() {
                   <div className="w-full lg:w-[100%]">
                     <h2
                       className="heading-main"
-                       style={{
-    fontFamily: "Ubuntu",
-    fontWeight: 700,
-    fontStyle: "bold",
-    fontSize: "32px",
-    lineHeight: "100%",
-    letterSpacing: "0%",
-  }}
+                      style={{
+                        fontFamily: "Ubuntu",
+                        fontWeight: 700,
+                        fontStyle: "bold",
+                        fontSize: "32px",
+                        lineHeight: "100%",
+                        letterSpacing: "0%",
+                      }}
                       onClick={() => handleDiseaseNavigate(disease.slug)}
                     >
                       {disease.name}
                     </h2>
-<span
-  style={{
-    width: "32px",
-    height: "4px",
-    background: "linear-gradient(to right, #f1a339, #7ac142)",
-    borderRadius: "5px",
-    display: "inline-block",
-  }}
-></span>
+                    <span
+                      style={{
+                        width: "32px",
+                        height: "4px",
+                        background: "linear-gradient(to right, #f1a339, #7ac142)",
+                        borderRadius: "5px",
+                        display: "inline-block",
+                      }}
+                    ></span>
 
 
                     <div className="grid grid-cols-3 grid-flow-row">
