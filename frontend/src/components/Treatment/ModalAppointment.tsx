@@ -20,7 +20,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({ isOpen, onClose }) 
                 </button>
 
 
-                <h2 className="text-xl font-semibold mb-4 text-left bg-[#F6F7F9] px-4 py-4">
+                <h2 className="text-xl font-semibold mb-4 text-left bg-[#F6F7F9] px-4 py-4 rounded-2xl">
                     Book An Appointment For Treatment
                 </h2>
 

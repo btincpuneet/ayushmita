@@ -170,7 +170,18 @@ const Footer: React.FC = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="text-sm hover:text-white transition">
+                  <span  className="text-sm hover:text-white transition"
+                    style={{
+                      fontFamily: 'Roboto',
+                      fontWeight: 400,          // Regular weight
+                      fontStyle: 'normal',      // Regular corresponds to normal
+                      fontSize: '16px',
+                      lineHeight: '28px',
+                      letterSpacing: '0%',
+                      verticalAlign: 'middle',
+                      // leading-trim: NONE is not standard CSS, so it's ignored
+                    }}
+                  >
                     {name}
                   </span>
                 </li>
@@ -202,6 +213,17 @@ const Footer: React.FC = () => {
                   <Link
                     to="/"
                     className="text-sm hover:text-white transition"
+                    style={{
+                      fontFamily: 'Roboto',
+                      fontWeight: 400,          // Regular weight
+                      fontStyle: 'normal',      // Regular corresponds to normal
+                      fontSize: '16px',
+                      lineHeight: '28px',
+                      letterSpacing: '0%',
+                      verticalAlign: 'middle',
+                      // leading-trim: NONE is not standard CSS, so it's ignored
+                    }}
+
                   >
                     {item.label}
                   </Link>
@@ -212,16 +234,15 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-10" />
-        <p className="mt-6 text-start sm:text-center text-gray-300 text-sm"
+        <p className="mt-6 text-start sm:text-center text-gray-300"
           style={{
             fontFamily: 'Poppins',
-            fontWeight: 400,          // Regular weight
-            fontStyle: 'normal',      // Regular corresponds to normal
+            fontWeight: 400,
+            fontStyle: 'normal',
             fontSize: '16px',
             lineHeight: '28px',
             letterSpacing: '0%',
             verticalAlign: 'middle',
-            // leading-trim: NONE is not standard CSS, so it's ignored
           }}>
           © {new Date().getFullYear()} ayushm.com. All Rights Reserved
         </p>

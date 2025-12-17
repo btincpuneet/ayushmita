@@ -35,19 +35,14 @@ const NextArrow = ({ onClick }: any) => (
                w-10 h-10 bg-white rounded-full shadow
                flex items-center justify-center"
     >
-        <ChevronRight className="text-orange-500" />
+        <svg width="19" height="10" viewBox="0 0 19 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.3615 6L12.9105 8.59L14.25 10L19 5L14.25 0L12.9105 1.41L15.3615 4H0V6H15.3615Z" fill="#F0A324" />
+        </svg>
     </button>
 );
 
 const PrevArrow = ({ onClick }: any) => (
-    <button
-        onClick={onClick}
-        className="absolute -left-5 top-1/2 -translate-y-1/2 z-10
-               w-10 h-10 bg-white rounded-full shadow
-               flex items-center justify-center"
-    >
-        <ChevronRight className="rotate-180 text-orange-500" />
-    </button>
+   <span></span>
 );
 
 /* -------------------- PAGE -------------------- */
@@ -165,51 +160,129 @@ const DoctorDetailsPage: React.FC = () => {
                                         <img
                                             src={image}
                                             alt={doctor.name}
-                                            className="w-[320px] h-[320px] object-cover rounded-2xl"
+                                            className="w-[370px] h-[276px] object-cover rounded-2xl"
                                         />
                                     </div>
 
                                     <div className="flex-1">
-                                        <div className="flex items-center gap-3  text-sm">
-                                            <Briefcase className="text-yellow-500 w-5 h-5" />
-                                            <span className="font-medium">
-                                                Experience: <strong>{doctor.experience}+ years of experience</strong>
+                                        <div className="flex items-center gap-3 mb-1 text-sm">
+                                            <Briefcase className="text-[#F0A324] w-5 h-5" />
+                                            <span style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 400,
+                                                fontStyle: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "26px",
+                                                letterSpacing: "0%",
+                                            }}
+                                            >
+                                                Experience: <strong style={{
+                                                    fontFamily: "Ubuntu, sans-serif",
+                                                    fontWeight: 700,
+                                                    fontStyle: "normal",
+                                                    fontSize: "14px",
+                                                    lineHeight: "26px",
+                                                    letterSpacing: "0%",
+                                                }}
+                                                >{doctor.experience}+ years of experience</strong>
                                             </span>
                                         </div>
 
 
-                                        <div className="flex items-center gap-3 text-sm">
-                                            <Stethoscope className="text-yellow-500 w-5 h-5" />
-                                            <span>
-                                                Specialty: <strong>{doctor.specialty}</strong>
+                                        <div className="flex items-center mb-2 gap-3 text-sm">
+                                            <Stethoscope className="text-[#F0A324] w-5 h-5" />
+                                            <span style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 400,
+                                                fontStyle: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "26px",
+                                                letterSpacing: "0%",
+                                            }}>
+                                                Specialty: <strong style={{
+                                                    fontFamily: "Ubuntu, sans-serif",
+                                                    fontWeight: 700,
+                                                    fontStyle: "normal",
+                                                    fontSize: "14px",
+                                                    lineHeight: "26px",
+                                                    letterSpacing: "0%",
+                                                }}>{doctor.specialty}</strong>
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-3 text-sm">
-                                            <Building2 className="text-yellow-500 w-5 h-5" />
-                                            <span>
-                                                Hospital: <strong>{doctor.hospital || "Medanta"}</strong>
+                                        <div className="flex items-center mb-2 gap-3 text-sm">
+                                            <Building2 className="text-[#F0A324] w-5 h-5" />
+                                            <span style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 400,
+                                                fontStyle: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "26px",
+                                                letterSpacing: "0%",
+                                            }}
+                                            >
+                                                Hospital: <strong style={{
+                                                    fontFamily: "Ubuntu, sans-serif",
+                                                    fontWeight: 700,
+                                                    fontStyle: "normal",
+                                                    fontSize: "14px",
+                                                    lineHeight: "26px",
+                                                    letterSpacing: "0%",
+                                                }}
+                                                >{doctor.hospital || "Medanta"}</strong>
                                             </span>
                                         </div>
 
                                         {/* CITY */}
-                                        <div className="flex items-center gap-3 text-sm">
-                                            <MapPin className="text-yellow-500 w-5 h-5" />
-                                            <span>
-                                                City: <strong>{doctor.city}</strong>
+                                        <div className="flex items-center mb-2 gap-3 text-sm">
+                                            <MapPin className="text-[#F0A324] w-5 h-5" />
+                                            <span style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 400,
+                                                fontStyle: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "26px",
+                                                letterSpacing: "0%",
+                                            }}
+                                            >
+                                                City: <strong style={{
+                                                    fontFamily: "Ubuntu, sans-serif",
+                                                    fontWeight: 700,
+                                                    fontStyle: "normal",
+                                                    fontSize: "14px",
+                                                    lineHeight: "26px",
+                                                    letterSpacing: "0%",
+                                                }}
+                                                >{doctor.city}</strong>
                                             </span>
                                         </div>
 
                                         {/* COUNTRY */}
-                                        <div className="flex items-center gap-3 text-sm">
-                                            <Globe className="text-yellow-500 w-5 h-5" />
-                                            <span>
-                                                Country: <strong>{doctor.country}</strong>
+                                        <div className="flex items-center mb-2 gap-3 text-sm">
+                                            <Globe className="text-[#F0A324] w-5 h-5" />
+                                            <span style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 400,
+                                                fontStyle: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "26px",
+                                                letterSpacing: "0%",
+                                            }}
+                                            >
+                                                Country: <strong style={{
+                                                    fontFamily: "Ubuntu, sans-serif",
+                                                    fontWeight: 700,
+                                                    fontStyle: "normal",
+                                                    fontSize: "14px",
+                                                    lineHeight: "26px",
+                                                    letterSpacing: "0%",
+                                                }}
+                                                >{doctor.country}</strong>
                                             </span>
                                         </div>
 
                                         {/* BUTTON */}
-                                        <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
+                                        <button className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
                                             Book An Appointment
                                         </button>
                                     </div>
@@ -232,14 +305,22 @@ const DoctorDetailsPage: React.FC = () => {
 
                 <section className="py-10">
                     <Container>
-                        <h2 className="text-xl font-bold mb-6">
+                        <h2 className="mb-6" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "28px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+>
                             Similar Doctors in {doctor.city}
                         </h2>
 
                         <div className="relative">
                             <Slider {...doctorSlider}>
                                 {similarDoctors.map((d) => (
-                                    <div key={d.id} className="px-3">
+                                    <div key={d.id} className="px-3" >
                                         <div className="bg-white rounded-xl shadow text-center">
                                             <img
                                                 src={
@@ -247,10 +328,27 @@ const DoctorDetailsPage: React.FC = () => {
                                                         ? `http://127.0.0.1:5001${d.image_url}`
                                                         : image
                                                 }
-                                                className=""
+                                                className="h-[233px] w-full object-cover rounded-2xl"
                                             />
-                                            <h3 className="font-semibold text-sm">{d.name}</h3>
-                                            <p className="text-xs text-gray-500">{d.specialty}</p>
+                                            <h3 style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 700,
+                                                fontSize: "20px",
+                                                lineHeight: "55px",
+                                                letterSpacing: "0px",
+                                                textAlign: "center",
+                                            }}
+                                            >{d.name}</h3>
+                                            <p style={{
+                                                fontFamily: "Ubuntu, sans-serif",
+                                                fontWeight: 700,
+                                                fontSize: "15px",
+
+                                                letterSpacing: "0px",
+                                                textAlign: "center",
+                                                color: "#F0A324",
+                                            }}
+                                            >{d.specialty}</p>
 
                                         </div>
                                     </div>
@@ -262,7 +360,15 @@ const DoctorDetailsPage: React.FC = () => {
 
                 <section className="py-10 bg-white">
                     <Container>
-                        <h2 className="text-xl font-bold mb-6">
+                        <h2 className="mb-6" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "28px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+>
                             Similar Hospitals in {doctor.city}
                         </h2>
 
@@ -274,11 +380,27 @@ const DoctorDetailsPage: React.FC = () => {
                                             <div className="rounded-xl overflow-hidden shadow">
                                                 <img
                                                     src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
-                                                    className="h-40 w-full object-cover"
+                                                    className="h-[280px] w-full object-cover rounded-2xl"
                                                 />
                                                 <div className="p-4">
-                                                    <h3 className="font-semibold">{name}</h3>
-                                                    <p className="text-sm text-gray-500">
+                                                    <h3 style={{
+                                                        fontFamily: "Ubuntu, sans-serif",
+                                                        fontWeight: 700,
+                                                        fontStyle: "normal",
+                                                        fontSize: "20px",
+                                                        lineHeight: "28px",
+                                                        letterSpacing: "0%",
+                                                    }}
+                                                    >{name}</h3>
+                                                    <p className="mt-3" style={{
+                                                        fontFamily: "Ubuntu, sans-serif",
+                                                        fontWeight: 400,
+                                                        fontStyle: "normal",
+                                                        fontSize: "14px",
+                                                        lineHeight: "10px",
+                                                        letterSpacing: "0%",
+                                                    }}
+                                                    >
                                                         {doctor.city}
                                                     </p>
                                                 </div>

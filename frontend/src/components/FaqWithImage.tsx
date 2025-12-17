@@ -66,7 +66,7 @@ const FaqWithImage = ({
           Frequently Asked Questions
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center faq-section-medical">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start [overflow-anchor:none]">
 
           {/* Left Image Section */}
           <div className="lg:col-span-5 flex justify-center lg:justify-start">

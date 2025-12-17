@@ -126,9 +126,10 @@ const SPECIALISATIONS = [
 const FindBySpecialisation: React.FC = () => {
   return (
     <section className="bg-gray-50">
-      <div className="relative w-full max-w-7xl mx-auto px-4 py-16">
+      <div className="relative w-full max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <h2
             className="Specialisation text-center capitalize"
             style={{
@@ -167,14 +168,14 @@ const FindBySpecialisation: React.FC = () => {
 
               <span className="text-gray-700 font-medium text-lg"
                 style={{
-                  fontFamily: 'Ubuntu',
-                  fontWeight: 500,          // Medium weight
+                          // Medium weight
                   fontStyle: 'normal',      // Medium corresponds to weight, fontStyle is normal
+                  fontWeight: 500,
+                  fontStyle: 'normal',
                   fontSize: '18px',
                   lineHeight: '27px',
                   letterSpacing: '0%',
                   textAlign: 'center',
-                  // leading-trim: NONE is not standard CSS, so it's ignored
                 }}>
                 {s.name}
               </span>
@@ -184,31 +185,28 @@ const FindBySpecialisation: React.FC = () => {
 
 
         <div className="mt-10 flex justify-center">
-          <Link to="/treatment">
-
-            <button
-
-              className="bg-amber-400 hover:bg-amber-500 py-3 px-8 rounded-lg shadow-md transition"
-              style={{
-                fontFamily: 'Ubuntu',
-                fontWeight: 500,
-                fontStyle: 'normal',
-                fontSize: '16px',
-                lineHeight: '100%',
-                letterSpacing: '2%',
-                textAlign: 'center',
-                backgroundColor: '#F0A324',
-                padding: '0.75rem 2rem',
-                borderRadius: '0.5rem',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-              }}>
-              View All
-            </button></Link>
-
+          <button className="bg-amber-400 hover:bg-amber-500 py-3 px-8 rounded-lg shadow-md transition"
+            style={{
+              fontFamily: 'Ubuntu',
+              fontWeight: 500,           // Medium weight
+              fontStyle: 'normal',       // Medium corresponds to weight
+              fontSize: '16px',
+              lineHeight: '100%',
+              letterSpacing: '2%',
+              textAlign: 'center',
+              backgroundColor: '#F0A324', // Your custom background
+              padding: '0.75rem 2rem',    // Tailwind py-3 px-8 equivalent
+              borderRadius: '0.5rem',     // Tailwind rounded-lg equivalent
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)', // Tailwind shadow-md
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              // leading-trim: NONE is not standard CSS, so it's ignored
+            }}>
+            View All
+          </button>
         </div>
       </div>
+       </div>
     </section>
   );
 };

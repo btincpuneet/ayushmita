@@ -30,8 +30,8 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
 
   return (
     <>
-      <article className="bg-white rounded-xl shadow-md p-5 flex gap-6 items-center hover:shadow-lg transition">
-        <div className="w-28 h-28 flex-shrink-0">
+      <article className="bg-white rounded-xl shadow-md p-5 flex gap-3 items-end hover:shadow-lg transition">
+        <div className="w-[158px] h-[158px] flex-shrink-0">
           <img
             src={image}
             alt={doctor.name}
@@ -40,39 +40,101 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
         </div>
 
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900">
+          <h3 style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "18px",
+  lineHeight: "24px",
+  letterSpacing: "0%",
+}}
+>
             {doctor.name}
           </h3>
 
-          <p className="text-sm text-gray-700 mb-2">
+          <p className="mb-2"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "24px",
+  letterSpacing: "0%",
+}}
+
+          >
             {doctor.specialty}
           </p>
 
           <div className="flex items-center gap-2 text-sm text-gray-700 mb-1">
-            <Briefcase size={16} className="text-orange-500" />
-            <span>
-              Experience: {doctor.experience}+ years
+            <Briefcase size={16} className="text-[#F0A324]" />
+            <span style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "26px",
+  letterSpacing: "0%",
+}}
+>
+              Experience:<b style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "26px",
+  letterSpacing: "0%",
+}}
+> {doctor.experience}+ years</b>
             </span>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <MapPin size={16} className="text-orange-500" />
-            <span>
+            <MapPin size={16} className="text-[#F0A324]" />
+            <span style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "26px",
+  letterSpacing: "0%",
+}}
+>
               {doctor.city}, {doctor.country}
             </span>
           </div>
 
-          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-2 bg-yellow-500 text-white text-sm font-medium rounded-md hover:bg-yellow-600 transition">
+          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-2 bg-[#F0A324]  rounded-md hover:bg-yellow-600 transition"
+                  style={{
+  fontFamily: "'Open Sans', sans-serif",
+  fontWeight: 600,
+  fontSize: "12px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+
+            >
             Book Appointment
           </button>
         </div>
 
         <button
           onClick={() => navigate(`/doctor/${doctor.slug}`)}
-          className="ml-auto px-4 py-2 border border-yellow-500 text-yellow-600 text-sm font-medium rounded-md flex items-center gap-2 hover:bg-yellow-50 transition"
-        >
-          View more
-          <ChevronRight size={16} />
+        className="px-4 py-2 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
+               style={{
+                  fontFamily: "'Open Sans', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "12px",
+                  lineHeight: "100%",
+                  letterSpacing: "0%",
+                }}
+             >
+                View more
+                <svg width="19" height="10" viewBox="0 0 19 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.3615 6L12.9105 8.59L14.25 10L19 5L14.25 0L12.9105 1.41L15.3615 4H0V6H15.3615Z" fill="#F0A324"/>
+</svg>
+
+              
         </button>
       </article>
       <ModalAppointment

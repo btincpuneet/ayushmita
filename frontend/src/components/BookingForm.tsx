@@ -36,10 +36,30 @@ const BookingForm: React.FC = () => {
   return (
     <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full max-w-sm sticky top-6">
       {/* Title */}
-      <h3 className="text-xl font-bold text-white text-center">
+      <h3 className="text-[#FFFFFF] text-center"
+      style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "24px",
+  lineHeight: "32px",
+  letterSpacing: "0%",
+}}
+
+      >
         Book Your Free Consultation
       </h3>
-      <p className="text-xs text-white/90 text-center mt-1 mb-6">
+      <p className="text-[#FFFFFF] text-center mt-1 mb-6"
+      style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "12px",
+  lineHeight: "18px",
+  letterSpacing: "0%",
+}}
+
+      >
         Our health expert will contact you within 24 hours
       </p>
 
@@ -47,7 +67,17 @@ const BookingForm: React.FC = () => {
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Full Name */}
         <div>
-          <label className="text-xs font-medium text-white mb-1 block">
+          <label className="text-[#FFFFFF] mb-1 block"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
+          >
             Full Name
           </label>
           <input
@@ -56,14 +86,34 @@ const BookingForm: React.FC = () => {
             onChange={handleChange}
             required
             placeholder="Enter your full name"
-            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 text-sm
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+  color: "#33333380",
+}}
+
           />
         </div>
 
         {/* Country */}
         <div>
-          <label className="text-xs font-medium text-white mb-1 block">
+          <label className="text-[#FFFFFF] mb-1 block"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
+          >
             Country
           </label>
           <select
@@ -71,8 +121,18 @@ const BookingForm: React.FC = () => {
             value={form.country}
             onChange={handleChange}
             required
-            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 text-sm
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+  color: "#33333380",
+}}
+
           >
             <option value="">Select Country</option>
             <option value="India">India</option>
@@ -83,7 +143,16 @@ const BookingForm: React.FC = () => {
 
         {/* City */}
         <div>
-          <label className="text-xs font-medium text-white mb-1 block">
+          <label className="text-[#FFFFFF] mb-1 block"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+>
             City
           </label>
           <select
@@ -91,8 +160,18 @@ const BookingForm: React.FC = () => {
             value={form.city}
             onChange={handleChange}
             required
-            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 text-sm
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+  color: "#33333380",
+}}
+
           >
             <option value="">Select City</option>
             <option value="Delhi">Delhi</option>
@@ -103,7 +182,16 @@ const BookingForm: React.FC = () => {
 
         {/* Mobile */}
         <div>
-          <label className="text-xs font-medium text-white mb-1 block">
+          <label className="text-[#FFFFFF] mb-1 block"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+>
             Mobile Number
           </label>
           <input
@@ -112,14 +200,34 @@ const BookingForm: React.FC = () => {
             onChange={handleChange}
             required
             placeholder="+91 XXXXX XXXXX"
-            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 text-sm
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+  color: "#33333380",
+}}
+
           />
         </div>
 
         {/* Requirement */}
         <div>
-          <label className="text-xs font-medium text-white mb-1 block">
+          <label className="text-[#FFFFFF] mb-1 block"
+          style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
+          >
             Treatment Requirement
           </label>
           <textarea
@@ -128,16 +236,34 @@ const BookingForm: React.FC = () => {
             onChange={handleChange}
             rows={3}
             placeholder="Describe your medical concern"
-            className="w-full px-3 py-2 rounded-lg bg-white border border-gray-300 text-sm resize-none
+            className="w-full px-3 py-2 rounded-lg bg-white border border-gray-300  resize-none
               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+              style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+  color: "#33333380",
+}}
+
           />
         </div>
 
         {/* Submit */}
         <button
           type="submit"
-          className="w-full mt-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold
+          className="w-full mt-2 bg-[#F0A324] hover:bg-[#F0A324] text-black 
             py-3 rounded-lg transition duration-200 active:scale-[0.98]"
+            style={{
+  fontFamily: "'Open Sans', sans-serif",
+  fontWeight: 600,
+  fontSize: "18px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+
         >
           Submit Request
         </button>

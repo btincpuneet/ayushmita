@@ -93,7 +93,17 @@ export default function Index() {
                   <p className="text-center text-red-500">{error}</p>
                 ) : (
                   <>
-                    <h2 className="text-md text-foreground mb-4">
+                    <h2 className="text-md text-[#454D5D] mb-4"
+                    style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "140%",
+  letterSpacing: "0%",
+}}
+
+                    >
                       Listing {filteredHospitals.length} Hospitals
                       {selectedCountry ? ` in ${selectedCountry}` : ""}
                     </h2>
