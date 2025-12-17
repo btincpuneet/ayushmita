@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Slider from "react-slick";
 import { Briefcase, Stethoscope, MapPin, Building2, Globe, ChevronRight } from "lucide-react";
+import ModalAppointment from "../components/Treatment/ModalAppointment"
 
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
@@ -55,6 +56,7 @@ const DoctorDetailsPage: React.FC = () => {
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [similarDoctors, setSimilarDoctors] = useState<Doctor[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -207,7 +209,7 @@ const DoctorDetailsPage: React.FC = () => {
                                         </div>
 
                                         {/* BUTTON */}
-                                        <button className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
+                                        <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 transition text-white font-semibold px-6 py-3 rounded-lg">
                                             Book An Appointment
                                         </button>
                                     </div>
@@ -291,6 +293,10 @@ const DoctorDetailsPage: React.FC = () => {
             </main>
 
             <Footer />
+            <ModalAppointment
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </>
     );
 };

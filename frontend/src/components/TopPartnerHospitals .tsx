@@ -4,8 +4,9 @@ import axios from "axios";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom";
 
-const API = "http://127.0.0.1:5001/api/hospitals"; 
+const API = "http://127.0.0.1:5001/api/hospitals";
 
 const NextArrow = ({ onClick }) => (
   <div
@@ -111,31 +112,35 @@ const TopPartnerHospitals = () => {
           <Slider {...settings}>
             {hospitals.map((h) => (
               <div key={h.id} className="px-4">
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-                  <div className="h-48 overflow-hidden rounded-xl">
-                    
-                    <img
-                      src={`http://127.0.0.1:5001${h.image_url}`}
-                      alt={h.name}
-                      className="w-full h-full object-cover"
-                    />
+                <Link to={`/hospitals/${h.slug}`}>
+                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition cursor-pointer">
+                    <div className="h-48 overflow-hidden rounded-xl">
+                      <img
+                        src={`http://127.0.0.1:5001${h.image_url}`}
+                        alt={h.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
+                    <div className="p-4">
+                      <h3
+                        className="font-semibold text-[15px]"
+                        style={{ fontFamily: "Ubuntu" }}
+                      >
+                        {h.name}
+                      </h3>
+                      <p
+                        className="text-gray-500 text-[13px]"
+                        style={{ fontFamily: "Ubuntu" }}
+                      >
+                        {h.city}, {h.country}
+                      </p>
+                    </div>
                   </div>
-
-                  <div className="p-4">
-                    <h3 className="font-semibold text-[15px]" style={{ fontFamily: "Ubuntu" }}>
-                      {h.name}
-                    </h3>
-                    <p
-                      className="text-gray-500 text-[13px]"
-                      style={{ fontFamily: "Ubuntu" }}
-                    >
-                      {h.city}, {h.country}
-                    </p>
-                  </div>
-                </div>
+                </Link>
               </div>
             ))}
+
           </Slider>
         </div>
       </div>

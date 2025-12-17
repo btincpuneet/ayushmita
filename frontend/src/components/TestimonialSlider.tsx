@@ -161,7 +161,7 @@ const TestimonialSlider: React.FC = () => {
 
                       <div className="flex gap-1 my-3">
                         {Array.from({ length: t.rating }).map((_, idx) => (
-                          <Star key={idx} className="w-5 h-5 text-yellow-500" />
+                          <Star key={idx} className="w-5 h-5 text-yellow-500 " fill="currentColor"/>
                         ))}
                       </div>
 

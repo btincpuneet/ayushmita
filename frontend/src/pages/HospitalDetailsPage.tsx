@@ -44,7 +44,8 @@ function PrevArrow({ onClick }: any) {
   );
 }
 
-function HospitalInfoCard({ hospital }: any) {
+function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
+
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -91,7 +92,8 @@ function HospitalInfoCard({ hospital }: any) {
           </ul>
 
           <div className="flex gap-4 mt-6">
-            <button onClick={() => setIsModalOpen(true)} className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold">
+            <button onClick={onBookAppointment}
+              className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold">
               Book Appointment
             </button>
             <button className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold">
@@ -237,11 +239,7 @@ export default function HospitalDetailsPage() {
 
   if (!hospital) return null;
 
-  const facilities = {
-    "Comfort During Stay": ["Private Rooms", "Wi-Fi", "Laundry"],
-    Food: ["Diet Meals", "International Cuisine"],
-    Transportation: ["Airport Pickup", "Ambulance"],
-  };
+
 
   const similarHospitals = [
     {
@@ -344,38 +342,34 @@ export default function HospitalDetailsPage() {
   return (
     <>
       <Header />
-
       <TreatmentHeader
         title={hospital.name}
         breadcrumbs={[
-          { label: "Home", link: "/" },
-          { label: "Hospitals", link: "/hospitals" },
-          { label: hospital.name },
+          { label: "Home" },
+          { label: "Hospitals", },
+          { label: hospital.name  , link: "/"},
         ]}
       />
-
       <Container className="py-10 mt-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
           <div className="lg:col-span-2">
-            <HospitalInfoCard hospital={hospital} />
-          </div>
+            <HospitalInfoCard
+              hospital={hospital}
+              onBookAppointment={() => setIsModalOpen(true)}
+            />          </div>
           <div className="lg:col-span-1 sticky top-24">
             <BookingForm />
           </div>
         </div>
-
         <div className="max-w-[860px] space-y-12">
           <ContentSection
-
             html={hospital.description_html}
           />
           {/* <FacilitiesSection facilities={facilities} /> */}
         </div>
-
         <SimilarHospitals hospitals={similarHospitals} />
         <DoctorsSection doctors={doctors} />
       </Container>
-
       <Footer />
       <ModalAppointment
         isOpen={isModalOpen}
