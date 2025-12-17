@@ -10,10 +10,12 @@ import DiseaseDetailsPage from "./pages/DiseaseDetailsPage";
 import HospitalDetailsPage from "./pages/HospitalDetailsPage";
 import DoctorsPage from "./pages/DoctorPage";
 import DoctorDetailsPage from "./pages/DoctorDetailsPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App: React.FC = () => {
   return (
     <HelmetProvider>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />
