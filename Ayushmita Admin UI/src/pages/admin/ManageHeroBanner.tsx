@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { heroBannerApi } from "@/services/banner";
 
 export default function ManageHeroBanner() {
-  const [banners, setBanners] = useState([]);
+  const [banners, setBanners] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
   const BASE_URL = "http://127.0.0.1:5001";
 
   const [form, setForm] = useState({
@@ -14,7 +15,7 @@ export default function ManageHeroBanner() {
     description: "",
     button_text: "",
     button_url: "",
-    sort_order: 1,
+    status: "inactive",
     image: null as File | null,
   });
 
@@ -54,7 +55,7 @@ export default function ManageHeroBanner() {
       description: "",
       button_text: "",
       button_url: "",
-      sort_order: 1,
+      status: "inactive",
       image: null,
     });
 
@@ -65,7 +66,6 @@ export default function ManageHeroBanner() {
 
   const handleSubmit = async () => {
     if (!form.title) return setErrorMsg("Title is required");
-
     if (!editingId && !form.image)
       return setErrorMsg("Image is required");
 
@@ -100,15 +100,11 @@ export default function ManageHeroBanner() {
       description: banner.description,
       button_text: banner.button_text,
       button_url: banner.button_url,
-      sort_order: banner.sort_order,
+      status: banner.status,
       image: null,
     });
 
-    const img = banner.image?.startsWith("/uploads")
-      ? `${BASE_URL}${banner.image}`
-      : banner.image;
-
-    setPreviewImage(img);
+    setPreviewImage(`${BASE_URL}${banner.image}`);
     setModalOpen(true);
   };
 
@@ -125,6 +121,7 @@ export default function ManageHeroBanner() {
 
   return (
     <div className="p-6">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Hero Banner Management</h1>
         <button
@@ -143,62 +140,106 @@ export default function ManageHeroBanner() {
               <th className="border p-3">Image</th>
               <th className="border p-3">Title</th>
               <th className="border p-3">Subtitle</th>
-              <th className="border p-3">Button</th>
-              <th className="border p-3">Sort</th>
+              <th className="border p-3">Description</th>
+              <th className="border p-3">Button Text</th>
+              <th className="border p-3">Button URL</th>
+              <th className="border p-3">Status</th>
               <th className="border p-3">Actions</th>
             </tr>
           </thead>
 
-          <tbody>
-            {banners.map((banner: any) => {
-                  {{console.log(banner.image)}}
-              return (
 
-                <tr key={banner.id} className="border hover:bg-gray-50">
+          <tbody>
+            {banners.map((banner) => (
+              <tr key={banner.id} className="border hover:bg-gray-50 align-top">
+
+                {/* Image */}
                 <td className="p-3">
-                  {/* FIXED: Now image loads correctly */}
                   {banner.image ? (
                     <img
-                      src={`${BASE_URL}${banner.image}`}
-                      alt=""
-                      className="w-20 h-14 object-cover rounded"
+                      src={`http://127.0.0.1:5001${banner.image}`}
+                      alt={banner.title}
+                      className="w-24 h-16 object-cover rounded"
                     />
                   ) : (
-                    <div className="w-20 h-14 bg-gray-200 rounded" />
+                    <span>-</span>
                   )}
                 </td>
-                  <td className="p-3 font-semibold">{banner.title}</td>
-                  <td className="p-3">{banner.subtitle}</td>
-                  <td className="p-3">{banner.button_text}</td>
-                  <td className="p-3">{banner.sort_order}</td>
 
-                  <td className="p-3 flex gap-3">
-                    <button
-                      onClick={() => handleEdit(banner)}
-                      className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                    >
-                      Edit
-                    </button>
+                {/* Title */}
+                <td className="p-3 whitespace-pre-line font-semibold">
+                  {banner.title}
+                </td>
 
-                    <button
-                      onClick={() => handleDelete(banner.id)}
-                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+                {/* Subtitle */}
+                <td className="p-3">
+                  {banner.subtitle || "-"}
+                </td>
+
+                {/* Description */}
+                <td className="p-3 max-w-xs text-sm text-gray-600">
+                  {banner.description || "-"}
+                </td>
+
+                {/* Button Text */}
+                <td className="p-3">
+                  {banner.button_text || "-"}
+                </td>
+
+                {/* Button URL */}
+                <td className="p-3 text-blue-600 underline break-all">
+                  {banner.button_url ? (
+                    <a href={banner.button_url} target="_blank" rel="noreferrer">
+                      {banner.button_url}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+
+                {/* Status */}
+                <td className="p-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${banner.status === "active"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-600"
+                      }`}
+                  >
+                    {banner.status}
+                  </span>
+                </td>
+
+               
+
+                {/* Actions */}
+                <td className="p-3 flex gap-2">
+                  <button
+                    onClick={() => handleEdit(banner)}
+                    className="px-3 py-1 bg-yellow-500 text-white rounded"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(banner.id)}
+                    className="px-3 py-1 bg-red-600 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+
+              </tr>
+            ))}
 
             {!banners.length && (
               <tr>
-                <td colSpan={6} className="text-center p-5">
-                  No banners found.
+                <td colSpan={9} className="text-center p-6 text-gray-500">
+                  No hero banners found
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
 
@@ -216,7 +257,6 @@ export default function ManageHeroBanner() {
               </p>
             )}
 
-            {/* Form Inputs */}
             <div className="grid grid-cols-2 gap-4">
               <input
                 className="border p-2 rounded"
@@ -227,8 +267,19 @@ export default function ManageHeroBanner() {
                 }
               />
 
-              <input
+              <select
                 className="border p-2 rounded"
+                value={form.status}
+                onChange={(e) =>
+                  setForm({ ...form, status: e.target.value })
+                }
+              >
+                <option value="inactive">Inactive</option>
+                <option value="active">Active</option>
+              </select>
+
+              <input
+                className="border p-2 rounded col-span-2"
                 placeholder="Subtitle"
                 value={form.subtitle}
                 onChange={(e) =>
@@ -263,30 +314,11 @@ export default function ManageHeroBanner() {
                 }
               />
 
-              <input
-                type="number"
-                className="border p-2 rounded"
-                placeholder="Sort Order"
-                value={form.sort_order}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    sort_order: Number(e.target.value),
-                  })
-                }
-              />
-
-              {/* Image Upload */}
               <div className="col-span-2">
                 <label className="font-semibold">
                   Image {editingId ? "" : "*"}
                 </label>
-
-                <input
-                  type="file"
-                  onChange={handleImage}
-                  className="mt-2"
-                />
+                <input type="file" onChange={handleImage} className="mt-2" />
 
                 {previewImage && (
                   <img
@@ -298,14 +330,13 @@ export default function ManageHeroBanner() {
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => {
                   setModalOpen(false);
                   clearForm();
                 }}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded"
               >
                 Cancel
               </button>
@@ -313,7 +344,7 @@ export default function ManageHeroBanner() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
+                className="px-4 py-2 bg-blue-600 text-white rounded disabled:bg-blue-300"
               >
                 {loading ? "Saving..." : editingId ? "Update" : "Create"}
               </button>

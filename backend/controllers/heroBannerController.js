@@ -2,7 +2,9 @@ const { HeroBanner } = require("../models/heroBanner");
 const { sequelize } = require("../models/index");
 const { Op } = require("sequelize");
 
-
+/* =========================
+   CREATE HERO BANNER
+========================= */
 const createHeroBanner = async (req, res) => {
   try {
     const {
@@ -15,20 +17,25 @@ const createHeroBanner = async (req, res) => {
       sort_order,
     } = req.body;
 
-    const image = req.file ? `/uploads/hero-banners/${req.file.filename}` : null;
+    const image = req.file
+      ? `/uploads/hero-banners/${req.file.filename}`
+      : null;
 
     if (!title || !image) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Title and image are required" });
+      return res.status(400).json({
+        success: false,
+        message: "Title and image are required",
+      });
     }
 
-    const requestedStatus = status === "active" ? "active" : "inactive";
+    const finalStatus = status === "active" ? "active" : "inactive";
+    const finalSortOrder = Number(sort_order) || 0;
 
     let newHero;
 
     await sequelize.transaction(async (t) => {
-      if (requestedStatus === "active") {
+      // Only one active banner allowed
+      if (finalStatus === "active") {
         await HeroBanner.update(
           { status: "inactive" },
           { where: { status: "active" }, transaction: t }
@@ -43,8 +50,8 @@ const createHeroBanner = async (req, res) => {
           image,
           button_text,
           button_url,
-          status: requestedStatus,
-          sort_order,
+          status: finalStatus,
+          sort_order: finalSortOrder,
         },
         { transaction: t }
       );
@@ -56,13 +63,23 @@ const createHeroBanner = async (req, res) => {
       data: newHero,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
+
+/* =========================
+   GET ALL HERO BANNERS
+========================= */
 const getAllHeroBanners = async (req, res) => {
   try {
     const heroes = await HeroBanner.findAll({
-      order: [["sort_order", "ASC"]],
+      order: [
+        ["sort_order", "ASC"],
+        ["id", "DESC"],
+      ],
     });
 
     res.status(200).json({
@@ -71,18 +88,25 @@ const getAllHeroBanners = async (req, res) => {
       data: heroes,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
+/* =========================
+   GET HERO BY ID
+========================= */
 const getHeroBannerById = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
 
     if (!hero) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Hero banner not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Hero banner not found",
+      });
     }
 
     res.status(200).json({
@@ -91,18 +115,25 @@ const getHeroBannerById = async (req, res) => {
       data: hero,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
+/* =========================
+   UPDATE HERO BANNER
+========================= */
 const updateHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
 
     if (!hero) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Hero banner not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Hero banner not found",
+      });
     }
 
     const {
@@ -119,7 +150,7 @@ const updateHeroBanner = async (req, res) => {
       ? `/uploads/hero-banners/${req.file.filename}`
       : hero.image;
 
-    const requestedStatus =
+    const finalStatus =
       status === "active"
         ? "active"
         : status === "inactive"
@@ -127,7 +158,7 @@ const updateHeroBanner = async (req, res) => {
         : hero.status;
 
     await sequelize.transaction(async (t) => {
-      if (requestedStatus === "active") {
+      if (finalStatus === "active") {
         await HeroBanner.update(
           { status: "inactive" },
           {
@@ -148,8 +179,11 @@ const updateHeroBanner = async (req, res) => {
           image: newImage,
           button_text: button_text ?? hero.button_text,
           button_url: button_url ?? hero.button_url,
-          status: requestedStatus,
-          sort_order: sort_order ?? hero.sort_order,
+          status: finalStatus,
+          sort_order:
+            sort_order !== undefined
+              ? Number(sort_order)
+              : hero.sort_order,
         },
         { transaction: t }
       );
@@ -161,19 +195,25 @@ const updateHeroBanner = async (req, res) => {
       data: hero,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-
+/* =========================
+   DELETE HERO BANNER
+========================= */
 const deleteHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
 
     if (!hero) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Hero banner not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Hero banner not found",
+      });
     }
 
     await hero.destroy();
@@ -183,10 +223,12 @@ const deleteHeroBanner = async (req, res) => {
       message: "Hero banner deleted successfully",
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
-
 
 module.exports = {
   createHeroBanner,

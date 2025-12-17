@@ -21,7 +21,7 @@ interface ArrowProps {
 const API = "http://127.0.0.1:5001/api/testimonials";
 
 const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
- <span></span>
+  <span></span>
 );
 
 const OverlapNextArrow: React.FC<ArrowProps> = ({ onClick }) => (
@@ -43,6 +43,13 @@ const OverlapNextArrow: React.FC<ArrowProps> = ({ onClick }) => (
 const TestimonialSlider: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState<number | null>(null);
+
+  const toggleReadMore = (id: number) => {
+    setExpanded((prev) => (prev === id ? null : id));
+  };
+
+  const MAX_LENGTH = 90;
 
   const fetchTestimonials = async () => {
     try {
@@ -125,7 +132,8 @@ const TestimonialSlider: React.FC = () => {
               <Slider {...settings}>
                 {testimonials.map((t) => (
                   <div key={t.id} className="px-3 md:px-4">
-                    <div className="bg-white rounded-2xl p-4 h-96 hover:scale-105 transition-transform flex flex-col items-center text-center">
+                    <div className="bg-white rounded-2xl p-4 min-h-[24rem] hover:scale-105 transition-transform flex flex-col items-center text-center"
+                    >
                       <img
                         src={`http://127.0.0.1:5001${t.image_url}`}
                         alt={t.name}
@@ -149,23 +157,39 @@ const TestimonialSlider: React.FC = () => {
 
                       <div className="flex gap-1 my-3">
                         {Array.from({ length: t.rating }).map((_, idx) => (
-                          <Star key={idx} className="w-5 h-5 text-yellow-500 " fill="currentColor"/>
+                          <Star key={idx} className="w-5 h-5 text-yellow-500 " fill="currentColor" />
                         ))}
                       </div>
 
-                      <p
-                        style={{
-                          fontFamily: "Inter",
-                          fontWeight: 400,
-                          fontStyle: "normal",
-                          fontSize: "20px",
-                          lineHeight: "150%",
-                          letterSpacing: "0%",
-                          textAlign: "center",
-                        }}
+                      <div
+                        className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded === t.id ? "max-h-[500px] opacity-100" : "max-h-[120px] opacity-90"
+                          }`}
                       >
-                        {t.message}
-                      </p>
+                        <p
+                          style={{
+                            fontFamily: "Inter",
+                            fontWeight: 400,
+                            fontSize: "20px",
+                            lineHeight: "150%",
+                            textAlign: "center",
+                          }}
+                        >
+                          {expanded === t.id || t.message.length <= MAX_LENGTH
+                            ? t.message
+                            : `${t.message.slice(0, MAX_LENGTH)}...`}
+                        </p>
+                      </div>
+
+
+                      {t.message.length > MAX_LENGTH && (
+                        <button
+                          onClick={() => toggleReadMore(t.id)}
+                          className="mt-2 text-[#F0A324] font-semibold text-sm transition-all duration-300 hover:underline hover:translate-y-[-1px]"
+                        >
+                          {expanded === t.id ? "Read Less" : "Read More"}
+                        </button>
+                      )}
+
                     </div>
                   </div>
                 ))}
