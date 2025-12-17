@@ -28,7 +28,10 @@ const OverlapNextArrow: React.FC<ArrowProps> = ({ onClick }) => (
   <button
     aria-label="Next"
     onClick={onClick}
-    className="absolute top-1/2 -right-8 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+    className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 
+w-12 h-12 bg-white rounded-full shadow-lg 
+items-center justify-center cursor-pointer z-10
+"
     style={{ zIndex: 30 }}
   >
     <svg width="34" height="18" viewBox="0 0 34 18" fill="none">
@@ -93,7 +96,7 @@ const TestimonialSlider: React.FC = () => {
       className="px-4 customer-happiness-sections"
       style={{ backgroundColor: "#F6F7F9" }}
     >
-      <div className="max-w-7xl mx-auto px-5 py-14 md:py-14 lg:py-14">
+      <div className="max-w-7xl mx-auto px-5 py-10 md:py-10 lg:py-10">
         <div className="container max-w-7xl mx-auto relative">
           <h2
             className="text-center mb-6"

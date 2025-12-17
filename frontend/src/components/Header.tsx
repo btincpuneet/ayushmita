@@ -78,7 +78,15 @@ const Header: React.FC = () => {
                 <li key={item.id}>
                   <Link
                     to={item.url}
-                    className="text-sm font-medium text-gray-800 hover:text-[#ff8a00]"
+                    style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+}}
+
                   >
                     {getLabel(item)}
                   </Link>
@@ -87,7 +95,16 @@ const Header: React.FC = () => {
 
               <Link
                 to={quoteItem.url}
-                className="px-5 py-2 rounded-lg bg-[#ff8a00] text-sm font-semibold"
+                className="px-5 py-3 rounded-lg bg-[#F0A324]"
+                style={{
+  fontFamily: "Poppins, sans-serif",
+  fontWeight: 500,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "100%",
+  letterSpacing: "2%",
+}}
+
               >
                 {getLabel(quoteItem)}
               </Link>

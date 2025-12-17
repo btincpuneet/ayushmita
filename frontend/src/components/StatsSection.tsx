@@ -213,7 +213,7 @@ const stats = [
 export const StatsSection: React.FC = () => {
   return (
     <section className="bg-[#F8EFBC80]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 py-12 md:py-16 lg:py-20">
+      <div className="relative w-full max-w-7xl mx-auto px-4 pb-12 md:pb-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* ---------------------- */}
           {/* Left Text Content     */}
@@ -262,7 +262,12 @@ export const StatsSection: React.FC = () => {
               return (
                 <div
                   key={stat.label}
-                  className={`${stagger} w-full max-w-xs sm:max-w-none mx-auto bg-white rounded-sm shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 md:p-7 flex flex-col items-center text-center space-y-4`}
+                  className={`${stagger} w-full h-[304px] mx-auto bg-white rounded-sm
+shadow-[0_10px_30px_rgba(15,23,42,0.06)]
+flex flex-col items-center justify-center text-center gap-4
+transition-all duration-300 ease-out
+hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(15,23,42,0.12)]
+`}
                 >
                   {/* Icon Circle */}
                   <div

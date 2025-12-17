@@ -22,7 +22,7 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
 }) => {
   return (
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
-      <div className="text-center mb-8">
+      <div className="text-center mb-9">
         {/* Breadcrumb */}
         <p className="text-[#87898C]"
           style={{

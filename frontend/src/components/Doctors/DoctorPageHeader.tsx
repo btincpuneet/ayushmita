@@ -23,7 +23,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
   return (
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       {/* TITLE */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-9">
         <p className="text-[#87898C]"
         style={{
   fontFamily: "Ubuntu, sans-serif",
@@ -38,7 +38,16 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
           Home <span className="text-[#F0A324]">/ Doctors</span>
         </p>
 
-        <h1 className="text-3xl font-bold text-gray-900 mt-2">
+        <h1 className="mt-2" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontStyle: "normal",
+  fontSize: "48px",
+  lineHeight: "100%",
+  letterSpacing: "0%",
+  textAlign: "center",
+}}
+>
           {title}
         </h1>
       </div>
