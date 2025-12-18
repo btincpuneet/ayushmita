@@ -19,7 +19,6 @@ const testimonialRoutes = require('./routes/testimonial/index.js');
 const diseaseRoutes = require("./routes/disease/diseaseRoutes.js");
 const treatmentRoutes = require("./routes/treatment/treatmentRoutes.js");
 
-// FAQ Routes
 const faqRoutes = require("./routes/faq/index.js");
 
 const blogRoutes = require("./routes/blog/index.js");

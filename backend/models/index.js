@@ -7,10 +7,10 @@ const sequelize = new Sequelize(
   config.username,
   config.password,
   {
-    host: config.host,
-    dialect: config.dialect,
+    host: config.host || "127.0.0.1",
+    dialect: config.dialect || "mysql",
     port: config.port || 3306,
-    logging: false, // Disable SQL logs (optional)
+    logging: false,
   }
 );
 
@@ -60,17 +60,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: "active",
     },
-
-    // Virtual field
     location: {
       type: DataTypes.VIRTUAL,
       get() {
         return `${this.city}, ${this.state}`;
-      },
-      set() {
-        throw new Error(
-          "Location cannot be set manually. It is computed from city and state."
-        );
       },
     },
   },
@@ -80,10 +73,17 @@ const User = sequelize.define(
   }
 );
 
-// Sync on start (safe mode)
-sequelize
-  .sync({ alter: false }) // prevent table structure from auto-changing
-  .then(() => console.log("User model synced"))
-  .catch((err) => console.error("Sync error:", err));
+// ✅ Proper DB connection & sync
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connected");
+
+    await sequelize.sync({ alter: false });
+    console.log("✅ User model synced");
+  } catch (err) {
+    console.error("❌ Database error:", err);
+  }
+})();
 
 module.exports = { sequelize, User };

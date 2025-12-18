@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { categoryApi } from "@/services/api";
 import { Category } from "@/types/content";
 
@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 /* =========================
    TYPES
 ========================= */
-type SortKey = "name" | "status" | "is_include_top_nav";
+type SortKey = "sort_order" | "name" | "status" | "is_include_top_nav";
 type SortOrder = "asc" | "desc";
 
 /* =========================
@@ -31,6 +31,7 @@ const emptyForm = {
   url: "",
   status: "active",
   is_include_top_nav: false,
+  sort_order: 0,
 };
 
 export default function ManageCategory() {
@@ -41,7 +42,7 @@ export default function ManageCategory() {
   const [editing, setEditing] = useState<Category | null>(null);
   const [form, setForm] = useState(emptyForm);
 
-  const [sortBy, setSortBy] = useState<SortKey>("name");
+  const [sortBy, setSortBy] = useState<SortKey>("sort_order");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   const { toast } = useToast();
@@ -89,6 +90,10 @@ export default function ManageCategory() {
       const valA = a[sortBy];
       const valB = b[sortBy];
 
+      if (typeof valA === "number") {
+        return sortOrder === "asc" ? valA - valB : valB - valA;
+      }
+
       if (typeof valA === "string") {
         return sortOrder === "asc"
           ? valA.localeCompare(valB as string)
@@ -104,6 +109,26 @@ export default function ManageCategory() {
       return 0;
     });
   }, [categories, sortBy, sortOrder]);
+
+  /* =========================
+     INLINE SORT UPDATE
+  ========================= */
+  const handleSortOrderChange = async (id: number, value: number) => {
+    try {
+      await categoryApi.update(id, { sort_order: value });
+      loadData();
+      toast({
+        title: "Updated",
+        description: "Sort order updated",
+      });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to update sort order",
+        variant: "destructive",
+      });
+    }
+  };
 
   /* =========================
      ADD / EDIT
@@ -122,6 +147,7 @@ export default function ManageCategory() {
       url: cat.url || "",
       status: cat.status,
       is_include_top_nav: cat.is_include_top_nav,
+      sort_order: cat.sort_order,
     });
     setOpen(true);
   };
@@ -177,6 +203,9 @@ export default function ManageCategory() {
     }
   };
 
+  /* =========================
+     UI
+  ========================= */
   return (
     <div className="p-6">
       {/* Header */}
@@ -191,30 +220,30 @@ export default function ManageCategory() {
           <thead className="bg-gray-100">
             <tr>
               <th
-                className="p-4 cursor-pointer"
+                onClick={() => handleSort("sort_order")}
+                className="p-4 cursor-pointer w-28"
+              >
+                Sort {sortBy === "sort_order" && (sortOrder === "asc" ? "▲" : "▼")}
+              </th>
+              <th
                 onClick={() => handleSort("name")}
+                className="p-4 cursor-pointer"
               >
                 Name {sortBy === "name" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-
               <th className="p-4">URL</th>
-
               <th
-                className="p-4 cursor-pointer"
                 onClick={() => handleSort("status")}
+                className="p-4 cursor-pointer"
               >
                 Status {sortBy === "status" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-
               <th
-                className="p-4 cursor-pointer"
                 onClick={() => handleSort("is_include_top_nav")}
+                className="p-4 cursor-pointer"
               >
-                Top Nav{" "}
-                {sortBy === "is_include_top_nav" &&
-                  (sortOrder === "asc" ? "▲" : "▼")}
+                Top Nav
               </th>
-
               <th className="p-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -222,6 +251,17 @@ export default function ManageCategory() {
           <tbody>
             {sortedCategories.map((cat) => (
               <tr key={cat.id} className="border-b hover:bg-gray-50">
+                <td className="p-4">
+                  <Input
+                    type="number"
+                    className="w-20 text-center"
+                    value={cat.sort_order}
+                    onChange={(e) =>
+                      handleSortOrderChange(cat.id, Number(e.target.value))
+                    }
+                  />
+                </td>
+
                 <td className="p-4 font-medium">{cat.name}</td>
                 <td className="p-4">{cat.url || "-"}</td>
 
@@ -272,7 +312,7 @@ export default function ManageCategory() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editing ? "Edit Category" : "Add New Category"}
+              {editing ? "Edit Category" : "Add Category"}
             </DialogTitle>
           </DialogHeader>
 
@@ -299,6 +339,15 @@ export default function ManageCategory() {
               value={form.description}
               onChange={(e) =>
                 setForm({ ...form, description: e.target.value })
+              }
+            />
+
+            <Label>Sort Order</Label>
+            <Input
+              type="number"
+              value={form.sort_order}
+              onChange={(e) =>
+                setForm({ ...form, sort_order: Number(e.target.value) })
               }
             />
 
