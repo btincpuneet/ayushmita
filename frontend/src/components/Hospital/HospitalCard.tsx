@@ -34,7 +34,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
   }
   return (
     <>
-      <article className="bg-white rounded-xl border border-[#EFF3F6] hover:border-[#F0A324] transition duration-200 p-4">
+      <article className="bg-white rounded-xl border border-[#EFF3F6] hover:shadow-lg transition duration-200 p-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className=" flex-shrink-0">
             <img
@@ -50,7 +50,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
 
           <div className="flex-1">
             {/* Title */}
-            <h3 className="mb-1"
+            <h3 className="mb-1 space-y-2"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 700,
@@ -65,14 +65,22 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
             </h3>
 
             {/* Address */}
-            <div className="flex space-y-1 items-start gap-2 text-gray-600 text-sm">
+            <div className="flex space-y-2 items-start gap-2 mb-1">
               <MapPin size={18} className="text-[#F0A324] mt-0.5" />
-              <p>{hospital.address}</p>
+              <p style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "14px",
+  lineHeight: "26px",
+  letterSpacing: "0%",
+}}
+>{hospital.address}</p>
             </div>
 
 
-            <div className="space-y-1 text-sm text-gray-700">
-              <div className="flex items-center gap-2">
+            <div className="space-y-2 text-sm text-gray-700">
+              <div className="flex space-y-2 items-center gap-2">
                 <Calendar size={18} className="text-[#F0A324]" />
                 <span
                   style={{
@@ -99,7 +107,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex space-y-2 items-center gap-2">
                 <Bed size={18} className="text-[#F0A324]" />
                 <span
                   style={{
@@ -125,9 +133,9 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-3 mt-4 flex-wrap">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3 mt-4 ">
-                <button onClick={() => setIsModalOpen(true)} className="px-5 py-2 rounded-md bg-[#F0A324] hover:bg-yellow-600 transition"
+                <button onClick={() => setIsModalOpen(true)} className="px-5 py-3 rounded-md bg-[#F0A324] hover:bg-yellow-600 transition"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,
@@ -139,7 +147,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                   Book Appointment
                 </button>
 
-                <button className="px-5 py-2 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition"
+                <button className="px-5 py-3 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,
@@ -164,7 +172,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               <div className="flex items-center mt-4 ">
                 <Link
                   to={`/hospitals/${hospital.slug}`}
-                  className="px-4 py-2 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
+                  className="px-4 py-3 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,

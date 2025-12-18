@@ -60,7 +60,17 @@ const LanguageSelector: React.FC = () => {
         className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
         <img src={selected.flag} alt={selected.language} className="w-5 h-4 object-cover rounded-sm" />
-        <span className="hidden sm:inline">{selected.language}</span>
+        <span className="hidden sm:inline"
+        style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 500,
+  fontStyle: "normal",
+  fontSize: "15px",
+  lineHeight: "100%",
+  letterSpacing: "0px",
+}}
+
+        >{selected.language}</span>
         <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clipRule="evenodd" />
         </svg>

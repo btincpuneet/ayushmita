@@ -130,7 +130,7 @@ const Footer: React.FC = () => {
                   </svg>
                   <Link
                     to="/"
-                    className="text-sm hover:text-white transition"
+                    className="hover:text-white transition"
                     style={{
                       fontFamily: 'Roboto',
                       fontWeight: 400,          // Regular weight
@@ -170,7 +170,7 @@ const Footer: React.FC = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span  className="text-sm hover:text-white transition"
+                  <span  className="hover:text-white transition"
                     style={{
                       fontFamily: 'Roboto',
                       fontWeight: 400,          // Regular weight
@@ -212,7 +212,7 @@ const Footer: React.FC = () => {
                   </svg>
                   <Link
                     to="/"
-                    className="text-sm hover:text-white transition"
+                    className="hover:text-white transition"
                     style={{
                       fontFamily: 'Roboto',
                       fontWeight: 400,          // Regular weight

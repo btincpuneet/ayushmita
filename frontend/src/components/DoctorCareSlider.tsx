@@ -12,7 +12,10 @@ function NextArrow({ onClick }) {
       onClick={onClick}
       aria-label="Next"
       type="button"
-      className="doctor-arrow absolute top-1/2 -translate-y-1/2 right-[-28px] rounded-full w-12 h-12 flex items-center justify-center z-30"
+      className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 
+w-12 h-12 bg-white rounded-full shadow-lg 
+items-center justify-center cursor-pointer z-10
+"
     >
       <svg
         width="34"
@@ -140,7 +143,7 @@ export default function DoctorCareSlider() {
                       {d.name}
                     </h3>
 
-                    <p className="text-amber-500 font-medium mt-1 uppercase text-sm tracking-wide">
+                    <p className="text-[#F0A324]  mt-1 tracking-wide">
                       {d.specialty}
                     </p>
                   </div>

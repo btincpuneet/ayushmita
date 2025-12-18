@@ -104,7 +104,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
             </span>
           </div>
 
-          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-2 bg-[#F0A324]  rounded-md hover:bg-yellow-600 transition"
+          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-3 bg-[#F0A324]  rounded-md hover:bg-yellow-600 transition"
             style={{
               fontFamily: "'Open Sans', sans-serif",
               fontWeight: 600,
@@ -120,7 +120,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
 
         <button
           onClick={() => navigate(`/doctor/${doctor.slug}`)}
-          className="px-4 py-2 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
+          className="px-4 py-3 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
           style={{
             fontFamily: "'Open Sans', sans-serif",
             fontWeight: 600,

@@ -50,20 +50,42 @@ const HeroImage = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex items-center">
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             {/* TEXT SECTION */}
             <div>
-              <p className="text-[#F0A324] mb-4 text-xl font-bold">
+              <p className="text-[#F0A324] mb-4" style={{
+  fontFamily: "Roboto, sans-serif",
+  fontWeight: 700,
+  fontSize: "22px",
+  lineHeight: "28px",
+  letterSpacing: "0px",
+}}
+>
                 {subtitle}
               </p>
 
-              <h1 className="text-[35px] md:text-[70px] font-bold leading-tight">
+              <h1 className="leading-tight" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 700,
+  fontSize: "70px",
+  lineHeight: "77px",
+  letterSpacing: "0px",
+}}
+>
                 {title}
               </h1>
 
-              <p className="mt-5 text-[18px] max-w-xl leading-[28px]">
+              <p className="mt-5 leading-[28px]" style={{
+  fontFamily: "Ubuntu, sans-serif",
+  fontWeight: 400,
+  fontStyle: "normal",
+  fontSize: "20px",
+  lineHeight: "28px",
+  letterSpacing: "0px",
+}}
+>
                 {description}
               </p>
 
@@ -72,7 +94,7 @@ const HeroImage = () => {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center px-7 py-3 rounded-full bg-[#F6A800] shadow-md hover:brightness-95"
+                    className="inline-flex items-center px-7 py-3 rounded-full bg-[#F0A324]"
                   >
                     {button_text}
                     <svg

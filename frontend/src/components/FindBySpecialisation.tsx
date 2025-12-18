@@ -187,7 +187,7 @@ const FindBySpecialisation: React.FC = () => {
           <div className="mt-10 flex justify-center">
             <Link to="/treatment" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
-              <button className="bg-amber-400 hover:bg-amber-500 py-3 px-8 rounded-lg shadow-md transition"
+              <button className="bg-[#F0A324] hover:bg-amber-500 py-3 px-8 rounded-lg shadow-md transition"
                 style={{
                   fontFamily: 'Ubuntu',
                   fontWeight: 500,           // Medium weight

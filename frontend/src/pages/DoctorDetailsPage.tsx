@@ -282,7 +282,7 @@ const DoctorDetailsPage: React.FC = () => {
                                         </div>
 
                                         {/* BUTTON */}
-                                        <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-[#F0A324] hover:bg-yellow-600 transition px-4 py-2 rounded-lg" style={{
+                                        <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-[#F0A324] hover:bg-yellow-600 transition px-4 py-3 rounded-lg" style={{
                                             fontFamily: '"Open Sans", sans-serif',
                                             fontWeight: 600,
                                             fontStyle: "normal",
