@@ -18,6 +18,7 @@ import ManageTestimonials from "./pages/admin/ManageTestimonials";
 import ManageDiseases from "./pages/admin/ManageDisease";
 import ManageTreatments from "./pages/admin/ManageTreatments";
 import ManageBlogs from "./pages/admin/ManageBlogs";
+import ManageCmsSection from "./pages/admin/ManageCmsSection";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="manage-disease" element={<ManageDiseases />} />
               <Route path="manage-treatment" element={<ManageTreatments/>} />
               <Route path="manage-blogs" element={<ManageBlogs/>} />
+              <Route path="manage-section" element={<ManageCmsSection/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

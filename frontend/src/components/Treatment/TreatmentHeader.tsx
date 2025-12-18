@@ -1,43 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-/* ---------------------------------------
-   TYPES
---------------------------------------- */
-interface BreadcrumbItem {
-  label: string;
-  link?: string;
-}
-
-interface TreatmentHeaderProps {
-  title: string;
-  breadcrumbs?: BreadcrumbItem[];
-
-  /* Background */
-  bgImage?: string;
-  bgColor?: string;
-  overlay?: boolean;
-
-  /* Styles */
-  titleColor?: string;
-  breadcrumbColor?: string;
-  highlightColor?: string;
-}
-
-
 const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   title,
-  breadcrumbs = [
-    { label: "Home" },
-    { label: "Treatment", link: "/treatment" },
-  ],
+  breadcrumbs = [],
+  children,
 
-  /* Background */
-  
-  bgColor = "#F8EFBC80",
-  overlay = true,
+  bgColor = "#FBF6DE",
+  overlay = false,
 
-  /* Styles */
   titleColor = "text-black",
   breadcrumbColor = "text-gray-600",
   highlightColor = "#F0A324",
@@ -46,30 +17,21 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
 
   return (
     <div
-      className="relative mt-20 pb-12"
-      style={{
-        backgroundColor:  bgColor,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className="relative mt-20 "
+      style={{ backgroundColor: bgColor }}
     >
-      {/* Overlay */}
-      {overlay && (
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
-      )}
-
       {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-4 pt-10 text-center">
+      <div className="max-w-7xl mx-auto  text-center pt-10 pb-10">
+        {/* Breadcrumb */}
         <p className={`text-sm ${breadcrumbColor} mb-2`}>
           {breadcrumbs.map((item, index) => (
             <span key={index}>
-             <span
-  className={`cursor-pointer ${
-    item.link ? "hover:underline" : ""
-  } ${index === 0 ? "text-inherit" : ""}`}
-  style={index === 0 ? {} : { color: highlightColor }}
-  onClick={() => item.link && navigate(item.link)}
->
+              <span
+                className={`cursor-pointer ${item.link ? "hover:underline" : ""
+                  }`}
+                style={index !== 0 ? { color: highlightColor } : {}}
+                onClick={() => item.link && navigate(item.link)}
+              >
                 {item.label}
               </span>
               {index !== breadcrumbs.length - 1 && " / "}
@@ -77,17 +39,23 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontStyle: "normal",
-  fontSize: "48px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
- className={`mt-2 ${titleColor}`}>
+        {/* Title */}
+        <h1
+          className={`font-bold ${titleColor}`}
+          style={{
+            fontSize: "48px",
+            fontFamily: "Ubuntu, sans-serif",
+          }}
+        >
           {title}
         </h1>
+
+        {/* SEARCH BAR SLOT */}
+        {children && (
+          <div className="mt-8 flex justify-center">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );

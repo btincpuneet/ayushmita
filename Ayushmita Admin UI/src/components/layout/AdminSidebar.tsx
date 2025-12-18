@@ -166,6 +166,20 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Blogs</span>}
         </NavLink>
+
+          <NavLink
+          to="/admin/manage-section"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Section</span>}
+        </NavLink>
       </nav>
 
       {/* USER PANEL + LOGOUT */}

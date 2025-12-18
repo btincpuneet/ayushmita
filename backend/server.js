@@ -18,7 +18,7 @@ const topPartnerHospitalRoutes = require('./routes/hospital/index.js');
 const testimonialRoutes = require('./routes/testimonial/index.js');
 const diseaseRoutes = require("./routes/disease/diseaseRoutes.js");
 const treatmentRoutes = require("./routes/treatment/treatmentRoutes.js");
-
+const cmsSectionRoutes = require("./routes/cmsSection/cmsSectionRoutes.js")
 const faqRoutes = require("./routes/faq/index.js");
 
 const blogRoutes = require("./routes/blog/index.js");
@@ -57,6 +57,7 @@ app.use("/api/diseases", diseaseRoutes);
 app.use("/api/treatments", treatmentRoutes);
 app.use("/api", faqRoutes);
 app.use("/api", blogRoutes);
+app.use("/api/cms-sections", cmsSectionRoutes);
 
 app.post("/api/book-consultation", async (req, res) => {
    console.log("BODY RECEIVED:", req.body);
