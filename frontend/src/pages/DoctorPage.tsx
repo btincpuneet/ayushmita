@@ -46,17 +46,17 @@ const DoctorsPage: React.FC = () => {
 
         const list: Doctor[] = Array.isArray(res.data?.data)
           ? res.data.data
-              .filter(Boolean)
-              .map((d: any) => ({
-                id: d.id,
-                name: d.name,
-                specialty: d.specialty,
-                experience: d.experience ?? 0,
-                city: d.city ?? "",
-                country: d.country ?? "",
-                image_url: d.image_url ?? null,
-                slug: d.slug,
-              }))
+            .filter(Boolean)
+            .map((d: any) => ({
+              id: d.id,
+              name: d.name,
+              specialty: d.specialty,
+              experience: d.experience ?? 0,
+              city: d.city ?? "",
+              country: d.country ?? "",
+              image_url: d.image_url ?? null,
+              slug: d.slug,
+            }))
           : [];
 
         setDoctors(list);
@@ -98,31 +98,52 @@ const DoctorsPage: React.FC = () => {
         <section className="py-12">
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
               <div className="lg:col-span-2">
                 {loading ? (
                   <p className="text-center text-gray-500">Loading doctors...</p>
                 ) : error ? (
                   <p className="text-center text-red-500">{error}</p>
-                ) : filteredDoctors.length === 0 ? (
-                  <div className="bg-white rounded-lg p-8 text-center shadow">
-                    <p className="text-muted-foreground">
-                      No doctors found for selected filters.
-                    </p>
-                  </div>
                 ) : (
-                  <div className="space-y-6">
-                    {filteredDoctors.map((doctor) => (
-                      <DoctorCard key={doctor.id} doctor={doctor} />
-                    ))}
-                  </div>
+                  <>
+                    {/* Listing Heading */}
+                    <h2
+                      className="text-md text-[#454D5D] mb-4"
+                      style={{
+                        fontFamily: "Ubuntu, sans-serif",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: "140%",
+                      }}
+                    >
+                      Listing {filteredDoctors.length} Doctors
+                      {selectedCity ? ` in ${selectedCity}` : ""}
+                    </h2>
+
+                    {filteredDoctors.length === 0 ? (
+                      <div className="bg-white rounded-lg p-8 text-center shadow">
+                        <p className="text-muted-foreground">
+                          No doctors found for selected filters.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {filteredDoctors.map((doctor) => (
+                          <DoctorCard key={doctor.id} doctor={doctor} />
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
               <div className="lg:col-span-1">
                 <BookingForm />
               </div>
+
             </div>
           </Container>
+
         </section>
       </main>
 
