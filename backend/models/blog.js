@@ -10,10 +10,10 @@ const Blog = sequelize.define(
       autoIncrement: true,
     },
 
-    category_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
+  category_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,     // NULL allowed for global blogs
+  },
 
     title: {
       type: DataTypes.STRING,

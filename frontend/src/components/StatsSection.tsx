@@ -213,12 +213,12 @@ const stats = [
 export const StatsSection: React.FC = () => {
   return (
     <section className="bg-[#F8EFBC80]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 pb-12 md:pb-16 lg:py-20">
+      <div className="relative w-full max-w-7xl mx-auto px-4 pb-12 md:pb-16 lg:py-20 hospital-slider">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* ---------------------- */}
           {/* Left Text Content     */}
           {/* ---------------------- */}
-          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left px-4 lg:px-0">
+          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left px-4 lg:px-0 headings-family">
             <h2 style={{
               fontFamily: 'Ubuntu',
               fontWeight: 700,          // Bold
@@ -254,7 +254,7 @@ export const StatsSection: React.FC = () => {
           {/* ---------------------- */}
           {/* Right Stats Cards     */}
           {/* ---------------------- */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 px-4 lg:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 px-4 lg:px-0 cards-icons-section">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               const stagger = index === 1 || index === 3 ? "md:translate-y-6" : "";

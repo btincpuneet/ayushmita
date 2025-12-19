@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import axios from "axios";
-
+import "../css/responsive.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
@@ -29,23 +29,7 @@ const NextArrow = ({ onClick }) => (
 );
 
 const PrevArrow = ({ onClick }) => (
-  <div
-    onClick={onClick}
-    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg items-center justify-center cursor-pointer z-10"
-  >
-    <svg
-      width="34"
-      height="18"
-      viewBox="0 0 34 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M7.05 7.5189L11.35 2.99464L9 0.531544L0.666687 9.26576L9 18L11.35 15.5369L7.05 11.0126H34V7.5189H7.05Z"
-        fill="#F0A324"
-      />
-    </svg>
-  </div>
+  <span></span>
 );
 
 const TopPartnerHospitals = () => {
@@ -94,9 +78,9 @@ const TopPartnerHospitals = () => {
   };
 
   return (
-    <section className="bg-white py-14">
+    <section className="mb-14">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center partner-hos-pital">
           <h2 className="text-[32px] font-bold" style={{ fontFamily: "Ubuntu" }}>
             Top Partner Hospitals
           </h2>
@@ -111,10 +95,10 @@ const TopPartnerHospitals = () => {
         <div className="relative">
           <Slider {...settings}>
             {hospitals.map((h) => (
-              <div key={h.id} className="px-4">
+              <div key={h.id} className="top-partner-hospitals-sections">
                 <Link to={`/hospitals/${h.slug}`}>
-                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition cursor-pointer">
-                    <div className="h-48 overflow-hidden rounded-xl">
+                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition hover:shadow-xl hover:-translate-y-1.5 cursor-pointer">
+                    <div className="h-48 ml-2 overflow-hidden rounded-xl">
                       <img
                         src={`http://127.0.0.1:5001${h.image_url}`}
                         alt={h.name}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import Breadcrumb from "../components/Treatment/TreatmentHeader";
+import "../css/common.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ModalAppointment from "../components/Treatment/ModalAppointment";
@@ -85,42 +85,13 @@ export default function TreatmentDetailsPage() {
                 display: "inline-block"
               }}
             ></span>
-            <p
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 300,
-                fontStyle: "normal",
-                fontSize: "16px",
-                lineHeight: "27px",
-                letterSpacing: "0%",
-              }}
-            >
-              Having cancer is one of the biggest fears for humans because most
-              people lose their lives to cancer. In cancer disease, the body
-              develops abnormal cells that spread to other parts of the body.
-              When a patient suffers from cancer, the patient experiences
-              various symptoms including unexplained weight loss, fatigue,
-              severe pain, and many more. So, patients must seek cancer
-              treatment.
-            </p>
-            <br />
-            <p
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 300,
-                fontStyle: "normal",
-                fontSize: "16px",
-                lineHeight: "27px",
-                letterSpacing: "0%",
-              }}
-            >
-              We know that receiving a cancer diagnosis can be enormous. So, if
-              people face these diseases, they have to choose the best
-              healthcare provider. At Aushmita, we have partnered with the best
-              cancer treatment hospitals and oncologists around the world. Our
-              medical network team provides cancer treatment options according
-              to the patient’s needs.
-            </p>
+            <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{
+            __html: treatment?.short_description || "",
+          }}
+        />
+
             <div className="flex gap-4 mt-8">
               <button
                 onClick={() => setOpenModal(true)}

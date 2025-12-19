@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ModalAppointment from "../components/Treatment/ModalAppointment"
-
+import "../css/responsive.css";
 const HeroImage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split("-")[0] || "en";
@@ -50,11 +50,11 @@ const HeroImage = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center">
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             {/* TEXT SECTION */}
-            <div>
+            <div className="sticky-item-over-image">
               <p className="text-[#F0A324] mb-4" style={{
   fontFamily: "Roboto, sans-serif",
   fontWeight: 700,
@@ -66,14 +66,7 @@ const HeroImage = () => {
                 {subtitle}
               </p>
 
-              <h1 className="leading-tight" style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontSize: "70px",
-  lineHeight: "77px",
-  letterSpacing: "0px",
-}}
->
+              <h1 className=" heading-of-pgs">
                 {title}
               </h1>
 

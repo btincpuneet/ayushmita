@@ -217,12 +217,12 @@ const PromoSlider: React.FC = () => {
               <div key={idx} className="images">
                 <div>
                   <div className="relative flex items-center">
-                    <div className="overflow-hidden flex-shrink-0 border-4 border-white rounded p-0">
+                    <div className="overflow-hidden flex-shrink-0 border-[10px] border-white rounded-2xl w-full">
                       <img
                         src={p.image}
                         alt="slider"
                         style={{
-                          width: "398.3px",
+                          width: "100%",
                           height: "199.15px",
                           borderRadius: "20px",
                           objectFit: "cover",

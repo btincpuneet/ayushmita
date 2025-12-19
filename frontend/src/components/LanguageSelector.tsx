@@ -80,7 +80,7 @@ const LanguageSelector: React.FC = () => {
         <ul
           role="listbox"
           aria-activedescendant={selected.code}
-          className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-50 overflow-hidden"
+          className="absolute right-0 mt-2 w-38 bg-white border border-gray-200 rounded-md shadow-lg z-50 overflow-hidden"
         >
           {LANGUAGE_OPTIONS.map((opt) => (
             <li

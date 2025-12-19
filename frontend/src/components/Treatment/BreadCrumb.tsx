@@ -28,7 +28,7 @@ export default function BreadCrumb({ onTabClick, activeTab, tabs }: Props) {
     <div className="bg-[#2A6506] w-full">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div
-          className="flex items-center gap-8 py-3"
+          className="flex items-center gap-8 py-3 overflow-x-auto whitespace-nowrap"
           style={{
             fontFamily: "Ubuntu",
             fontWeight: 400,

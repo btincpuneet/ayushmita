@@ -30,16 +30,16 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
 
   return (
     <>
-      <article className="bg-white rounded-xl shadow-md p-5 flex gap-3 items-end hover:shadow-lg transition">
-        <div className="w-[158px] h-[158px] flex-shrink-0">
+      <article className="bg-white rounded-xl shadow-md p-5 flex gap-3 items-end hover:shadow-lg transition doctor-listing-page">
+        <div className=" flex-shrink-0 doctor-details-page">
           <img
             src={image}
             alt={doctor.name}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover rounded-lg "
           />
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 doctor-name-title-details">
           <h3 style={{
             fontFamily: "Ubuntu, sans-serif",
             fontWeight: 700,
@@ -104,7 +104,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
             </span>
           </div>
 
-          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-3 bg-[#F0A324]  rounded-md hover:bg-yellow-600 transition"
+          <button onClick={() => setIsModalOpen(true)} className="mt-3 px-5 py-3 bg-[#F0A324] rounded-md hover:bg-yellow-600 transition book-app-sec"
             style={{
               fontFamily: "'Open Sans', sans-serif",
               fontWeight: 600,

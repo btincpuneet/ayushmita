@@ -103,17 +103,10 @@ const TestimonialSlider: React.FC = () => {
       className="px-4 customer-happiness-sections"
       style={{ backgroundColor: "#F6F7F9" }}
     >
-      <div className="max-w-7xl mx-auto px-5 py-15 md:py-15 lg:py-15">
+      <div className="max-w-7xl mx-auto px-5 py-10 md:py-10 lg:py-10 happiness">
         <div className="container max-w-7xl mx-auto relative">
           <h2
-            className="text-center mb-6"
-            style={{
-              fontFamily: "Ubuntu",
-              fontWeight: 700,
-              fontSize: "32px",
-              lineHeight: "71px",
-              textAlign: "center",
-            }}
+            className="text-center mb-6 headings-section-it"
           >
             Customer Happiness Guaranteed
           </h2>
@@ -169,6 +162,7 @@ const TestimonialSlider: React.FC = () => {
                           }`}
                       >
                         <p
+                         className="slider-message-section-1"
                           style={{
                             fontFamily: "Inter",
                             fontWeight: 400,
