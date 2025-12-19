@@ -126,9 +126,9 @@ const SPECIALISATIONS = [
 const FindBySpecialisation: React.FC = () => {
   return (
     <section className="bg-gray-50">
-      <div className="relative w-full max-w-7xl mx-auto px-4">
+      <div className="relative w-full max-w-7xl mx-auto px-4 hospital-slider">
 
-        <div className="text-center mb-10 py-10">
+        <div className="text-center mb-10 lg:py-10">
           <div className="text-center mb-6">
             <h2
               className="Specialisation text-center capitalize"
@@ -166,7 +166,7 @@ const FindBySpecialisation: React.FC = () => {
                   {s.icon}
                 </div>
 
-                <span className="text-gray-700 font-medium text-lg"
+                <span className="text-gray-700 font-medium text-lg Specialisation-sec"
                   style={{
                     // Medium weight
                     fontStyle: 'normal',      // Medium corresponds to weight, fontStyle is normal

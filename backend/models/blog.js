@@ -10,7 +10,7 @@ const Blog = sequelize.define('Blog', {
 
   category_id: {
     type: DataTypes.INTEGER,
-    allowNull: true,     // NULL allowed for global blogs
+    allowNull: true,     
   },
 
   title: {

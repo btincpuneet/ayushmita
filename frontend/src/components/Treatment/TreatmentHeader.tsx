@@ -77,15 +77,7 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontStyle: "normal",
-  fontSize: "48px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
- className={`mt-2 ${titleColor}`}>
+        <h1 className="hospital-treatment-low-price">
           {title}
         </h1>
       </div>

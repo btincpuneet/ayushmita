@@ -53,16 +53,8 @@ const FaqWithImage = ({
           className="
             text-center mb-12
             text-[28px] leading-[1]
-            sm:text-[32px] sm:leading-[67px]
-          "
-          style={{
-            fontFamily: "Ubuntu",
-            fontWeight: 700,
-            fontStyle: "normal",
-            letterSpacing: "0%",
-            verticalAlign: "middle",
-          }}
-        >
+            sm:text-[32px] sm:leading-[67px] faq-sections
+          "        >
           Frequently Asked Questions
         </h2>
 
@@ -91,7 +83,7 @@ const FaqWithImage = ({
 
               {/* Sticker Icons */}
               <div
-                className="absolute -right-10 top-45 -translate-y-1/2 flex items-center justify-center rounded-full bg-white"
+                className="absolute -right-10 top-45 -translate-y-1/2 flex items-center justify-center rounded-full bg-white emoji-help"
                 style={{
                   width: 70,
                   height: 70,
@@ -102,7 +94,7 @@ const FaqWithImage = ({
               </div>
 
               <div
-                className="absolute -left-7 top-80 bg-white rounded-xl flex items-center gap-4"
+                className="absolute -left-7 top-80 bg-white rounded-xl flex items-center gap-4 happy-image"
                 style={{
                   padding: "14px 10px",
                   boxShadow: "0 20px 50px rgba(2,6,23,0.08)",
@@ -146,7 +138,7 @@ const FaqWithImage = ({
                     <button
                       onClick={() => toggle(f.id)}
                       aria-expanded={isOpen}
-                      className="w-full text-left flex items-center justify-between py-5 bg-white"
+                      className="w-full text-left flex items-center justify-between py-5 bg-white fa-questions"
                     >
                       <span
                         style={{

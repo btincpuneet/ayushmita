@@ -160,7 +160,7 @@ const DoctorDetailsPage: React.FC = () => {
                                         <img
                                             src={image}
                                             alt={doctor.name}
-                                            className="w-[370px] h-[276px] object-cover rounded-2xl"
+                                            className="object-cover rounded-2xl doctor-detail-page-image-1"
                                         />
                                     </div>
 

@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import PromoSlider from "../components/PromoSlider";
 import MedicalTourism from "../components/MedicalTourism";
 import FindBySpecialisation from "../components/FindBySpecialisation";
-import TopPartnerHospitals from "../components/TopPartnerHospitals ";
+import TopPartnerHospitals from "../components/TopPartnerHospitals";
 import { StatsSection } from "../components/StatsSection";
 import DoctorCareSlider from "../components/DoctorCareSlider";
 import TestimonialSlider from "../components/TestimonialSlider";

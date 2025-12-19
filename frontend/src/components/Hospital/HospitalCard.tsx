@@ -40,7 +40,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
             <img
               src={hospital.image_url}
               alt={hospital.name}
-              className="w-[158px] h-[158px] md:h-full object-cover rounded-lg"
+              className="md:h-full object-cover rounded-lg image-hospital-list"
               onError={(e) => {
                 e.currentTarget.src =
                   "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop";
@@ -134,8 +134,8 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
             </div>
 
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-3 mt-4 ">
-                <button onClick={() => setIsModalOpen(true)} className="px-5 py-3 rounded-md bg-[#F0A324] hover:bg-yellow-600 transition"
+              <div className="flex items-center gap-3 mt-4 list-page-button">
+                <button onClick={() => setIsModalOpen(true)} className="px-5 py-3 rounded-md bg-[#F0A324] hover:bg-yellow-600 transition btn-sec-list"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,
@@ -147,7 +147,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                   Book Appointment
                 </button>
 
-                <button className="px-5 py-3 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition"
+                <button className="px-5 py-3 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition btn-sec-list"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,
@@ -172,7 +172,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               <div className="flex items-center mt-4 ">
                 <Link
                   to={`/hospitals/${hospital.slug}`}
-                  className="px-4 py-3 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition"
+                  className="px-4 py-3 border border-[#F0A324] text-[#F0A324] bg-[#FBF6DD] rounded-md font-medium flex items-center gap-2 hover:bg-orange-50 transition "
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,

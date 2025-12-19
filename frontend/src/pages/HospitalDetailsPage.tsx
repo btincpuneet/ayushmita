@@ -51,7 +51,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
           className="w-full lg:w-[370px] h-[276px] object-cover rounded-xl"
         />
 
-        <div className="flex-1">
+        <div className="flex-1 details-page-section-description">
           {/* <h1 className="text-2xl font-bold mb-4">{hospital.name}</h1> */}
 
           <ul className="space-y-3">
@@ -195,7 +195,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
             </li>
           </ul>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex gap-4 mt-6 details-pgs-btn-1">
             <button onClick={onBookAppointment} className="px-6 py-3 bg-[#F0A324] rounded-lg "
               style={{
                 fontFamily: "Ubuntu, sans-serif",
@@ -253,7 +253,7 @@ function ContentSection({ title, html }: any) {
 function FacilitiesSection({ facilities }: any) {
   return (
     <div>
-      <h2 className="text-xl font-bold mb-6">Facilities</h2>
+      <h2 className="related-items-more mb-6">Facilities</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
         {Object.entries(facilities).map(([title, items]: any) => (
           <div key={title}>
@@ -307,7 +307,7 @@ function SimilarHospitals({ hospitals }: any) {
 
       <Slider {...settings}>
         {hospitals.map((h: any) => (
-          <div key={h.name} className="px-3">
+          <div key={h.name} className="px-3 similar-hospital">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <img
                 src={h.image}
@@ -363,11 +363,11 @@ function DoctorsSection({ doctors }: any) {
 
   return (
     <div className="mt-16">
-      <h2 className="text-xl font-bold mb-6">Doctors</h2>
+      <h2 className="related-items-more mb-6">Doctors</h2>
 
       <Slider {...settings}>
         {doctors.map((d: any) => (
-          <div key={d.name} className="px-3 mb-20">
+          <div key={d.name} className="px-3 mb-20 similar-hospital">
             <div className="bg-white shadow rounded-lg text-center">
               <img
                 src={d.image}
@@ -528,7 +528,7 @@ export default function HospitalDetailsPage() {
         ]}
       />
 
-      <div className="relative w-full max-w-7xl mx-auto px-4">
+      <div className="relative w-full max-w-7xl mx-auto px-4 hospital-slider">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12 mb-12">
           <div className="lg:col-span-2">
             <HospitalInfoCard

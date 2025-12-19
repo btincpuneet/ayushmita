@@ -12,10 +12,10 @@ const countries = [
 const MedicalTourism: React.FC = () => {
   return (
     <section className="bg-white">
-      <div className="relative w-full max-w-7xl mx-auto px-4 py-8 md:py-8">
+      <div className="relative w-full max-w-7xl mx-auto px-4 py-8 md:py-8 hospital-slider">
 
         {/* Heading */}
-        <div className="text-center">
+        <div className="text-center top-medical-tourism">
           <h2 className=" md:text-4xl"
             style={{
               fontFamily: 'Ubuntu',
@@ -48,7 +48,7 @@ const MedicalTourism: React.FC = () => {
         </div>
 
         {/* Country tiles */}
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12 flex country-card-flag">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
             {countries.map((c) => (
               <button
@@ -56,9 +56,9 @@ const MedicalTourism: React.FC = () => {
                 type="button"
                 aria-label={`Select ${c.name}`}
                 className="flex flex-col items-center justify-center text-center gap-3
-                           bg-white rounded-xl p-4 w-32 h-32 shadow-sm hover:shadow-lg 
+                           bg-white rounded-xl shadow-sm hover:shadow-lg 
                            border border-gray-100 hover:border-amber-300
-                           transition-all duration-200"
+                           transition-all duration-200 flag-section-1"
                
               >
                 <div className="w-16 h-10 rounded-md overflow-hidden bg-white flex items-center justify-center">

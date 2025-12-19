@@ -118,13 +118,13 @@ export default function DoctorCareSlider() {
         <div className="relative">
           <Slider {...settings}>
             {doctors.map((d, i) => (
-              <div key={i} className="px-3 flex justify-center">
+              <div key={i} className=" flex justify-center slider-image-doctor">
                 <div 
                   onClick={() => navigate(`/doctor/${slugify(d.name)}`)}
 
-                className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px]">
+                className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px] image-section-sli-der">
 
-                  <div className="w-full h-64 overflow-hidden bg-gray-100">
+                  <div className=" overflow-hidden bg-gray-100">
                     <img
                       src={d.image}
                       alt={d.name}

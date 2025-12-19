@@ -104,7 +104,7 @@ export default function TreatmentsLandingPage() {
                 key={disease.id}
                 ref={(el) => (sectionRefs.current[disease.slug] = el)}
                 data-slug={disease.slug}
-                className="mb-20 rounded-2xl"
+                className="mb-20 rounded-2xl trreatment-page-listing"
               // className={`mb-24 py-16 rounded-2xl ${
               //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
               // }`}
@@ -117,7 +117,7 @@ export default function TreatmentsLandingPage() {
                     <img
                       src={`http://127.0.0.1:5001${disease.image}`}
                       alt={disease.name}
-                      className="rounded-xl w-full max-w-[370px] h-[370px] object-cover"
+                      className="rounded-xl w-full max-w-[370px] object-cover treatment-list-image"
                     />
                   </div>
 
@@ -147,7 +147,8 @@ export default function TreatmentsLandingPage() {
                     ></span>
 
 
-                    <div className="grid grid-cols-3 grid-flow-row">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-flow-row
+">
 
                       {disease.treatments.map((treat) => (
                         <p

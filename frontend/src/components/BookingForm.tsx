@@ -34,7 +34,8 @@ const BookingForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full h-[650px] max-w-sm sticky top-6">
+   <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full sticky top-6 sider-form-section">
+
       {/* Title */}
       <h3 className="text-[#FFFFFF] text-center"
       style={{

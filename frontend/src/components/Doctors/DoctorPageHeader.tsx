@@ -54,10 +54,10 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
 
       {/* FILTER BAR */}
       <div className="flex justify-center">
-        <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl">
+        <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl headings-search-location">
 
           {/* COUNTRY */}
-          <div className="relative w-1/2">
+          <div className="relative w-1/2 space-placeholder">
             <select
               value={selectedCountry}
               onChange={onCountryChange}
@@ -87,7 +87,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
           </div>
 
           {/* CITY */}
-          <div className="relative w-1/2">
+          <div className="relative w-1/2 space-placeholder">
             <select
               value={selectedCity}
               onChange={onCityChange}
