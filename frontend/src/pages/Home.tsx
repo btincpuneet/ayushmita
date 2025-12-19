@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import PromoSlider from "../components/PromoSlider";
 import MedicalTourism from "../components/MedicalTourism";
 import FindBySpecialisation from "../components/FindBySpecialisation";
-import TopPartnerHospitals from "../components/TopPartnerHospitals ";
+import TopPartnerHospitals from "../components/TopPartnerHospitals";
 import { StatsSection } from "../components/StatsSection";
 import DoctorCareSlider from "../components/DoctorCareSlider";
 import TestimonialSlider from "../components/TestimonialSlider";
@@ -32,7 +32,6 @@ const Home: React.FC = () => {
 
       <div className="min-h-screen flex-col flex bg-white">
         <Header />
-
         <main className="flex-1">
           <HeroImage />
           <PromoSlider />
@@ -44,7 +43,6 @@ const Home: React.FC = () => {
           <TestimonialSlider />
           <FaqWithImage />
         </main>
-
         <Footer />
       </div>
     </>
