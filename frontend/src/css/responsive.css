@@ -1,0 +1,256 @@
+h1.heading-of-pgs {
+    font-family: Ubuntu, sans-serif;
+    font-weight: 700;
+    font-size: 70px;
+    line-height: 77px;
+    letter-spacing: 0px;
+}
+ 
+h1.hospital-treatment-low-price {
+    font-family: Ubuntu, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 48px;
+    line-height: 100%;
+}
+h1.hospital-treatment-low-price {
+    font-size: 25px;
+}
+ 
+img.object-cover.rounded-2xl.doctor-detail-page-image-1 {
+    width: 370px;
+    height: 276px;
+}
+ 
+.flex-shrink-0.doctor-details-page {
+    width: 158px;
+    height: 158px;
+}
+ 
+.mt-12.flex.country-card-flag {
+    justify-content: center;
+}
+ 
+.top-partner-hospitals-sections {
+    padding: 20px 16px;
+}
+.max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
+    padding: 57px 12px;
+}
+ 
+h2.text-center.mb-6.headings-section-it {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 71px;
+    text-align: center;
+}
+ 
+h2.text-center.mb-6.headings-section-it {
+    font-size: 30px;
+    line-height: normal;
+}
+ 
+h2.text-center.mb-12.text-\[28px\].leading-\[1\].sm\:text-\[32px\].sm\:leading-\[67px\].faq-sections {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: normal;
+    vertical-align: middle;
+}
+ 
+button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.rounded-xl.shadow-sm.hover\:shadow-lg.border.border-gray-100.hover\:border-amber-300.transition-all.duration-200.flag-section-1 {
+    padding: 16px;
+}
+ 
+.flex.justify-center.slider-image-doctor {
+    padding: 0px 12px;
+}
+ 
+img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
+    width: 158px;
+    height: 158px;
+}
+ 
+h2.related-items-more.mb-6 {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 28px;
+    line-height: 100%;
+}
+ 
+img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
+    height: 370px;
+}
+ 
+ 
+ 
+/* responsive */
+@media (max-width: 768px) {
+    .max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
+        padding: 0;
+    }
+ 
+    img.object-cover.rounded-2xl.doctor-detail-page-image-1 {
+        width: auto;
+        height: 276px;
+    }
+ 
+    .flex.items-center.gap-3.mt-4.list-page-button {
+        flex-direction: column;
+        width: 100%;
+    }
+ 
+    a.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
+        width: 100% !important;
+        justify-content: center;
+    }
+ 
+    .flex.items-center.justify-between.gap-3.flex-wrap {
+        margin-top: 10px;
+    }
+ 
+    .flex.items-center.mt-4 {
+        margin: 0;
+        width: 100%;
+    }
+ 
+    .flex-1.details-page-section-description {
+        width: 100%;
+    }
+ 
+    .btn-sec-list {
+        width: 100%;
+        justify-content: center;
+    }
+ 
+    img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
+        width: 100%;
+        height: 158px;
+    }
+ 
+    .flex.justify-center.slider-image-doctor {
+        padding: 0px;
+    }
+ 
+    .top-partner-hospitals-sections {
+        padding: 0px;
+    }
+ 
+    button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.rounded-xl.shadow-sm.hover\:shadow-lg.border.border-gray-100.hover\:border-amber-300.transition-all.duration-200.flag-section-1 {
+        padding: 43px;
+    }
+ 
+    h2.text-center.mb-12.text-\[28px\].leading-\[1\].sm\:text-\[32px\].sm\:leading-\[67px\].faq-sections {
+        margin-bottom: 15px;
+    }
+ 
+    .sticky-item-over-image {
+        position: relative;
+        top: 50%;
+    }
+ 
+    h1.heading-of-pgs {
+        font-size: 30px;
+        line-height: normal;
+    }
+ 
+    .text-center.partner-hos-pital {
+        margin-bottom: 40px;
+    }
+ 
+    span.text-gray-700.font-medium.text-lg.Specialisation-sec {
+        min-width: max-content;
+    }
+ 
+    .relative.w-full.max-w-7xl.mx-auto.px-4.hospital-slider {
+        padding: 20px 20px;
+    }
+ 
+    .text-center.partner-hos-pital {
+        margin-bottom: 20px;
+    }
+ 
+    .bg-\[\#F0A324\].px-6.py-3.rounded-lg.flex.gap-4.items-center.w-full.max-w-2xl.headings-search-location {
+        flex-direction: column;
+    }
+ 
+    .relative.w-1\/2.space-placeholder {
+        width: 100%;
+    }
+ 
+    .relative.z-10.h-full.max-w-7xl.mx-auto.px-25.flex.items-center.over-image-section {
+        padding: 16px;
+        height: auto;
+    }
+ 
+    button.w-full.text-left.flex.items-center.justify-between.py-5.bg-white.fa-questions {
+        padding: 0;
+    }
+ 
+    .absolute.-left-7.top-80.bg-white.rounded-xl.flex.items-center.gap-4.happy-image {
+        left: 0;
+    }
+ 
+    .absolute.-right-10.top-45.-translate-y-1\/2.flex.items-center.justify-center.rounded-full.bg-white.emoji-help {
+        right: 0;
+    }
+ 
+    px-3.flex.justify-center.slider-image-doctor {
+        padding: 0;
+    }
+ 
+    .grid.grid-cols-1.sm\:grid-cols-2.gap-4.md\:gap-6.lg\:gap-8.px-4.lg\:px-0.cards-icons-section {
+        padding: 0;
+    }
+ 
+}
+ 
+@media (max-width: 500px) {
+    .flex.gap-4.mt-6.details-pgs-btn-1 {
+        flex-direction: column;
+    }
+ 
+    button.px-6.py-3.bg-green-500.flex.gap-3.text-white.rounded-lg {
+        justify-content: center;
+    }
+ 
+    img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
+        height: auto;
+    }
+ 
+    .similar-hospital {
+        padding: 0;
+    }
+ 
+    article.bg-white.rounded-xl.shadow-md.p-5.flex.gap-3.items-end.hover\:shadow-lg.transition.doctor-listing-page {
+        flex-direction: column;
+        align-items: start;
+        width: 100%;
+    }
+ 
+    .flex-shrink-0.doctor-details-page {
+        width: 100%;
+    }
+ 
+    .flex-1.doctor-name-title-details-page {
+        width: 100%;
+    }
+ 
+    .flex-1.doctor-name-title-details {
+        width: 100%;
+    }
+ 
+    button.mt-3.px-5.py-3.bg-\[\#F0A324\].rounded-md.hover\:bg-yellow-600.transition.book-app-sec {
+        width: 100%;
+    }
+ 
+    button.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
+        width: 100%;
+        justify-content: center;
+    }
+ 
+    .mb-20.rounded-2xl.trreatment-page-listing {
+        margin-bottom: 20px;
+    }
+}
