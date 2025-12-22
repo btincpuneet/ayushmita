@@ -33,7 +33,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value,
   onChange,
   placeholder = "Start typing here...",
-  minHeight = 200,
+  minHeight = 180,
   showWordCount = true,
 }) => {
   const [mode, setMode] = useState<"visual" | "html">("visual");

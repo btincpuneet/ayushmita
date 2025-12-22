@@ -73,7 +73,6 @@ const User = sequelize.define(
   }
 );
 
-// ✅ Proper DB connection & sync
 (async () => {
   try {
     await sequelize.authenticate();

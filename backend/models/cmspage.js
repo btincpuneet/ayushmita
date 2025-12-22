@@ -13,12 +13,12 @@ const CmsSection = sequelize.define(
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: true, 
     },
 
     title: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
 
     content_html: {
@@ -28,7 +28,7 @@ const CmsSection = sequelize.define(
 
     content_json: {
       type: DataTypes.JSON,
-      allowNull: true,
+      allowNull: true, 
     },
 
     status: {
@@ -55,7 +55,6 @@ const CmsSection = sequelize.define(
     tableName: "cms_sections",
     timestamps: false,
     underscored: true,
-    paranoid: false,
   }
 );
 

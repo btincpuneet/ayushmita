@@ -1,4 +1,9 @@
-
+.container {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 18px;
+}
 .cancer-overview-container {
   display: flex;
   align-items: center;

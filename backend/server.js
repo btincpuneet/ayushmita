@@ -7,7 +7,7 @@ console.log("Starting server...");
 const authRoutes = require('./routes/auth/index.js');
 const { sequelize } = require('./models/index.js');
 const nodemailer = require("nodemailer");
-
+require("dotenv").config();
 require('./models/relations');
 
 const categoryRoutes = require('./routes/category/index.js');
@@ -20,9 +20,9 @@ const diseaseRoutes = require("./routes/disease/diseaseRoutes.js");
 const treatmentRoutes = require("./routes/treatment/treatmentRoutes.js");
 const cmsSectionRoutes = require("./routes/cmsSection/cmsSectionRoutes.js")
 const faqRoutes = require("./routes/faq/index.js");
-
+const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
-
+const formRoutes = require("./routes/form/forms.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -57,7 +57,9 @@ app.use("/api/diseases", diseaseRoutes);
 app.use("/api/treatments", treatmentRoutes);
 app.use("/api", faqRoutes);
 app.use("/api", blogRoutes);
-app.use("/api/cms-sections", cmsSectionRoutes);
+app.use("/api", cmsSectionRoutes);
+app.use("/api/contact-us", contactUsRoutes);
+app.use("/api", formRoutes);
 
 app.post("/api/book-consultation", async (req, res) => {
    console.log("BODY RECEIVED:", req.body);

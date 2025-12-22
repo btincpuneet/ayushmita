@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-
 import Home from "./pages/Home";
 import HospitalPage from "./pages/HospitalPage";
 import TreatmentsLandlingPage from "./pages/TreatmentsLandlingPage";
@@ -14,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
+import CmsPage from "./pages/CmsPage";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +32,7 @@ const App: React.FC = () => {
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="cms-page/about-us" element={<CmsPage />} />
 
       </Routes>
     </HelmetProvider>

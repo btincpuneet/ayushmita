@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
@@ -90,7 +89,10 @@ export default function TreatmentsLandingPage() {
   return (
     <div>
       <Header />
-      <TreatmentHeader title="Treatments In India at Low Cost" />
+      <TreatmentHeader title="Treatments In India at Low Cost" breadcrumbs={[
+            { label: "Home" },
+            { label:  "Treatment"  },
+          ]}/>
 
       <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
 

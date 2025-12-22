@@ -32,7 +32,10 @@ img.object-cover.rounded-2xl.doctor-detail-page-image-1 {
 }
 
 .top-partner-hospitals-sections {
-    padding: 0px 16px;
+    padding: 20px 16px;
+}
+.max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
+    padding: 57px 12px;
 }
 
 h2.text-center.mb-6.headings-section-it {
@@ -250,4 +253,7 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     .mb-20.rounded-2xl.trreatment-page-listing {
         margin-bottom: 20px;
     }
+    .max-w-7xl.mx-auto.px-4.mt-16.desese-overview-sec {
+    margin: 0px;
+}
 }

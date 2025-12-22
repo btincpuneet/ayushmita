@@ -19,6 +19,7 @@ import ManageDiseases from "./pages/admin/ManageDisease";
 import ManageTreatments from "./pages/admin/ManageTreatments";
 import ManageBlogs from "./pages/admin/ManageBlogs";
 import ManageCmsSection from "./pages/admin/ManageCmsSection";
+import ManageContactUs from "./pages/admin/ManageContactUs";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="manage-treatment" element={<ManageTreatments/>} />
               <Route path="manage-blogs" element={<ManageBlogs/>} />
               <Route path="manage-section" element={<ManageCmsSection/>} />
+              <Route path="manage-contact" element={<ManageContactUs/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

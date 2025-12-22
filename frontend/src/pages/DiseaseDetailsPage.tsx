@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import Breadcrumb from "../components/Treatment/TreatmentHeader";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ConsultationForm from "../components/ConsulatForm";
 import TestimonialSlider from "../components/TestimonialSlider";
 import BlogSection from "../components/BlogSection";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import "../css/common.css";
 
 interface Treatment {
   id: number;
@@ -66,7 +66,7 @@ const DiseaseDetailsPage = () => {
           title={disease?.name}
           breadcrumbs={[
             { label: "Home" },
-            { label: disease?.name || "Treatment" ,link: "/" },
+            { label: disease?.name || "Treatment", link: "/" },
           ]}
         />
       </div>
@@ -122,7 +122,7 @@ const DiseaseDetailsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-16">
+      <div className="max-w-7xl mx-auto px-4 mt-16 desese-overview-sec">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
           {disease.treatments.map((t) => (
             <Link
@@ -156,67 +156,12 @@ const DiseaseDetailsPage = () => {
           ))}
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 mt-16">
-        <h2 className="text-[22px] font-semibold mb-3">Top Destination for Cancer Treatment Abroad</h2>
-        <p className="text-gray-700 leading-7 mb-4">
-          We work with top hospitals and cancer centers in the world. Here is the list of the best countries for cancer treatments:
-        </p>
-
-        <ul className="text-gray-700 leading-7 space-y-2">
-          <li>• India: India is famous for advanced treatments at low rates, with high standards of medical equipment.</li>
-          <li>• Thailand: Prominent hospitals providing excellent oncology services.</li>
-          <li>• Turkey: Growing into a medical hub with modern equipment at competitive prices.</li>
-          <li>• Germany: Leading in creative cancer therapies with cutting-edge treatment facilities.</li>
-        </ul>
-
-        <h2 className="text-[22px] font-semibold mt-10 mb-3">Cancer Treatment Cost Comparison Abroad</h2>
-        <p className="text-gray-700 leading-7 mb-4">
-          The price of the treatment varies according to location and hospital. Here are affordable cost estimates:
-        </p>
-
-        <div className="overflow-x-auto">
-          <table className="w-full bg-white rounded-lg shadow border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="py-3 px-4 text-left">Country</th>
-                <th className="py-3 px-4 text-left">Starting Cost (USD)</th>
-                <th className="py-3 px-4 text-left">Common Treatments Available</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t">
-                <td className="py-3 px-4">India</td>
-                <td className="py-3 px-4">$4,000</td>
-                <td className="py-3 px-4">Chemotherapy, Surgery, Radiation</td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Turkey</td>
-                <td className="py-3 px-4">$6,500</td>
-                <td className="py-3 px-4">Robotic Surgery, Immunotherapy</td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Thailand</td>
-                <td className="py-3 px-4">$9,000</td>
-                <td className="py-3 px-4">Chemotherapy, Gamma Knife</td>
-              </tr>
-              <tr className="border-t">
-                <td className="py-3 px-4">Germany</td>
-                <td className="py-3 px-4">$12,000</td>
-                <td className="py-3 px-4">Proton Therapy, Advanced Diagnostics</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 className="text-[22px] font-semibold mt-10 mb-3">How Ayushmita Helps You?</h2>
-
-        <ul className="text-gray-700 leading-7 space-y-2">
-          <li>• Trusted Network: Partnership with top cancer centers worldwide.</li>
-          <li>• Medical Matching: Best hospitals and surgeons for your medical condition.</li>
-          <li>• Post-Treatment Follow-up: Assistance in follow-up treatments with global doctors.</li>
-          <li>• Quality & Safety: Only international hospitals with experienced oncologists.</li>
-        </ul>
-      </div>
+      <div
+        className="prose max-w-none"
+        dangerouslySetInnerHTML={{
+          __html: disease?.description_html || "",
+        }}
+      />
 
       <div>
         <ConsultationForm />

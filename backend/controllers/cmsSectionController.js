@@ -1,133 +1,163 @@
-const { CmsSection } = require("../models/CmsSection");
+const { CmsSection } = require("../models/cmspage");
 
-/**
- * CREATE CMS SECTION
- */
-exports.createSection = async (req, res) => {
+exports.createPage = async (req, res) => {
   try {
-    const section = await CmsSection.create(req.body);
+    const { title, slug, content_html, content_json, status } = req.body;
+
+    if (!title || !slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and slug are required",
+      });
+    }
+
+    const exists = await CmsSection.findOne({
+      where: { slug, deleted_at: null },
+    });
+
+    if (exists) {
+      return res.status(400).json({
+        success: false,
+        message: "Slug already exists",
+      });
+    }
+
+    const page = await CmsSection.create({
+      title,
+      slug,
+      content_html,
+      content_json,
+      status,
+    });
+
     res.status(201).json({
       success: true,
-      message: "CMS section created successfully",
-      data: section,
+      message: "CMS page created successfully",
+      data: page,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/**
- * UPDATE CMS SECTION
- */
-exports.updateSection = async (req, res) => {
+exports.getAllPages = async (req, res) => {
   try {
-    const { id } = req.params;
+    const pages = await CmsSection.findAll({
+      where: { deleted_at: null },
+      order: [["created_at", "DESC"]],
+    });
 
-    const section = await CmsSection.findByPk(id);
-    if (!section) {
+    res.json({ success: true, data: pages });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getPageById = async (req, res) => {
+  try {
+    const page = await CmsSection.findOne({
+      where: { id: req.params.id, deleted_at: null },
+    });
+
+    if (!page) {
       return res.status(404).json({
         success: false,
-        message: "CMS section not found",
+        message: "Page not found",
       });
     }
 
-    await section.update(req.body);
-
-    res.json({
-      success: true,
-      message: "CMS section updated successfully",
-      data: section,
-    });
+    res.json({ success: true, data: page });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/**
- * GET ALL CMS SECTIONS (ADMIN)
- */
-exports.getAllSections = async (req, res) => {
+exports.updatePage = async (req, res) => {
   try {
-    const sections = await CmsSection.findAll({
-      order: [["id", "DESC"]],
-    });
+    const page = await CmsSection.findByPk(req.params.id);
 
-    res.json({
-      success: true,
-      data: sections,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-/**
- * GET SINGLE CMS SECTION BY SLUG (PUBLIC)
- */
-exports.getSectionBySlug = async (req, res) => {
-  try {
-    const { slug } = req.params;
-
-    const section = await CmsSection.findOne({
-      where: { slug, status: "active" },
-    });
-
-    if (!section) {
+    if (!page || page.deleted_at) {
       return res.status(404).json({
         success: false,
-        message: "CMS section not found",
+        message: "Page not found",
       });
     }
 
+    await page.update(req.body);
+
     res.json({
       success: true,
-      data: section,
+      message: "CMS page updated successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/**
- * DELETE CMS SECTION (SOFT)
- */
-exports.deleteSection = async (req, res) => {
+exports.deletePage = async (req, res) => {
   try {
-    const { id } = req.params;
+    const page = await CmsSection.findByPk(req.params.id);
 
-    const section = await CmsSection.findByPk(id);
-    if (!section) {
+    if (!page) {
       return res.status(404).json({
         success: false,
-        message: "CMS section not found",
+        message: "Page not found",
       });
     }
 
-    await section.update({
-      status: "inactive",
-      deleted_at: new Date(),
-    });
+    await page.update({ deleted_at: new Date() });
 
     res.json({
       success: true,
-      message: "CMS section deleted successfully",
+      message: "CMS page deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.toggleStatus = async (req, res) => {
+  try {
+    const page = await CmsSection.findByPk(req.params.id);
+
+    if (!page) {
+      return res.status(404).json({
+        success: false,
+        message: "Page not found",
+      });
+    }
+
+    const newStatus = page.status === "active" ? "inactive" : "active";
+    await page.update({ status: newStatus });
+
+    res.json({
+      success: true,
+      message: `Page ${newStatus} successfully`,
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getPageBySlug = async (req, res) => {
+  try {
+    const page = await CmsSection.findOne({
+      where: {
+        slug: req.params.slug,
+        status: "active",
+        deleted_at: null,
+      },
+    });
+
+    if (!page) {
+      return res.status(404).json({
+        success: false,
+        message: "Page not found",
+      });
+    }
+
+    res.json({ success: true, data: page });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
