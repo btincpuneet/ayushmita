@@ -51,7 +51,7 @@ const HeroImage = () => {
 
         {/* Content */}
         <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-8">
 
             {/* TEXT SECTION */}
             <div className="sticky-item-over-image">

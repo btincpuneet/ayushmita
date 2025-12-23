@@ -79,7 +79,7 @@ const TopPartnerHospitals = () => {
 
   return (
     <section className="mb-14">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="text-center partner-hos-pital">
           <h2 className="text-[32px] font-bold" style={{ fontFamily: "Ubuntu" }}>
             Top Partner Hospitals
@@ -98,11 +98,11 @@ const TopPartnerHospitals = () => {
               <div key={h.id} className="top-partner-hospitals-sections">
                 <Link to={`/hospitals/${h.slug}`}>
                   <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition hover:shadow-xl hover:-translate-y-1.5 cursor-pointer">
-                    <div className="h-48 ml-2 overflow-hidden rounded-xl">
+                    <div className="overflow-hidden rounded-xl">
                       <img
                         src={`http://127.0.0.1:5001${h.image_url}`}
                         alt={h.name}
-                        className="w-full h-full object-cover"
+                        className="w-[369px] h-[280px] object-cover rounded-lg"
                       />
                     </div>
 
@@ -159,7 +159,7 @@ const TopPartnerHospitals = () => {
           width: 14px;
           height: 14px;
           background: transparent;
-          border: 2px solid #be7c0bff;
+          border: 1px solid #be7c0bff;
         }
         .slick-dots li.slick-active .dot-inner {
           width: 6px;

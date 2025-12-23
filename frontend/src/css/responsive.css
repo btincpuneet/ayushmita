@@ -1,9 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+
+.middel-sections-mains-universe {
+    background: #F6F7F9;
+    padding: 15px 0px;
+}
 h1.heading-of-pgs {
     font-family: Ubuntu, sans-serif;
     font-weight: 700;
     font-size: 70px;
     line-height: 77px;
     letter-spacing: 0px;
+}
+/* APPOINTMENT CARD */
+.ayu-appointment-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacity-60.contact-page-submit-btn {
+    font-family: Open Sans;
+    font-weight: 600;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+.ayu-appointment-card h3 {
+    color: #F0A324;
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+label.contact-form-section {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+}
+h3.have-a-questionss.mb-4 {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 32px;
+    leading-trim: NONE;
+    line-height: 46px;
+    letter-spacing: 0%;
+}
+.ayu-appointment-card p {
+        font-family: Ubuntu;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    line-height: 26px;
+}
+
+.address-contact {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 26px;
+    letter-spacing: 0%;
+}
+
+/* LEFT CONTENT */
+.ayu-contact-left h2 {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 46px;
+    margin-bottom: 10px;
+}
+
+.ayu-contact-left .ayu-desc {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+
+    margin-bottom: 30px;
+}
+
+/* CONTACT ITEMS */
+.ayu-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: #1f2937;
+}
+
+.ayu-contact-item span {
+    color: #f4a51c;
+    font-size: 18px;
+}
+
+.form-names {
+    /* font-family: Ubuntu; */
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 140%;
+    letter-spacing: 0%;
+}
+.sider-form-section {
+  max-height: 700px;
+  overflow-y: hidden;
 }
 
 h1.hospital-treatment-low-price {
@@ -12,9 +125,6 @@ h1.hospital-treatment-low-price {
     font-style: normal;
     font-size: 48px;
     line-height: 100%;
-}
-h1.hospital-treatment-low-price {
-    font-size: 25px;
 }
 
 img.object-cover.rounded-2xl.doctor-detail-page-image-1 {

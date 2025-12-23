@@ -190,22 +190,14 @@ const PromoSlider: React.FC = () => {
     ],
     appendDots: (dots: React.ReactNode) => (
       <div>
-        <ul className="flex items-center justify-center gap-2 mt-4">{dots}</ul>
+         <ul className="flex items-center justify-center mt-20">{dots}</ul>
       </div>
     ),
-    customPaging: (i: number) => (
-      <div
-        className={`w-4 h-4 flex items-center justify-center rounded-full ${
-          i === current ? "bg-transparent" : "bg-amber-200"
-        }`}
-      >
-        <div
-          className={`w-2 h-2 rounded-full ${
-            i === current ? "bg-amber-500" : "bg-amber-400/80"
-          }`}
-        />
-      </div>
-    ),
+ customPaging: (i: number) => (
+  <div className="dot-outer">
+    <div className="dot-inner" />
+  </div>
+),
   };
 
   return (
@@ -237,6 +229,44 @@ const PromoSlider: React.FC = () => {
           </Slider>
         </div>
       </Container>
+      {/* Dots Styling */}
+      <style>{`
+        .slick-slide > div {
+          height: 100%;
+          display: flex;
+          align-items: stretch;
+          justify-content: center;
+        }
+
+        .slick-dots li button { display: none; }
+        .slick-dots li { margin: 0 4px; }
+
+        .dot-outer {
+          width: 10px;
+          height: 10px;
+          border-radius: 9999px;
+          background: #fbbf24;
+          opacity: 0.7;
+        }
+        .dot-inner {
+          width: 4px;
+          height: 4px;
+          border-radius: 9999px;
+          background: #f59e0b;
+        }
+
+        .slick-dots li.slick-active .dot-outer {
+          width: 14px;
+          height: 14px;
+          background: transparent;
+          border: 1px solid #be7c0bff;
+        }
+        .slick-dots li.slick-active .dot-inner {
+          width: 6px;
+          height: 6px;
+          background: #f59e0b;
+        }
+      `}</style>
     </section>
   );
 };
