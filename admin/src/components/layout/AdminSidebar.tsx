@@ -169,11 +169,9 @@ export function AdminSidebar() {
           }
         >
           <FolderOpen size={20} />
-          {!collapsed && <span>Manage Section</span>}
+          {!collapsed && <span>Manage CMS Section</span>}
         </NavLink>
-      </nav>
-
-        <NavLink
+           <NavLink
           to="/admin/manage-contact"
           className={({ isActive }) =>
             cn(
@@ -187,6 +185,9 @@ export function AdminSidebar() {
           {!collapsed && <span>Manage Contact</span>}
         </NavLink>
 
+      </nav>
+
+     
 
       <div className="p-4 border-t border-white/10">
         {!collapsed && user && (
