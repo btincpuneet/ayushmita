@@ -48,7 +48,7 @@ const FaqWithImage = ({
 
   return (
     <section className="relative bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16 lg:py-10">
+      <div className="max-w-6xl mx-auto px-5 py-12 md:py-16 lg:py-10">
         <h2
           className="
             text-center mb-12
@@ -151,7 +151,7 @@ const FaqWithImage = ({
                         {f.q}
                       </span>
                       <span
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-amber-500 transition-transform ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[#F0A324] transition-transform ${
                           isOpen ? "rotate-45" : ""
                         }`}
                       >

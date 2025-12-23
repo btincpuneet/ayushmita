@@ -104,7 +104,7 @@ export default function ManageHeroBanner() {
       image: null,
     });
 
-    setPreviewImage(`${BASE_URL}${banner.image}`);
+    setPreviewImage(`http://127.0.0.1:5001${banner.image}`);
     setModalOpen(true);
   };
 

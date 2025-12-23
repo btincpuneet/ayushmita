@@ -84,7 +84,7 @@ const ManagePromoSlider = () => {
 
     // FIXED: Show image from uploads folder
     if (item.image_url) {
-      setPreview(`${BASE_URL}${item.image_url}`);
+      setPreview(`http://127.0.0.1:5001${item.image_url}`);
     }
 
     setOpen(true);
@@ -153,7 +153,7 @@ const ManagePromoSlider = () => {
                   {/* FIXED: Now image loads correctly */}
                   {item.image_url ? (
                     <img
-                      src={`${BASE_URL}${item.image_url}`}
+                      src={`http://127.0.0.1:5001${item.image_url}`}
                       alt=""
                       className="w-20 h-14 object-cover rounded"
                     />

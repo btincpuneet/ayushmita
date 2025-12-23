@@ -213,7 +213,7 @@ const stats = [
 export const StatsSection: React.FC = () => {
   return (
     <section className="bg-[#F8EFBC80]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 pb-12 md:pb-16 lg:py-20 hospital-slider">
+      <div className="relative w-full max-w-6xl mx-auto px-4 pb-12 md:pb-16 lg:py-20 hospital-slider">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* ---------------------- */}
           {/* Left Text Content     */}

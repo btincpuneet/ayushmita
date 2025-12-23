@@ -112,7 +112,7 @@ const ContactUs = () => {
             <div className="space-y-6">
 
 
-              <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className=" rounded-xl p-6">
                 {loading ? (
                   <p className="text-gray-500">Loading...</p>
                 ) : (
@@ -125,44 +125,55 @@ const ContactUs = () => {
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold mb-4 text-lg">
+              <h3 className="have-a-questionss mb-4">
                 Have questions? Contact us
               </h3>
 
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div className="name-form-sec">
+                   <label className="contact-form-section">Name</label>
                   <input
                     type="text"
                     name="name"
-                    placeholder="Full Name"
+                  
                     value={formData.name}
                     onChange={handleChange}
                     className="input"
                     required
                   />
+                 </div>
 
+
+<div className="name-form-sec">
+                   <label className="contact-form-section">Phone Number</label>
                   <input
                     type="text"
                     name="mobile"
-                    placeholder="Phone Number"
+                    
                     value={formData.mobile}
                     onChange={handleChange}
                     className="input"
                     required
                   />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="name-form-sec">
+                   <label className="contact-form-section">Email ID</label>
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email ID"
+                    
                     value={formData.email}
                     onChange={handleChange}
                     className="input"
                     required
                   />
-
+                  </div>
+<div className="name-form-sec">
+                   <label className="contact-form-section">Country</label>
                   <select
                     name="country"
                     value={formData.country}
@@ -175,30 +186,34 @@ const ContactUs = () => {
                     <option value="USA">USA</option>
                     <option value="UK">UK</option>
                   </select>
+                  </div>
                 </div>
-
+<div className="name-form-sec">
+                   <label className="contact-form-section">Which Treatment Are You Looking For ?</label>
                 <input
                   type="text"
                   name="treatment"
-                  placeholder="Which Treatment Are You Looking For?"
+                  
                   value={formData.treatment}
                   onChange={handleChange}
                   className="input"
                 />
-
+</div>
+<div className="name-form-sec">
+                   <label className="contact-form-section">Describe your treatment requirements</label>
                 <textarea
                   rows={4}
                   name="message"
-                  placeholder="Describe your treatment requirements"
+                
                   value={formData.message}
                   onChange={handleChange}
                   className="input resize-none"
                 />
-
+</div>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-yellow-500 py-3 rounded-md font-semibold hover:bg-yellow-600 transition disabled:opacity-60"
+                  className="w-full bg-[#F0A324] py-[12px] rounded-md transition disabled:opacity-60 contact-page-submit-btn"
                 >
                   {submitting ? "Please wait..." : "Send Message"}
                 </button>

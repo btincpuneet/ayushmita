@@ -92,7 +92,7 @@ export default function DoctorCareSlider() {
 
   return (
     <section className="py-10 bg-white mb-8">
-      <div className="max-w-7xl mx-auto px-5 text-center">
+      <div className="max-w-6xl mx-auto px-5 text-center">
         <h2 className="Professional"
           style={{
             fontFamily: 'Ubuntu',
@@ -128,7 +128,7 @@ export default function DoctorCareSlider() {
                     <img
                       src={d.image}
                       alt={d.name}
-                      className="w-full h-full object-cover object-top"
+                      className="w-272px h-[233px] object-cover object-top"
                     />
                   </div>
 

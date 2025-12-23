@@ -534,17 +534,19 @@ export default function HospitalDetailsPage() {
             <HospitalInfoCard
               hospital={hospital}
               onBookAppointment={() => setIsModalOpen(true)}
-            />          </div>
-          <div className="lg:col-span-1 sticky top-24">
-            <BookingForm />
-          </div>
-        </div>
-        <div className="max-w-[860px] space-y-12">
+            />      
+            <div className="space-y-12">
           <ContentSection
             html={hospital.description_html}
           />
           {/* <FacilitiesSection facilities={facilities} /> */}
         </div>
+                </div>
+          <div className="lg:col-span-1 sticky top-24">
+            <BookingForm />
+          </div>
+        </div>
+        
         <SimilarHospitals hospitals={similarHospitals} />
         <DoctorsSection doctors={doctors} />
       </div>

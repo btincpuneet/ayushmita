@@ -87,8 +87,8 @@ const TestimonialSlider: React.FC = () => {
       </div>
     ),
     appendDots: (dots: React.ReactNode) => (
-      <div className="dots-wrapper">
-        <ul className="flex items-center justify-center">{dots}</ul>
+      <div className="dots-wrapper home-page-sliders-sections">
+        <ul className="flex items-center justify-center gap-2 sections">{dots}</ul>
       </div>
     ),
     responsive: [
@@ -103,10 +103,10 @@ const TestimonialSlider: React.FC = () => {
       className="px-4 customer-happiness-sections"
       style={{ backgroundColor: "#F6F7F9" }}
     >
-      <div className="max-w-7xl mx-auto px-5 py-10 md:py-10 lg:py-10 happiness">
-        <div className="container max-w-7xl mx-auto relative">
+      <div className="max-w-6xl mx-auto px-5 py-20 md:py-20 lg:py-20 happiness">
+        <div className="container max-w-6xl  !px-0  mx-auto relative">
           <h2
-            className="text-center mb-6 headings-section-it"
+            className="text-center mb-6  headings-section-it"
           >
             Customer Happiness Guaranteed
           </h2>
@@ -133,7 +133,7 @@ const TestimonialSlider: React.FC = () => {
                       <img
                         src={`http://127.0.0.1:5001${t.image_url}`}
                         alt={t.name}
-                        className="w-24 h-24 rounded-full object-cover mb-4"
+                        className="w-[70px] h-[70px] rounded-full object-cover mb-4"
                         loading="lazy"
                       />
 

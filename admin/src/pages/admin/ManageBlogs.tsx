@@ -17,9 +17,9 @@ import RichTextEditor from "@/components/RichTextEditor";
 /* ================= CONFIG ================= */
 
 const BASE_URL = "http://127.0.0.1:5001";
-const BLOG_API = `${BASE_URL}/api/blogs`;
-const DISEASE_API = `${BASE_URL}/api/diseases`;
-const TREATMENT_API = `${BASE_URL}/api/treatments`;
+const BLOG_API = `http://127.0.0.1:5001/api/blogs`;
+const DISEASE_API = `http://127.0.0.1:5001/api/diseases`;
+const TREATMENT_API = `http://127.0.0.1:5001/api/treatments`;
 
 /* ================= FORM ================= */
 
@@ -183,7 +183,7 @@ export default function ManageBlogs() {
             <div className="w-32 h-20 bg-muted flex items-center justify-center overflow-hidden">
               {b.blog_image ? (
                 <img
-                  src={`${BASE_URL}/${b.blog_image}`}
+                  src={`http://127.0.0.1:5001/${b.blog_image}`}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -337,7 +337,7 @@ export default function ManageBlogs() {
 
             {editing?.blog_image && (
               <img
-                src={`${BASE_URL}/${editing.blog_image}`}
+                src={`http://127.0.0.1:5001/${editing.blog_image}`}
                 className="mt-2 h-24 rounded object-cover"
               />
             )}

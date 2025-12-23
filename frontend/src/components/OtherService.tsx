@@ -56,13 +56,13 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
           Other Related Treatments
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {services.map((service) => (
             <Link
               key={service.id}
               to={`/treatment-details/${service.slug}`}
               className="
-                flex items-center gap-3 p-4 
+                flex-col  items-center  gap-3 p-2 
                 bg-white rounded-lg 
                 hover:shadow-md 
                 transition-all duration-200
@@ -70,20 +70,19 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
             >
               <div
                 className="
-     flex items-center justify-center 
-    bg-[#f5f9f7] rounded-lg overflow-hidden
+   flex items-center justify-center 
   "
               >
                 <img
                   src={`http://127.0.0.1:5001${service.image}`}
                   alt={service.name}
-                  className="w-[60px] h-[60px] rounded-lg object-cover"
+                  className="w-[100%] h-[80px] rounded-lg object-cover"
                 />
               </div>
 
-              <span
+              <div
                 className="
-                 leading-tight
+               dot-outer
                 "
                 style={{
                   fontFamily: "Ubuntu",
@@ -96,7 +95,7 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
                 }}
               >
                 {service.name}
-              </span>
+              </div>
             </Link>
           ))}
         </div>

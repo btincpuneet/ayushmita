@@ -110,7 +110,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
         <form className="space-y-4 p-6" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
-              <label>Full Name</label>
+              <label className="form-names">Full Name</label>
               <input
                 type="text"
                 name="name"
@@ -122,7 +122,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
             </div>
 
             <div className="flex flex-col">
-              <label>Phone Number</label>
+              <label className="form-names">Phone Number</label>
               <input
                 type="tel"
                 name="phone"
@@ -135,7 +135,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
           </div>
 
           <div>
-            <label>Describe your treatment requirements</label>
+            <label className="form-names">Describe your treatment requirements</label>
             <textarea
               name="message"
               value={form.message}
@@ -153,7 +153,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
               name="agree"
               className="mt-1"
             />
-            <span>
+            <span className="form-names">
               I agree to receive updates/notifications via WhatsApp
             </span>
           </label>

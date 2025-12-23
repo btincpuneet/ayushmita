@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://127.0.0.1:5001";
-const API_ABOUT = `${BASE_URL}/api/contact-us`;
+const API_ABOUT = `http://127.0.0.1:5001/api/contact-us`;
 
 export const aboutUsService = {
   getAll: async () => {

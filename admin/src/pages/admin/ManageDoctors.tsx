@@ -90,7 +90,7 @@ const ManageDoctors = () => {
       image: null,
     });
 
-    setPreview(item.image_url ? `${BASE_URL}${item.image_url}` : null);
+    setPreview(item.image_url ? `http://127.0.0.1:5001${item.image_url}` : null);
     setOpen(true);
   };
 
@@ -158,7 +158,7 @@ const ManageDoctors = () => {
                 <td className="p-3">
                   {d.image_url ? (
                     <img
-                      src={`${BASE_URL}${d.image_url}`}
+                      src={`http://127.0.0.1:5001${d.image_url}`}
                       className="w-16 h-16 rounded object-cover"
                     />
                   ) : (

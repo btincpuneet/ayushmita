@@ -26,9 +26,9 @@ import {
 import RichTextEditor from "@/components/RichTextEditor";
 
 const BASE_URL = "http://127.0.0.1:5001";
-const API_TREATMENT = `${BASE_URL}/api/treatments`;
-const API_DISEASE = `${BASE_URL}/api/diseases`;
-const API_SINGLE_TREATMENT = `${BASE_URL}/api/treatments/single`;
+const API_TREATMENT = `http://127.0.0.1:5001/api/treatments`;
+const API_DISEASE = `http://127.0.0.1:5001/api/diseases`;
+const API_SINGLE_TREATMENT = `http://127.0.0.1:5001/api/treatments/single`;
 
 const decodeHTML = (html: string) => {
   const txt = document.createElement("textarea");
@@ -263,7 +263,7 @@ const ManageTreatments = () => {
                 <div className="flex items-center gap-4">
                   {singleTreatment.image ? (
                     <img
-                      src={`${BASE_URL}${singleTreatment.image}`}
+                      src={`http://127.0.0.1:5001${singleTreatment.image}`}
                       className="w-20 h-20 rounded-lg object-cover shadow-card"
                       alt={singleTreatment.name}
                     />
@@ -504,7 +504,7 @@ const ManageTreatments = () => {
               <div className="col-span-2">
                 <Label className="text-xs font-medium text-muted-foreground mb-2 block">Image Preview</Label>
                 <img
-                  src={preview || `${BASE_URL}${editing.image}`}
+                  src={preview || `http://127.0.0.1:5001${editing.image}`}
                   className="w-48 h-32 object-cover rounded-lg border shadow-sm"
                   alt="Preview"
                 />

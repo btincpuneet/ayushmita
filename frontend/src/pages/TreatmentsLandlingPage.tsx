@@ -96,87 +96,90 @@ export default function TreatmentsLandingPage() {
 
       <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
 
-      <div className="w-full bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          {loading ? (
-            <p className="text-center text-lg font-semibold">Loading...</p>
-          ) : (
-            diseases.map((disease, index) => (
-              <div
-                key={disease.id}
-                ref={(el) => (sectionRefs.current[disease.slug] = el)}
-                data-slug={disease.slug}
-                className="mb-20 rounded-2xl trreatment-page-listing"
-              // className={`mb-24 py-16 rounded-2xl ${
-              //   index % 2 !== 0 ? "bg-gray-100 " : "bg-white"
-              // }`}
-              >
-                <div
-                  className={`flex flex-col-reverse lg:flex-row items-center ${index % 2 !== 0 ? "lg:flex-row-reverse" : ""
-                    }`}
-                >
-                  <div className="w-full lg:w-1/2 flex justify-center">
-                    <img
-                      src={`http://127.0.0.1:5001${disease.image}`}
-                      alt={disease.name}
-                      className="rounded-xl w-full max-w-[370px] object-cover treatment-list-image"
-                    />
-                  </div>
+   <div className="container-fluid">
+  {loading ? (
+    <p className="text-center text-lg font-semibold py-20">Loading...</p>
+  ) : (
+    diseases.map((disease, index) => (
+     <section
+  key={disease.id}
+  ref={(el) => (sectionRefs.current[disease.slug] = el)}
+  data-slug={disease.slug}
+  className="w-full bg-white py-7 trreatment-page-listing sec"
+>
+ <div
+  className={`${
+    disease.slug === "cardiology"
+      ? "w-full px-4 middel-sections-mains-universe"
+      : "max-w-7xl mx-auto px-4 middel-sections-mains"
+  }`}
+>
+    <div
+      className={` w-7xl  py-10 m-auto flex gap-6 flex-col-reverse lg:flex-row items-start ${
+        index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+      }`}
+    >
+      {/* Image */}
+      <div className="w-full lg:w-1/2 flex justify-center">
+        <img
+          src={`http://127.0.0.1:5001${disease.image}`}
+          alt={disease.name}
+          className="rounded-xl w-full max-w-[370px] object-cover treatment-list-image"
+        />
+      </div>
 
-                  <div className="w-full lg:w-[100%]">
-                    <h2
-                      className="heading-main"
-                      style={{
-                        fontFamily: "Ubuntu",
-                        fontWeight: 700,
-                        fontStyle: "bold",
-                        fontSize: "32px",
-                        lineHeight: "100%",
-                        letterSpacing: "0%",
-                      }}
-                      onClick={() => handleDiseaseNavigate(disease.slug)}
-                    >
-                      {disease.name}
-                    </h2>
-                    <span
-                      style={{
-                        width: "32px",
-                        height: "4px",
-                        background: "linear-gradient(to right, #f1a339, #7ac142)",
-                        borderRadius: "5px",
-                        display: "inline-block",
-                      }}
-                    ></span>
+      {/* Content */}
+      <div className="w-full">
+        <h2
+          className="heading-main cursor-pointer"
+          style={{
+            fontFamily: "Ubuntu",
+            fontWeight: 700,
+            fontSize: "32px",
+            lineHeight: "100%",
+          }}
+          onClick={() => handleDiseaseNavigate(disease.slug)}
+        >
+          {disease.name}
+        </h2>
 
+        <span
+          style={{
+            width: "32px",
+            height: "4px",
+            background: "linear-gradient(to right, #f1a339, #7ac142)",
+            borderRadius: "5px",
+            display: "inline-block",
+            margin: "12px 0",
+          }}
+        />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-flow-row
-">
-
-                      {disease.treatments.map((treat) => (
-                        <p
-                          key={treat.id}
-                          onClick={() => handleNavigate(treat.slug)}
-                          className="cursor-pointer hover:text-orange-500 text-gray-800 text-[15px]"
-                          style={{
-                            fontFamily: "Ubuntu",
-                            fontWeight: 400,
-                            fontStyle: "normal",
-                            fontSize: "14px",
-                            lineHeight: "30px",
-                            letterSpacing: "0%"
-                          }}
-                        ><span className="text-[18px] mx-2 leading-[0]">•</span>
-                          {treat.name}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
+        {/* Treatments */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
+          {disease.treatments.map((treat) => (
+            <p
+              key={treat.id}
+              onClick={() => handleNavigate(treat.slug)}
+              className="cursor-pointer hover:text-orange-500 text-gray-800 text-[14px]"
+              style={{
+                fontFamily: "Ubuntu",
+                lineHeight: "30px",
+              }}
+            >
+              <span className="text-[18px] mx-2">•</span>
+              {treat.name}
+            </p>
+          ))}
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+    ))
+  )}
+</div>
+
 
       <Footer />
     </div>
