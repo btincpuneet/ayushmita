@@ -14,7 +14,7 @@ import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
-
+import img from "./assets/banner-about.jpg"
 const App: React.FC = () => {
   return (
     <HelmetProvider>
@@ -32,8 +32,7 @@ const App: React.FC = () => {
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="cms-page/about-us" element={<CmsPage />} />
-
+        <Route path="/about-us" element={<CmsPage />} />
       </Routes>
     </HelmetProvider>
   );

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const blogController = require("../../controllers/blogController");
 const multer = require("multer");
+console.log("blogController:", blogController);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -13,14 +14,20 @@ const upload = multer({
   },
 });
 
-router.post("/blogs", upload.single("image"), blogController.createBlog);
+router.post(
+  "/blogs",
+  upload.single("blog_image"),   
+  blogController.createBlog
+);
+
+router.put(
+  "/blogs/:id",
+  upload.single("blog_image"),
+  blogController.updateBlog
+);
 
 router.get("/blogs", blogController.getAllBlogs);
-
 router.get("/blogs/:id", blogController.getBlogById);
-
-router.put("/blogs/:id", upload.single("image"), blogController.updateBlog);
-
 router.delete("/blogs/:id", blogController.deleteBlog);
 
 module.exports = router;

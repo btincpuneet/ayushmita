@@ -5,11 +5,7 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   title,
   breadcrumbs = [],
   children,
-
   bgColor = "#FBF6DE",
-  overlay = false,
-
-  titleColor = "text-black",
   breadcrumbColor = "text-gray-600",
   highlightColor = "#F0A324",
 }) => {
@@ -20,9 +16,7 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
       className="relative mt-20 "
       style={{ backgroundColor: bgColor }}
     >
-      {/* Content */}
       <div className="max-w-7xl mx-auto  text-center pt-10 pb-10">
-        {/* Breadcrumb */}
         <p className={`text-sm ${breadcrumbColor} mb-2`}>
           {breadcrumbs.map((item, index) => (
             <span key={index}>
@@ -39,11 +33,10 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 className="hospital-treatment-low-price">
+        <h1 className="hospital-treatment-low-price text-2xl">
           {title}
         </h1>
 
-        {/* SEARCH BAR SLOT */}
         {children && (
           <div className="mt-8 flex justify-center">
             {children}

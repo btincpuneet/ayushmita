@@ -237,7 +237,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           </div>
 
           {/* Preview Toggle */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
@@ -247,7 +247,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
               {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               {showPreview ? "Hide Preview" : "Show Preview"}
             </Button>
-          </div>
+          </div> */}
 
           {/* Visual Preview */}
           {showPreview && value && (

@@ -10,10 +10,15 @@ const Blog = sequelize.define(
       autoIncrement: true,
     },
 
-  category_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,     // NULL allowed for global blogs
-  },
+    disease_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+
+    treatment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
 
     title: {
       type: DataTypes.STRING,
@@ -26,7 +31,7 @@ const Blog = sequelize.define(
       unique: true,
     },
 
-    image: {
+    blog_image: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -53,6 +58,7 @@ const Blog = sequelize.define(
 
     is_featured: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
 
     is_global: {
@@ -77,7 +83,7 @@ const Blog = sequelize.define(
 
     meta_keywords: {
       type: DataTypes.STRING,
-      allowNull: true, 
+      allowNull: true,
     },
 
     view_count: {
@@ -85,13 +91,8 @@ const Blog = sequelize.define(
       defaultValue: 0,
     },
 
-    reading_time: {
-      type: DataTypes.STRING, 
-      allowNull: true,
-    },
-
     tags: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,
       allowNull: true,
     },
 
@@ -117,7 +118,7 @@ const Blog = sequelize.define(
   },
   {
     tableName: "blogs",
-    timestamps: false,   
+    timestamps: false,
     underscored: true,
   }
 );

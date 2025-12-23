@@ -1,24 +1,39 @@
-import React from "react"; 
-import{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
+import Header from "../components/Header";
+import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import Footer from "../components/Footer";
+import "../css/aboutUs.css";
 const API_BASE = "http://127.0.0.1:5001/api";
 
-export default function CmsPage() {
-  const { slug } = useParams();
-  const [page, setPage] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+interface CmsPageData {
+  id?: number;
+  title: string;
+  slug?: string;
+  content_html: string;
+  status?: string;
+}
+
+const CmsPage: React.FC = () => {
+  const { slug } = useParams(); 
+  const [page, setPage] = useState<CmsPageData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchPage();
   }, [slug]);
 
-  const fetchPage = async () => {
+  const fetchPage = async (): Promise<void> => {
     try {
-      const res = await axios.get(`${API_BASE}/pages/${slug}`);
+      setLoading(true);
+      const res = await axios.get<{ data: CmsPageData }>(
+        `${API_BASE}/pages/about-us`
+      );
       setPage(res.data.data);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setPage(null);
     } finally {
       setLoading(false);
@@ -43,18 +58,27 @@ export default function CmsPage() {
 
   return (
     <>
-      <div className="bg-[#fdf8e6] py-10 text-center">
-        <h1 className="text-3xl font-semibold">{page.title}</h1>
-      </div>
+      <Header />
+
+      <TreatmentHeader
+        title={page.title}
+        breadcrumbs={[
+          { label: "Home" },
+          { label: "Blog" },
+          { label: "BlogDetails" },
+        ]}
+      />
 
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div
           className="cms-content prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{
-            __html: page.content_html,
-          }}
+          dangerouslySetInnerHTML={{ __html: page.content_html }}
         />
       </section>
+
+      <Footer />
     </>
   );
-}
+};
+
+export default CmsPage;

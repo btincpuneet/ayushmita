@@ -8,6 +8,7 @@ import TestimonialSlider from "../components/TestimonialSlider";
 import BlogSection from "../components/BlogSection";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import "../css/common.css";
+import "../css/doctor.css";
 
 interface Treatment {
   id: number;

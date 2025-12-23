@@ -14,13 +14,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
 
+
 const API_BASE = "http://localhost:5001/api";
 const FRONTEND_BASE = "http://localhost:8080";
 
+interface CmsPage {
+  id: number;
+  title: string;
+  slug: string;
+  content_html: string;
+  status: "active" | "inactive";
+}
+
 export default function ManageCmsPage() {
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState<CmsPage[]>([]);
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState<CmsPage | null>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -29,6 +38,7 @@ export default function ManageCmsPage() {
     status: "active",
   });
 
+  /* ---------------- FETCH PAGES ---------------- */
   const fetchPages = async () => {
     try {
       const res = await axios.get(`${API_BASE}/cms-pages`);
@@ -42,12 +52,24 @@ export default function ManageCmsPage() {
     fetchPages();
   }, []);
 
-  const createSlug = (text) =>
+  /* ---------------- HELPERS ---------------- */
+  const createSlug = (text: string) =>
     text
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
+  const resetForm = () => {
+    setEditing(null);
+    setForm({
+      title: "",
+      slug: "",
+      content_html: "",
+      status: "active",
+    });
+  };
+
+  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async () => {
     if (!form.title || !form.slug) {
       return toast.error("Title and Slug are required");
@@ -65,12 +87,13 @@ export default function ManageCmsPage() {
       setOpen(false);
       resetForm();
       fetchPages();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Save failed");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Save failed");
     }
   };
 
-  const handleEdit = (page) => {
+  /* ---------------- EDIT ---------------- */
+  const handleEdit = (page: CmsPage) => {
     setEditing(page);
     setForm({
       title: page.title,
@@ -81,28 +104,24 @@ export default function ManageCmsPage() {
     setOpen(true);
   };
 
-  const resetForm = () => {
-    setEditing(null);
-    setForm({
-      title: "",
-      slug: "",
-      content_html: "",
-      status: "active",
-    });
-  };
-
+  /* ---------------- UI ---------------- */
   return (
     <div className="p-6 space-y-6">
-      
+      {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">CMS Pages</h1>
-        <Button onClick={() => { resetForm(); setOpen(true); }}>
+        <Button
+          onClick={() => {
+            resetForm();
+            setOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Create Page
         </Button>
       </div>
 
-     
+      {/* TABLE */}
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-100">
@@ -123,6 +142,7 @@ export default function ManageCmsPage() {
 
                 <td className="p-3">
                   <a
+                    href={`${FRONTEND_BASE}/${page.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
@@ -157,7 +177,7 @@ export default function ManageCmsPage() {
 
             {pages.length === 0 && (
               <tr>
-                <td colSpan="5" className="p-6 text-center text-gray-400">
+                <td colSpan={5} className="p-6 text-center text-gray-400">
                   No CMS pages found
                 </td>
               </tr>
@@ -168,7 +188,7 @@ export default function ManageCmsPage() {
 
       {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit CMS Page" : "Create CMS Page"}
@@ -196,15 +216,18 @@ export default function ManageCmsPage() {
               }
             />
 
-            <RichTextEditor
-              value={form.content_html}
-              onChange={(val) =>
-                setForm({ ...form, content_html: val })
-              }
-            />
+            {/* FIXED HEIGHT EDITOR */}
+            <div className="h-[350px] overflow-y-auto border rounded">
+              <RichTextEditor
+                value={form.content_html}
+                onChange={(val: string) =>
+                  setForm({ ...form, content_html: val })
+                }
+              />
+            </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="sticky bottom-0 bg-white pt-4">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
