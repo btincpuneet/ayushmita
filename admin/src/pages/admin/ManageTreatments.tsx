@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 
 import {
   Dialog,
@@ -12,11 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  FileText, 
+import {
+  Plus,
+  Edit3,
+  Trash2,
+  FileText,
   Search,
   ChevronRight,
   Stethoscope,
@@ -25,10 +26,10 @@ import {
 
 import RichTextEditor from "@/components/RichTextEditor";
 
-const BASE_URL = "http://127.0.0.1:5001";
-const API_TREATMENT = `http://127.0.0.1:5001/api/treatments`;
-const API_DISEASE = `http://127.0.0.1:5001/api/diseases`;
-const API_SINGLE_TREATMENT = `http://127.0.0.1:5001/api/treatments/single`;
+const BASE_URL = API_BASE;
+const API_TREATMENT = `${API_BASE}/api/treatments`;
+const API_DISEASE = `${API_BASE}/api/diseases`;
+const API_SINGLE_TREATMENT = `${API_BASE}/api/treatments/single`;
 
 const decodeHTML = (html: string) => {
   const txt = document.createElement("textarea");
@@ -182,7 +183,7 @@ const ManageTreatments = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      
+
       <header className="sticky top-0 z-40 bg-card border-b shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -204,13 +205,13 @@ const ManageTreatments = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8 space-y-6">
-        
+
         <div className="bg-card rounded-xl shadow-card border p-6 animate-fade-in">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-4 h-4 text-muted-foreground" />
             <h2 className="text-sm font-semibold text-foreground">Filter Treatments</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Select Disease</Label>
@@ -263,7 +264,7 @@ const ManageTreatments = () => {
                 <div className="flex items-center gap-4">
                   {singleTreatment.image ? (
                     <img
-                      src={`http://127.0.0.1:5001${singleTreatment.image}`}
+                      src={`${API_BASE}${singleTreatment.image}`}
                       className="w-20 h-20 rounded-lg object-cover shadow-card"
                       alt={singleTreatment.name}
                     />
@@ -274,11 +275,10 @@ const ManageTreatments = () => {
                   )}
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        singleTreatment.status === 1 
-                          ? "bg-success/10 text-success" 
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${singleTreatment.status === 1
+                          ? "bg-success/10 text-success"
                           : "bg-muted text-muted-foreground"
-                      }`}>
+                        }`}>
                         {singleTreatment.status === 1 ? "Active" : "Inactive"}
                       </span>
                     </div>
@@ -307,7 +307,7 @@ const ManageTreatments = () => {
                 <FileText className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-semibold text-foreground">Content Preview</h3>
               </div>
-              
+
               <div
                 className="cms-content bg-muted/30 rounded-lg p-6 border"
                 dangerouslySetInnerHTML={{
@@ -334,7 +334,7 @@ const ManageTreatments = () => {
           </div>
         )}
       </main>
-  {/* MODAL */}
+      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -504,7 +504,7 @@ const ManageTreatments = () => {
               <div className="col-span-2">
                 <Label className="text-xs font-medium text-muted-foreground mb-2 block">Image Preview</Label>
                 <img
-                  src={preview || `http://127.0.0.1:5001${editing.image}`}
+                  src={preview || `${API_BASE}${editing.image}`}
                   className="w-48 h-32 object-cover rounded-lg border shadow-sm"
                   alt="Preview"
                 />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 import {
   Dialog,
   DialogContent,
@@ -13,8 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
 
-const API_URL = "http://127.0.0.1:5001/api/doctors";
-const BASE_URL = "http://127.0.0.1:5001";
+const API_URL = `${API_BASE}/api/doctors`;
+const BASE_URL = API_BASE;
 
 interface Doctor {
   id: number;
@@ -90,7 +91,7 @@ const ManageDoctors = () => {
       image: null,
     });
 
-    setPreview(item.image_url ? `http://127.0.0.1:5001${item.image_url}` : null);
+    setPreview(item.image_url ? `${API_BASE}${item.image_url}` : null);
     setOpen(true);
   };
 
@@ -158,7 +159,7 @@ const ManageDoctors = () => {
                 <td className="p-3">
                   {d.image_url ? (
                     <img
-                      src={`http://127.0.0.1:5001${d.image_url}`}
+                      src={`${API_BASE}${d.image_url}`}
                       className="w-16 h-16 rounded object-cover"
                     />
                   ) : (

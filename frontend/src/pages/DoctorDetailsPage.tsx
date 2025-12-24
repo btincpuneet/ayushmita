@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import Slider from "react-slick";
 import { Briefcase, Stethoscope, MapPin, Building2, Globe, ChevronRight } from "lucide-react";
 import ModalAppointment from "../components/Treatment/ModalAppointment"
@@ -57,11 +58,11 @@ const DoctorDetailsPage: React.FC = () => {
         const loadData = async () => {
             try {
                 const doctorRes = await axios.get(
-                    `http://127.0.0.1:5001/api/doctors/${slug}`
+                    `${API_BASE}/api/doctors/${slug}`
                 );
 
                 const listRes = await axios.get(
-                    `http://127.0.0.1:5001/api/doctors`
+                    `${API_BASE}/api/doctors`
                 );
 
                 setDoctor(doctorRes.data.data);
@@ -103,7 +104,7 @@ const DoctorDetailsPage: React.FC = () => {
     }
 
     const image = doctor.image_url
-        ? `http://127.0.0.1:5001${doctor.image_url}`
+        ? `${API_BASE}${doctor.image_url}`
         : "https://images.unsplash.com/photo-1606813909359-9c9d45d90c2e";
 
     /* -------------------- SLIDER SETTINGS -------------------- */
@@ -332,7 +333,7 @@ const DoctorDetailsPage: React.FC = () => {
                                             <img
                                                 src={
                                                     d.image_url
-                                                        ? `http://127.0.0.1:5001${d.image_url}`
+                                                        ? `${API_BASE}${d.image_url}`
                                                         : image
                                                 }
                                                 className="h-[233px] w-full object-cover rounded-2xl"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE } from "../config/api";
 import Slider from "react-slick";
 import axios from "axios";
 
@@ -46,13 +47,13 @@ export default function DoctorCareSlider() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5001/api/doctors")
+      .get(`${API_BASE}/api/doctors`)
       .then((res) => {
         if (res.data.success) {
           const mapped = res.data.data.map((d) => ({
             name: d.name,
             specialty: d.specialty,
-            image: `http://127.0.0.1:5001${d.image_url}`,
+            image: `${API_BASE}${d.image_url}`,
           }));
           setDoctors(mapped);
         }

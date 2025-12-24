@@ -125,6 +125,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Container from "./Container";
+import { API_BASE } from "../config/api";
 
 const PromoSlider: React.FC = () => {
   const ref = useRef<Slider | null>(null);
@@ -133,14 +134,14 @@ const PromoSlider: React.FC = () => {
 
   // -------------------- FETCH API --------------------
   useEffect(() => {
-    fetch("http://127.0.0.1:5001/api/promo-sliders")
+    fetch(`${API_BASE}/api/promo-sliders`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           const activePromos = data.data
             .filter((item) => item.status === "active")
             .map((item) => ({
-              image: "http://127.0.0.1:5001" + item.image_url,
+              image: `${API_BASE}${item.image_url}`,
             }));
 
           setPromos(activePromos);

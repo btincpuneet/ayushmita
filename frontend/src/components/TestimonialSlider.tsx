@@ -18,7 +18,8 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
-const API = "http://127.0.0.1:5001/api/testimonials";
+import { API_BASE } from "../config/api";
+const API = `${API_BASE}/api/testimonials`;
 
 const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
   <span></span>
@@ -131,7 +132,7 @@ const TestimonialSlider: React.FC = () => {
                     <div className="bg-white rounded-2xl p-4 min-h-[24rem] hover:scale-105 transition-transform flex flex-col items-center text-center"
                     >
                       <img
-                        src={`http://127.0.0.1:5001${t.image_url}`}
+                        src={`${API_BASE}${t.image_url}`}
                         alt={t.name}
                         className="w-[70px] h-[70px] rounded-full object-cover mb-4"
                         loading="lazy"

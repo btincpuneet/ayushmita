@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import "../css/responsive.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 
-const API = "http://127.0.0.1:5001/api/hospitals";
+const API = `${API_BASE}/api/hospitals`;
 
 const NextArrow = ({ onClick }) => (
   <div
@@ -100,7 +101,7 @@ const TopPartnerHospitals = () => {
                   <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition hover:shadow-xl hover:-translate-y-1.5 cursor-pointer">
                     <div className="overflow-hidden rounded-xl">
                       <img
-                        src={`http://127.0.0.1:5001${h.image_url}`}
+                        src={`${API_BASE}${h.image_url}`}
                         alt={h.name}
                         className="w-[369px] h-[280px] object-cover rounded-lg"
                       />

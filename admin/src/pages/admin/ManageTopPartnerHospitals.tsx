@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 
 import {
   Dialog,
@@ -13,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
 
-const API_URL = "http://127.0.0.1:5001/api/hospitals";
+const API_URL = `${API_BASE}/api/hospitals`;
 
 const emptyForm = {
   name: "",
@@ -145,7 +146,7 @@ export default function ManageTopPartnerHospitals() {
                 <tr key={h.id}>
                   <td className="p-2 border">
                     <img
-                      src={`http://127.0.0.1:5001${h.image_url}`}
+                      src={`${API_BASE}${h.image_url}`}
                       className="w-16 h-16 rounded object-cover"
                     />
                   </td>

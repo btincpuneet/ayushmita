@@ -1,7 +1,8 @@
 // src/services/disease.ts
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
-const API_DISEASE = "http://127.0.0.1:5001/api/diseases";
+const API_DISEASE = `${API_BASE}/api/diseases`;
 
 // Get all diseases
 export const getDiseases = async () => {

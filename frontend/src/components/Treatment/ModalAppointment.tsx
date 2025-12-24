@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 import Swal from "sweetalert2";
 
 interface ModalAppointmentProps {
@@ -7,7 +8,6 @@ interface ModalAppointmentProps {
   onClose: () => void;
 }
 
-const BASE_URL = "http://127.0.0.1:5001/api";
 
 const ModalAppointment: React.FC<ModalAppointmentProps> = ({
   isOpen,
@@ -56,7 +56,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
     });
 
     try {
-      await axios.post(`http://127.0.0.1:5001/form-submit`, {
+      await axios.post(`${API_BASE}/form-submit`, {
         type: "appointment",
         data: {
           name: form.name,

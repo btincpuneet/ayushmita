@@ -7,6 +7,7 @@ exports.createBlog = async (req, res) => {
   try {
     let imageUrl = null;
 
+    // ✅ IMAGE HANDLING
     if (req.file) {
       const imageName = `blog_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads");
@@ -25,26 +26,13 @@ exports.createBlog = async (req, res) => {
     const isFeatured = ["1", 1, true, "true"].includes(req.body.is_featured);
 
     const blog = await Blog.create({
-      title: req.body.title,
-      slug: req.body.slug,
-      short_description: req.body.short_description,
-      description_html: req.body.description_html,
-      author_name: req.body.author_name || "Admin",
-
-      blog_image: imageUrl, 
-
-      is_global: isGlobal,
-      is_featured: isFeatured,
-
-      disease_id: isGlobal ? null : req.body.disease_id,
-      treatment_id: isGlobal ? null : req.body.treatment_id,
-
-      status: req.body.status || "published",
-      meta_title: req.body.meta_title,
-      meta_description: req.body.meta_description,
-      meta_keywords: req.body.meta_keywords,
-      tags: req.body.tags,
-      published_at: new Date(),
+      category_id,
+      title,
+      slug,
+      image: imageUrl,
+      short_description,
+      description_html,
+      is_global: is_global || 1
     });
 
     res.status(201).json({ success: true, data: blog });
@@ -54,8 +42,17 @@ exports.createBlog = async (req, res) => {
   }
 };
 
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.findAll({ order: [["id", "DESC"]] });
+    res.status(200).json({ success: true, data: blogs });
+  } catch (err) {
+    console.error("Get Blogs Error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
-exports.updateBlog = async (req, res) => {
+const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id);
 
@@ -67,6 +64,7 @@ exports.updateBlog = async (req, res) => {
 
     let imageUrl = blog.blog_image;
 
+    // ✅ IMAGE UPDATE
     if (req.file) {
       const imageName = `blog_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads");
@@ -85,29 +83,11 @@ exports.updateBlog = async (req, res) => {
     const isFeatured = ["1", 1, true, "true"].includes(req.body.is_featured);
 
     await blog.update({
-      title: req.body.title,
-      slug: req.body.slug,
-      short_description: req.body.short_description,
-      description_html: req.body.description_html,
-      blog_image: imageUrl, 
-      author_name: req.body.author_name,
-      status: req.body.status,
-      meta_title: req.body.meta_title,
-      meta_description: req.body.meta_description,
-      meta_keywords: req.body.meta_keywords,
-      tags: req.body.tags,
-
-      is_global: isGlobal,
-      is_featured: isFeatured,
-      disease_id: isGlobal ? null : req.body.disease_id,
-      treatment_id: isGlobal ? null : req.body.treatment_id,
+      ...req.body,
+      image: imageUrl,
     });
 
-    res.json({
-      success: true,
-      message: "Blog updated successfully",
-      data: blog,
-    });
+    res.status(200).json({ success: true, message: "Blog updated successfully", data: blog });
   } catch (err) {
     console.error("Update Blog Error:", err);
     res.status(500).json({ success: false, message: err.message });
@@ -174,31 +154,11 @@ exports.deleteBlog = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-exports.getBlogBySlug = async (req, res) => {
-  try {
-    const { slug } = req.params;
 
-    const blog = await Blog.findOne({
-      slug,
-      status: "published",
-    });
-
-    if (!blog) {
-      return res.status(404).json({
-        success: false,
-        message: "Blog not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: blog,
-    });
-  } catch (error) {
-    console.error("getBlogBySlug error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+module.exports = {
+  createBlog,
+  getAllBlogs,
+  getBlogById,
+  updateBlog,
+  deleteBlog,
 };

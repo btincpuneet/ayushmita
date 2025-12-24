@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE } from "../config/api";
 import { useTranslation } from "react-i18next";
 import ModalAppointment from "../components/Treatment/ModalAppointment"
 import "../css/responsive.css";
@@ -8,10 +9,8 @@ const HeroImage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [banner, setBanner] = useState(null);
-  const API = "http://127.0.0.1:5001/api/hero-banners";
-
   useEffect(() => {
-    fetch(API)
+    fetch(`${API_BASE}/api/hero-banners`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data.length > 0) {
@@ -41,7 +40,7 @@ const HeroImage = () => {
         {/* Background Image */}
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src={`http://127.0.0.1:5001${image}`}
+            src={`${API_BASE}${image}`}
             alt={title}
             className="w-full h-full object-cover object-center"
           />
@@ -56,13 +55,13 @@ const HeroImage = () => {
             {/* TEXT SECTION */}
             <div className="sticky-item-over-image">
               <p className="text-[#F0A324] mb-4" style={{
-  fontFamily: "Roboto, sans-serif",
-  fontWeight: 700,
-  fontSize: "22px",
-  lineHeight: "28px",
-  letterSpacing: "0px",
-}}
->
+                fontFamily: "Roboto, sans-serif",
+                fontWeight: 700,
+                fontSize: "22px",
+                lineHeight: "28px",
+                letterSpacing: "0px",
+              }}
+              >
                 {subtitle}
               </p>
 
@@ -71,14 +70,14 @@ const HeroImage = () => {
               </h1>
 
               <p className="mt-5 leading-[28px]" style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 400,
-  fontStyle: "normal",
-  fontSize: "20px",
-  lineHeight: "28px",
-  letterSpacing: "0px",
-}}
->
+                fontFamily: "Ubuntu, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "20px",
+                lineHeight: "28px",
+                letterSpacing: "0px",
+              }}
+              >
                 {description}
               </p>
 

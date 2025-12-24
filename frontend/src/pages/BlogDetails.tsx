@@ -318,7 +318,6 @@ const BlogDetails: React.FC = () => {
             />
           </article>
 
-          {/* ================= SIDEBAR ================= */}
           <aside className="lg:w-[32%] space-y-6">
             <div className="sticky top-28">
               <BookingForm />

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Category } from "@/types/content";
+import { API_BASE } from "../config/api";
 
-const API_URL = "http://127.0.0.1:5001/api"; // your backend base URL
+const API_URL = `${API_BASE}/api`; // your backend base URL
 
 export const categoryApi = {
   async getAll(): Promise<Category[]> {

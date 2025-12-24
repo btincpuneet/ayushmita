@@ -1,7 +1,8 @@
 // src/services/treatment.ts
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
-const API_TREATMENT = "http://127.0.0.1:5001/api/treatments";
+const API_TREATMENT = `${API_BASE}/api/treatments`;
 
 // =========================
 // GET All Treatments of a Disease

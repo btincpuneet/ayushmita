@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import Slider from "react-slick";
 
 import Header from "../components/Header";
@@ -46,7 +47,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         <img
-          src={`http://127.0.0.1:5001${hospital.image_url}`}
+          src={`${API_BASE}${hospital.image_url}`}
           alt={hospital.name}
           className="w-full lg:w-[370px] h-[276px] object-cover rounded-xl"
         />
@@ -406,11 +407,11 @@ function DoctorsSection({ doctors }: any) {
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
   const [hospital, setHospital] = useState<any>(null);
-   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5001/api/hospitals/${slug}`)
+      .get(`${API_BASE}/api/hospitals/${slug}`)
       .then((res) => setHospital(res.data.data));
   }, [slug]);
 
@@ -534,19 +535,19 @@ export default function HospitalDetailsPage() {
             <HospitalInfoCard
               hospital={hospital}
               onBookAppointment={() => setIsModalOpen(true)}
-            />      
+            />
             <div className="space-y-12">
-          <ContentSection
-            html={hospital.description_html}
-          />
-          {/* <FacilitiesSection facilities={facilities} /> */}
-        </div>
-                </div>
+              <ContentSection
+                html={hospital.description_html}
+              />
+              {/* <FacilitiesSection facilities={facilities} /> */}
+            </div>
+          </div>
           <div className="lg:col-span-1 sticky top-24">
             <BookingForm />
           </div>
         </div>
-        
+
         <SimilarHospitals hospitals={similarHospitals} />
         <DoctorsSection doctors={doctors} />
       </div>

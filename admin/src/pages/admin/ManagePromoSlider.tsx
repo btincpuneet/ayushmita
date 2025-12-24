@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-const API_URL = "http://127.0.0.1:5001/api/promo-sliders";
-const BASE_URL = "http://127.0.0.1:5001";
+const API_URL = `${API_BASE}/api/promo-sliders`;
 
 const ManagePromoSlider = () => {
   const [sliders, setSliders] = useState([]);
@@ -84,7 +84,7 @@ const ManagePromoSlider = () => {
 
     // FIXED: Show image from uploads folder
     if (item.image_url) {
-      setPreview(`http://127.0.0.1:5001${item.image_url}`);
+      setPreview(`${API_BASE}${item.image_url}`);
     }
 
     setOpen(true);
@@ -153,7 +153,7 @@ const ManagePromoSlider = () => {
                   {/* FIXED: Now image loads correctly */}
                   {item.image_url ? (
                     <img
-                      src={`http://127.0.0.1:5001${item.image_url}`}
+                      src={`${API_BASE}${item.image_url}`}
                       alt=""
                       className="w-20 h-14 object-cover rounded"
                     />

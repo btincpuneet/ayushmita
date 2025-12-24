@@ -276,9 +276,10 @@
 // export default BookingForm;
 import React, { useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import Swal from "sweetalert2";
 
-const BASE_URL = "http://127.0.0.1:5001/api";
+const BASE_URL = API_BASE;
 
 const BookingForm: React.FC = () => {
   const [form, setForm] = useState({
@@ -314,7 +315,7 @@ const BookingForm: React.FC = () => {
     });
 
     try {
-      await axios.post(`http://127.0.0.1:5001/form-submit`, {
+      await axios.post(`${API_BASE}/form-submit`, {
         type: "consultation",
         data: form,
       });
@@ -390,7 +391,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block form-elements-section">Country</label>
+          <label className="text-white mb-1 block">Country</label>
           <select
             name="country"
             value={form.country}
@@ -406,7 +407,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block form-elements-section">City</label>
+          <label className="text-white mb-1 block">City</label>
           <select
             name="city"
             value={form.city}

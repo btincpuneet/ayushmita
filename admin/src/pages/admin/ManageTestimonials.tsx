@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../../config/api";
 
 interface Testimonial {
   id: number;
@@ -25,7 +26,7 @@ const ManageTestimonials: React.FC = () => {
 
   const isEditing = form.id !== null;
 
-  const API = "http://127.0.0.1:5001/api/testimonials";
+  const API = `${API_BASE}/api/testimonials`;
 
   // Load testimonials
   const fetchTestimonials = async () => {
@@ -75,7 +76,7 @@ const ManageTestimonials: React.FC = () => {
     });
 
     if (t.image_url) {
-      setPreviewImage(`http://localhost:5001${t.image_url}`);
+      setPreviewImage(`${API_BASE}${t.image_url}`);
     }
 
     setModalOpen(true);
@@ -150,7 +151,7 @@ const ManageTestimonials: React.FC = () => {
                 <td className="p-3 border">
                   {t.image_url ? (
                     <img
-                      src={`http://localhost:5001${t.image_url}`}
+                      src={`${API_BASE}${t.image_url}`}
                       className="w-16 h-16 object-cover rounded"
                     />
                   ) : (

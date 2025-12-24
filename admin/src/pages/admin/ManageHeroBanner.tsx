@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { heroBannerApi } from "@/services/banner";
+import { API_BASE } from "../../config/api";
 
 export default function ManageHeroBanner() {
   const [banners, setBanners] = useState<any[]>([]);
@@ -7,7 +8,7 @@ export default function ManageHeroBanner() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const BASE_URL = "http://127.0.0.1:5001";
+  
 
   const [form, setForm] = useState({
     title: "",
@@ -104,7 +105,7 @@ export default function ManageHeroBanner() {
       image: null,
     });
 
-    setPreviewImage(`http://127.0.0.1:5001${banner.image}`);
+    setPreviewImage(`${API_BASE}${banner.image}`);
     setModalOpen(true);
   };
 
@@ -157,7 +158,7 @@ export default function ManageHeroBanner() {
                 <td className="p-3">
                   {banner.image ? (
                     <img
-                      src={`http://127.0.0.1:5001${banner.image}`}
+                      src={`${API_BASE}${banner.image}`}
                       alt={banner.title}
                       className="w-24 h-16 object-cover rounded"
                     />

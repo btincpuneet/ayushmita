@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
-const API_URL = "http://127.0.0.1:5001/api/promo-sliders";
+const API_URL = `${API_BASE}/api/promo-sliders`;
 
 export interface PromoSlider {
   id: string;

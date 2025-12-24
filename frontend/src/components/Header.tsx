@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { API_BASE } from "../config/api";
 import Logo from "../assets/logo.png";
 import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
@@ -30,7 +31,7 @@ const Header: React.FC = () => {
 
   const loadCategories = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:5001/api/categories");
+      const res = await fetch(`${API_BASE}/api/categories`);
       const data = await res.json();
 
       const filtered = data.filter(

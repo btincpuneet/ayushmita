@@ -3,6 +3,7 @@ import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
+import { API_BASE } from "../config/api";
 import HospitalPageHeader from "../components/Hospital/HospitalPageHeader";
 import HospitalCard from "../components/Hospital/HospitalCard";
 import BookingForm from "../components/BookingForm";
@@ -28,7 +29,7 @@ export default function Index() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:5001/api/hospitals");
+            const res = await axios.get(`${API_BASE}/api/hospitals`);
 
         setHospitals(
           res.data.data.map((h: any) => ({

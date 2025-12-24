@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
 // Type for each treatment
 interface Treatment {
@@ -23,7 +24,7 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
   const fetchServices = async () => {
     try {
       const res = await axios.get<{ treatments: Treatment[] }>(
-        `http://127.0.0.1:5001/api/treatments/disease/${diseaseId}`
+        `${API_BASE}/api/treatments/disease/${diseaseId}`
       );
       console.log("res", res.data.treatments)
       const filtered = res.data.treatments.filter(
@@ -74,7 +75,7 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
   "
               >
                 <img
-                  src={`http://127.0.0.1:5001${service.image}`}
+                  src={`${API_BASE}${service.image}`}
                   alt={service.name}
                   className="w-[100%] h-[80px] rounded-lg object-cover"
                 />

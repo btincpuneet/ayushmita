@@ -15,9 +15,10 @@
 // services/api.ts
 
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
 export const api = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
+  baseURL: `${API_BASE}/api`,
 });
 
 // Add token automatically

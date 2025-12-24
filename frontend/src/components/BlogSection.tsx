@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
 const BlogSection = () => {
   const [blogPosts, setBlogPosts] = useState([]);
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:5001/api/blogs");
+      const res = await axios.get(`${API_BASE}/api/blogs`);
 
       const blogs = res.data.data || [];
 
@@ -16,8 +17,8 @@ const BlogSection = () => {
         excerpt: post.short_description?.trim(),
         slug: post.slug?.trim(),
         image: post.image.startsWith("/uploads")
-          ? `http://127.0.0.1:5001${post.image}`
-          : `http://127.0.0.1:5001/uploads/blogs/${post.image}`
+          ? `${API_BASE}${post.image}`
+          : `${API_BASE}/uploads/blogs/${post.image}`
       }));
 
       setBlogPosts(mapped);

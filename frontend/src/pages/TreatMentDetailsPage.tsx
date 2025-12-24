@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
 import "../css/common.css";
 import Header from "../components/Header";
@@ -21,7 +22,7 @@ export default function TreatmentDetailsPage() {
   const fetchTreatment = async () => {
     try {
       const res = await axios.get(
-        `http://127.0.0.1:5001/api/treatments/single/${slug}`
+        `${API_BASE}/api/treatments/single/${slug}`
       );
       console.log("resss",res.data.treatment?.disease.name)
       if (res.data?.success) setTreatment(res.data.treatment);
@@ -59,7 +60,7 @@ export default function TreatmentDetailsPage() {
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-              src={`http://127.0.0.1:5001${treatment.image}`}
+                src={`${API_BASE}${treatment.image}`}
               alt={treatment.name}
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />

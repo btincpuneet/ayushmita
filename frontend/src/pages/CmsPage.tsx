@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import Footer from "../components/Footer";
 import "../css/aboutUs.css";
-const API_BASE = "http://127.0.0.1:5001/api";
+import { API_BASE } from "../config/api";
 
 
 interface CmsPageData {
@@ -29,7 +29,7 @@ const CmsPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await axios.get<{ data: CmsPageData }>(
-        `${API_BASE}/pages/about-us`
+        `${API_BASE}/api/pages/about-us`
       );
       setPage(res.data.data);
     } catch (error) {

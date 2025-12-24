@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
 
+import { API_BASE, FRONTEND_BASE } from "@/config/api";
 
-const API_BASE = "http://localhost:5001/api";
-const FRONTEND_BASE = "http://localhost:8080";
+/* ================= TYPES ================= */
 
 interface CmsPage {
   id: number;
@@ -25,6 +25,8 @@ interface CmsPage {
   content_html: string;
   status: "active" | "inactive";
 }
+
+/* ================= COMPONENT ================= */
 
 export default function ManageCmsPage() {
   const [pages, setPages] = useState<CmsPage[]>([]);
@@ -38,10 +40,11 @@ export default function ManageCmsPage() {
     status: "active",
   });
 
-  /* ---------------- FETCH PAGES ---------------- */
+  /* ---------------- FETCH ---------------- */
+
   const fetchPages = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/cms-pages`);
+      const res = await axios.get(`${API_BASE}/api/cms-pages`);
       setPages(res.data.data || []);
     } catch {
       toast.error("Failed to load CMS pages");
@@ -77,10 +80,13 @@ export default function ManageCmsPage() {
 
     try {
       if (editing) {
-        await axios.put(`${API_BASE}/cms-pages/${editing.id}`, form);
+        await axios.put(
+          `${API_BASE}/api/cms-pages/${editing.id}`,
+          form
+        );
         toast.success("Page updated");
       } else {
-        await axios.post(`${API_BASE}/cms-pages`, form);
+        await axios.post(`${API_BASE}/api/cms-pages`, form);
         toast.success("Page created");
       }
 
@@ -216,7 +222,6 @@ export default function ManageCmsPage() {
               }
             />
 
-            {/* FIXED HEIGHT EDITOR */}
             <div className="h-[350px] overflow-y-auto border rounded">
               <RichTextEditor
                 value={form.content_html}

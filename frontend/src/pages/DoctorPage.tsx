@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -42,7 +43,7 @@ const DoctorsPage: React.FC = () => {
   useEffect(() => {
     const loadDoctors = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:5001/api/doctors");
+        const res = await axios.get(`${API_BASE}/api/doctors`);
 
         const list: Doctor[] = Array.isArray(res.data?.data)
           ? res.data.data

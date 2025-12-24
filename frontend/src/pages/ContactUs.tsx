@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import Swal from "sweetalert2";
 // import "../css/contact.css";
 
@@ -7,7 +8,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
-const API_BASE = "http://127.0.0.1:5001/api";
 
 const ContactUs = () => {
   const [cmsContent, setCmsContent] = useState("");
@@ -29,7 +29,7 @@ const ContactUs = () => {
 
   const fetchCmsContent = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/contact-us`);
+      const res = await axios.get(`${API_BASE}/api/contact-us`);
       if (res.data?.data?.length > 0) {
         setCmsContent(res.data.data[0].content_html);
       }

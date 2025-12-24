@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MapPin, Briefcase, ChevronRight } from "lucide-react";
+import { API_BASE } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import ModalAppointment from "../Treatment/ModalAppointment"
 interface Doctor {
@@ -25,7 +26,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
 
   const image =
     doctor.image_url && doctor.image_url.length > 0
-      ? `http://127.0.0.1:5001${doctor.image_url}`
+      ? `${API_BASE}${doctor.image_url}`
       : "https://images.unsplash.com/photo-1606813909359-9c9d45d90c2e?auto=format&fit=crop&w=400&q=80";
 
   return (

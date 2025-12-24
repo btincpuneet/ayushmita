@@ -1,7 +1,8 @@
 // src/services/banner.ts
 import axios from "axios";
+import { API_BASE } from "../config/api";
 
-const API_URL = "http://127.0.0.1:5001/api/hero-banners";
+const API_URL = `${API_BASE}/api/hero-banners`;
 
 export const heroBannerApi = {
   getAll: async () => {

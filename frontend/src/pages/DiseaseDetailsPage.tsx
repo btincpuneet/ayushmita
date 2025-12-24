@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ConsultationForm from "../components/ConsulatForm";
@@ -40,7 +41,7 @@ const DiseaseDetailsPage = () => {
 
   const fetchDisease = async () => {
     try {
-      const res = await axios.get(`http://127.0.0.1:5001/api/diseases/${slug}`);
+      const res = await axios.get(`${API_BASE}/api/diseases/${slug}`);
       if (res.data?.success) {
         setDisease(res.data.disease);
       }
@@ -76,7 +77,7 @@ const DiseaseDetailsPage = () => {
         <div className="flex flex-col-reverse lg:flex-row items-center ">
           <div class="w-full lg:w-1/2 flex justify-center">
             <img
-              src={`http://127.0.0.1:5001${disease.image}`}
+              src={`${API_BASE}${disease.image}`}
               alt={disease.name}
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
@@ -133,7 +134,7 @@ const DiseaseDetailsPage = () => {
             >
               <div className="w-full h-24 overflow-hidden rounded-lg">
                 <img
-                  src={`http://127.0.0.1:5001${t.image}`}
+                  src={`${API_BASE}${t.image}`}
                   alt={t.name}
                   className="w-full h-full object-cover rounded-lg"
                 />

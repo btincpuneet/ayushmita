@@ -73,6 +73,7 @@
 // }import React, { createContext, useContext, useState, useEffect } from "react";import { api } from "@/services/api";
 import { User, AuthState } from "@/types/content";
 import axios from "axios";
+import { API_BASE } from "../config/api";
 import { useContext, useEffect, useState, createContext } from "react";
 
 interface AuthContextType extends AuthState {
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Login function using REAL API
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await axios.post("http://127.0.0.1:5001/api/login", { email, password });
+      const response = await axios.post(`${API_BASE}/api/login`, { email, password });
       const data = response.data;
 
       if (!data.success) return false;

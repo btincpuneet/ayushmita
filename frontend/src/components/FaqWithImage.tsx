@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE } from "../config/api";
 import faqImage from "../assets/hero-medical.jpg";
 import care from "../assets/care.png";
 import Smile from "../assets/smile.png";
@@ -17,7 +18,7 @@ const FaqWithImage = ({
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5001/api/faqs");
+        const response = await fetch(`${API_BASE}/api/faqs`);
         const data = await response.json();
 
         // Convert API fields to expected UI format
