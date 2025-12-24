@@ -1,0 +1,506 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.gm-section {
+  padding: 70px 20px;
+  background: #ffffff;
+}
+
+/* Container */
+.gm-container {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.ayu-about-section {
+  width: 100%;
+  background: #ffffff;
+  padding: 60px 20px;
+}
+
+.ayu-about-wrapper {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* IMAGE BOX */
+.ayu-about-image-box {
+  position: relative;
+  /* border-radius: 16px; */
+  overflow: hidden;
+}
+
+.ayu-about-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+/* BADGE */
+.ayu-about-badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  color: #f39c12;
+  font-weight: 600;
+  font-size: 28px;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.ayu-about-badge span {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* CONTENT */
+.ayu-about-content {
+  max-width: 520px;
+}
+
+.ayu-about-title {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 28px;
+  line-height: 100%;
+
+
+  color: #2b2b2b;
+  margin-bottom: 16px;
+}
+
+.ayu-about-text {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  line-height: 100%;
+
+  line-height: 26px;
+  color: #5f5f5f;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .ayu-about-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ayu-about-content {
+    max-width: 100%;
+  }
+
+  .ayu-about-badge {
+    bottom: -16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ayu-about-title {
+    font-size: 24px;
+  }
+
+  .ayu-about-text {
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  .ayu-about-badge {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+
+  .ayu-about-badge span {
+    font-size: 18px;
+  }
+}
+
+/* Map Wrapper */
+.gm-map-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 30px;
+}
+
+/* SVG Map */
+.gm-world-map {
+  width: 100%;
+  height: 380px;
+}
+
+.gm-world-map path {
+  fill: #d6eaf8;
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+/* Stats */
+.gm-stats {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gm-stat {
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gm-stat:last-child {
+  border-bottom: none;
+}
+
+.gm-number {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 40px;
+  line-height: 40px;
+  color: #F0A324;
+}
+
+.gm-label {
+  margin-top: 4px;
+  font-family: Ubuntu;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: 100%;
+  color: #374151;
+}
+
+.info-wrapper {
+  display: flex;
+  gap: 24px;
+  margin: 40px auto;
+}
+
+.info-card {
+  border: 1px solid #E7E6E6;
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  position: relative;
+  border-left: 4px solid #8EC141;
+}
+
+.info-card.mission {
+  border: 1px solid #E7E6E6;
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  position: relative;
+  border-left: 4px solid #F0A324;
+}
+
+.info-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 4px;
+  border-radius: 6px;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.mission-icon {
+  background: #fff7ed;
+  color: #f59e0b;
+}
+
+.vision-icon {
+  background: #f0fdf4;
+  color: #65a30d;
+}
+
+.title-our-mission {
+  font-family: Ubuntu, sans-serif;
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 28px;
+  line-height: 100%;
+  color: #0f172a;
+}
+
+.info-text {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 40px;
+  color: #333333;
+}
+
+/* Section background */
+.obj-section-bg {
+  background: #F6F7F9;
+  padding: 130px 20px;
+}
+
+/* Card */
+.obj-card {
+  max-width: 958px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 40px 42px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  border-top: 4px solid #F0A324;
+}
+
+/* Title */
+.obj-title {
+  text-align: center;
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 28px;
+  line-height: 100%;
+  color: #1f2937;
+}
+
+/* Subtitle */
+.obj-subtitle {
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 26px;
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+
+  text-align: center;
+
+  color: #6b7280;
+}
+
+/* List */
+.obj-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Item */
+.obj-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Bullet */
+.obj-dot {
+  font-size: 18px;
+  line-height: 24px;
+  color: #111827;
+}
+
+/* Text */
+.obj-text {
+  font-family: Ubuntu;
+font-weight: 300;
+font-size: 100%;
+line-height: 27px;
+  color: #374151;
+}
+
+.obj-text strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.ayu-why-container {
+  padding: 60px 0px;
+  background: #ffffff;
+}
+
+.ayu-why-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* IMAGE GRID */
+.ayu-why-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+.ayu-img {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ayu-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* IMAGE SIZES */
+.ayu-img-1 {
+  height: 202px;
+}
+
+.ayu-img-2 {
+  height: 202px;
+}
+
+.ayu-img-3 {
+  grid-column: span 2;
+  height: 202px;
+}
+
+/* CONTENT */
+.ayu-why-content {
+  max-width: 520px;
+}
+
+.ayu-why-title {
+  font-family: Ubuntu;
+font-weight: 700;
+font-size: 28px;
+line-height: 100%;
+
+  margin-bottom: 16px;
+}
+
+.ayu-why-text {
+font-family: Ubuntu;
+font-weight: 300;
+font-size: 16px;
+line-height: 27px;
+
+  color: #333333;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .ayu-why-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .obj-section-bg {
+    padding: 30px 0px;
+  }
+
+  .ayu-about-section {
+    padding: 0px;
+  }
+
+  .ayu-why-content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .ayu-why-images {
+    grid-template-columns: 1fr;
+  }
+
+  .ayu-img-3 {
+    grid-column: span 1;
+  }
+
+  .ayu-img-1,
+  .ayu-img-2,
+  .ayu-img-3 {
+    height: 200px;
+  }
+
+  .ayu-why-title {
+    font-size: 24px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .obj-card {
+    padding: 30px 24px;
+  }
+}
+
+
+
+/* Responsive */
+@media (max-width: 992px) {
+  .gm-container {
+    flex-direction: column;
+  }
+
+  .gm-stats {
+    width: 100%;
+  }
+
+  .gm-world-map {
+    height: 300px;
+  }
+
+  .gm-map-wrapper {
+    flex-direction: column;
+  }
+
+  img.map-details-image {
+    width: 100%;
+  }
+
+  .info-wrapper {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .gm-world-map {
+    height: 240px;
+  }
+
+  .gm-number {
+    font-size: 26px;
+  }
+}
