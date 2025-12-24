@@ -177,6 +177,7 @@ exports.deleteBlog = async (req, res) => {
 exports.getBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
+  console.log("🔥 SLUG API HIT:", slug);
 
     const blog = await Blog.findOne({
       slug,

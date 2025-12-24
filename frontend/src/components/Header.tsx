@@ -80,13 +80,13 @@ const Header: React.FC = () => {
                   <Link
                     to={item.url}
                     style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 400,
-  fontStyle: "normal",
-  fontSize: "14px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
+                      fontFamily: "Ubuntu, sans-serif",
+                      fontWeight: 400,
+                      fontStyle: "normal",
+                      fontSize: "14px",
+                      lineHeight: "100%",
+                      letterSpacing: "0%",
+                    }}
 
                   >
                     {getLabel(item)}
@@ -98,13 +98,13 @@ const Header: React.FC = () => {
                 to={quoteItem.url}
                 className="px-5 py-3 rounded-lg bg-[#F0A324]"
                 style={{
-  fontFamily: "Poppins, sans-serif",
-  fontWeight: 500,
-  fontStyle: "normal",
-  fontSize: "14px",
-  lineHeight: "100%",
-  letterSpacing: "2%",
-}}
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: 500,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "100%",
+                  letterSpacing: "2%",
+                }}
 
               >
                 {getLabel(quoteItem)}
@@ -139,7 +139,7 @@ const Header: React.FC = () => {
                 </Link>
               ))}
 
-            
+
               <Link
                 to="/quote"
                 onClick={() => setIsOpen(false)}
