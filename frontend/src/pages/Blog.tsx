@@ -1,140 +1,371 @@
-import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { ChevronRight, ArrowRight, ArrowLeft } from "lucide-react";
-import { blogPosts, categories } from "../data/blogData";
-import SearchBar from "../components/Blog/SearchBar";
-import FeaturedBlogCard from "../components/Blog/FeaturedBlogCard";
-import BlogCard from "../components/Blog/BlogCard";
-import BookingForm from "../components/BookingForm";
+// import React, { useEffect, useMemo, useState } from "react";
+// import axios from "axios";
+// import { ArrowLeft, ArrowRight } from "lucide-react";
+
+// import Header from "../components/Header";
+// import Footer from "../components/Footer";
+// import Container from "../components/Container";
+// import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+// import SearchBar from "../components/Blog/SearchBar";
+// import BlogCard from "../components/Blog/BlogCard";
+// import FeaturedBlogCard from "../components/Blog/FeaturedBlogCard";
+// import BookingForm from "../components/BookingForm";
+
+// const API_BASE_URL = "http://127.0.0.1:5001";
+
+
+// const Blog = () => {
+//   const [blogs, setBlogs] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [visiblePosts, setVisiblePosts] = useState(5);
+//   const [featuredIndex, setFeaturedIndex] = useState(0);
+
+//   // ================= FETCH BLOGS =================
+//   useEffect(() => {
+//     const fetchBlogs = async () => {
+//       try {
+//         const res = await axios.get(`${API_BASE_URL}/api/blogs`);
+//         const data = Array.isArray(res.data?.data) ? res.data.data : [];
+
+//         // ✅ only published blogs
+//         const publishedBlogs = data.filter(
+//           (b: any) => b.status === "published"
+//         );
+
+//         setBlogs(publishedBlogs);
+//       } catch (err) {
+//         console.error("Blog fetch error", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchBlogs();
+//   }, []);
+
+//   // ================= SEARCH =================
+//   const filteredPosts = useMemo(() => {
+//     return blogs.filter((b) =>
+//       b.title?.toLowerCase().includes(searchQuery.toLowerCase())
+//     );
+//   }, [blogs, searchQuery]);
+
+//   // ================= FEATURED (FIXED & SAFE) =================
+//   const featuredPosts = useMemo(() => {
+//     const featured = blogs.filter(
+//       (b) =>
+//         b.is_featured === true ||
+//         b.is_featured === "true" ||
+//         b.is_featured === 1
+//     );
+
+//     // 🔥 fallback: if less than 3 featured, show latest blogs
+//     return featured.length >= 3 ? featured : blogs.slice(0, 3);
+//   }, [blogs]);
+
+//   const visibleFeatured = featuredPosts.slice(
+//     featuredIndex,
+//     featuredIndex + 3
+//   );
+
+//   if (loading) {
+//     return <div className="py-20 text-center">Loading...</div>;
+//   }
+
+//   return (
+//     <>
+//       <Header />
+
+//       <TreatmentHeader
+//         title="Blog"
+//         breadcrumbs={[{ label: "Home" }, { label: "Blog" }]}
+//       >
+//         <SearchBar
+//           searchQuery={searchQuery}
+//           onSearchChange={setSearchQuery}
+//         />
+//       </TreatmentHeader>
+
+//       <Container>
+//         {featuredPosts.length > 0 && (
+//           <section className="mb-12">
+//             <div className="flex items-center justify-between mb-4">
+//               <h2 className="text-xl font-bold">Latest Health Tips</h2>
+
+//               {featuredPosts.length > 3 && (
+//                 <div className="flex gap-2">
+//                   <button
+//                     disabled={featuredIndex === 0}
+//                     onClick={() =>
+//                       setFeaturedIndex((p) => Math.max(0, p - 1))
+//                     }
+//                     className="p-2 border rounded disabled:opacity-40"
+//                   >
+//                     <ArrowLeft size={18} />
+//                   </button>
+
+//                   <button
+//                     disabled={featuredIndex >= featuredPosts.length - 3}
+//                     onClick={() =>
+//                       setFeaturedIndex((p) =>
+//                         Math.min(featuredPosts.length - 3, p + 1)
+//                       )
+//                     }
+//                     className="p-2 border rounded disabled:opacity-40"
+//                   >
+//                     <ArrowRight size={18} />
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+
+//             <div className="grid md:grid-cols-3 gap-6">
+//               {visibleFeatured.map((post) => (
+//                 <FeaturedBlogCard
+//                   key={post._id}
+//                   post={{
+//                     ...post,
+//                     blog_image: post.blog_image
+//                       ? `${API_BASE_URL}${post.blog_image}`
+//                       : null,
+//                   }}
+//                 />
+//               ))}
+//             </div>
+//           </section>
+//         )}
+
+//         <div className="flex gap-8">
+//           <div className="flex-1 space-y-4">
+//             {filteredPosts.slice(0, visiblePosts).map((post) => (
+//               <BlogCard
+//                 key={post._id}
+//                 post={{
+//                   ...post,
+//                   blog_image: post.blog_image
+//                     ? `${API_BASE_URL}${post.blog_image}`
+//                     : null,
+//                 }}
+//               />
+//             ))}
+
+//             {visiblePosts < filteredPosts.length && (
+//               <div className="text-center pt-4">
+//                 <button
+//                   onClick={() => setVisiblePosts((p) => p + 5)}
+//                   className="px-6 py-2 bg-orange-500 text-white rounded"
+//                 >
+//                   Load more
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+
+//           <aside className="w-[360px] sticky top-24 h-fit">
+//             <BookingForm />
+//           </aside>
+//         </div>
+//       </Container>
+
+//       <Footer />
+//     </>
+//   );
+// };
+
+// export default Blog;
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import SearchBar from "../components/Blog/SearchBar";
+import BlogCard from "../components/Blog/BlogCard";
+import FeaturedBlogCard from "../components/Blog/FeaturedBlogCard";
+import BookingForm from "../components/BookingForm";
+
+const API_BASE_URL = "http://127.0.0.1:5001";
 
 const Blog: React.FC = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const [visiblePosts, setVisiblePosts] = useState(5);
-    const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [visiblePosts, setVisiblePosts] = useState(5);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
 
-    const filteredPosts = useMemo(() => {
-        return blogPosts.filter((post) => {
-            const matchesSearch =
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCategory =
-                selectedCategory === "All" || post.category === selectedCategory;
-            return matchesSearch && matchesCategory;
-        });
-    }, [searchQuery, selectedCategory]);
+  // ================= FETCH BLOGS =================
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/blogs`);
+        const list = Array.isArray(res.data?.data) ? res.data.data : [];
 
-    const featuredPosts = blogPosts.slice(0, 4);
-    const visibleFeatured = featuredPosts.slice(featuredIndex, featuredIndex + 3);
+        // ✅ only published blogs
+        const published = list.filter(
+          (b: any) => b.status === "published"
+        );
 
-    const handlePrevFeatured = () => {
-        setFeaturedIndex((prev) => Math.max(0, prev - 1));
+        setBlogs(published);
+      } catch (error) {
+        console.error("Failed to fetch blogs", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleNextFeatured = () => {
-        setFeaturedIndex((prev) => Math.min(featuredPosts.length - 3, prev + 1));
-    };
+    fetchBlogs();
+  }, []);
 
-    const handleLoadMore = () => {
-        setVisiblePosts((prev) => prev + 5);
-    };
+  // ================= SEARCH =================
+  const filteredPosts = useMemo(() => {
+    if (!searchQuery.trim()) return blogs;
 
-    return (
-        <>
-            <Header />
-           
-            <TreatmentHeader
-                title="Blog"
-                breadcrumbs={[{ label: "Home" }, { label: "Blog" }]}
-            >
-
-                <SearchBar
-                    searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
-                    selectedCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                />
-
-            </TreatmentHeader>
-            <Container>
-
-                <main className="container mx-auto px-4 pb-12">
-                    {/* Featured Section */}
-                    <section className="mb-12">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-heading font-bold text-xl text-foreground">
-                                Latest Health Tips
-                            </h2>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={handlePrevFeatured}
-                                    disabled={featuredIndex === 0}
-                                    className="w-9 h-9 rounded-full bg-card border border-border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
-                                >
-                                    <ArrowLeft className="w-4 h-4 text-foreground" />
-                                </button>
-                                <button
-                                    onClick={handleNextFeatured}
-                                    disabled={featuredIndex >= featuredPosts.length - 3}
-                                    className="w-9 h-9 rounded-full bg-secondary text-secondary-foreground hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                                >
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {visibleFeatured.map((post) => (
-                                <FeaturedBlogCard key={post.id} post={post} />
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* Blog List with Sidebar */}
-                    <div className="flex flex-col lg:flex-row gap-8">
-                        {/* Blog List */}
-                        <div className="flex-1 space-y-4">
-                            {filteredPosts.slice(0, visiblePosts).map((post) => (
-                                <BlogCard key={post.id} post={post} />
-                            ))}
-
-                            {visiblePosts < filteredPosts.length && (
-                                <div className="text-center pt-6">
-                                    <button
-                                        onClick={handleLoadMore}
-                                        className="px-8 py-2.5 rounded-lg font-semibold transition-all duration-200 bg-secondary text-secondary-foreground hover:opacity-90"
-                                    >
-                                        Load more
-                                    </button>
-                                </div>
-                            )}
-
-                            {filteredPosts.length === 0 && (
-                                <div className="text-center py-12">
-                                    <p className="text-muted-foreground">
-                                        No articles found matching your criteria.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Sidebar */}
-                        <aside className="lg:w-[380px] flex-shrink-0">
-                            <BookingForm />
-                        </aside>
-                    </div>
-                </main>
-
-            </Container>
-
-            <Footer />
-        </>
-
+    return blogs.filter((b) =>
+      b.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+  }, [blogs, searchQuery]);
+
+  // ================= FEATURED =================
+  const featuredPosts = useMemo(() => {
+    const featured = blogs.filter(
+      (b) =>
+        b.is_featured === true ||
+        b.is_featured === "true" ||
+        b.is_featured === 1
+    );
+
+    // fallback if not enough featured blogs
+    return featured.length >= 3 ? featured : blogs.slice(0, 3);
+  }, [blogs]);
+
+  const visibleFeatured = featuredPosts.slice(
+    featuredIndex,
+    featuredIndex + 3
+  );
+
+  if (loading) {
+    return <div className="py-20 text-center">Loading blogs...</div>;
+  }
+
+  return (
+    <>
+      <Header />
+
+      <TreatmentHeader
+        title="Blog"
+        breadcrumbs={[{ label: "Home" }, { label: "Blog" }]}
+      >
+        <SearchBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+      </TreatmentHeader>
+
+      <Container>
+        {/* ================= FEATURED BLOGS ================= */}
+        {featuredPosts.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Latest Health Tips</h2>
+
+              {featuredPosts.length > 3 && (
+                <div className="flex gap-2">
+                  <button
+                    disabled={featuredIndex === 0}
+                    onClick={() =>
+                      setFeaturedIndex((prev) =>
+                        Math.max(0, prev - 1)
+                      )
+                    }
+                    className="p-2 border rounded disabled:opacity-40"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+
+                  <button
+                    disabled={
+                      featuredIndex >= featuredPosts.length - 3
+                    }
+                    onClick={() =>
+                      setFeaturedIndex((prev) =>
+                        Math.min(
+                          featuredPosts.length - 3,
+                          prev + 1
+                        )
+                      )
+                    }
+                    className="p-2 border rounded disabled:opacity-40"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {visibleFeatured.map((post) => (
+                <FeaturedBlogCard
+                  key={post._id}
+                  post={{
+                    ...post,
+                    blog_image: post.blog_image
+                      ? `${API_BASE_URL}${post.blog_image}`
+                      : "/placeholder.jpg",
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ================= BLOG LIST ================= */}
+        <div className="flex gap-8">
+          <div className="flex-1 space-y-4">
+            {filteredPosts.slice(0, visiblePosts).map((post) => (
+              <BlogCard
+                key={post._id}
+                post={{
+                  ...post,
+                  blog_image: post.blog_image
+                    ? `${API_BASE_URL}${post.blog_image}`
+                    : "/placeholder.jpg",
+                }}
+              />
+            ))}
+
+            {visiblePosts < filteredPosts.length && (
+              <div className="text-center pt-4">
+                <button
+                  onClick={() =>
+                    setVisiblePosts((prev) => prev + 5)
+                  }
+                  className="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                >
+                  Load more
+                </button>
+              </div>
+            )}
+
+            {filteredPosts.length === 0 && (
+              <div className="text-center py-10 text-gray-500">
+                No blogs found.
+              </div>
+            )}
+          </div>
+
+          {/* ================= SIDEBAR ================= */}
+          <aside className="w-[360px] sticky top-24 h-fit hidden lg:block">
+            <BookingForm />
+          </aside>
+        </div>
+      </Container>
+
+      <Footer />
+    </>
+  );
 };
 
 export default Blog;

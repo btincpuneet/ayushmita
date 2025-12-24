@@ -243,7 +243,7 @@ function ContentSection({ title, html }: any) {
   return (
     <div>
       <div
-        className="text-sm  leading-relaxed"
+        className="text-sm leading-relaxed"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -307,7 +307,7 @@ function SimilarHospitals({ hospitals }: any) {
 
       <Slider {...settings}>
         {hospitals.map((h: any) => (
-          <div key={h.name} className="px-3 similar-hospital">
+          <div key={h.name} className="pr-6 similar-hospital">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <img
                 src={h.image}
@@ -367,7 +367,7 @@ function DoctorsSection({ doctors }: any) {
 
       <Slider {...settings}>
         {doctors.map((d: any) => (
-          <div key={d.name} className="px-3 mb-20 similar-hospital">
+          <div key={d.name} className="pr-6 mb-20 similar-hospital">
             <div className="bg-white shadow rounded-lg text-center">
               <img
                 src={d.image}

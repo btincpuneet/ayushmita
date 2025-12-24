@@ -1,8 +1,6 @@
  
 .doctor-profile-container {
-  max-width: 900px;
   margin: 0 auto;
-  padding: 40px 20px 60px;
 }
  
 /* Sections */
@@ -26,7 +24,7 @@ letter-spacing: 0%;
   display: inline-block;
   width: 26px;
   height: 3px;
-  background-color: #f1b400;
+  background: linear-gradient(to right, #EFA324, #8EBC34);
   border-radius: 4px;
   margin: 8px 0 14px;
 }

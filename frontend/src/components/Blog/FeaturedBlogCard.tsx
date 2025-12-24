@@ -1,31 +1,48 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BlogPost } from "../../data/blogData";
 
-interface FeaturedBlogCardProps {
-  post: BlogPost;
-}
+type FeaturedBlogCardProps = {
+  post: {
+    _id?: string;
+    slug: string;
+    title: string;
+    blog_image?: string | null;
+    short_description?: string;
+    description_html?: string;
+  };
+};
+
+const stripHtml = (html: string = "") =>
+  html.replace(/<[^>]*>?/gm, "").slice(0, 120);
 
 const FeaturedBlogCard: React.FC<FeaturedBlogCardProps> = ({ post }) => {
+  if (!post) return null;
+
   return (
-    <Link to={`/blog/${post.slug}`} className="block ">
-      <article className="bg-card rounded-lg overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="h-36 overflow-hidden">
-          <img
-            src={post.image}
-            alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          />
-        </div>
+    <Link to={`/blog/${post.slug}`} aria-label={post.title}>
+      <div className="rounded-lg border shadow hover:shadow-lg transition overflow-hidden">
+        <img
+          src={post.blog_image || "/placeholder.jpg"}
+          alt={post.title}
+          className="w-full h-56 object-cover"
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src = "/placeholder.jpg";
+          }}
+        />
+
         <div className="p-4">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
+          <h3 className="font-bold mb-2 line-clamp-2">
             {post.title}
           </h3>
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-            {post.excerpt}
+
+          <p className="text-sm text-gray-600 line-clamp-3">
+            {post.short_description?.trim()
+              ? post.short_description
+              : stripHtml(post.description_html || "")}
           </p>
         </div>
-      </article>
+      </div>
     </Link>
   );
 };

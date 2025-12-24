@@ -378,7 +378,7 @@ const BookingForm: React.FC = () => {
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Full Name */}
         <div>
-          <label className="text-white mb-1 block">Full Name</label>
+          <label className="text-white mb-1 block form-elements-section">Full Name</label>
           <input
             name="name"
             value={form.name}
@@ -390,7 +390,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block">Country</label>
+          <label className="text-white mb-1 block form-elements-section">Country</label>
           <select
             name="country"
             value={form.country}
@@ -406,7 +406,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block">City</label>
+          <label className="text-white mb-1 block form-elements-section">City</label>
           <select
             name="city"
             value={form.city}
@@ -422,7 +422,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block">Mobile Number</label>
+          <label className="text-white mb-1 block form-elements-section">Mobile Number</label>
           <input
             name="mobile"
             value={form.mobile}
@@ -434,7 +434,7 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-white mb-1 block">
+          <label className="text-white mb-1 block form-elements-section">
             Treatment Requirement
           </label>
           <textarea

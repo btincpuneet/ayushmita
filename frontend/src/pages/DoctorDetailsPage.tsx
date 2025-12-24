@@ -149,7 +149,7 @@ const DoctorDetailsPage: React.FC = () => {
                     { label: doctor.name ,link: "/"},
                 ]}
             />
-            <main className=" bg-gray-50">
+            <main className="main-sec-det-pg">
                 <section className="py-10">
                     <Container>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -310,7 +310,7 @@ const DoctorDetailsPage: React.FC = () => {
                     </Container>
                 </section>
 
-                <section className="py-10">
+                <section className="py-6 similar-doctor-section-docdetails-page">
                     <Container>
                         <h2 className="mb-6" style={{
                             fontFamily: "Ubuntu, sans-serif",

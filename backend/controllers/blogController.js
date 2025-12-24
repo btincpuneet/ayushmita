@@ -7,7 +7,6 @@ exports.createBlog = async (req, res) => {
   try {
     let imageUrl = null;
 
-    // ✅ IMAGE HANDLING
     if (req.file) {
       const imageName = `blog_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads");
@@ -32,7 +31,7 @@ exports.createBlog = async (req, res) => {
       description_html: req.body.description_html,
       author_name: req.body.author_name || "Admin",
 
-      blog_image: imageUrl, // ✅ saved image path
+      blog_image: imageUrl, 
 
       is_global: isGlobal,
       is_featured: isFeatured,
@@ -55,9 +54,7 @@ exports.createBlog = async (req, res) => {
   }
 };
 
-/**
- * UPDATE BLOG
- */
+
 exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id);
@@ -70,7 +67,6 @@ exports.updateBlog = async (req, res) => {
 
     let imageUrl = blog.blog_image;
 
-    // ✅ IMAGE UPDATE
     if (req.file) {
       const imageName = `blog_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads");
@@ -93,9 +89,7 @@ exports.updateBlog = async (req, res) => {
       slug: req.body.slug,
       short_description: req.body.short_description,
       description_html: req.body.description_html,
-
-      blog_image: imageUrl, // ✅ keep or update
-
+      blog_image: imageUrl, 
       author_name: req.body.author_name,
       status: req.body.status,
       meta_title: req.body.meta_title,
@@ -178,5 +172,33 @@ exports.deleteBlog = async (req, res) => {
   } catch (err) {
     console.error("Delete Blog Error:", err);
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+exports.getBlogBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const blog = await Blog.findOne({
+      slug,
+      status: "published",
+    });
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: blog,
+    });
+  } catch (error) {
+    console.error("getBlogBySlug error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };

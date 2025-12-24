@@ -25,6 +25,7 @@ router.put(
   upload.single("blog_image"),
   blogController.updateBlog
 );
+router.get("/blogs/slug/:slug", blogController.getBlogBySlug);
 
 router.get("/blogs", blogController.getAllBlogs);
 router.get("/blogs/:id", blogController.getBlogById);

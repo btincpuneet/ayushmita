@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
 
 .middel-sections-mains-universe {
@@ -366,4 +367,17 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     .max-w-7xl.mx-auto.px-4.mt-16.desese-overview-sec {
     margin: 0px;
 }
+}
+
+section.py-6.similar-doctor-section-docdetails-page {
+    background: #F6F7F9;
+}
+label.text-white.mb-1.block.form-elements-section {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 140%;
+    letter-spacing: 0%;
 }
