@@ -19,6 +19,7 @@ router.post(
   upload.single("blog_image"),   
   blogController.createBlog
 );
+router.get("/blogs/slug/:slug", blogController.getBlogBySlug);
 
 router.put(
   "/blogs/:id",
@@ -27,7 +28,6 @@ router.put(
 );
 router.get("/blogs/recent", blogController.getRecentBlogs);
 
-router.get("/blogs/slug/:slug", blogController.getBlogBySlug);
 
 router.get("/blogs", blogController.getAllBlogs);
 router.get("/blogs/:id", blogController.getBlogById);

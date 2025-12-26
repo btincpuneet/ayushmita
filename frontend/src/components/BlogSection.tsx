@@ -19,7 +19,6 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
       const res = await axios.get(`${API_BASE}/api/blogs`);
       const blogs = res.data.data || [];
 
-      /* ========= CORE FILTER LOGIC ========= */
       const filteredBlogs = diseaseId
         ? blogs.filter(
             (b: any) =>
@@ -72,7 +71,6 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
     <section style={{ backgroundColor: "#ffffff", padding: "60px 0" }}>
       <div className="max-w-7xl mx-auto px-5">
 
-        {/* ===== HEADER ===== */}
         <div
           style={{
             display: "flex",
@@ -105,12 +103,11 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
           </Link>
         </div>
 
-        {/* ===== SLIDER ===== */}
         <Slider {...settings}>
           {blogPosts.map((post, index) => (
             <div key={index} style={{ padding: "0 12px" }}>
               <Link
-                to={`/blog/${post.slug}`}
+                to={`/blogs/${post.slug}`}
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: "12px",

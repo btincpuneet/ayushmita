@@ -231,28 +231,37 @@ exports.getBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Slug is required",
+      });
+    }
+
     const blog = await Blog.findOne({
       where: {
-        slug,
+        slug: slug.trim(),        // 🔥 ensure clean slug
         status: "published",
         deleted_at: null,
       },
+      raw: true,                 // 🔥 avoids sequelize cache / instance issues
     });
 
     if (!blog) {
       return res.status(404).json({
         success: false,
         message: "Blog not found",
+        data: null,
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: blog,
     });
   } catch (error) {
     console.error("getBlogBySlug error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Server error",
     });
@@ -274,14 +283,12 @@ exports.getRecentBlogs = async (req, res) => {
     const whereCondition = {
       status: "published",
       deleted_at: null,
-      [Op.or]: [
-        { disease_id: diseaseId },
-        { is_global: true },
-      ],
+      disease_id: Number(diseaseId),
     };
 
+    // only add treatment filter if provided
     if (treatmentId && Number(treatmentId) !== 0) {
-      whereCondition.treatment_id = treatmentId;
+      whereCondition.treatment_id = Number(treatmentId);
     }
 
     const blogs = await Blog.findAll({
@@ -294,13 +301,12 @@ exports.getRecentBlogs = async (req, res) => {
       success: true,
       data: blogs,
     });
+
   } catch (error) {
-    console.error("getRecentBlogs error:", error);
+    console.error("getRecentBlogs ERROR:", error);
     res.status(500).json({
       success: false,
       message: "Server error",
     });
   }
 };
-
-
