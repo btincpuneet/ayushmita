@@ -170,7 +170,8 @@ const DiseaseDetailsPage = () => {
       </div>
 
       <TestimonialSlider />
-      <BlogSection />
+      <BlogSection diseaseId={disease.id} />
+
       <Footer />
     </div>
   );

@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { Blog } = require("../models/blog");
+const { Disease } = require("../models/disease");
+const { Treatment } = require("../models/treatment");
 
 
 exports.createBlog = async (req, res) => {
@@ -15,35 +17,48 @@ exports.createBlog = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      const uploadPath = path.join(uploadDir, imageName);
-      fs.writeFileSync(uploadPath, req.file.buffer);
+      fs.writeFileSync(
+        path.join(uploadDir, imageName),
+        req.file.buffer
+      );
 
       imageUrl = `/uploads/${imageName}`;
     }
 
     const isGlobal = ["1", 1, true, "true"].includes(req.body.is_global);
-    const isFeatured = ["1", 1, true, "true"].includes(req.body.is_featured);
+
+    let diseaseName = null;
+    let treatmentName = null;
+
+    if (!isGlobal && req.body.disease_id) {
+      const disease = await Disease.findByPk(req.body.disease_id);
+      diseaseName = disease ? disease.name : null;
+    }
+
+    if (!isGlobal && req.body.treatment_id && req.body.treatment_id !== "0") {
+      const treatment = await Treatment.findByPk(req.body.treatment_id);
+      treatmentName = treatment ? treatment.name : null;
+    }
 
     const blog = await Blog.create({
       title: req.body.title,
       slug: req.body.slug,
       short_description: req.body.short_description,
       description_html: req.body.description_html,
+
+      blog_image: imageUrl,
       author_name: req.body.author_name || "Admin",
 
-      blog_image: imageUrl, 
-
       is_global: isGlobal,
-      is_featured: isFeatured,
+      is_featured: req.body.is_featured === "true",
 
       disease_id: isGlobal ? null : req.body.disease_id,
+      disease_name: diseaseName,
+
       treatment_id: isGlobal ? null : req.body.treatment_id,
+      treatment_name: treatmentName,
 
       status: req.body.status || "published",
-      meta_title: req.body.meta_title,
-      meta_description: req.body.meta_description,
-      meta_keywords: req.body.meta_keywords,
-      tags: req.body.tags,
       published_at: new Date(),
     });
 
@@ -55,14 +70,17 @@ exports.createBlog = async (req, res) => {
 };
 
 
+
+
 exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id);
 
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
     }
 
     let imageUrl = blog.blog_image;
@@ -75,32 +93,52 @@ exports.updateBlog = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      const uploadPath = path.join(uploadDir, imageName);
-      fs.writeFileSync(uploadPath, req.file.buffer);
+      fs.writeFileSync(
+        path.join(uploadDir, imageName),
+        req.file.buffer
+      );
 
       imageUrl = `/uploads/${imageName}`;
     }
 
     const isGlobal = ["1", 1, true, "true"].includes(req.body.is_global);
-    const isFeatured = ["1", 1, true, "true"].includes(req.body.is_featured);
+
+    let diseaseName = null;
+    let treatmentName = null;
+
+    if (!isGlobal && req.body.disease_id) {
+      const disease = await Disease.findByPk(req.body.disease_id);
+      diseaseName = disease ? disease.name : null;
+    }
+
+    if (!isGlobal && req.body.treatment_id && req.body.treatment_id !== "0") {
+      const treatment = await Treatment.findByPk(req.body.treatment_id);
+      treatmentName = treatment ? treatment.name : null;
+    }
 
     await blog.update({
       title: req.body.title,
       slug: req.body.slug,
       short_description: req.body.short_description,
       description_html: req.body.description_html,
-      blog_image: imageUrl, 
-      author_name: req.body.author_name,
+
+      blog_image: imageUrl,
+      author_name: req.body.author_name || "Admin",
+
+      is_global: isGlobal,
+      is_featured: ["1", 1, true, "true"].includes(req.body.is_featured),
+
+      disease_id: isGlobal ? null : req.body.disease_id,
+      disease_name: diseaseName,
+
+      treatment_id: isGlobal ? null : req.body.treatment_id,
+      treatment_name: treatmentName,
+
       status: req.body.status,
       meta_title: req.body.meta_title,
       meta_description: req.body.meta_description,
       meta_keywords: req.body.meta_keywords,
       tags: req.body.tags,
-
-      is_global: isGlobal,
-      is_featured: isFeatured,
-      disease_id: isGlobal ? null : req.body.disease_id,
-      treatment_id: isGlobal ? null : req.body.treatment_id,
     });
 
     res.json({
@@ -113,6 +151,7 @@ exports.updateBlog = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+;
 
 exports.getAllBlogs = async (_req, res) => {
   try {
@@ -156,32 +195,48 @@ exports.deleteBlog = async (req, res) => {
     const blog = await Blog.findByPk(req.params.id);
 
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
     }
 
-    await blog.update({
-      deleted_at: new Date(),
-    });
+    // 🔥 Delete image from server
+    if (blog.blog_image) {
+      const imagePath = path.join(
+        __dirname,
+        "..",
+        blog.blog_image
+      );
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // 🔥 PERMANENT DELETE FROM DB
+    await blog.destroy();
 
     res.json({
       success: true,
-      message: "Blog deleted successfully",
+      message: "Blog deleted permanently",
     });
   } catch (err) {
     console.error("Delete Blog Error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 exports.getBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-  console.log("🔥 SLUG API HIT:", slug);
 
     const blog = await Blog.findOne({
-      slug,
-      status: "published",
+      where: {
+        slug,
+        status: "published",
+        deleted_at: null,
+      },
     });
 
     if (!blog) {
@@ -203,3 +258,49 @@ exports.getBlogBySlug = async (req, res) => {
     });
   }
 };
+
+
+exports.getRecentBlogs = async (req, res) => {
+  try {
+    const { diseaseId, treatmentId } = req.query;
+
+    if (!diseaseId) {
+      return res.status(400).json({
+        success: false,
+        message: "diseaseId is required",
+      });
+    }
+
+    const whereCondition = {
+      status: "published",
+      deleted_at: null,
+      [Op.or]: [
+        { disease_id: diseaseId },
+        { is_global: true },
+      ],
+    };
+
+    if (treatmentId && Number(treatmentId) !== 0) {
+      whereCondition.treatment_id = treatmentId;
+    }
+
+    const blogs = await Blog.findAll({
+      where: whereCondition,
+      order: [["published_at", "DESC"]],
+      limit: 5,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: blogs,
+    });
+  } catch (error) {
+    console.error("getRecentBlogs error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+

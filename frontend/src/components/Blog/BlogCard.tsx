@@ -8,7 +8,7 @@ const stripHtml = (html = "") =>
 const BlogCard = ({ post }: any) => {
   return (
     <Link to={`/blogs/slug/${post.slug}`} className="block">
-      <div className="flex gap-4 border rounded-lg overflow-hidden hover:shadow transition">
+      <div className="flex gap-4  rounded-lg overflow-hidden hover:shadow transition">
         <img
           src={post.blog_image || "/placeholder.jpg"}
           className="w-44 h-32 object-cover"
