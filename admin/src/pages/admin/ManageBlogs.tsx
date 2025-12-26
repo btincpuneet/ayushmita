@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
 
 /* ================= CONFIG ================= */
-const BASE_URL = "http://127.0.0.1:5001";
+const BASE_URL = "http://13.203.47.236:5001";
 const BLOG_API = `${BASE_URL}/api/blogs`;
 const DISEASE_API = `${BASE_URL}/api/diseases`;
 const TREATMENT_API = `${BASE_URL}/api/treatments`;
