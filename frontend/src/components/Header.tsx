@@ -4,7 +4,8 @@ import { API_BASE } from "../config/api";
 import Logo from "../assets/logo.png";
 import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
-
+import { NavLink } from "react-router-dom";
+ 
 const fallbackTranslations = (name: string) => ({
   en: name,
   fr: name,
@@ -13,46 +14,46 @@ const fallbackTranslations = (name: string) => ({
   ar: name,
   yo: name,
 });
-
+ 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState<any[]>([]);
   const { i18n } = useTranslation();
-
+ 
   const getLabel = (item: any) => {
     const lang = i18n.language.split("-")[0] || "en";
-
+ 
     if (item.translations && item.translations[lang]) {
       return item.translations[lang];
     }
-
+ 
     return item.name;
   };
-
+ 
   const loadCategories = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/categories`);
       const data = await res.json();
-
+ 
       const filtered = data.filter(
         (item: any) => item.is_include_top_nav && item.status === "active"
       );
-
+ 
       const enriched = filtered.map((item: any) => ({
         ...item,
         translations: fallbackTranslations(item.name),
       }));
-
+ 
       setNavItems(enriched);
     } catch (error) {
       console.error("Failed to load categories", error);
     }
   };
-
+ 
   useEffect(() => {
     loadCategories();
   }, []);
-
+ 
   const quoteItem = {
     url: "/",
     translations: {
@@ -64,7 +65,7 @@ const Header: React.FC = () => {
       yo: "Gba agbasọ Ọfẹ",
     },
   };
-
+ 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white border-b border-gray-200">
       <div className="relative w-full max-w-7xl mx-auto">
@@ -72,48 +73,45 @@ const Header: React.FC = () => {
           <Link to="/" className="flex items-center">
             <img src={Logo} alt="Company Logo" className="w-25 " />
           </Link>
-
+ 
           <div className="hidden lg:flex flex-1 justify-end">
-            <ul className="flex gap-[40px] items-center">
+  <ul className="flex gap-[40px] items-center nav-menu">
               {navItems.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    to={item.url}
-                    style={{
-                      fontFamily: "Ubuntu, sans-serif",
-                      fontWeight: 400,
-                      fontStyle: "normal",
-                      fontSize: "14px",
-                      lineHeight: "100%",
-                      letterSpacing: "0%",
-                    }}
-
-                  >
-                    {getLabel(item)}
-                  </Link>
-                </li>
-              ))}
-
-              <Link
-                to={quoteItem.url}
-                className="px-5 py-3 rounded-lg bg-[#F0A324]"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: 500,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "100%",
-                  letterSpacing: "2%",
-                }}
-
-              >
-                Get a FREE quote
-              </Link>
-
-              <LanguageSelector />
-            </ul>
+      <li key={item.id}>
+        <NavLink
+          to={item.url}
+          className={({ isActive }) =>
+            `nav-link ${isActive ? "nav-active" : ""}`
+          }
+          style={{
+            fontFamily: "Ubuntu, sans-serif",
+            fontWeight: 400,
+            fontSize: "14px",
+            lineHeight: "100%",
+          }}
+        >
+          {getLabel(item)}
+        </NavLink>
+      </li>
+    ))}
+ 
+    {/* CTA button (no underline) */}
+    <NavLink
+      to={quoteItem.url}
+      className="px-5 py-3 rounded-lg bg-[#F0A324]"
+      style={{
+        fontFamily: "Poppins, sans-serif",
+        fontWeight: 500,
+        fontSize: "14px",
+      }}
+    >
+      {getLabel(quoteItem)}
+    </NavLink>
+ 
+    <LanguageSelector />
+  </ul>
           </div>
-
+ 
           <div className="lg:hidden flex items-center gap-2">
             <LanguageSelector />
             <button
@@ -124,7 +122,7 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
-
+ 
         {isOpen && (
           <div className="lg:hidden border-t border-gray-200 pb-4">
             <nav className="px-4 pt-4 space-y-2">
@@ -138,8 +136,8 @@ const Header: React.FC = () => {
                   {getLabel(item)}
                 </Link>
               ))}
-
-
+ 
+ 
               <Link
                 to="/quote"
                 onClick={() => setIsOpen(false)}
@@ -154,5 +152,6 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
+ 
+ 
 export default Header;
