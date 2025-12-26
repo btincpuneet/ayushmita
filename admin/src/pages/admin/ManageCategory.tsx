@@ -30,7 +30,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-/* ================= FORM ================= */
 const emptyForm = {
   name: "",
   description: "",
@@ -39,7 +38,6 @@ const emptyForm = {
   is_include_top_nav: true,
 };
 
-/* ================= SORTABLE ROW ================= */
 function SortableRow({
   cat,
   children,
