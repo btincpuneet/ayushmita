@@ -1,9 +1,15 @@
 const { ContactUs } = require("../models/contact");
 
-
 const createContactUs = async (req, res) => {
   try {
-    const { title, content_html, status } = req.body;
+    const {
+      title,
+      content_html,
+      seo_title,
+      seo_description,
+      seo_keywords,
+      status,
+    } = req.body;
 
     if (!title || !content_html) {
       return res.status(400).json({
@@ -15,6 +21,9 @@ const createContactUs = async (req, res) => {
     const section = await ContactUs.create({
       title,
       content_html,
+      seo_title,
+      seo_description,
+      seo_keywords,
       status: status || "active",
     });
 
@@ -29,14 +38,10 @@ const createContactUs = async (req, res) => {
   }
 };
 
-
 const getAllContactUs = async (req, res) => {
   try {
     const sections = await ContactUs.findAll({
-      where: {
-        status: "active",
-        deleted_at: null,
-      },
+      where: { deleted_at: null },
       order: [["id", "ASC"]],
     });
 
@@ -47,13 +52,11 @@ const getAllContactUs = async (req, res) => {
   }
 };
 
-
 const getContactUsById = async (req, res) => {
   try {
     const section = await ContactUs.findOne({
       where: {
         id: req.params.id,
-        status: "active",
         deleted_at: null,
       },
     });
@@ -68,36 +71,20 @@ const getContactUsById = async (req, res) => {
   }
 };
 
-
 const updateContactUs = async (req, res) => {
   try {
     const section = await ContactUs.findOne({
-      where: {
-        id: req.params.id,
-        deleted_at: null,
-      },
+      where: { id: req.params.id, deleted_at: null },
     });
 
     if (!section)
       return res.status(404).json({ success: false, message: "Not found" });
 
-    let data = {};
-
-    Object.keys(req.body).forEach((key) => {
-      if (
-        req.body[key] !== undefined &&
-        req.body[key] !== null &&
-        req.body[key] !== ""
-      ) {
-        data[key] = req.body[key];
-      }
-    });
-
-    await section.update(data);
+    await section.update(req.body);
 
     res.json({
       success: true,
-      message: "Contact Us section updated",
+      message: "Contact Us section updated successfully",
       data: section,
     });
   } catch (error) {
@@ -105,7 +92,6 @@ const updateContactUs = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 const deleteContactUs = async (req, res) => {
   try {
@@ -126,7 +112,6 @@ const deleteContactUs = async (req, res) => {
   }
 };
 
-
 const getActiveContactUs = async (req, res) => {
   try {
     const sections = await ContactUs.findAll({
@@ -137,19 +122,12 @@ const getActiveContactUs = async (req, res) => {
       order: [["id", "ASC"]],
     });
 
-    res.json({
-      success: true,
-      data: sections,
-    });
+    res.json({ success: true, data: sections });
   } catch (error) {
     console.error("GET ACTIVE CONTACT US ERROR:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 module.exports = {
   createContactUs,

@@ -56,7 +56,7 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
     });
 
     try {
-      await axios.post(`${API_BASE}/form-submit`, {
+      await axios.post(`${API_BASE}/api/form-submit`, {
         type: "appointment",
         data: {
           name: form.name,

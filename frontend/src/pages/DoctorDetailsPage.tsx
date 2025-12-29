@@ -13,7 +13,6 @@ import Footer from "../components/Footer";
 import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
 
-/* -------------------- TYPES -------------------- */
 interface Doctor {
     id: number;
     name: string;
@@ -28,7 +27,6 @@ interface Doctor {
     image_url: string | null;
 }
 
-/* -------------------- SLIDER ARROWS -------------------- */
 const NextArrow = ({ onClick }: any) => (
     <button
         onClick={onClick}
@@ -46,7 +44,6 @@ const PrevArrow = ({ onClick }: any) => (
     <span></span>
 );
 
-/* -------------------- PAGE -------------------- */
 const DoctorDetailsPage: React.FC = () => {
     const { slug } = useParams();
     const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -107,7 +104,6 @@ const DoctorDetailsPage: React.FC = () => {
         ? `${API_BASE}${doctor.image_url}`
         : "https://images.unsplash.com/photo-1606813909359-9c9d45d90c2e";
 
-    /* -------------------- SLIDER SETTINGS -------------------- */
     const doctorSlider = {
         dots: false,
         infinite: true,
@@ -146,8 +142,8 @@ const DoctorDetailsPage: React.FC = () => {
                 title={doctor.name}
                 breadcrumbs={[
                     { label: "Home" },
-                    { label: "Hospitals"},
-                    { label: doctor.name ,link: "/"},
+                    { label: "Doctor" },
+                    { label: doctor.name },
                 ]}
             />
             <main className="main-sec-det-pg">
@@ -234,7 +230,6 @@ const DoctorDetailsPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        {/* CITY */}
                                         <div className="flex items-center mb-2 gap-3 text-sm">
                                             <MapPin className="text-[#F0A324] w-5 h-5" />
                                             <span style={{
@@ -258,7 +253,6 @@ const DoctorDetailsPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        {/* COUNTRY */}
                                         <div className="flex items-center mb-2 gap-3 text-sm">
                                             <Globe className="text-[#F0A324] w-5 h-5" />
                                             <span style={{
@@ -282,7 +276,6 @@ const DoctorDetailsPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        {/* BUTTON */}
                                         <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-block bg-[#F0A324] hover:bg-yellow-600 transition px-4 py-3 rounded-lg" style={{
                                             fontFamily: '"Open Sans", sans-serif',
                                             fontWeight: 600,
@@ -303,7 +296,6 @@ const DoctorDetailsPage: React.FC = () => {
 
 
                                 </div>
-
                             </div>
 
                             <BookingForm />

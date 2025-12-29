@@ -1,159 +1,83 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Slider from "react-slick";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { API_BASE } from "../config/api";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
-interface BlogSectionProps {
-  diseaseId?: number;
+interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  blog_image?: string;
 }
 
-const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
-  const [blogPosts, setBlogPosts] = useState<any[]>([]);
+interface Props {
+  diseaseId: number;
+  treatmentId?: number;
+}
 
-  const fetchBlogs = async () => {
-    try {
-      const res = await axios.get(`${API_BASE}/api/blogs`);
-      const blogs = res.data.data || [];
-
-      const filteredBlogs = diseaseId
-        ? blogs.filter(
-            (b: any) =>
-              b.status === "published" &&
-              b.disease_id === diseaseId
-          )
-        : blogs.filter((b: any) => b.status === "published");
-
-      const mapped = filteredBlogs.map((post: any) => ({
-        title: post.title?.trim(),
-        excerpt: post.short_description?.trim(),
-        slug: post.slug,
-        image: post.blog_image
-          ? `${API_BASE}${post.blog_image}`
-          : "/placeholder.jpg",
-      }));
-
-      setBlogPosts(mapped);
-    } catch (error) {
-      console.log("Blog fetch error", error);
-    }
-  };
+const BlogSection: React.FC<Props> = ({ diseaseId, treatmentId = 0 }) => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!diseaseId) return;
+
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get(
+          `${API_BASE}/api/blogs/recent`,
+          {
+            params: {
+              diseaseId,
+              treatmentId: treatmentId || 0,
+            },
+          }
+        );
+
+        setBlogs(res.data?.data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchBlogs();
-  }, [diseaseId]);
+  }, [diseaseId, treatmentId]);
 
-  if (!blogPosts.length) return null;
-
-  const settings = {
-    dots: true,
-    arrows: true,
-    infinite: blogPosts.length > 3,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 },
-      },
-    ],
-  };
+  if (loading) return null;
+  if (!blogs.length) return null;
 
   return (
-    <section style={{ backgroundColor: "#ffffff", padding: "60px 0" }}>
-      <div className="max-w-7xl mx-auto px-5">
+    <section className="bg-gray-50 py-14">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-2xl font-bold mb-8">
+          Related Blogs
+        </h2>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "32px",
-          }}
-        >
-          <h2
-            style={{
-              color: "#1a1a1a",
-              fontSize: "24px",
-              fontWeight: "700",
-              fontFamily: "'Poppins', sans-serif",
-            }}
-          >
-            Related Blogs
-          </h2>
-
-          <Link
-            to="/blog"
-            style={{
-              color: "#2d6b4f",
-              fontSize: "14px",
-              fontWeight: "500",
-              textDecoration: "none",
-            }}
-          >
-            View All →
-          </Link>
-        </div>
-
-        <Slider {...settings}>
-          {blogPosts.map((post, index) => (
-            <div key={index} style={{ padding: "0 12px" }}>
-              <Link
-                to={`/blogs/${post.slug}`}
-                style={{
-                  backgroundColor: "#fff",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                  textDecoration: "none",
-                  display: "block",
-                  height: "100%",
-                }}
-              >
+        <div className="grid md:grid-cols-3 gap-6">
+          {blogs.map((blog) => (
+            <Link
+              key={blog.id}
+              to={`/blogs/${blog.slug}`}
+              className="bg-white rounded-lg shadow hover:shadow-lg transition"
+            >
+              {blog.blog_image && (
                 <img
-                  src={post.image}
-                  alt={post.title}
-                  style={{
-                    width: "100%",
-                    height: "180px",
-                    objectFit: "cover",
-                  }}
+                  src={`${API_BASE}${blog.blog_image}`}
+                  alt={blog.title}
+                  className="h-48 w-full object-cover rounded-t-lg"
                 />
+              )}
 
-                <div style={{ padding: "20px" }}>
-                  <h3
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: "600",
-                      marginBottom: "10px",
-                      color: "#1a1a1a",
-                    }}
-                  >
-                    {post.title}
-                  </h3>
-
-                  <p
-                    style={{
-                      fontSize: "13px",
-                      color: "#666",
-                      lineHeight: "1.5",
-                    }}
-                  >
-                    {post.excerpt}
-                  </p>
-                </div>
-              </Link>
-            </div>
+              <div className="p-4">
+                <h3 className="font-semibold text-sm line-clamp-2">
+                  {blog.title}
+                </h3>
+              </div>
+            </Link>
           ))}
-        </Slider>
+        </div>
       </div>
     </section>
   );

@@ -40,7 +40,7 @@ const BookingForm: React.FC = () => {
     });
 
     try {
-      await axios.post(`${API_BASE}/form-submit`, {
+      await axios.post(`${API_BASE}/api/form-submit`, {
         type: "consultation",
         data: form,
       });
@@ -178,7 +178,7 @@ const BookingForm: React.FC = () => {
           disabled={loading}
           className="w-full mt-2 bg-[#F0A324] text-black py-3 rounded-lg transition duration-200 disabled:opacity-70"
         >
-          {loading ? "Submitting..." : "Submit Request"}
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

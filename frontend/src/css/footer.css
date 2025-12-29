@@ -1,0 +1,150 @@
+.ayushmita-footer-fluid {
+    width: 100%;
+    background-color: #333333;
+
+    color: #ffffff;
+}
+
+.ayushmita-footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px;
+}
+
+.ayushmita-footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.ayushmita-footer-logo {
+    height: 60px;
+    width: 74px;
+}
+
+.ayushmita-footer-text {
+    font-family: Roboto;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 17px;
+    leading-trim: NONE;
+    line-height: 28px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+/* Social icons */
+.ayushmita-footer-socials {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.ayushmita-social-circle {
+    width: 34px;
+    height: 34px;
+    background-color: #ffffff;
+    color: #333;
+    border-radius: 50%;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Headings */
+.ayushmita-footer-heading {
+    font-family: Poppins;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 20px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    color: #FFFFFF;
+    margin-top: 0px;
+}
+
+/* Links */
+.ayushmita-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ayushmita-footer-links li {
+    font-family: Roboto;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 28px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 16px;
+}
+
+.ayushmita-footer-links li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: #ffffff;
+}
+
+/* Divider */
+.ayushmita-footer-divider {
+    height: 1px;
+    background-color: #4a4a4a;
+    margin: 40px 0 20px;
+}
+
+/* Bottom */
+.ayushmita-footer-bottom {
+    text-align: center;
+  font-family: Poppins;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 28px;
+letter-spacing: 0%;
+vertical-align: middle;
+
+    color: #FFFFFF;
+}
+.ayushmita-social-circle i {
+  color: #F0A324;
+}
+/* Responsive */
+@media (max-width: 992px) {
+    .ayushmita-footer-top {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .ayushmita-footer-top {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .ayushmita-footer-socials {
+        justify-content: center;
+    }
+
+    .ayushmita-footer-links li {
+        padding-left: 0;
+    }
+
+    .ayushmita-footer-links li::before {
+        display: none;
+    }
+}
