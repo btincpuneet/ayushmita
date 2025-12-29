@@ -22,12 +22,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   categories,
 }) => {
   return (
-    <div className="flex items-center bg-card rounded-lg overflow-hidden border shadow-sm w-1/2 mx-auto">
+    <div className="flex items-center bg-card rounded-lg overflow-hidden shadow-sm w-1/2 mx-auto blog-search-section-header">
       <div className="relative">
         <select
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="appearance-none px-4 py-3 pr-10 bg-white text-sm font-medium border-r cursor-pointer"
+          className="appearance-none px-4 py-3 pr-10 bg-[#F6F7F9] text-sm font-medium border-r cursor-pointer blog-filter-section"
         >
           <option value="">All Diseases</option>
 
@@ -46,10 +46,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
         placeholder="Search articles"
-        className="flex-1 px-4 py-3 text-sm focus:outline-none"
+        className="flex-1 px-4 py-3 text-sm bg-[#FFFFFF] focus:outline-none rounded"
       />
 
-      <button className="bg-green-800 px-4 py-3">
+      <button className="bg-[#2A6506] px-4 py-3 rounded">
         <Search className="w-5 h-5 text-white" />
       </button>
     </div>
