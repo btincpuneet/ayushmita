@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Slider from "react-slick";
@@ -18,9 +19,17 @@ interface Blog {
   title: string;
   slug: string;
   short_description: string;
+  description_html: string;
   blog_image: string | null;
   author?: string;
   status: string;
+  disease_name?: string;
+  published_at: string;
+}
+
+interface Disease {
+  id: number;
+  name: string;
 }
 
 const PrevArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
@@ -43,22 +52,24 @@ const NextArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
 
 const Blog: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [categories, setCategories] = useState<Disease[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const stripHtml = (html = "") =>
-    html.replace(/<[^>]+>/g, "");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "");
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(`${API_BASE_URL}/api/blogs`);
-        const published: Blog[] = (res.data?.data || []).filter(
+        const published = (res.data?.data || []).filter(
           (b: Blog) => b.status === "published"
         );
         setBlogs(published);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -67,11 +78,31 @@ const Blog: React.FC = () => {
     fetchBlogs();
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${API_BASE_URL}/api/diseases`)
+      .then((res) => setCategories(res.data.data || []))
+      .catch(console.error);
+  }, []);
+
+  const filteredBlogs = blogs.filter((blog) => {
+    const q = searchQuery.toLowerCase();
+
+    const matchesSearch =
+      blog.title.toLowerCase().includes(q) ||
+      stripHtml(blog.description_html).toLowerCase().includes(q);
+
+    const matchesCategory =
+      !selectedCategory || blog.disease_name === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
   const sliderSettings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: Math.min(3, blogs.length),
+    slidesToShow: Math.min(3, filteredBlogs.length),
     slidesToScroll: 1,
     arrows: true,
     prevArrow: <PrevArrow />,
@@ -90,6 +121,7 @@ const Blog: React.FC = () => {
   return (
     <>
       <Header />
+
       <TreatmentHeader
         breadcrumbs={[
           { label: "Home", path: "/" },
@@ -99,100 +131,88 @@ const Blog: React.FC = () => {
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          categories={categories}
         />
       </TreatmentHeader>
 
-
       <Container>
-        {blogs.length > 0 && (
+        {filteredBlogs.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xl font-bold mb-4">Latest Health Tips</h2>
 
-            <div className="relative">
-              <Slider {...sliderSettings}>
-                {blogs.map((post) => (
-                  <div key={post.id} className="px-2">
-                    <Link to={`/blogs/${post.slug}`}>
-                      <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition">
-                        <img
-                          src={
-                            post.blog_image
-                              ? `${API_BASE_URL}${post.blog_image}`
-                              : "/placeholder.jpg"
-                          }
-                          alt={post.title}
-                          className="h-48 w-full object-cover"
-                        />
-
-                        <div className="p-4">
-                          <h3 className="font-semibold text-sm mb-2 line-clamp-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-xs text-gray-500 line-clamp-2">
-                            {post.short_description}
-                          </p>
-                        </div>
+            <Slider {...sliderSettings}>
+              {filteredBlogs.map((post) => (
+                <div key={post.id} className="px-2">
+                  <Link to={`/blogs/${post.slug}`}>
+                    <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+                      <img
+                        src={
+                          post.blog_image
+                            ? `${API_BASE_URL}${post.blog_image}`
+                            : "/placeholder.jpg"
+                        }
+                        className="h-48 w-full object-cover"
+                      />
+                      <div className="p-4">
+                        <h3 className="font-semibold text-sm line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 line-clamp-2">
+                          {post.short_description}
+                        </p>
                       </div>
-                    </Link>
-                  </div>
-                ))}
-              </Slider>
-            </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </Slider>
           </section>
         )}
 
         <div className="flex gap-8">
-          <div className="flex-1 space-y-4 ">
-            {blogs.map((post) => (
+          <div className="flex-1 space-y-4">
+            {filteredBlogs.map((post) => (
               <Link key={post.id} to={`/blogs/${post.slug}`}>
-                <div className="flex justify-between gap-4 bg-white  p-5 rounded-xl shadow hover:shadow-lg transition">
-
-                  <div className="flex flex-col justify-between flex-1 ">
-
+                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+                  <div className="flex-1">
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                       <User size={14} />
                       <span>Written by: {post.author || "Admin"}</span>
                       <span>•</span>
                       <span>
-                        {new Date(post.published_at).toLocaleDateString("en-US", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {new Date(post.published_at).toLocaleDateString()}
                       </span>
                     </div>
 
                     {post.disease_name && (
-                      <span className="w-fit mb-2 text-xs font-medium px-2 py-1 rounded-full bg-orange-100 text-orange-700">
+                      <span className="mb-2 inline-block text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700">
                         {post.disease_name}
                       </span>
                     )}
 
-                    <h3 className="font-semibold text-base leading-snug line-clamp-2 mb-2">
+                    <h3 className="font-semibold text-base line-clamp-2 mb-2">
                       {post.title}
                     </h3>
 
-                    <p className="line-clamp-3 text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 line-clamp-3">
                       {stripHtml(post.description_html)}
                     </p>
-
-
-
                   </div>
+
                   <img
                     src={
                       post.blog_image
                         ? `${API_BASE_URL}${post.blog_image}`
                         : "/placeholder.jpg"
                     }
-                    alt={post.title}
-                    className="w-40 h-28 object-cover rounded-lg flex-shrink-0"
+                    className="w-40 h-28 object-cover rounded-lg"
                   />
                 </div>
               </Link>
             ))}
           </div>
-
 
           <aside className="w-[360px] hidden lg:block sticky top-24">
             <BookingForm />

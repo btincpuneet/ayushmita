@@ -12,7 +12,6 @@ import BookingForm from "../components/BookingForm";
 
 const API_BASE_URL = "http://127.0.0.1:5001";
 
-/* ================= TYPES ================= */
 interface Blog {
   id: number;
   title: string;
@@ -31,11 +30,13 @@ interface Disease {
 
 const BlogDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+
   const [blog, setBlog] = useState<Blog | null>(null);
   const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!slug) return;
@@ -44,26 +45,16 @@ const BlogDetails: React.FC = () => {
     setBlog(null);
     setRecentBlogs([]);
 
-
     const fetchBlog = async () => {
       try {
         const res = await axios.get(
           `${API_BASE_URL}/api/blogs/slug/${slug}`
         );
-        console.log("res", res.data);
 
         const data = res.data?.data;
-
-        if (!data) {
-          setBlog(null);
-          return;
-        }
-
         const blogData: Blog = Array.isArray(data) ? data[1] : data;
-        console.log(blogData);
 
         setBlog(blogData);
-
       } catch (err) {
         console.error(err);
       } finally {
@@ -72,7 +63,7 @@ const BlogDetails: React.FC = () => {
     };
 
     fetchBlog();
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     axios
@@ -97,9 +88,7 @@ const BlogDetails: React.FC = () => {
         const res = await axios.get(
           `${API_BASE_URL}/api/blogs/recent`,
           {
-            params: {
-              diseaseId: blog.disease_id,
-            },
+            params: { diseaseId: blog.disease_id },
           }
         );
 
@@ -138,6 +127,7 @@ const BlogDetails: React.FC = () => {
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          categories={diseases}
         />
       </TreatmentHeader>
 
