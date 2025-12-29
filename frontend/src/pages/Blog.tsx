@@ -123,7 +123,7 @@ const Blog: React.FC = () => {
       <Header />
 
       <TreatmentHeader
-        title="Blog"
+      title="Blog"
         breadcrumbs={[
           { label: "Home", path: "/" },
           { label: "Blog" },
@@ -141,7 +141,7 @@ const Blog: React.FC = () => {
       <Container>
         {filteredBlogs.length > 0 && (
           <section className="mb-12">
-            <h2 className="text-xl font-bold mb-4">Latest Health Tips</h2>
+            <h2 className="text-xl font-bold mb-4 tips-about-health">Latest Health Tips</h2>
 
             <Slider {...sliderSettings}>
               {filteredBlogs.map((post) => (
@@ -157,7 +157,7 @@ const Blog: React.FC = () => {
                         className="h-48 w-full object-cover"
                       />
                       <div className="p-4">
-                        <h3 className="font-semibold text-sm line-clamp-2">
+                        <h3 className="line-clamp-2 treatment-lists-headings">
                           {post.title}
                         </h3>
                         <p className="text-xs text-gray-500 line-clamp-2">
@@ -176,28 +176,29 @@ const Blog: React.FC = () => {
           <div className="flex-1 space-y-4">
             {filteredBlogs.map((post) => (
               <Link key={post.id} to={`/blogs/${post.slug}`}>
-                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition mb-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                      <User size={14} />
-                      <span>Written by: {post.author || "Admin"}</span>
-                      <span>•</span>
+                    <div className="flex items-center gap-2 text-xs text-[#333333] mb-2">
+                      <User size={24} />
+                      <div className="listed-by">
+                        <span>Written by: {post.author || "Admin"}</span>
                       <span>
                         {new Date(post.published_at).toLocaleDateString()}
                       </span>
+                      </div>
                     </div>
 
                     {post.disease_name && (
-                      <span className="mb-2 inline-block text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700">
+                      <span className="mb-2 inline-block short-related-sec">
                         {post.disease_name}
                       </span>
                     )}
 
-                    <h3 className="font-semibold text-base line-clamp-2 mb-2">
+                    <h3 className="line-clamp-2 mb-2 list-headings-blog-sec">
                       {post.title}
                     </h3>
 
-                    <p className="text-sm text-gray-600 line-clamp-3">
+                    <p className="line-clamp-3 paragraph-of-page-blog">
                       {stripHtml(post.description_html)}
                     </p>
                   </div>
@@ -208,7 +209,7 @@ const Blog: React.FC = () => {
                         ? `${API_BASE_URL}${post.blog_image}`
                         : "/placeholder.jpg"
                     }
-                    className="w-40 h-28 object-cover rounded-lg"
+                    className="w-[195px] h-[195px] object-cover rounded-lg"
                   />
                 </div>
               </Link>

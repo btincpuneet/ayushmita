@@ -54,10 +54,10 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
           lineHeight: "100%",
           letterSpacing: "0%",
         }}>
-          Other Related Treatments
-        </h2>
+          Our Other Services  
+                </h2>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {services.map((service) => (
             <Link
               key={service.id}
