@@ -1,11 +1,67 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
-
+h3.mb-4.related-post-section-blog {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    leading-trim: NONE;
+    line-height: 32px;
+    letter-spacing: 0%;
+}
+a.hover\:underline.blog-details-related {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 27px;
+    letter-spacing: 0%;
+}
+.related-blog-cards-section {
+    width: 335px;
+}
+button.flex.items-center.bg-\[\#FBF6DD\].gap-2.px-4.py-2.rounded-lg.share-blog-btn {
+    font-family: Ubuntu;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 2%;
+}
+li.section-blog-related-news {
+    border-bottom: 1px solid #DBDBDB;
+    padding: 10px 0px;
+}
+svg.lucide.lucide-share2.lucide-share-2 {
+    color: #F0A324;
+}
+p.admin-written-date {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 20px;
+    letter-spacing: 0%;
+}
+p.font-medium.admin-written-by {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 20px;
+    letter-spacing: 0%;
+}
 .middel-sections-mains-universe {
     background: #F6F7F9;
     padding: 15px 0px;
 }
+
+
 .blog-search-section-header {
     border: 12px solid #F0A324;
 }
@@ -438,4 +494,164 @@ label.text-white.mb-1.block.form-elements-section {
     leading-trim: NONE;
     line-height: 140%;
     letter-spacing: 0%;
+}
+
+
+.image-content-hair-transplant-section {
+  max-width: 770px;
+  margin: 0 auto;
+}
+
+.image-card {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.text-content {
+  margin-top: 16px;
+}
+
+.text-content p {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  line-height: 27px;
+}
+
+.ht-why-wrapper {
+  margin: 20px 0px;
+}
+
+.ht-why-title {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  margin-bottom: 12px;
+}
+
+.ht-why-intro {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+
+  margin-bottom: 18px;
+}
+
+.ht-why-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ht-why-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ht-why-heading {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+}
+
+.ht-why-text {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+
+  margin-left: 10px;
+}
+
+.ht-why-footer {
+  margin-top: 20px;
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+
+}
+
+.eh-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.eh-spacing-top {
+  margin-top: 28px;
+  font-family: Ubuntu;
+font-weight: 700;
+font-style: Bold;
+font-size: 28px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+
+}
+
+.eh-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eh-point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.eh-dot {
+  font-size: 16px;
+  line-height: 22px;
+  color: #222;
+}
+
+.eh-text {
+font-family: Ubuntu;
+font-weight: 300;
+font-style: Light;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 27px;
+letter-spacing: 0%;
+
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .eh-section-title {
+    font-size: 19px;
+  }
+
+  .ht-why-title {
+    font-size: 20px;
+  }
+
+  .image-content-hair-transplant-section {
+    padding: 20px;
+  }
 }

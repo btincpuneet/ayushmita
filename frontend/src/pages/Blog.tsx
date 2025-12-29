@@ -123,6 +123,7 @@ const Blog: React.FC = () => {
       <Header />
 
       <TreatmentHeader
+      title="Blog"
         breadcrumbs={[
           { label: "Home", path: "/" },
           { label: "Blog" },

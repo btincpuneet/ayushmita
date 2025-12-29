@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { User, Share2 } from "lucide-react";
-
+import "../css/responsive.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
@@ -65,6 +65,13 @@ const BlogDetails: React.FC = () => {
     fetchBlog();
   }, [slug]);
 
+  const decodeHtml = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
+
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}/api/diseases`)
@@ -118,6 +125,7 @@ const BlogDetails: React.FC = () => {
       <Header />
 
       <TreatmentHeader
+        
         breadcrumbs={[
           { label: "Home", path: "/" },
           { label: "Blog", path: "/blogs" },
@@ -132,33 +140,38 @@ const BlogDetails: React.FC = () => {
       </TreatmentHeader>
 
       <Container>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3 text-sm text-gray-600">
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-              <User size={16} />
-            </div>
-            <div>
-              <p className="font-medium">
-                Written by: {blog.author_name || "Admin"}
-              </p>
-              <p className="text-xs text-gray-500">
-                {new Date(blog.published_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
 
-          <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-100">
-            <Share2 size={16} />
-            Share
-          </button>
-        </div>
 
         <div className="flex flex-col lg:flex-row gap-10">
+
           <article className="lg:w-[68%]">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="rounded-full bg-[#F6F7F9] flex items-center justify-center">
+                  <User size={21} />
+                </div>
+                <div>
+                  <p className="font-medium admin-written-by">
+                    Written by: {blog.author_name || "Admin"}
+                  </p>
+                  <p className="admin-written-date">
+                    {new Date(blog.published_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <button className="flex items-center bg-[#FBF6DD] gap-2 px-4 py-2 rounded-lg share-blog-btn">
+                <Share2 size={16} />
+                Share
+              </button>
+            </div>
+            <h1 className="text-3xl font-bold mb-6">
+              {blog.title}
+            </h1>
             <img
               src={
                 blog.blog_image
@@ -176,14 +189,12 @@ const BlogDetails: React.FC = () => {
               </p>
             )}
 
-            <h1 className="text-3xl font-bold mb-6">
-              {blog.title}
-            </h1>
+
 
             <div
               className="prose max-w-none"
               dangerouslySetInnerHTML={{
-                __html: blog.description_html,
+                __html: decodeHtml(blog.description_html),
               }}
             />
           </article>
@@ -192,17 +203,17 @@ const BlogDetails: React.FC = () => {
             <BookingForm />
 
             {recentBlogs.length > 0 && (
-              <div className="bg-white border rounded-lg p-5">
-                <h3 className="font-bold text-lg mb-4">
+              <div className="bg-[#F6F7F9] rounded-lg p-5">
+                <h3 className="mb-4 related-post-section-blog">
                   Related Posts
                 </h3>
 
-                <ul className="space-y-3">
+                <ul className="space-y-3 ">
                   {recentBlogs.map((post) => (
-                    <li key={post.id}>
+                    <li key={post.id} className="section-blog-related-news">
                       <Link
                         to={`/blogs/${post.slug}`}
-                        className="text-sm font-medium text-blue-600 hover:underline"
+                        className="hover:underline blog-details-related "
                       >
                         {post.title}
                       </Link>

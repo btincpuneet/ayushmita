@@ -93,10 +93,13 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
           <Link
             to="/blog"
             style={{
-              color: "#2d6b4f",
+              color: "#F0A324",
               fontSize: "14px",
               fontWeight: "500",
               textDecoration: "none",
+              border:"1px solid #F0A324",
+              padding:"6px 12px",
+              borderRadius:"99px",
             }}
           >
             View All →
@@ -105,7 +108,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
 
         <Slider {...settings}>
           {blogPosts.map((post, index) => (
-            <div key={index} style={{ padding: "0 12px" }}>
+            <div  key={index} style={{ padding: "0 12px", width: "335px", }}>
               <Link
                 to={`/blogs/${post.slug}`}
                 style={{
@@ -116,7 +119,10 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
                   textDecoration: "none",
                   display: "block",
                   height: "100%",
+                  marginRight: "20px",
+                  
                 }}
+                className="related-post-sec-1"
               >
                 <img
                   src={post.image}
@@ -125,10 +131,11 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
                     width: "100%",
                     height: "180px",
                     objectFit: "cover",
+                    
                   }}
                 />
 
-                <div style={{ padding: "20px" }}>
+                <div className="related-blog-cards-section" style={{ padding: "20px" }}>
                   <h3
                     style={{
                       fontSize: "15px",
