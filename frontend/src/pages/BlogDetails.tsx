@@ -10,7 +10,7 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import SearchBar from "../components/Blog/SearchBar";
 import BookingForm from "../components/BookingForm";
 
-const API_BASE_URL = "http://127.0.0.1:5001";
+import { API_BASE } from "../config/api";
 
 interface Blog {
   id: number;
@@ -48,7 +48,7 @@ const BlogDetails: React.FC = () => {
     const fetchBlog = async () => {
       try {
         const res = await axios.get(
-          `${API_BASE_URL}/api/blogs/slug/${slug}`
+          `${API_BASE}/api/blogs/slug/${slug}`
         );
 
         const data = res.data?.data;
@@ -74,7 +74,7 @@ const BlogDetails: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE_URL}/api/diseases`)
+      .get(`${API_BASE}/api/diseases`)
       .then((res) => setDiseases(res.data.data || []))
       .catch(console.error);
   }, []);
@@ -93,7 +93,7 @@ const BlogDetails: React.FC = () => {
     const fetchRelated = async () => {
       try {
         const res = await axios.get(
-          `${API_BASE_URL}/api/blogs/recent`,
+          `${API_BASE}/api/blogs/recent`,
           {
             params: { diseaseId: blog.disease_id },
           }
@@ -175,7 +175,7 @@ const BlogDetails: React.FC = () => {
             <img
               src={
                 blog.blog_image
-                  ? `${API_BASE_URL}${blog.blog_image}`
+                  ? `${API_BASE}${blog.blog_image}`
                   : "/placeholder.jpg"
               }
               alt={blog.title}

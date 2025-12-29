@@ -91,7 +91,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
           </h2>
  
           <Link
-            to="/blog"
+            to="/blogs"
             style={{
               color: "#F0A324",
               fontSize: "14px",
