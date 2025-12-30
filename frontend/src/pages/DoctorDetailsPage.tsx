@@ -147,7 +147,7 @@ const DoctorDetailsPage: React.FC = () => {
                 ]}
             />
             <main className="main-sec-det-pg">
-                <section className="py-10">
+                <section className="py-10 doctor-details-page-list-items-sec">
                     <Container>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2  p-6 ">
@@ -376,7 +376,7 @@ const DoctorDetailsPage: React.FC = () => {
                             <Slider {...hospitalSlider}>
                                 {["LIV Hospital", "American Hospital", "American Hospital", "Emsey Hospital"].map(
                                     (name, i) => (
-                                        <div key={i} className="px-3">
+                                        <div key={i} className="px-3 related-cards-1">
                                             <div className="rounded-xl overflow-hidden shadow">
                                                 <img
                                                     src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3"

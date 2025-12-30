@@ -68,7 +68,7 @@ export default function CancerSection() {
 
         
             <div>
-              <h2 className="text-3xl font-bold mb-6">Cancer</h2>
+              <h2 className="page-details-section-item mb-6">Cancer</h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-gray-700">
                 {items.map((col, i) => (
