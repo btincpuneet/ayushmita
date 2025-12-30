@@ -53,18 +53,7 @@ const Header: React.FC = () => {
     loadCategories();
   }, []);
 
-  const quoteItem = {
-    url: "/",
-    translations: {
-      en: "Get a FREE quote",
-      fr: "Obtenir un devis GRATUIT",
-      de: "Erhalten Sie ein KOSTENLOSES Angebot",
-      es: "Obtén una cotización GRATIS",
-      ar: "احصل على عرض مجاني",
-      yo: "Gba agbasọ Ọfẹ",
-    },
-  };
-
+ 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white border-b border-gray-200">
       <div className="relative w-full max-w-7xl mx-auto">
@@ -95,7 +84,7 @@ const Header: React.FC = () => {
               ))}
 
               <Link
-                to={quoteItem.url}
+                to="/"
                 className="px-5 py-3 rounded-lg bg-[#F0A324]"
                 style={{
                   fontFamily: "Poppins, sans-serif",
@@ -107,7 +96,7 @@ const Header: React.FC = () => {
                 }}
 
               >
-                {getLabel(quoteItem)}
+                Book An Appointment
               </Link>
 
               <LanguageSelector />

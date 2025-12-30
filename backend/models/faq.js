@@ -23,12 +23,12 @@ const FAQ = sequelize.define(
     },
     status: {
       type: DataTypes.TINYINT,
-      defaultValue: 1, // 1 = active, 0 = inactive
+      defaultValue: 1, 
     },
   },
   {
-    timestamps: true,       // created_at + updated_at
-    underscored: true,      // snake_case columns
+    timestamps: true,       
+    underscored: true,     
     tableName: "faqs",
   }
 );

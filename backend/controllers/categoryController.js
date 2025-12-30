@@ -1,6 +1,5 @@
 const { Category } = require("../models/category");
 
-/* ================= CREATE ================= */
 exports.createCategory = async (req, res) => {
   try {
     const {
