@@ -376,7 +376,7 @@ const DoctorDetailsPage: React.FC = () => {
                             <Slider {...hospitalSlider}>
                                 {["LIV Hospital", "American Hospital", "American Hospital", "Emsey Hospital"].map(
                                     (name, i) => (
-                                        <div key={i} className="px-3">
+                                        <div key={i} className="px-3 related-cards-1">
                                             <div className="rounded-xl overflow-hidden shadow">
                                                 <img
                                                     src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3"

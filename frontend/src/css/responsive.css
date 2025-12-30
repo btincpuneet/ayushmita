@@ -803,4 +803,8 @@ h2.text-left.mb-10 {
 .max-w-6xl.mx-auto.px-5.py-20.md\:py-20.lg\:py-20.happiness {
     padding: 0px 0px 0px 0px;
 }
+.px-3.related-cards-1 {
+    padding: 0;
+}
+
 }
