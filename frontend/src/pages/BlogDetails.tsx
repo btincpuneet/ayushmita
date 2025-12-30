@@ -169,7 +169,7 @@ const BlogDetails: React.FC = () => {
                 Share
               </button>
             </div>
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="page-details-section-item mb-6">
               {blog.title}
             </h1>
             <img

@@ -37,7 +37,6 @@ const HeroImage = () => {
         className="relative w-full pt-20 bg-sky-50 h-screen"
         aria-label={title}
       >
-        {/* Background Image */}
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={`${API_BASE}${image}`}
@@ -48,7 +47,6 @@ const HeroImage = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
         </div>
 
-        {/* Content */}
         <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">
           <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-8">
 

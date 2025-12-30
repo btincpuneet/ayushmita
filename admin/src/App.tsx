@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminLayout } from "@/components/layout/AdminLayout";
-
 import Login from "./pages/Login";
 import ManageCategory from "./pages/admin/ManageCategory";
 import NotFound from "./pages/NotFound";
@@ -21,6 +20,8 @@ import ManageBlogs from "./pages/admin/ManageBlogs";
 import ManageCmsSection from "./pages/admin/ManageCmsSection";
 import ManageContactUs from "./pages/admin/ManageContactUs";
 import ManageFooter from "./pages/admin/ManageFooter";
+import ManageFaq from "./pages/admin/ManageFaq";
+import ManageFamilyStats from "./pages/admin/ManageFamilyStats";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,8 @@ const App = () => (
               <Route path="manage-section" element={<ManageCmsSection/>} />
               <Route path="manage-contact" element={<ManageContactUs/>} />
               <Route path="manage-footer" element={<ManageFooter/>} />
+              <Route path="manage-faq" element={<ManageFaq/>} />
+              <Route path="manage-familyStats" element={<ManageFamilyStats/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

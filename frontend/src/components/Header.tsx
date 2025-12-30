@@ -54,18 +54,6 @@ const Header: React.FC = () => {
     loadCategories();
   }, []);
  
-  const quoteItem = {
-    url: "/",
-    translations: {
-      en: "Get a FREE quote",
-      fr: "Obtenir un devis GRATUIT",
-      de: "Erhalten Sie ein KOSTENLOSES Angebot",
-      es: "Obtén una cotización GRATIS",
-      ar: "احصل على عرض مجاني",
-      yo: "Gba agbasọ Ọfẹ",
-    },
-  };
- 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white border-b border-gray-200">
       <div className="relative w-full max-w-7xl mx-auto">
@@ -77,39 +65,42 @@ const Header: React.FC = () => {
           <div className="hidden lg:flex flex-1 justify-end">
   <ul className="flex gap-[40px] items-center nav-menu">
               {navItems.map((item) => (
-      <li key={item.id}>
-        <NavLink
-          to={item.url}
-          className={({ isActive }) =>
-            `nav-link ${isActive ? "nav-active" : ""}`
-          }
-          style={{
-            fontFamily: "Ubuntu, sans-serif",
-            fontWeight: 400,
-            fontSize: "14px",
-            lineHeight: "100%",
-          }}
-        >
-          {getLabel(item)}
-        </NavLink>
-      </li>
-    ))}
- 
-    {/* CTA button (no underline) */}
-    <NavLink
-      to={quoteItem.url}
-      className="px-5 py-3 rounded-lg bg-[#F0A324]"
-      style={{
-        fontFamily: "Poppins, sans-serif",
-        fontWeight: 500,
-        fontSize: "14px",
-      }}
-    >
-      {getLabel(quoteItem)}
-    </NavLink>
- 
-    <LanguageSelector />
-  </ul>
+                <li key={item.id}>
+                  <Link
+                    to={item.url}
+                    style={{
+                      fontFamily: "Ubuntu, sans-serif",
+                      fontWeight: 400,
+                      fontStyle: "normal",
+                      fontSize: "14px",
+                      lineHeight: "100%",
+                      letterSpacing: "0%",
+                    }}
+
+                  >
+                    {getLabel(item)}
+                  </Link>
+                </li>
+              ))}
+
+              <Link
+                to="/"
+                className="px-5 py-3 rounded-lg bg-[#F0A324]"
+                style={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: 500,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "100%",
+                  letterSpacing: "2%",
+                }}
+
+              >
+                Book An Appointment
+              </Link>
+
+              <LanguageSelector />
+            </ul>
           </div>
  
           <div className="lg:hidden flex items-center gap-2">

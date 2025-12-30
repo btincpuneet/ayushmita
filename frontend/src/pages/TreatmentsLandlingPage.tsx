@@ -111,7 +111,7 @@ export default function TreatmentsLandingPage() {
               <div
                 className={`${disease.slug === "cardiology"
                     ? "w-full px-4 middel-sections-mains-universe"
-                    : "max-w-7xl mx-auto px-4 middel-sections-mains"
+                    : "max-w-7xl mx-auto middel-sections-mains"
                   }`}
               >
                 <div
@@ -123,7 +123,7 @@ export default function TreatmentsLandingPage() {
                     <img
                       src={`${API_BASE}${disease.image}`}
                       alt={disease.name}
-                      className="rounded-xl w-full max-w-[370px] object-cover treatment-list-image"
+                      className="rounded-xl object-cover treatment-list-image"
                     />
                   </div>
 

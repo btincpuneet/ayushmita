@@ -84,30 +84,7 @@ const DiseaseDetailsPage = () => {
           </div>
 
           <div className="w-full lg:w-[100%]">
-            <h2
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 700,
-                fontStyle: "bold",
-                fontSize: "28px",
-                lineHeight: "100%",
-                letterSpacing: "0%"
-              }}
-            >
-              Overview
-            </h2>
-            <span
-              style={{
-                width: "32px",
-                height: "4px",
-                background: "linear-gradient(to right, #f1a339, #7ac142)",
-                borderRadius: "5px",
-                display: "inline-block"
-              }}
-            ></span>
-
             <p
-              className="mb-4"
               style={{
                 fontFamily: "Ubuntu",
                 fontWeight: 300,

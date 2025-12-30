@@ -67,25 +67,6 @@ export default function TreatmentDetailsPage() {
           </div>
 
           <div className="w-full lg:w-[100%]">
-            <h2
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 700,
-                fontStyle: "bold",
-                fontSize: "28px",
-                lineHeight: "100%",
-                letterSpacing: "0%"
-              }}
-            >Overview</h2>
-            <span
-              style={{
-                width: "32px",
-                height: "4px",
-                background: "linear-gradient(to right, #f1a339, #7ac142)",
-                borderRadius: "5px",
-                display: "inline-block"
-              }}
-            ></span>
             <div
               className="prose max-w-none"
               dangerouslySetInnerHTML={{
@@ -93,7 +74,7 @@ export default function TreatmentDetailsPage() {
               }}
             />
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-8 treat-ment-details-btns">
               <button
                 onClick={() => setOpenModal(true)}
                 className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"
