@@ -39,7 +39,7 @@ exports.createBlog = async (req, res) => {
       const treatment = await Treatment.findByPk(req.body.treatment_id);
       treatmentName = treatment ? treatment.name : null;
     }
-
+    console.log(req.body);
     const blog = await Blog.create({
       title: req.body.title,
       slug: req.body.slug,

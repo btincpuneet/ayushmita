@@ -20,14 +20,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
+import { API_BASE } from "../../config/api";
 
-/* ================= CONFIG ================= */
-const BASE_URL = "http://13.203.47.236:5001";
-const BLOG_API = `${BASE_URL}/api/blogs`;
-const DISEASE_API = `${BASE_URL}/api/diseases`;
-const TREATMENT_API = `${BASE_URL}/api/treatments`;
+const BLOG_API = `${API_BASE}/api/blogs`;
+const DISEASE_API = `${API_BASE}/api/diseases`;
+const TREATMENT_API = `${API_BASE}/api/treatments`;
 
-/* ================= FORM STATE ================= */
 const emptyForm = {
   title: "",
   slug: "",
@@ -67,7 +65,6 @@ export default function ManageBlogs() {
     setBlogs(res.data.data || []);
   };
 
-  /* ================= LOAD DATA ================= */
   useEffect(() => {
     loadBlogs();
     axios.get(DISEASE_API).then((r) => setDiseases(r.data.data || []));
@@ -83,7 +80,6 @@ export default function ManageBlogs() {
     }
   }, [form.disease_id, form.is_global]);
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
     if (
       !form.title ||
@@ -170,7 +166,7 @@ export default function ManageBlogs() {
           <div className="w-32 h-20 bg-muted flex items-center justify-center">
             {b.blog_image ? (
               <img
-                src={`${BASE_URL}${b.blog_image}`}
+                src={`${API_BASE}${b.blog_image}`}
                 className="w-full h-full object-cover"
               />
             ) : (

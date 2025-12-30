@@ -29,7 +29,6 @@ const Blog = sequelize.define(
       allowNull: true,
     },
 
-
     title: {
       type: DataTypes.STRING,
       allowNull: false,
