@@ -167,14 +167,15 @@ const Blog: React.FC = () => {
                         }
                         className="h-48 w-full object-cover rounded-lg"
                       />
-                      <div className="p-4">
-                        <h3 className="line-clamp-2 treatment-lists-headings">
-                          {post.title}
-                        </h3>
-                        <p className="text-xs text-gray-500 line-clamp-2">
-                          {post.short_description}
-                        </p>
-                      </div>
+                      <div className="p-4 h-[96px] flex flex-col justify-between">
+  <h3 className="line-clamp-2 treatment-lists-headings min-h-[40px]">
+    {post.title}
+  </h3>
+
+  <p className="text-xs text-gray-500 line-clamp-2 ">
+    {post.short_description}
+  </p>
+</div>
                     </div>
                   </Link>
                 </div>
