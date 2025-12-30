@@ -825,5 +825,33 @@ h2.text-left.mb-10 {
 .px-3.related-cards-1 {
     padding: 0;
 }
+.rounded-xl.p-6.contact-us-pgs-1 {
+    padding: 0;
+}
+.ayu-appointment-card p{
+    font-size: 14px;
+}
+.ayu-appointment-card h3{
+    line-height: 100%;
+    font-size: 16px;
+}
+.ayu-appointment-card{
+    padding: 15px;
+}
+.ayu-contact-left h2{
+    font-size: 16px;
+}
+.address-contact {
 
+    font-weight: 500;
+ 
+    font-size: 16px;
+
+    line-height: 100%;
+
+}
+h3.have-a-questionss.mb-4{
+    font-size: 16px;
+    line-height: 100%;
+}
 }

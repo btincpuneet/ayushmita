@@ -130,11 +130,11 @@ const Header: React.FC = () => {
  
  
               <Link
-                to="/quote"
+                to="/"
                 onClick={() => setIsOpen(false)}
                 className="block w-full text-center mt-3 px-4 py-2 rounded-md bg-[#ff8a00] text-white"
               >
-                {getLabel(quoteItem)}
+                "Book An Appointment"
               </Link>
             </nav>
           </div>

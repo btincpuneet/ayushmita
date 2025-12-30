@@ -18,9 +18,20 @@
 }
 
 .ayushmita-footer-logo {
-    height: 60px;
-    width: 74px;
+  display: block;
+  height: 60px;
+  width: 74px;
+ 
+  background-image: url("../assets/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
+ 
+.ayushmita-footer-logo[src] {
+  color: transparent;
+}
+ 
 
 .ayushmita-footer-text {
     font-family: Roboto;
