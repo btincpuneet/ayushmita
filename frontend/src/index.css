@@ -35,8 +35,8 @@ body {
 
 /* inner dot */
 .slick-dots li .dot-inner {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 9999px;
   background: rgba(251, 146, 60, 0.6); /* default medium orange */
   transition: transform 150ms ease, background-color 150ms ease;
@@ -54,8 +54,8 @@ body {
 }
 
 .slick-dots li.slick-active .dot-inner {
-  width: 14px;
-  height: 14px;
+  width: 8px;
+  height: 8px;
   background: #fb923c; /* bright orange */
   transform: scale(1.08);
 }
@@ -88,7 +88,7 @@ body {
 @media (max-width: 768px) {
   .dots-wrapper { margin-top: 18px; }
   .slick-dots li .dot-outer { width: 16px; height: 16px; }
-  .slick-dots li .dot-inner { width: 8px; height: 8px; }
+  .slick-dots li .dot-inner { width: 4px; height: 4px; }
 }
 
 .promoslider-sections .slick-dots {

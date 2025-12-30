@@ -19,13 +19,15 @@ router.post(
   upload.single("blog_image"),   
   blogController.createBlog
 );
+router.get("/blogs/slug/:slug", blogController.getBlogBySlug);
 
 router.put(
   "/blogs/:id",
   upload.single("blog_image"),
   blogController.updateBlog
 );
-router.get("/blogs/slug/:slug", blogController.getBlogBySlug);
+router.get("/blogs/recent", blogController.getRecentBlogs);
+
 
 router.get("/blogs", blogController.getAllBlogs);
 router.get("/blogs/:id", blogController.getBlogById);

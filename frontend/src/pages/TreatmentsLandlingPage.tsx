@@ -92,7 +92,7 @@ export default function TreatmentsLandingPage() {
       <Header />
       <TreatmentHeader title="Treatments In India at Low Cost" breadcrumbs={[
         { label: "Home" },
-        { label: "Treatment" },
+        { label: "Treatments" },
       ]} />
 
       <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />

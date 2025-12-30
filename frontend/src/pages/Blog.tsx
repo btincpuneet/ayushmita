@@ -1,41 +1,75 @@
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import Slider from "react-slick";
+import { ArrowLeft, ArrowRight, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
-import SearchBar from "../components/Blog/SearchBar";
-import BlogCard from "../components/Blog/BlogCard";
-import FeaturedBlogCard from "../components/Blog/FeaturedBlogCard";
 import BookingForm from "../components/BookingForm";
+import SearchBar from "../components/Blog/SearchBar";
 
-const API_BASE_URL = "http://127.0.0.1:5001";
+import { API_BASE } from "../config/api";
+
+interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  short_description: string;
+  description_html: string;
+  blog_image: string | null;
+  author?: string;
+  status: string;
+  disease_name?: string;
+  published_at: string;
+}
+
+interface Disease {
+  id: number;
+  name: string;
+}
+
+const PrevArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
+  >
+    <ArrowLeft size={18} />
+  </button>
+);
+
+const NextArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
+  >
+    <ArrowRight size={18} />
+  </button>
+);
 
 const Blog: React.FC = () => {
-  const [blogs, setBlogs] = useState<any[]>([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [categories, setCategories] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [visiblePosts, setVisiblePosts] = useState(5);
-  const [featuredIndex, setFeaturedIndex] = useState(0);
 
-  // ================= FETCH BLOGS =================
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "");
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/blogs`);
-        const list = Array.isArray(res.data?.data) ? res.data.data : [];
-
-        // ✅ only published blogs
-        const published = list.filter(
-          (b: any) => b.status === "published"
+        const res = await axios.get(`${API_BASE}/api/blogs`);
+        const published = (res.data?.data || []).filter(
+          (b: Blog) => b.status === "published"
         );
-
         setBlogs(published);
-      } catch (error) {
-        console.error("Failed to fetch blogs", error);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -44,35 +78,44 @@ const Blog: React.FC = () => {
     fetchBlogs();
   }, []);
 
-  // ================= SEARCH =================
-  const filteredPosts = useMemo(() => {
-    if (!searchQuery.trim()) return blogs;
+  useEffect(() => {
+    axios
+      .get(`${API_BASE}/api/diseases`)
+      .then((res) => setCategories(res.data.data || []))
+      .catch(console.error);
+  }, []);
 
-    return blogs.filter((b) =>
-      b.title?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [blogs, searchQuery]);
+  const filteredBlogs = blogs.filter((blog) => {
+    const q = searchQuery.toLowerCase();
 
-  // ================= FEATURED =================
-  const featuredPosts = useMemo(() => {
-    const featured = blogs.filter(
-      (b) =>
-        b.is_featured === true ||
-        b.is_featured === "true" ||
-        b.is_featured === 1
-    );
+    const matchesSearch =
+      blog.title.toLowerCase().includes(q) ||
+      stripHtml(blog.description_html).toLowerCase().includes(q);
 
-    // fallback if not enough featured blogs
-    return featured.length >= 3 ? featured : blogs.slice(0, 3);
-  }, [blogs]);
+    const matchesCategory =
+      !selectedCategory || blog.disease_name === selectedCategory;
 
-  const visibleFeatured = featuredPosts.slice(
-    featuredIndex,
-    featuredIndex + 3
-  );
+    return matchesSearch && matchesCategory;
+  });
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: Math.min(3, filteredBlogs.length),
+    slidesToScroll: 1,
+    arrows: true,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
+    ],
+  };
 
   if (loading) {
-    return <div className="py-20 text-center">Loading blogs...</div>;
+    return <div className="py-20 text-center">Loading...</div>;
   }
 
   return (
@@ -80,107 +123,100 @@ const Blog: React.FC = () => {
       <Header />
 
       <TreatmentHeader
-        title="Blog"
-        breadcrumbs={[{ label: "Home" }, { label: "Blog" }]}
+      title="Blog"
+        breadcrumbs={[
+          { label: "Home", path: "/" },
+          { label: "Blog" },
+        ]}
       >
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          categories={categories}
         />
       </TreatmentHeader>
 
       <Container>
-        {/* ================= FEATURED BLOGS ================= */}
-        {featuredPosts.length > 0 && (
+        {filteredBlogs.length > 0 && (
           <section className="mb-12">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Latest Health Tips</h2>
+            <h2 className="text-xl font-bold mb-4 tips-about-health">Latest Health Tips</h2>
 
-              {featuredPosts.length > 3 && (
-                <div className="flex gap-2">
-                  <button
-                    disabled={featuredIndex === 0}
-                    onClick={() =>
-                      setFeaturedIndex((prev) =>
-                        Math.max(0, prev - 1)
-                      )
-                    }
-                    className="p-2 border rounded disabled:opacity-40"
-                  >
-                    <ArrowLeft size={18} />
-                  </button>
-
-                  <button
-                    disabled={
-                      featuredIndex >= featuredPosts.length - 3
-                    }
-                    onClick={() =>
-                      setFeaturedIndex((prev) =>
-                        Math.min(
-                          featuredPosts.length - 3,
-                          prev + 1
-                        )
-                      )
-                    }
-                    className="p-2 border rounded disabled:opacity-40"
-                  >
-                    <ArrowRight size={18} />
-                  </button>
+            <Slider {...sliderSettings}>
+              {filteredBlogs.map((post) => (
+                <div key={post.id} className="px-2">
+                  <Link to={`/blogs/${post.slug}`}>
+                    <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+                      <img
+                        src={
+                          post.blog_image
+                            ? `${API_BASE}${post.blog_image}`
+                            : "/placeholder.jpg"
+                        }
+                        className="h-48 w-full object-cover"
+                      />
+                      <div className="p-4">
+                        <h3 className="line-clamp-2 treatment-lists-headings">
+                          {post.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 line-clamp-2">
+                          {post.short_description}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              )}
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {visibleFeatured.map((post) => (
-                <FeaturedBlogCard
-                  key={post._id}
-                  post={{
-                    ...post,
-                    blog_image: post.blog_image
-                      ? `${API_BASE_URL}${post.blog_image}`
-                      : "/placeholder.jpg",
-                  }}
-                />
               ))}
-            </div>
+            </Slider>
           </section>
         )}
 
         <div className="flex gap-8">
           <div className="flex-1 space-y-4">
-            {filteredPosts.slice(0, visiblePosts).map((post) => (
-              <BlogCard
-                key={post._id}
-                post={{
-                  ...post,
-                  blog_image: post.blog_image
-                    ? `${API_BASE_URL}${post.blog_image}`
-                    : "/placeholder.jpg",
-                }}
-              />
+            {filteredBlogs.map((post) => (
+              <Link key={post.id} to={`/blogs/${post.slug}`}>
+                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 text-xs text-[#333333] mb-2">
+                      <User size={24} />
+                      <div className="listed-by">
+                        <span>Written by: {post.author || "Admin"}</span>
+                      <span>
+                        {new Date(post.published_at).toLocaleDateString()}
+                      </span>
+                      </div>
+                    </div>
+
+                    {post.disease_name && (
+                      <span className="mb-2 inline-block short-related-sec">
+                        {post.disease_name}
+                      </span>
+                    )}
+
+                    <h3 className="line-clamp-2 mb-2 list-headings-blog-sec">
+                      {post.title}
+                    </h3>
+
+                    <p className="line-clamp-3 paragraph-of-page-blog">
+                      {stripHtml(post.description_html)}
+                    </p>
+                  </div>
+
+                  <img
+                    src={
+                      post.blog_image
+                        ? `${API_BASE}${post.blog_image}`
+                        : "/placeholder.jpg"
+                    }
+                    className="w-[195px] h-[195px] object-cover rounded-lg"
+                  />
+                </div>
+              </Link>
             ))}
-
-            {visiblePosts < filteredPosts.length && (
-              <div className="text-center pt-4">
-                <button
-                  onClick={() =>
-                    setVisiblePosts((prev) => prev + 5)
-                  }
-                  className="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
-                >
-                  Load more
-                </button>
-              </div>
-            )}
-
-            {filteredPosts.length === 0 && (
-              <div className="text-center py-10 text-gray-500">
-                No blogs found.
-              </div>
-            )}
           </div>
 
-          <aside className="w-[360px] sticky top-24 h-fit hidden lg:block">
+          <aside className="w-[360px] hidden lg:block sticky top-24">
             <BookingForm />
           </aside>
         </div>

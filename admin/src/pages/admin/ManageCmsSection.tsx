@@ -16,7 +16,6 @@ import RichTextEditor from "@/components/RichTextEditor";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
 
-/* ================= TYPES ================= */
 
 interface CmsPage {
   id: number;

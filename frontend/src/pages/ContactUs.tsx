@@ -59,7 +59,7 @@ const ContactUs = () => {
     try {
       setSubmitting(true);
 
-      await axios.post(`${API_BASE}/form-submit`, {
+      await axios.post(`${API_BASE}/api/form-submit`, {
         type: "contact",
         data: formData,
       });

@@ -9,6 +9,7 @@ const { sequelize } = require('./models/index.js');
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 require('./models/relations');
+const footerRoutes = require("./routes/footer/footer.js");
 
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
@@ -59,6 +60,7 @@ app.use("/api", blogRoutes);
 app.use("/api", cmsSectionRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
+app.use("/api/footer", footerRoutes); 
 
 app.post("/api/book-consultation", async (req, res) => {
    console.log("BODY RECEIVED:", req.body);
