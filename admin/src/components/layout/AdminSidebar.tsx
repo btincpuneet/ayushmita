@@ -28,7 +28,7 @@ export function AdminSidebar() {
         </button>
       </div>
 
-     
+
       <nav className="flex-1 space-y-1 p-4">
 
         <NavLink
@@ -129,6 +129,19 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Disease</span>}
         </NavLink>
+         <NavLink
+          to="/admin/manage-faq"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage FAQ</span>}
+        </NavLink>
 
         <NavLink
           to="/admin/manage-treatment"
@@ -143,8 +156,22 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Treatment</span>}
         </NavLink>
+        <NavLink
+          to="/admin/manage-familyStats"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage FamilyStats</span>}
+        </NavLink>
 
-          <NavLink
+
+        <NavLink
           to="/admin/manage-blogs"
           className={({ isActive }) =>
             cn(
@@ -158,7 +185,7 @@ export function AdminSidebar() {
           {!collapsed && <span>Manage Blogs</span>}
         </NavLink>
 
-          <NavLink
+        <NavLink
           to="/admin/manage-section"
           className={({ isActive }) =>
             cn(
@@ -171,7 +198,7 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage CMS Section</span>}
         </NavLink>
-           <NavLink
+        <NavLink
           to="/admin/manage-contact"
           className={({ isActive }) =>
             cn(
@@ -184,11 +211,20 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Contact</span>}
         </NavLink>
-
+ <NavLink
+          to="/admin/manage-footer"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Footer</span>}
+        </NavLink>
       </nav>
-
-     
-
       <div className="p-4 border-t border-white/10">
         {!collapsed && user && (
           <div className="mb-3">

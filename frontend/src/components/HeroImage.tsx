@@ -37,7 +37,6 @@ const HeroImage = () => {
         className="relative w-full pt-20 bg-sky-50 h-screen"
         aria-label={title}
       >
-        {/* Background Image */}
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={`${API_BASE}${image}`}
@@ -48,20 +47,19 @@ const HeroImage = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
         </div>
 
-        {/* Content */}
         <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">
           <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-8">
 
             {/* TEXT SECTION */}
             <div className="sticky-item-over-image">
               <p className="text-[#F0A324] mb-4" style={{
-  fontFamily: "Roboto, sans-serif",
-  fontWeight: 700,
-  fontSize: "22px",
-  lineHeight: "28px",
-  letterSpacing: "0px",
-}}
->
+                fontFamily: "Roboto, sans-serif",
+                fontWeight: 700,
+                fontSize: "22px",
+                lineHeight: "28px",
+                letterSpacing: "0px",
+              }}
+              >
                 {subtitle}
               </p>
 
@@ -70,14 +68,14 @@ const HeroImage = () => {
               </h1>
 
               <p className="mt-5 leading-[28px]" style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 400,
-  fontStyle: "normal",
-  fontSize: "20px",
-  lineHeight: "28px",
-  letterSpacing: "0px",
-}}
->
+                fontFamily: "Ubuntu, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "20px",
+                lineHeight: "28px",
+                letterSpacing: "0px",
+              }}
+              >
                 {description}
               </p>
 

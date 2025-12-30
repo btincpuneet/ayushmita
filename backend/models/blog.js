@@ -19,6 +19,15 @@ const Blog = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    disease_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    treatment_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     title: {
       type: DataTypes.STRING,

@@ -16,7 +16,6 @@ import RichTextEditor from "@/components/RichTextEditor";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
 
-/* ================= TYPES ================= */
 
 interface CmsPage {
   id: number;
@@ -56,7 +55,6 @@ export default function ManageCmsPage() {
   }, []);
 
   /* ---------------- HELPERS ---------------- */
-
   const createSlug = (text: string) =>
     text
       .toLowerCase()
@@ -74,7 +72,6 @@ export default function ManageCmsPage() {
   };
 
   /* ---------------- SUBMIT ---------------- */
-
   const handleSubmit = async () => {
     if (!form.title || !form.slug) {
       return toast.error("Title and Slug are required");
@@ -101,7 +98,6 @@ export default function ManageCmsPage() {
   };
 
   /* ---------------- EDIT ---------------- */
-
   const handleEdit = (page: CmsPage) => {
     setEditing(page);
     setForm({
@@ -114,7 +110,6 @@ export default function ManageCmsPage() {
   };
 
   /* ---------------- UI ---------------- */
-
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}

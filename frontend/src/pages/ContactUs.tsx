@@ -59,7 +59,7 @@ const ContactUs = () => {
     try {
       setSubmitting(true);
 
-      await axios.post(`${API_BASE}/form-submit`, {
+      await axios.post(`${API_BASE}/api/form-submit`, {
         type: "contact",
         data: formData,
       });
@@ -112,7 +112,7 @@ const ContactUs = () => {
             <div className="space-y-6">
 
 
-              <div className=" rounded-xl p-6">
+              <div className=" rounded-xl p-6 contact-us-pgs-1">
                 {loading ? (
                   <p className="text-gray-500">Loading...</p>
                 ) : (

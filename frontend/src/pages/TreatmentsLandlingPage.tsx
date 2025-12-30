@@ -91,95 +91,93 @@ export default function TreatmentsLandingPage() {
     <div>
       <Header />
       <TreatmentHeader title="Treatments In India at Low Cost" breadcrumbs={[
-            { label: "Home" },
-            { label:  "Treatment"  },
-          ]}/>
+        { label: "Home" },
+        { label: "Treatments" },
+      ]} />
 
       <BreadCrumb onTabClick={handleTabClick} activeTab={activeTab} />
 
-   <div className="container-fluid">
-  {loading ? (
-    <p className="text-center text-lg font-semibold py-20">Loading...</p>
-  ) : (
-    diseases.map((disease, index) => (
-     <section
-  key={disease.id}
-  ref={(el) => (sectionRefs.current[disease.slug] = el)}
-  data-slug={disease.slug}
-  className="w-full bg-white py-7 trreatment-page-listing sec"
->
- <div
-  className={`${
-    disease.slug === "cardiology"
-      ? "w-full px-4 middel-sections-mains-universe"
-      : "max-w-7xl mx-auto px-4 middel-sections-mains"
-  }`}
->
-    <div
-      className={` w-7xl  py-10 m-auto flex gap-6 flex-col-reverse lg:flex-row items-start ${
-        index % 2 !== 0 ? "lg:flex-row-reverse" : ""
-      }`}
-    >
-      {/* Image */}
-      <div className="w-full lg:w-1/2 flex justify-center">
-        <img
-          src={`${API_BASE}${disease.image}`}
-          alt={disease.name}
-          className="rounded-xl w-full max-w-[370px] object-cover treatment-list-image"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="w-full">
-        <h2
-          className="heading-main cursor-pointer"
-          style={{
-            fontFamily: "Ubuntu",
-            fontWeight: 700,
-            fontSize: "32px",
-            lineHeight: "100%",
-          }}
-          onClick={() => handleDiseaseNavigate(disease.slug)}
-        >
-          {disease.name}
-        </h2>
-
-        <span
-          style={{
-            width: "32px",
-            height: "4px",
-            background: "linear-gradient(to right, #f1a339, #7ac142)",
-            borderRadius: "5px",
-            display: "inline-block",
-            margin: "12px 0",
-          }}
-        />
-
-        {/* Treatments */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
-          {disease.treatments.map((treat) => (
-            <p
-              key={treat.id}
-              onClick={() => handleNavigate(treat.slug)}
-              className="cursor-pointer hover:text-orange-500 text-gray-800 text-[14px]"
-              style={{
-                fontFamily: "Ubuntu",
-                lineHeight: "30px",
-              }}
+      <div className="container-fluid">
+        {loading ? (
+          <p className="text-center text-lg font-semibold py-20">Loading...</p>
+        ) : (
+          diseases.map((disease, index) => (
+            <section
+              key={disease.id}
+              ref={(el) => (sectionRefs.current[disease.slug] = el)}
+              data-slug={disease.slug}
+              className="w-full bg-white py-7 trreatment-page-listing sec"
             >
-              <span className="text-[18px] mx-2">•</span>
-              {treat.name}
-            </p>
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+              <div
+                className={`${disease.slug === "cardiology"
+                    ? "w-full px-4 middel-sections-mains-universe"
+                    : "max-w-7xl mx-auto middel-sections-mains"
+                  }`}
+              >
+                <div
+                  className={` w-7xl  py-10 m-auto flex gap-6 flex-col-reverse lg:flex-row items-start ${index % 2 !== 0 ? "lg:flex-row-reverse" : ""
+                    }`}
+                >
+                  {/* Image */}
+                  <div className="w-full lg:w-1/2 flex justify-center">
+                    <img
+                      src={`${API_BASE}${disease.image}`}
+                      alt={disease.name}
+                      className="rounded-xl object-cover treatment-list-image"
+                    />
+                  </div>
 
-    ))
-  )}
-</div>
+                  {/* Content */}
+                  <div className="w-full">
+                    <h2
+                      className="heading-main cursor-pointer"
+                      style={{
+                        fontFamily: "Ubuntu",
+                        fontWeight: 700,
+                        fontSize: "32px",
+                        lineHeight: "100%",
+                      }}
+                      onClick={() => handleDiseaseNavigate(disease.slug)}
+                    >
+                      {disease.name}
+                    </h2>
+
+                    <span
+                      style={{
+                        width: "32px",
+                        height: "4px",
+                        background: "linear-gradient(to right, #f1a339, #7ac142)",
+                        borderRadius: "5px",
+                        display: "inline-block",
+                        margin: "12px 0",
+                      }}
+                    />
+
+                    {/* Treatments */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
+                      {disease.treatments.map((treat) => (
+                        <p
+                          key={treat.id}
+                          onClick={() => handleNavigate(treat.slug)}
+                          className="cursor-pointer hover:text-orange-500 text-gray-800 text-[14px]"
+                          style={{
+                            fontFamily: "Ubuntu",
+                            lineHeight: "30px",
+                          }}
+                        >
+                          <span className="text-[18px] mx-2">•</span>
+                          {treat.name}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          ))
+        )}
+      </div>
 
 
       <Footer />

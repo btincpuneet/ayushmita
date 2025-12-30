@@ -24,7 +24,7 @@ export default function TreatmentDetailsPage() {
       const res = await axios.get(
         `${API_BASE}/api/treatments/single/${slug}`
       );
-      console.log("resss",res.data.treatment?.disease.name)
+      console.log("resss", res.data.treatment?.disease.name)
       if (res.data?.success) setTreatment(res.data.treatment);
       setLoading(false);
     } catch (err) {
@@ -44,13 +44,13 @@ export default function TreatmentDetailsPage() {
     <div className="bg-white">
       <Header />
 
-     <div className="w-full">
+      <div className="w-full">
         <TreatmentHeader
           title={treatment?.name}
           breadcrumbs={[
             { label: "Home" },
-            { label: treatment?.disease?.name || "Treatment"  },
-            { label: treatment?.name || "Treatment" ,link: "/" },
+            { label: treatment?.disease?.name || "Treatments" },
+            { label: treatment?.name || "Treatment", link: "/" },
           ]}
         />
       </div>
@@ -60,40 +60,21 @@ export default function TreatmentDetailsPage() {
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-                src={`${API_BASE}${treatment.image}`}
+              src={`${API_BASE}${treatment.image}`}
               alt={treatment.name}
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
           </div>
 
           <div className="w-full lg:w-[100%]">
-            <h2
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 700,
-                fontStyle: "bold",
-                fontSize: "28px",
-                lineHeight: "100%",
-                letterSpacing: "0%"
-              }}
-            >Overview</h2>
-            <span
-              style={{
-                width: "32px",
-                height: "4px",
-                background: "linear-gradient(to right, #f1a339, #7ac142)",
-                borderRadius: "5px",
-                display: "inline-block"
-              }}
-            ></span>
             <div
-          className="prose max-w-none"
-          dangerouslySetInnerHTML={{
-            __html: treatment?.short_description || "",
-          }}
-        />
+              className="prose max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: treatment?.short_description || "",
+              }}
+            />
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-8 treat-ment-details-btns">
               <button
                 onClick={() => setOpenModal(true)}
                 className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"
@@ -144,7 +125,10 @@ export default function TreatmentDetailsPage() {
       <OtherServices diseaseId={treatment.disease_id} currentSlug={treatment.slug} />
       <ConsultationForm />
       <TestimonialSlider />
-      <BlogSection />
+      <BlogSection
+        diseaseId={treatment.disease_id}
+        treatmentId={treatment?.id || 0}
+      />
       <Footer />
 
       <ModalAppointment

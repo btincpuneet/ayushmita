@@ -20,6 +20,23 @@ const ContactUs = sequelize.define(
       allowNull: false,
     },
 
+
+    seo_title: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+
+    seo_description: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+
+    seo_keywords: {
+      type: DataTypes.TEXT, 
+      allowNull: true,
+    },
+
+
     status: {
       type: DataTypes.ENUM("active", "inactive"),
       defaultValue: "active",
@@ -35,8 +52,9 @@ const ContactUs = sequelize.define(
     timestamps: true,
     underscored: true,
     indexes: [
-      { fields: ["status"] },
+     
       { fields: ["deleted_at"] },
+      { fields: ["seo_title"] },
     ],
   }
 );

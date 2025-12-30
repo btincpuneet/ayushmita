@@ -9,6 +9,7 @@ const { sequelize } = require('./models/index.js');
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 require('./models/relations');
+const footerRoutes = require("./routes/footer/footer.js");
 
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
@@ -23,12 +24,13 @@ const faqRoutes = require("./routes/faq/index.js");
 const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
+const familyStatsRoutes = require("./routes/familyStats/familyStats.routes.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 const corsOptions = {
   origin: [
-    'http://localhost:5174',
+    'http://localhost:5173',
     'http://localhost:8080',
     'http://localhost:8081',
     'http://3.110.67.235'
@@ -59,6 +61,8 @@ app.use("/api", blogRoutes);
 app.use("/api", cmsSectionRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
+app.use("/api/footer", footerRoutes); 
+app.use("/api/family-stats", familyStatsRoutes); 
 
 app.post("/api/book-consultation", async (req, res) => {
    console.log("BODY RECEIVED:", req.body);

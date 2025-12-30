@@ -1,5 +1,4 @@
 
-// export default ManageDiseases;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";

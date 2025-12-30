@@ -22,19 +22,22 @@ exports.createFAQ = async (req, res) => {
   }
 };
 
-// GET ALL FAQ
 exports.getFAQs = async (req, res) => {
   try {
     const data = await FAQ.findAll({
-      order: [["sort_order", "ASC"], ["id", "DESC"]],
+      where: { status: 1 }, 
+      order: [
+        ["sort_order", "ASC"],
+        ["id", "DESC"],
+      ],
     });
+
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// GET FAQ BY ID
 exports.getFAQ = async (req, res) => {
   try {
     const faq = await FAQ.findByPk(req.params.id);

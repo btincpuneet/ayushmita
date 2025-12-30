@@ -1,40 +1,76 @@
-import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
 import axios from "axios";
 import { API_BASE } from "../config/api";
-
-const BlogSection = () => {
-  const [blogPosts, setBlogPosts] = useState([]);
-
+ 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+ 
+interface BlogSectionProps {
+  diseaseId?: number;
+}
+ 
+const BlogSection: React.FC<BlogSectionProps> = ({ diseaseId }) => {
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
+ 
   const fetchBlogs = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/blogs`);
-
       const blogs = res.data.data || [];
-
-      const mapped = blogs.map((post) => ({
+ 
+      const filteredBlogs = diseaseId
+        ? blogs.filter(
+            (b: any) =>
+              b.status === "published" &&
+              b.disease_id === diseaseId
+          )
+        : blogs.filter((b: any) => b.status === "published");
+ 
+      const mapped = filteredBlogs.map((post: any) => ({
         title: post.title?.trim(),
         excerpt: post.short_description?.trim(),
-        slug: post.slug?.trim(),
-        image: post.image.startsWith("/uploads")
-          ? `${API_BASE}${post.image}`
-          : `${API_BASE}/uploads/blogs/${post.image}`
+        slug: post.slug,
+        image: post.blog_image
+          ? `${API_BASE}${post.blog_image}`
+          : "/placeholder.jpg",
       }));
-
+ 
       setBlogPosts(mapped);
     } catch (error) {
       console.log("Blog fetch error", error);
     }
   };
-
+ 
   useEffect(() => {
     fetchBlogs();
-  }, []);
-
+  }, [diseaseId]);
+ 
+  if (!blogPosts.length) return null;
+ 
+  const settings = {
+    dots: true,
+    arrows: true,
+    infinite: blogPosts.length > 3,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 2 },
+      },
+      {
+        breakpoint: 640,
+        settings: { slidesToShow: 1 },
+      },
+    ],
+  };
+ 
   return (
     <section style={{ backgroundColor: "#ffffff", padding: "60px 0" }}>
-      <div className="max-w-7xl mx-auto px-5 py-15 md:py-15 lg:py-15">
-        
+      <div className="max-w-7xl mx-auto px-5">
+ 
         <div
           style={{
             display: "flex",
@@ -51,140 +87,83 @@ const BlogSection = () => {
               fontFamily: "'Poppins', sans-serif",
             }}
           >
-            Latest Health Tips
+            Related Blogs
           </h2>
-
+ 
           <Link
-            to="/blog"
+            to="/blogs"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              color: "#2d6b4f",
+              color: "#F0A324",
               fontSize: "14px",
               fontWeight: "500",
               textDecoration: "none",
-              fontFamily: "'Poppins', sans-serif",
+              border:"1px solid #F0A324",
+              padding:"6px 12px",
+              borderRadius:"99px",
             }}
           >
-            View All
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            View All →
           </Link>
         </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px",
-          }}
-        >
+ 
+        <Slider {...settings}>
           {blogPosts.map((post, index) => (
-            <Link
-              key={index}
-              to={`/blog/${post.slug}`}
-              style={{
-                backgroundColor: "#ffffff",
-                borderRadius: "12px",
-                overflow: "hidden",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                border: "1px solid #f0f0f0",
-                textDecoration: "none",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 8px 24px rgba(0,0,0,0.1)";
-                e.currentTarget.style.transform = "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 2px 12px rgba(0,0,0,0.06)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              <div
+            <div  key={index} style={{ padding: "0 12px", width: "335px", }}>
+              <Link
+                to={`/blogs/${post.slug}`}
                 style={{
-                  height: "180px",
+                  backgroundColor: "#fff",
+                  borderRadius: "12px",
                   overflow: "hidden",
-                  position: "relative",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                  textDecoration: "none",
+                  display: "block",
+                  height: "100%",
+                  marginRight: "20px",
+                  
                 }}
+                className="related-post-sec-1"
               >
                 <img
                   src={post.image}
                   alt={post.title}
                   style={{
                     width: "100%",
-                    height: "100%",
+                    height: "180px",
                     objectFit: "cover",
-                    transition: "transform 0.3s ease",
+                    
                   }}
                 />
-              </div>
-
-              <div style={{ padding: "20px" }}>
-                <h3
-                  style={{
-                    color: "#1a1a1a",
-                    fontSize: "15px",
-                    fontWeight: "600",
-                    marginBottom: "10px",
-                    lineHeight: "1.4",
-                    fontFamily: "'Poppins', sans-serif",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {post.title}
-                </h3>
-
-                <p
-                  style={{
-                    color: "#666666",
-                    fontSize: "13px",
-                    lineHeight: "1.5",
-                    fontFamily: "'Poppins', sans-serif",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {post.excerpt}
-                </p>
-              </div>
-            </Link>
+ 
+                <div className="related-blog-cards-section" style={{ padding: "20px" }}>
+                  <h3
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "600",
+                      marginBottom: "10px",
+                      color: "#1a1a1a",
+                    }}
+                  >
+                    {post.title}
+                  </h3>
+ 
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      color: "#666",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    {post.excerpt}
+                  </p>
+                </div>
+              </Link>
+            </div>
           ))}
-        </div>
+        </Slider>
       </div>
-
-      <style>{`
-        @media (max-width: 900px) {
-          section > div > div:last-child {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 600px) {
-          section > div > div:last-child {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 };
-
+ 
 export default BlogSection;

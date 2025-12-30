@@ -1,9 +1,177 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
 
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #2A6506;
+  border-radius: 4px;
+  background-color: #ffffff; /* unchecked background */
+  cursor: pointer;
+  position: relative;
+}
+img.rounded-xl.object-cover.treatment-list-image {
+    height: 370px;
+    width: 370px;
+}
+select.blog-filter-section {
+    border-right: 1px solid;
+}
+ 
+h1.page-details-section-item.mb-6 {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 32px;
+    leading-trim: NONE;
+    line-height: 48px;
+    letter-spacing: 0%;
+}
+/* checked background */
+input[type="checkbox"]:checked {
+  background-color: #ffb300;
+  border-color: #ffb300;
+}
+ 
+/* tick color */
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff; /* tick color */
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+button.absolute.-left-6.top-1\/2.-translate-y-1\/2.z-10.bg-white.p-2.rounded-full.shadow {
+    display: none;
+}
+.bg-white.rounded-xl.overflow-hidden.shadow.hover\:shadow-lg.transition {
+    padding: 13px;
+}
+h3.mb-4.related-post-section-blog {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    leading-trim: NONE;
+    line-height: 32px;
+    letter-spacing: 0%;
+}
+a.hover\:underline.blog-details-related {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 27px;
+    letter-spacing: 0%;
+}
+.related-blog-cards-section {
+    width: 335px;
+}
+button.flex.items-center.bg-\[\#FBF6DD\].gap-2.px-4.py-2.rounded-lg.share-blog-btn {
+    font-family: Ubuntu;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 2%;
+}
+li.section-blog-related-news {
+    border-bottom: 1px solid #DBDBDB;
+    padding: 10px 0px;
+}
+svg.lucide.lucide-share2.lucide-share-2 {
+    color: #F0A324;
+}
+p.admin-written-date {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 20px;
+    letter-spacing: 0%;
+}
+p.font-medium.admin-written-by {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 20px;
+    letter-spacing: 0%;
+}
 .middel-sections-mains-universe {
     background: #F6F7F9;
     padding: 15px 0px;
+}
+
+
+.blog-search-section-header {
+    border: 12px solid #F0A324;
+}
+
+.blog-filter-section {
+    max-width: 77px;
+}
+h2.text-xl.font-bold.mb-4.tips-about-health {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 28px;
+    leading-trim: NONE;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+h3.line-clamp-2.treatment-lists-headings {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 27px;
+    letter-spacing: 0%;
+}
+h3.line-clamp-2.mb-2.list-headings-blog-sec {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 27px;
+    letter-spacing: 0%;
+}
+p.line-clamp-3.paragraph-of-page-blog {
+    font-family: Ubuntu;
+    font-weight: 300;
+    font-style: Light;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 22px;
+    letter-spacing: 0%;
+}
+span.mb-2.inline-block.short-related-sec {
+    font-family: Ubuntu;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 12px;
+    letter-spacing: 0%;
+    color: #F0A324;
+}
+.listed-by {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 h1.heading-of-pgs {
     font-family: Ubuntu, sans-serif;
@@ -12,6 +180,7 @@ h1.heading-of-pgs {
     line-height: 77px;
     letter-spacing: 0px;
 }
+ 
 /* APPOINTMENT CARD */
 .ayu-appointment-card {
     background: #ffffff;
@@ -20,6 +189,7 @@ h1.heading-of-pgs {
     text-align: center;
     margin-bottom: 40px;
 }
+ 
 button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacity-60.contact-page-submit-btn {
     font-family: Open Sans;
     font-weight: 600;
@@ -28,6 +198,7 @@ button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacit
     line-height: 100%;
     letter-spacing: 0%;
 }
+ 
 .ayu-appointment-card h3 {
     color: #F0A324;
     font-family: Ubuntu;
@@ -37,12 +208,14 @@ button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacit
     text-align: center;
     margin-bottom: 10px;
 }
+ 
 label.contact-form-section {
     font-family: Ubuntu;
     font-weight: 400;
     font-size: 14px;
     line-height: 140%;
 }
+ 
 h3.have-a-questionss.mb-4 {
     font-family: Ubuntu;
     font-weight: 700;
@@ -52,8 +225,9 @@ h3.have-a-questionss.mb-4 {
     line-height: 46px;
     letter-spacing: 0%;
 }
+ 
 .ayu-appointment-card p {
-        font-family: Ubuntu;
+    font-family: Ubuntu;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +235,7 @@ h3.have-a-questionss.mb-4 {
     font-size: 18px;
     line-height: 26px;
 }
-
+ 
 .address-contact {
     font-family: Ubuntu;
     font-weight: 700;
@@ -71,7 +245,7 @@ h3.have-a-questionss.mb-4 {
     line-height: 26px;
     letter-spacing: 0%;
 }
-
+ 
 /* LEFT CONTENT */
 .ayu-contact-left h2 {
     font-family: Ubuntu;
@@ -80,16 +254,16 @@ h3.have-a-questionss.mb-4 {
     line-height: 46px;
     margin-bottom: 10px;
 }
-
+ 
 .ayu-contact-left .ayu-desc {
     font-family: Ubuntu;
     font-weight: 400;
     font-size: 16px;
     line-height: 26px;
-
+ 
     margin-bottom: 30px;
 }
-
+ 
 /* CONTACT ITEMS */
 .ayu-contact-item {
     display: flex;
@@ -99,12 +273,12 @@ h3.have-a-questionss.mb-4 {
     font-size: 15px;
     color: #1f2937;
 }
-
+ 
 .ayu-contact-item span {
     color: #f4a51c;
     font-size: 18px;
 }
-
+ 
 .form-names {
     /* font-family: Ubuntu; */
     font-weight: 400;
@@ -114,11 +288,16 @@ h3.have-a-questionss.mb-4 {
     line-height: 140%;
     letter-spacing: 0%;
 }
+ 
 .sider-form-section {
-  max-height: 700px;
-  overflow-y: hidden;
+    max-height: 700px;
+    overflow-y: hidden;
 }
-
+ 
+.rounded-xl.contact-us-main-content-cont {
+    padding: 24px;
+}
+ 
 h1.hospital-treatment-low-price {
     font-family: Ubuntu, sans-serif;
     font-weight: 700;
@@ -126,28 +305,29 @@ h1.hospital-treatment-low-price {
     font-size: 48px;
     line-height: 100%;
 }
-
+ 
 img.object-cover.rounded-2xl.doctor-detail-page-image-1 {
     width: 370px;
     height: 276px;
 }
-
+ 
 .flex-shrink-0.doctor-details-page {
     width: 158px;
     height: 158px;
 }
-
+ 
 .mt-12.flex.country-card-flag {
     justify-content: center;
 }
-
+ 
 .top-partner-hospitals-sections {
     padding: 20px 16px;
 }
+ 
 .max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
     padding: 57px 12px;
 }
-
+ 
 h2.text-center.mb-6.headings-section-it {
     font-family: Ubuntu;
     font-weight: 700;
@@ -155,32 +335,32 @@ h2.text-center.mb-6.headings-section-it {
     line-height: 71px;
     text-align: center;
 }
-
+ 
 h2.text-center.mb-6.headings-section-it {
     font-size: 30px;
     line-height: normal;
 }
-
+ 
 h2.text-center.mb-12.text-\[28px\].leading-\[1\].sm\:text-\[32px\].sm\:leading-\[67px\].faq-sections {
     font-family: Ubuntu;
     font-weight: 700;
     font-style: normal;
     vertical-align: middle;
 }
-
+ 
 button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.rounded-xl.shadow-sm.hover\:shadow-lg.border.border-gray-100.hover\:border-amber-300.transition-all.duration-200.flag-section-1 {
     padding: 16px;
 }
-
+ 
 .flex.justify-center.slider-image-doctor {
     padding: 0px 12px;
 }
-
+ 
 img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
     width: 158px;
     height: 158px;
 }
-
+ 
 h2.related-items-more.mb-6 {
     font-family: Ubuntu;
     font-weight: 700;
@@ -188,182 +368,490 @@ h2.related-items-more.mb-6 {
     font-size: 28px;
     line-height: 100%;
 }
-
+ 
 img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     height: 370px;
 }
-
-
-
+ 
+ 
+ 
 /* responsive */
 @media (max-width: 768px) {
     .max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
         padding: 0;
     }
-
+ 
+    .rounded-xl.contact-us-main-content-cont {
+        padding: 0;
+    }
+ 
     img.object-cover.rounded-2xl.doctor-detail-page-image-1 {
         width: auto;
         height: 276px;
     }
-
+ 
     .flex.items-center.gap-3.mt-4.list-page-button {
         flex-direction: column;
         width: 100%;
     }
-
+ 
     a.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
         width: 100% !important;
         justify-content: center;
     }
-
+ 
+ 
     .flex.items-center.justify-between.gap-3.flex-wrap {
         margin-top: 10px;
     }
-
+ 
     .flex.items-center.mt-4 {
         margin: 0;
         width: 100%;
     }
-
+ 
     .flex-1.details-page-section-description {
         width: 100%;
     }
-
+ 
     .btn-sec-list {
         width: 100%;
         justify-content: center;
     }
-
+ 
     img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
         width: 100%;
         height: 158px;
     }
-
+ 
     .flex.justify-center.slider-image-doctor {
         padding: 0px;
     }
-
+ 
     .top-partner-hospitals-sections {
         padding: 0px;
     }
-
+ 
     button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.rounded-xl.shadow-sm.hover\:shadow-lg.border.border-gray-100.hover\:border-amber-300.transition-all.duration-200.flag-section-1 {
         padding: 43px;
     }
-
+ 
     h2.text-center.mb-12.text-\[28px\].leading-\[1\].sm\:text-\[32px\].sm\:leading-\[67px\].faq-sections {
         margin-bottom: 15px;
     }
-
+ 
     .sticky-item-over-image {
         position: relative;
         top: 50%;
     }
-
+ 
     h1.heading-of-pgs {
         font-size: 30px;
         line-height: normal;
     }
-
+ 
     .text-center.partner-hos-pital {
         margin-bottom: 40px;
     }
-
+ 
     span.text-gray-700.font-medium.text-lg.Specialisation-sec {
         min-width: max-content;
     }
-
+ 
     .relative.w-full.max-w-7xl.mx-auto.px-4.hospital-slider {
         padding: 20px 20px;
     }
-
+ 
     .text-center.partner-hos-pital {
         margin-bottom: 20px;
     }
-
+ 
     .bg-\[\#F0A324\].px-6.py-3.rounded-lg.flex.gap-4.items-center.w-full.max-w-2xl.headings-search-location {
         flex-direction: column;
     }
-
+ 
     .relative.w-1\/2.space-placeholder {
         width: 100%;
     }
-
+ 
     .relative.z-10.h-full.max-w-7xl.mx-auto.px-25.flex.items-center.over-image-section {
         padding: 16px;
         height: auto;
     }
-
+ 
     button.w-full.text-left.flex.items-center.justify-between.py-5.bg-white.fa-questions {
         padding: 0;
     }
-
+ 
     .absolute.-left-7.top-80.bg-white.rounded-xl.flex.items-center.gap-4.happy-image {
         left: 0;
     }
-
+ 
     .absolute.-right-10.top-45.-translate-y-1\/2.flex.items-center.justify-center.rounded-full.bg-white.emoji-help {
         right: 0;
     }
-
+ 
     px-3.flex.justify-center.slider-image-doctor {
         padding: 0;
     }
-
+ 
     .grid.grid-cols-1.sm\:grid-cols-2.gap-4.md\:gap-6.lg\:gap-8.px-4.lg\:px-0.cards-icons-section {
         padding: 0;
     }
-
+ 
 }
-
+ 
 @media (max-width: 500px) {
     .flex.gap-4.mt-6.details-pgs-btn-1 {
         flex-direction: column;
     }
-
+ 
     button.px-6.py-3.bg-green-500.flex.gap-3.text-white.rounded-lg {
         justify-content: center;
     }
-
+ 
     img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
         height: auto;
     }
-
+ 
     .similar-hospital {
         padding: 0;
     }
-
+ 
     article.bg-white.rounded-xl.shadow-md.p-5.flex.gap-3.items-end.hover\:shadow-lg.transition.doctor-listing-page {
         flex-direction: column;
         align-items: start;
         width: 100%;
     }
-
+ 
     .flex-shrink-0.doctor-details-page {
         width: 100%;
     }
-
+ 
     .flex-1.doctor-name-title-details-page {
         width: 100%;
     }
-
+ 
     .flex-1.doctor-name-title-details {
         width: 100%;
     }
-
+ 
     button.mt-3.px-5.py-3.bg-\[\#F0A324\].rounded-md.hover\:bg-yellow-600.transition.book-app-sec {
         width: 100%;
     }
-
+ 
     button.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
         width: 100%;
         justify-content: center;
     }
-
+ 
     .mb-20.rounded-2xl.trreatment-page-listing {
         margin-bottom: 20px;
     }
+ 
     .max-w-7xl.mx-auto.px-4.mt-16.desese-overview-sec {
-    margin: 0px;
+        margin: 0px;
+    }
+}
+ 
+section.py-6.similar-doctor-section-docdetails-page {
+    background: #F6F7F9;
+}
+ 
+label.text-white.mb-1.block.form-elements-section {
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 140%;
+    letter-spacing: 0%;
+}
+
+
+.image-content-hair-transplant-section {
+  max-width: 770px;
+  margin: 0 auto;
+}
+
+.image-card {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.text-content {
+  margin-top: 16px;
+}
+
+.text-content p {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  line-height: 27px;
+}
+
+.ht-why-wrapper {
+  margin: 20px 0px;
+}
+
+.ht-why-title {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  margin-bottom: 12px;
+}
+
+.ht-why-intro {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+
+  margin-bottom: 18px;
+}
+
+.ht-why-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ht-why-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ht-why-heading {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+}
+
+.ht-why-text {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+
+  margin-left: 10px;
+}
+
+.ht-why-footer {
+  margin-top: 20px;
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+
+}
+
+.eh-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.eh-spacing-top {
+  margin-top: 28px;
+  font-family: Ubuntu;
+font-weight: 700;
+font-style: Bold;
+font-size: 28px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+
+}
+
+.eh-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eh-point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.eh-dot {
+  font-size: 16px;
+  line-height: 22px;
+  color: #222;
+}
+
+.eh-text {
+font-family: Ubuntu;
+font-weight: 300;
+font-style: Light;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 27px;
+letter-spacing: 0%;
+
+}
+img.blog-listing-page-image.object-cover.rounded-lg {
+    height: 190px;
+    width: 190px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .eh-section-title {
+    font-size: 19px;
+  }
+.flex.gap-4.bg-white.p-5.rounded-xl.shadow.hover\:shadow-lg.transition.mb-4.cards-blog-data {
+    flex-direction: column;
+}
+img.blog-listing-page-image.object-cover.rounded-lg {
+    height: 190px;
+    width: auto;
+}
+  .ht-why-title {
+    font-size: 20px;
+  }
+
+  .image-content-hair-transplant-section {
+    padding: 20px;
+  }
+  h1.hospital-treatment-low-price{
+    font-size: 24px;
+  }
+  .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-3.gap-x-6 {
+    flex-direction: column;
+    display: flex;
+}
+.w-full.lg\:w-1\/2.flex.justify-center {
+    justify-content: start;
+}
+.flex-1.space-y-4.blog-section-pgs-item {
+    width: 100%;
+}
+.blog-search-section-header{
+     display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 100%;
+  background: #8080803d;
+
+}
+.blog-search-section-header > :nth-child(3) input::placeholder {
+  text-align: center;
+}
+.blog-filter-section{
+    max-width: 100%;
+    width: 100%;
+}
+select.blog-filter-section {
+    border: none !important;
+}
+button.bg-\[\#2A6506\].px-4.py-3.rounded{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+button.bg-\[\#2A6506\].px-4.py-3.rounded::after {
+  content: "Search";
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 10px;
+}
+h1.page-details-section-item.mb-6 {
+   line-height: 100%;
+    font-size: 24px;
+}
+.w-7xl.py-10.m-auto.flex.gap-6.flex-col-reverse.lg\:flex-row.items-start {
+    max-width: 100%;
+    padding: 20px;
+}
+img.rounded-xl.object-cover.treatment-list-image {
+    height: 370px;
+    width: 100%;
+}
+section.w-full.bg-white.py-7.trreatment-page-listing.sec {
+    padding: 0;
+}
+section.py-10.doctor-details-page-list-items-sec {
+    padding: 0;
+}
+.lg\:col-span-2.p-6 {
+    padding: 0;
+}
+
+.flex.gap-4.mt-8.treat-ment-details-btns {
+    flex-direction: column;
+}
+button.bg-\[\#25CB68\].hover\:bg-green-600.text-\[\#FFFFFF\].px-\[24px\].py-\[12px\].rounded-lg.transition {
+    justify-content: center;
+    margin-bottom: 10px;
+}
+section.bg-\[\#F6F7F9\].py-16 {
+    padding: 0;
+}
+.flex.flex-col-reverse.lg\:flex-row.items-center.items-start.mb-20 {
+    margin: 0px 0px 20px 0px;
+}
+.max-w-7xl.mx-auto.px-4.py-12 {
+    padding-bottom: 10px;
+}
+h2.text-left.mb-10 {
+    margin-bottom: 10px;
+}
+.max-w-6xl.mx-auto.px-5.py-20.md\:py-20.lg\:py-20.happiness {
+    padding: 0px 0px 0px 0px;
+}
+.px-3.related-cards-1 {
+    padding: 0;
+}
+.rounded-xl.p-6.contact-us-pgs-1 {
+    padding: 0;
+}
+.ayu-appointment-card p{
+    font-size: 14px;
+}
+.ayu-appointment-card h3{
+    line-height: 100%;
+    font-size: 16px;
+}
+.ayu-appointment-card{
+    padding: 15px;
+}
+.ayu-contact-left h2{
+    font-size: 16px;
+}
+.address-contact {
+
+    font-weight: 500;
+ 
+    font-size: 16px;
+
+    line-height: 100%;
+
+}
+h3.have-a-questionss.mb-4{
+    font-size: 16px;
+    line-height: 100%;
 }
 }

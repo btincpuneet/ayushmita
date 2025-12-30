@@ -4,6 +4,21 @@
     margin-right: auto;
     padding: 0px 18px;
 }
+   button.inline-flex.items-center.px-7.py-3.rounded-full.bg-\[\#F0A324\] {
+    cursor: pointer;
+}
+.focus\:outline-none {
+    cursor: pointer;
+}
+.focus\:outline-none {
+    cursor: pointer;
+}
+.bg-white.rounded-2xl.border.border-gray-200.overflow-hidden.w-full.max-w-\[320px\].image-section-sli-der{
+  cursor: pointer;
+}
+button.mt-2.text-\[\#F0A324\].font-semibold.text-sm.transition-all.duration-300.hover\:underline.hover\:translate-y-\[-1px\]{
+  cursor: pointer;
+}
 .cancer-overview-container {
   display: flex;
   align-items: center;
@@ -22,10 +37,65 @@
 /* Image Box */
 .cancer-overview-image-box {
   border-radius: 12px;
-
-
 }
-
+button.mt-3.px-5.py-3.bg-\[\#F0A324\].rounded-md.hover\:bg-yellow-600.transition.book-app-sec {
+    cursor: pointer;
+}
+button.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
+    cursor: pointer;
+}
+button.w-full.mt-2.bg-\[\#F0A324\].text-black.py-3.rounded-lg.transition.duration-200.disabled\:opacity-70 {
+    cursor: pointer;
+}
+button.px-4.py-2.border.border-\[\#E7E6E6\].rounded-md.text-\[\#000000\].disabled\:opacity-40 {
+    cursor: pointer;
+}
+button.w-full.text-left.flex.items-center.justify-between.py-5.bg-white.fa-questions{
+  cursor: pointer;
+}button.px-4.py-2.rounded-md.border.text-sm.border-\[\#F0A324\].text-\[\#F0A324\].font-medium {
+    cursor: pointer;
+}
+button.px-4.py-2.rounded-md.border.text-sm.text-\[\#000000\].border-\[\#E7E6E6\].hover\:border-orange-400 {
+    cursor: pointer;
+}button.mt-4.inline-block.bg-\[\#F0A324\].hover\:bg-yellow-600.transition.px-4.py-3.rounded-lg {
+    cursor: pointer;
+}
+.bg-white.rounded-xl.shadow.text-center {
+    cursor: pointer;
+}
+.rounded-xl.overflow-hidden.shadow {
+    cursor: pointer;
+}
+button.bg-\[\#2A6506\].px-4.py-3.rounded {
+    cursor: pointer;
+}
+button.px-5.py-3.rounded-md.bg-\[\#25CB68\].text-white.font-medium.flex.items-center.gap-2.hover\:bg-green-600.transition.btn-sec-list {
+    cursor: pointer;
+}
+button.px-5.py-3.rounded-md.bg-\[\#F0A324\].hover\:bg-yellow-600.transition.btn-sec-list {
+    cursor: pointer;
+}
+button.px-6.py-3.bg-\[\#F0A324\].rounded-lg {
+    cursor: pointer;
+}
+button.px-6.py-3.bg-green-500.flex.gap-3.text-white.rounded-lg {
+    cursor: pointer;
+}
+.bg-white.shadow.rounded-lg.overflow-hidden {
+    cursor: pointer;
+}
+.bg-white.shadow.rounded-lg.text-center {
+    cursor: pointer;
+}
+button.bg-\[\#F0A324\].hover\:bg-orange-500.py-\[12px\].px-\[24px\].rounded-lg.transition {
+    cursor: pointer;
+}
+button.bg-\[\#25CB68\].hover\:bg-green-600.text-\[\#FFFFFF\].px-\[24px\].py-\[12px\].rounded-lg.transition {
+    cursor: pointer;
+}
+button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacity-60.contact-page-submit-btn{
+    cursor: pointer;
+}
 .cancer-overview-image {
   border-radius: 12px;
   width: 370px;
