@@ -93,7 +93,7 @@ export default function TreatmentDetailsPage() {
               }}
             />
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-8 treat-ment-details-btns">
               <button
                 onClick={() => setOpenModal(true)}
                 className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"

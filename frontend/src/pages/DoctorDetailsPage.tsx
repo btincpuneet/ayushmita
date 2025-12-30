@@ -147,7 +147,7 @@ const DoctorDetailsPage: React.FC = () => {
                 ]}
             />
             <main className="main-sec-det-pg">
-                <section className="py-10">
+                <section className="py-10 doctor-details-page-list-items-sec">
                     <Container>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2  p-6 ">

@@ -27,7 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <select
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="appearance-none px-4 py-3 pr-10 bg-[#F6F7F9] text-sm font-medium border-r cursor-pointer blog-filter-section"
+          className="appearance-none px-4 py-3 pr-10 bg-[#F6F7F9] text-sm font-medium cursor-pointer blog-filter-section"
         >
           <option value="">All Diseases</option>
 

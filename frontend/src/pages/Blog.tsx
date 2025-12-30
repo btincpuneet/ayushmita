@@ -44,9 +44,20 @@ const PrevArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
 const NextArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
+    className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 h-12 rounded-full shadow"
   >
-    <ArrowRight size={18} />
+     <svg
+      width="34"
+      height="18"
+      viewBox="0 0 34 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M26.95 10.4811L22.65 15.0054L25 17.4685L33.3333 8.73424L25 0L22.65 2.46305L26.95 6.98739H0V10.4811H26.95Z"
+        fill="#F0A324"
+      />
+    </svg>
   </button>
 );
 
@@ -154,7 +165,7 @@ const Blog: React.FC = () => {
                             ? `${API_BASE_URL}${post.blog_image}`
                             : "/placeholder.jpg"
                         }
-                        className="h-48 w-full object-cover"
+                        className="h-48 w-full object-cover rounded-lg"
                       />
                       <div className="p-4">
                         <h3 className="line-clamp-2 treatment-lists-headings">
@@ -173,10 +184,10 @@ const Blog: React.FC = () => {
         )}
 
         <div className="flex gap-8">
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-4 blog-section-pgs-item">
             {filteredBlogs.map((post) => (
               <Link key={post.id} to={`/blogs/${post.slug}`}>
-                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition mb-4">
+                <div className="flex gap-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition mb-4 cards-blog-data">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 text-xs text-[#333333] mb-2">
                       <User size={24} />
@@ -209,7 +220,7 @@ const Blog: React.FC = () => {
                         ? `${API_BASE_URL}${post.blog_image}`
                         : "/placeholder.jpg"
                     }
-                    className="w-[195px] h-[195px] object-cover rounded-lg"
+                    className="blog-listing-page-image object-cover rounded-lg"
                   />
                 </div>
               </Link>
