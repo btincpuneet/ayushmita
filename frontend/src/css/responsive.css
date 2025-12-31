@@ -274,7 +274,6 @@ h3.have-a-questionss.mb-4 {
 }
 
 .form-names {
-    /* font-family: Ubuntu; */
     font-weight: 400;
     font-style: Regular;
     font-size: 14px;
@@ -283,7 +282,7 @@ h3.have-a-questionss.mb-4 {
     letter-spacing: 0%;
 }
 .sider-form-section {
-  max-height: 700px;
+  max-height: 1200px;
   overflow-y: hidden;
 }
 

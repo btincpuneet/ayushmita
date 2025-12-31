@@ -201,7 +201,6 @@ exports.deleteBlog = async (req, res) => {
       });
     }
 
-    // 🔥 Delete image from server
     if (blog.blog_image) {
       const imagePath = path.join(
         __dirname,
@@ -214,7 +213,7 @@ exports.deleteBlog = async (req, res) => {
       }
     }
 
-    // 🔥 PERMANENT DELETE FROM DB
+    
     await blog.destroy();
 
     res.json({
@@ -240,11 +239,11 @@ exports.getBlogBySlug = async (req, res) => {
 
     const blog = await Blog.findOne({
       where: {
-        slug: slug.trim(),        // 🔥 ensure clean slug
+        slug: slug.trim(),        
         status: "published",
         deleted_at: null,
       },
-      raw: true,                 // 🔥 avoids sequelize cache / instance issues
+      raw: true,                 
     });
 
     if (!blog) {
@@ -286,7 +285,6 @@ exports.getRecentBlogs = async (req, res) => {
       disease_id: Number(diseaseId),
     };
 
-    // only add treatment filter if provided
     if (treatmentId && Number(treatmentId) !== 0) {
       whereCondition.treatment_id = Number(treatmentId);
     }

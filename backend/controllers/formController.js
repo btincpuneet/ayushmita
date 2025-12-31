@@ -78,11 +78,16 @@ exports.handleForm = async (req, res) => {
         title: "Free Consultation Request",
         subtitle: "A new consultation request has been submitted.",
         fields: [
+          { label: "Appointment Date", value: data.appointment_date },
           { label: "Full Name", value: data.name },
+          { label: "Email", value: data.email },
+          { label: "Mobile Number", value: data.mobile },
           { label: "Country", value: data.country },
           { label: "City", value: data.city },
-          { label: "Mobile Number", value: data.mobile },
+          { label: "Age", value: data.age },
+          { label: "Gender", value: data.gender },
           { label: "Treatment Requirement", value: data.requirement },
+          { label: "Page URL", value: data.hidden_url },
         ],
       });
     }

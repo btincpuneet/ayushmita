@@ -207,28 +207,31 @@ const DoctorDetailsPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center mb-2 gap-3 text-sm">
-                                            <Building2 className="text-[#F0A324] w-5 h-5" />
-                                            <span style={{
-                                                fontFamily: "Ubuntu, sans-serif",
-                                                fontWeight: 400,
-                                                fontStyle: "normal",
-                                                fontSize: "14px",
-                                                lineHeight: "26px",
-                                                letterSpacing: "0%",
-                                            }}
-                                            >
-                                                Hospital: <strong style={{
+                                        <div className="flex items-start mb-2 gap-3 text-sm">
+                                            <Building2 className="text-[#F0A324] w-5 h-5 mt-1" />
+                                            <span
+                                                style={{
                                                     fontFamily: "Ubuntu, sans-serif",
-                                                    fontWeight: 700,
-                                                    fontStyle: "normal",
+                                                    fontWeight: 400,
                                                     fontSize: "14px",
                                                     lineHeight: "26px",
-                                                    letterSpacing: "0%",
                                                 }}
-                                                >{doctor.hospital || "Medanta"}</strong>
+                                            >
+                                                Hospital:&nbsp;
+                                                <strong
+                                                    style={{
+                                                        fontFamily: "Ubuntu, sans-serif",
+                                                        fontWeight: 700,
+                                                        fontSize: "14px",
+                                                    }}
+                                                >
+                                                    {doctor.hospitals && doctor.hospitals.length > 0
+                                                        ? doctor.hospitals.map((h) => h.name).join("")
+                                                        : "N/A"}
+                                                </strong>
                                             </span>
                                         </div>
+
 
                                         <div className="flex items-center mb-2 gap-3 text-sm">
                                             <MapPin className="text-[#F0A324] w-5 h-5" />
