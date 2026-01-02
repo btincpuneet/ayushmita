@@ -228,7 +228,7 @@ const Blog: React.FC = () => {
             ))}
           </div>
 
-          <aside className="w-[360px] hidden lg:block sticky top-24">
+          <aside className="w-[370px] hidden lg:block sticky top-24">
             <BookingForm />
           </aside>
         </div>

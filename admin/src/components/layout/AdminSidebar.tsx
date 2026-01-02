@@ -59,7 +59,19 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Promo Slider</span>}
         </NavLink>
-
+ <NavLink
+          to="/admin/manage-button-name"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Button Name</span>}
+        </NavLink>
         <NavLink
           to="/admin/hero-banner"
           className={({ isActive }) =>
@@ -129,7 +141,7 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Disease</span>}
         </NavLink>
-         <NavLink
+        <NavLink
           to="/admin/manage-faq"
           className={({ isActive }) =>
             cn(
@@ -156,7 +168,7 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Treatment</span>}
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="/admin/manage-familyStats"
           className={({ isActive }) =>
             cn(
@@ -168,7 +180,7 @@ export function AdminSidebar() {
         >
           <FolderOpen size={20} />
           {!collapsed && <span>Manage FamilyStats</span>}
-        </NavLink>
+        </NavLink> */}
 
 
         <NavLink
@@ -211,7 +223,7 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Contact</span>}
         </NavLink>
- <NavLink
+        <NavLink
           to="/admin/manage-footer"
           className={({ isActive }) =>
             cn(

@@ -25,6 +25,7 @@ const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
 const familyStatsRoutes = require("./routes/familyStats/familyStats.routes.js")
+const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -63,6 +64,7 @@ app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
 app.use("/api/footer", footerRoutes); 
 app.use("/api/family-stats", familyStatsRoutes); 
+app.use("/api/button", buttonAppointRoutes); 
 
 app.post("/api/book-consultation", async (req, res) => {
    console.log("BODY RECEIVED:", req.body);

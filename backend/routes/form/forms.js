@@ -5,6 +5,6 @@ const {
   handleForm,
 } = require("../../controllers/formController");
 
-router.post("/api/form-submit", handleForm);
+router.post("/form-submit", handleForm);
 
 module.exports = router;

@@ -1,10 +1,15 @@
-const { Doctor } = require("../models/doctor");
 const fs = require("fs");
 const path = require("path");
-const slugify = require("../utils/slugify");
 const { Op } = require("sequelize");
+const slugify = require("../utils/slugify");
 
+const { Doctor } = require("../models/doctor");
+const { TopPartnerHospital } = require("../models/topPartnerHospital");
+const { RelationHospitalDoctor } = require("../models/relationHospitalDoctor");
 
+/* ======================================================
+   CREATE DOCTOR
+====================================================== */
 const createDoctor = async (req, res) => {
   try {
     const {
@@ -24,23 +29,16 @@ const createDoctor = async (req, res) => {
       status,
     } = req.body;
 
-    if (!name) {
+    let hospitals = req.body.hospitals || [];
+
+    if (!name || !specialty) {
       return res.status(400).json({
         success: false,
-        message: "Name is required",
+        message: "Name and specialty are required",
       });
     }
 
-    if (!specialty) {
-      return res.status(400).json({
-        success: false,
-        message: "Specialty is required",
-      });
-    }
-
-    /* -------------------------------
-       SLUG GENERATION
-    -------------------------------- */
+    /* ---------- SLUG ---------- */
     let baseSlug = slugify(name);
     let slug = baseSlug;
     let count = 1;
@@ -49,9 +47,7 @@ const createDoctor = async (req, res) => {
       slug = `${baseSlug}-${count++}`;
     }
 
-    /* -------------------------------
-       IMAGE UPLOAD
-    -------------------------------- */
+    /* ---------- IMAGE ---------- */
     let imageUrl = null;
     if (req.file) {
       const imageName = `doctor_${Date.now()}.jpg`;
@@ -61,17 +57,11 @@ const createDoctor = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      fs.writeFileSync(
-        path.join(uploadDir, imageName),
-        req.file.buffer
-      );
-
+      fs.writeFileSync(path.join(uploadDir, imageName), req.file.buffer);
       imageUrl = `/uploads/doctors/${imageName}`;
     }
 
-    /* -------------------------------
-       CREATE RECORD
-    -------------------------------- */
+    /* ---------- CREATE DOCTOR ---------- */
     const doctor = await Doctor.create({
       name,
       slug,
@@ -91,6 +81,28 @@ const createDoctor = async (req, res) => {
       status: status ?? 1,
     });
 
+    /* ---------- HOSPITAL RELATION (SAFE) ---------- */
+    if (!Array.isArray(hospitals)) hospitals = [hospitals];
+
+    hospitals = hospitals
+      .map((id) => Number(id))
+      .filter((id) => !isNaN(id));
+
+    const validHospitals = await TopPartnerHospital.findAll({
+      where: { id: hospitals },
+      attributes: ["id"],
+    });
+
+    const relations = validHospitals.map((h) => ({
+      doctor_id: doctor.id,
+      hospital_id: h.id,
+      status: 1,
+    }));
+
+    if (relations.length) {
+      await RelationHospitalDoctor.bulkCreate(relations);
+    }
+
     res.status(201).json({
       success: true,
       data: doctor,
@@ -104,31 +116,45 @@ const createDoctor = async (req, res) => {
   }
 };
 
+/* ======================================================
+   GET ALL DOCTORS
+====================================================== */
 const getDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.findAll({
-      where: { status: 1 },
+      include: [
+        {
+          model: TopPartnerHospital,
+          as: "hospitals",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+      ],
       order: [["id", "DESC"]],
     });
 
-    res.json({
-      success: true,
-      data: doctors,
-    });
+    res.json({ success: true, data: doctors });
   } catch (err) {
     console.error("Get Doctors Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-
+/* ======================================================
+   GET DOCTOR BY SLUG
+====================================================== */
 const getDoctorBySlug = async (req, res) => {
   try {
     const doctor = await Doctor.findOne({
-      where: { slug: req.params.slug },
+      where: { slug: req.params.slug, status: 1 },
+      include: [
+        {
+          model: TopPartnerHospital,
+          as: "hospitals",
+          attributes: ["id", "name", "slug", "city", "country"],
+          through: { attributes: [] },
+        },
+      ],
     });
 
     if (!doctor) {
@@ -138,19 +164,16 @@ const getDoctorBySlug = async (req, res) => {
       });
     }
 
-    res.json({
-      success: true,
-      data: doctor,
-    });
+    res.json({ success: true, data: doctor });
   } catch (err) {
     console.error("Get Doctor By Slug Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+/* ======================================================
+   UPDATE DOCTOR
+====================================================== */
 const updateDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByPk(req.params.id);
@@ -162,11 +185,10 @@ const updateDoctor = async (req, res) => {
       });
     }
 
-    const updateData = { ...req.body };
+    let updateData = { ...req.body };
+    let hospitals = req.body.hospitals || [];
 
-    /* -------------------------------
-       REGENERATE SLUG IF NAME CHANGES
-    -------------------------------- */
+    /* ---------- SLUG UPDATE ---------- */
     if (req.body.name && req.body.name !== doctor.name) {
       let baseSlug = slugify(req.body.name);
       let slug = baseSlug;
@@ -174,10 +196,7 @@ const updateDoctor = async (req, res) => {
 
       while (
         await Doctor.findOne({
-          where: {
-            slug,
-            id: { [Op.ne]: doctor.id },
-          },
+          where: { slug, id: { [Op.ne]: doctor.id } },
         })
       ) {
         slug = `${baseSlug}-${count++}`;
@@ -186,9 +205,7 @@ const updateDoctor = async (req, res) => {
       updateData.slug = slug;
     }
 
-    /* -------------------------------
-       IMAGE UPDATE
-    -------------------------------- */
+    /* ---------- IMAGE UPDATE ---------- */
     if (req.file) {
       const imageName = `doctor_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads/doctors");
@@ -197,30 +214,48 @@ const updateDoctor = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      fs.writeFileSync(
-        path.join(uploadDir, imageName),
-        req.file.buffer
-      );
-
+      fs.writeFileSync(path.join(uploadDir, imageName), req.file.buffer);
       updateData.image_url = `/uploads/doctors/${imageName}`;
     }
 
     await doctor.update(updateData);
 
-    res.json({
-      success: true,
-      data: doctor,
+    /* ---------- RESET RELATIONS ---------- */
+    await RelationHospitalDoctor.destroy({
+      where: { doctor_id: doctor.id },
     });
+
+    if (!Array.isArray(hospitals)) hospitals = [hospitals];
+
+    hospitals = hospitals
+      .map((id) => Number(id))
+      .filter((id) => !isNaN(id));
+
+    const validHospitals = await TopPartnerHospital.findAll({
+      where: { id: hospitals },
+      attributes: ["id"],
+    });
+
+    const relations = validHospitals.map((h) => ({
+      doctor_id: doctor.id,
+      hospital_id: h.id,
+      status: 1,
+    }));
+
+    if (relations.length) {
+      await RelationHospitalDoctor.bulkCreate(relations);
+    }
+
+    res.json({ success: true, data: doctor });
   } catch (err) {
     console.error("Update Doctor Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-
+/* ======================================================
+   DELETE DOCTOR
+====================================================== */
 const deleteDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByPk(req.params.id);
@@ -232,6 +267,10 @@ const deleteDoctor = async (req, res) => {
       });
     }
 
+    await RelationHospitalDoctor.destroy({
+      where: { doctor_id: doctor.id },
+    });
+
     await doctor.destroy();
 
     res.json({
@@ -240,10 +279,7 @@ const deleteDoctor = async (req, res) => {
     });
   } catch (err) {
     console.error("Delete Doctor Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
