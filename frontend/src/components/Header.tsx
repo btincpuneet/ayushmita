@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { API_BASE } from "../config/api";
 import Logo from "../assets/logo.png";
-import LanguageSelector from "./LanguageSelector";
+//import GoogleTranslate from "./GoogleTranslate";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
  
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
             <img src={Logo} alt="Company Logo" className="w-25 " />
           </Link>
  
-          <div className="hidden lg:flex flex-1 justify-end">
+          <div className="hidden lg:flex flex-1 justify-start" style={{ marginLeft: '12%' }}>
   <ul className="flex gap-[40px] items-center nav-menu">
               {navItems.map((item) => (
                 <li key={item.id}>
@@ -99,12 +99,12 @@ const Header: React.FC = () => {
                 Book An Appointment
               </Link>
 
-              <LanguageSelector />
+              {/* <GoogleTranslate /> */}
             </ul>
           </div>
  
           <div className="lg:hidden flex items-center gap-2">
-            <LanguageSelector />
+            {/* <GoogleTranslate /> */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 text-gray-700 hover:bg-gray-100 rounded-md"

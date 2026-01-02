@@ -10,6 +10,7 @@ import HospitalDetailsPage from "./pages/HospitalDetailsPage";
 import DoctorsPage from "./pages/DoctorPage";
 import DoctorDetailsPage from "./pages/DoctorDetailsPage";
 import ScrollToTop from "./components/ScrollToTop";
+import GoogleTranslate from "./components/GoogleTranslate";
 import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
@@ -19,7 +20,7 @@ const App: React.FC = () => {
   return (
     <HelmetProvider>
       <ScrollToTop />
-    
+      <GoogleTranslate />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />

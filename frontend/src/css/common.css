@@ -20,7 +20,7 @@ button.mt-2.text-\[\#F0A324\].font-semibold.text-sm.transition-all.duration-300.
   cursor: pointer;
 }
 .cancer-overview-container {
-  display: flex;
+  display: flex;  
   align-items: center;
   gap: 30px;
   margin-bottom: 50px;

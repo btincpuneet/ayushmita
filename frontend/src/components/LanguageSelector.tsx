@@ -48,6 +48,14 @@ const LanguageSelector: React.FC = () => {
     i18n.changeLanguage(code);
     const opt = LANGUAGE_OPTIONS.find((l) => l.code === code);
     if (opt) setSelected(opt);
+    // Trigger Google Translate widget (if present) to translate page and dynamic content
+    // @ts-ignore
+    if (typeof window.applyGoogleTranslate === "function") {
+      // Google Translate expects target language, sometimes in two-letter code
+      // Use the same `code` used by i18next
+      // @ts-ignore
+      window.applyGoogleTranslate(code);
+    }
   };
 
   return (
