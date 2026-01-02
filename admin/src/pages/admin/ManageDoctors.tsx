@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
 
-/* SHADCN */
 import {
   Popover,
   PopoverTrigger,

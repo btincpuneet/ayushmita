@@ -15,8 +15,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Plus, Edit, Trash, X } from "lucide-react";
+import { API_BASE} from "../../config/api";
 
-const API_BASE = "http://127.0.0.1:5001/api";
+const API_URL = `${API_BASE}/api`;
 
 interface FAQ {
   id: number;
@@ -26,7 +27,6 @@ interface FAQ {
   status: number;
 }
 
-/* ================= SORTABLE ROW ================= */
 function SortableRow({
   faq,
   children,
@@ -53,7 +53,6 @@ function SortableRow({
   );
 }
 
-/* ================= MAIN ================= */
 export default function ManageFaq() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [open, setOpen] = useState(false);
@@ -69,17 +68,15 @@ export default function ManageFaq() {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  /* ================= LOAD ================= */
   const loadFaqs = async () => {
-    const res = await axios.get(`${API_BASE}/faqs`);
-    setFaqs(res.data); // backend ordered
+    const res = await axios.get(`${API_URL}/faqs`);
+    setFaqs(res.data); 
   };
 
   useEffect(() => {
     loadFaqs();
   }, []);
 
-  /* ================= DRAG END ================= */
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -91,27 +88,23 @@ export default function ManageFaq() {
       (f, index) => ({ ...f, sort_order: index + 1 })
     );
 
-    // ✅ UI update first
     setFaqs(reordered);
 
-    // ✅ Save order in DB
     await Promise.all(
       reordered.map((f) =>
-        axios.put(`${API_BASE}/faqs/${f.id}`, {
+        axios.put(`${API_URL}/faqs/${f.id}`, {
           sort_order: f.sort_order,
         })
       )
     );
   };
 
-  /* ================= ADD ================= */
   const handleAdd = () => {
     setEditing(null);
     setForm({ question: "", answer: "", status: 1 });
     setOpen(true);
   };
 
-  /* ================= EDIT ================= */
   const handleEdit = (faq: FAQ) => {
     setEditing(faq);
     setForm({
@@ -122,12 +115,11 @@ export default function ManageFaq() {
     setOpen(true);
   };
 
-  /* ================= SAVE ================= */
   const handleSubmit = async () => {
     if (editing) {
-      await axios.put(`${API_BASE}/faqs/${editing.id}`, form);
+      await axios.put(`${API_URL}/faqs/${editing.id}`, form);
     } else {
-      await axios.post(`${API_BASE}/faqs`, {
+      await axios.post(`${API_URL}/faqs`, {
         ...form,
         sort_order: faqs.length + 1,
       });
@@ -140,7 +132,7 @@ export default function ManageFaq() {
   /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete FAQ?")) return;
-    await axios.delete(`${API_BASE}/faqs/${id}`);
+    await axios.delete(`${API_URL}/faqs/${id}`);
     loadFaqs();
   };
 

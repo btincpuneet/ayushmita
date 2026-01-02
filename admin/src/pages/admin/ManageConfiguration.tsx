@@ -30,8 +30,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { API_BASE } from "../../config/api";
 
-const API_URL = "http://127.0.0.1:5001/api/global-settings";
+const API_URL = `${API_BASE}/api/global-settings`;
 
 const configSchema = z.object({
   emailHost: z.string().min(1),

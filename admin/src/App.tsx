@@ -21,7 +21,6 @@ import ManageCmsSection from "./pages/admin/ManageCmsSection";
 import ManageContactUs from "./pages/admin/ManageContactUs";
 import ManageFooter from "./pages/admin/ManageFooter";
 import ManageFaq from "./pages/admin/ManageFaq";
-import ManageFamilyStats from "./pages/admin/ManageFamilyStats";
 import ManageButtonName from "./pages/admin/ManageButtonName";
 import ManageConfiguration from "./pages/admin/ManageConfiguration";
 
@@ -59,7 +58,6 @@ const App = () => (
               <Route path="manage-contact" element={<ManageContactUs/>} />
               <Route path="manage-footer" element={<ManageFooter/>} />
               <Route path="manage-faq" element={<ManageFaq/>} />
-              <Route path="manage-familyStats" element={<ManageFamilyStats/>} />
               <Route path="manage-button-name" element={<ManageButtonName/>} />
               <Route path="manage-configuration" element={<ManageConfiguration/>} />
 

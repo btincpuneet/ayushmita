@@ -76,17 +76,15 @@ export default function ManageCategory() {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  /* ================= LOAD ================= */
   const loadData = async () => {
     const res = await categoryApi.getAll();
-    setCategories(res); // backend already ordered
+    setCategories(res); 
   };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  /* ================= DRAG END (FIXED) ================= */
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -102,10 +100,8 @@ export default function ManageCategory() {
       (c, i) => ({ ...c, sort_order: i + 1 })
     );
 
-    // ✅ UPDATE UI FIRST
     setCategories(reordered);
 
-    // ✅ SAVE IN DB
     await Promise.all(
       reordered.map((c) =>
         categoryApi.update(c.id, { sort_order: c.sort_order })
@@ -115,14 +111,12 @@ export default function ManageCategory() {
     toast({ title: "Order updated successfully" });
   };
 
-  /* ================= ADD ================= */
   const handleAdd = () => {
     setEditing(null);
     setForm(emptyForm);
     setOpen(true);
   };
 
-  /* ================= EDIT ================= */
   const handleEdit = (cat: Category) => {
     setEditing(cat);
     setForm({
@@ -135,13 +129,12 @@ export default function ManageCategory() {
     setOpen(true);
   };
 
-  /* ================= SAVE ================= */
   const handleSubmit = async () => {
     if (editing) {
       await categoryApi.update(editing.id, form);
       toast({ title: "Category updated" });
     } else {
-      await categoryApi.create(form); // backend auto assigns sort_order
+      await categoryApi.create(form); 
       toast({ title: "Category created" });
     }
 
@@ -149,7 +142,6 @@ export default function ManageCategory() {
     loadData();
   };
 
-  /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete category?")) return;
 
@@ -158,7 +150,6 @@ export default function ManageCategory() {
     loadData();
   };
 
-  /* ================= UI ================= */
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
@@ -215,7 +206,6 @@ export default function ManageCategory() {
         </DndContext>
       </div>
 
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>

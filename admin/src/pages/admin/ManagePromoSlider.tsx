@@ -19,7 +19,6 @@ const ManagePromoSlider = () => {
   const [sliders, setSliders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal State
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({
@@ -35,7 +34,6 @@ const ManagePromoSlider = () => {
 
   const [preview, setPreview] = useState(null);
 
-  // Load Data
   const loadData = async () => {
     setLoading(true);
     try {

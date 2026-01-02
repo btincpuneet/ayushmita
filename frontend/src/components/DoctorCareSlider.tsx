@@ -36,11 +36,11 @@ items-center justify-center cursor-pointer z-10
 
 export default function DoctorCareSlider() {
   const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
 
   const [doctors, setDoctors] = useState([]);
   const navigate = useNavigate();
@@ -120,10 +120,10 @@ export default function DoctorCareSlider() {
           <Slider {...settings}>
             {doctors.map((d, i) => (
               <div key={i} className=" flex justify-center slider-image-doctor">
-                <div 
+                <div
                   onClick={() => navigate(`/doctor/${slugify(d.name)}`)}
 
-                className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px] image-section-sli-der">
+                  className="bg-white rounded-2xl border border-gray-200 overflow-hidden w-full max-w-[320px] image-section-sli-der">
 
                   <div className=" overflow-hidden bg-gray-100">
                     <img
