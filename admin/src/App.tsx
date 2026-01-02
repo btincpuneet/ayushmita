@@ -23,6 +23,7 @@ import ManageFooter from "./pages/admin/ManageFooter";
 import ManageFaq from "./pages/admin/ManageFaq";
 import ManageFamilyStats from "./pages/admin/ManageFamilyStats";
 import ManageButtonName from "./pages/admin/ManageButtonName";
+import ManageConfiguration from "./pages/admin/ManageConfiguration";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="manage-faq" element={<ManageFaq/>} />
               <Route path="manage-familyStats" element={<ManageFamilyStats/>} />
               <Route path="manage-button-name" element={<ManageButtonName/>} />
+              <Route path="manage-configuration" element={<ManageConfiguration/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

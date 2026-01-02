@@ -59,7 +59,7 @@ export function AdminSidebar() {
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Promo Slider</span>}
         </NavLink>
- <NavLink
+        <NavLink
           to="/admin/manage-button-name"
           className={({ isActive }) =>
             cn(
@@ -235,6 +235,19 @@ export function AdminSidebar() {
         >
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Footer</span>}
+        </NavLink>
+         <NavLink
+          to="/admin/manage-configuration"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center"
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Configuration</span>}
         </NavLink>
       </nav>
       <div className="p-4 border-t border-white/10">

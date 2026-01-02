@@ -22,7 +22,6 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
 }) => {
   return (
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
-      {/* TITLE */}
       <div className="text-center mb-9">
         <p className="text-[#87898C]"
         style={{
@@ -33,7 +32,6 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
   lineHeight: "100%",
   letterSpacing: "0%",
 }}
-
         >
           Home <span className="text-[#F0A324]">/ Doctors</span>
         </p>
