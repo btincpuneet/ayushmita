@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { z } from "zod";
@@ -35,18 +34,22 @@ import { API_BASE } from "../../config/api";
 const API_URL = `${API_BASE}/api/global-settings`;
 
 const configSchema = z.object({
-  emailHost: z.string().min(1),
+  emailHost: z.string().min(1, "Email host is required"),
   emailPort: z.coerce.number().min(1).max(65535),
-  emailUser: z.string().email(),
-  emailPass: z.string().min(1),
-  adminEmail: z.string().email(),
-  whatsappNumber: z.string().optional(),
-  contactEmail: z.string().optional(),
-  appointmentEmail: z.string().optional(),
-  seoTitle: z.string(),
-  seoDescription: z.string(),
-  seoKeywords: z.string(),
-  emailTemplateHtml: z.string(),
+  emailUser: z.string().email("Invalid email"),
+  emailPass: z.string().min(1, "Password is required"),
+  adminEmail: z.string().email("Invalid admin email"),
+  whatsappNumber: z
+    .string()
+    .regex(/^\d{10}$/, "WhatsApp number must be 10 digits")
+    .optional()
+    .or(z.literal("")),
+  contactEmail: z.string().email("Invalid contact email").optional().or(z.literal("")),
+  appointmentEmail: z.string().email("Invalid appointment email").optional().or(z.literal("")),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  seoKeywords: z.string().optional(),
+  emailTemplateHtml: z.string().optional(),
 });
 
 type ConfigForm = z.infer<typeof configSchema>;
@@ -77,6 +80,7 @@ type TabId = (typeof tabs)[number]["id"];
 
 const ManageConfiguration: React.FC = () => {
   const [form, setForm] = useState<ConfigForm>(defaultForm);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState<TabId>("email");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -86,7 +90,6 @@ const ManageConfiguration: React.FC = () => {
     try {
       setLoading(true);
       const res = await axios.get(API_URL);
-
       if (res.data?.data) {
         setExists(true);
         setForm({
@@ -121,24 +124,35 @@ const ManageConfiguration: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleSave = async () => {
     try {
       setSaving(true);
-
+      setErrors({});
+      const validated = configSchema.parse(form);
       if (exists) {
-        await axios.put(API_URL, form); // ✅ UPDATE
+        await axios.put(API_URL, validated);
         toast.success("Configuration updated");
       } else {
-        await axios.post(API_URL, form); // ✅ CREATE
+        await axios.post(API_URL, validated);
         toast.success("Configuration created");
       }
-
       fetchSettings();
-    } catch {
-      toast.error("Save failed");
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors: Record<string, string> = {};
+        err.errors.forEach((e) => {
+          if (e.path[0]) fieldErrors[e.path[0] as string] = e.message;
+        });
+        setErrors(fieldErrors);
+        toast.error("Please fix validation errors");
+      } else {
+        toast.error("Save failed");
+      }
     } finally {
       setSaving(false);
     }
@@ -146,7 +160,7 @@ const ManageConfiguration: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(API_URL); 
+      await axios.delete(API_URL);
       setForm(defaultForm);
       setExists(false);
       toast.success("Configuration deleted");
@@ -156,7 +170,7 @@ const ManageConfiguration: React.FC = () => {
   };
 
   const handleReset = () => {
-    fetchSettings(); 
+    fetchSettings();
     toast.info("Reset to last saved configuration");
   };
 
@@ -170,7 +184,6 @@ const ManageConfiguration: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-6">
-     
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-primary/10 rounded-xl">
@@ -183,7 +196,6 @@ const ManageConfiguration: React.FC = () => {
             </p>
           </div>
         </div>
-
         <div
           className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
             exists
@@ -196,7 +208,6 @@ const ManageConfiguration: React.FC = () => {
         </div>
       </div>
 
-     
       <div className="flex gap-4 border-b mb-6">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -220,19 +231,26 @@ const ManageConfiguration: React.FC = () => {
       <div className="bg-background border rounded-xl shadow-sm p-6 mb-6">
         {activeTab === "email" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <InputField name="emailHost" label="Email Host" value={form.emailHost} onChange={handleChange} />
-            <InputField name="emailPort" label="Email Port" type="number" value={form.emailPort} onChange={handleChange} />
-            <InputField name="emailUser" label="Email User" value={form.emailUser} onChange={handleChange} />
-            <InputField name="emailPass" label="Email Password" type="password" value={form.emailPass} onChange={handleChange} />
-            <InputField name="adminEmail" label="Admin Email" value={form.adminEmail} onChange={handleChange} />
+            <InputField name="emailHost" label="Email Host" value={form.emailHost} onChange={handleChange} error={errors.emailHost} />
+            <InputField name="emailPort" label="Email Port" type="number" value={form.emailPort} onChange={handleChange} error={errors.emailPort} />
+            <InputField name="emailUser" label="Email User" value={form.emailUser} onChange={handleChange} error={errors.emailUser} />
+            <InputField name="emailPass" label="Email Password" type="password" value={form.emailPass} onChange={handleChange} error={errors.emailPass} />
+            <InputField name="adminEmail" label="Admin Email" value={form.adminEmail} onChange={handleChange} error={errors.adminEmail} />
           </div>
         )}
 
         {activeTab === "contact" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <InputField name="whatsappNumber" label="WhatsApp Number" value={form.whatsappNumber} onChange={handleChange} />
-            <InputField name="contactEmail" label="Contact Email" value={form.contactEmail} onChange={handleChange} />
-            <InputField name="appointmentEmail" label="Appointment Email" value={form.appointmentEmail} onChange={handleChange} />
+            <InputField
+              name="whatsappNumber"
+              label="WhatsApp Number"
+              value={form.whatsappNumber}
+              onChange={handleChange}
+              maxLength={10}
+              error={errors.whatsappNumber}
+            />
+            <InputField name="contactEmail" label="Contact Email" value={form.contactEmail} onChange={handleChange} error={errors.contactEmail} />
+            <InputField name="appointmentEmail" label="Appointment Email" value={form.appointmentEmail} onChange={handleChange} error={errors.appointmentEmail} />
           </div>
         )}
 
@@ -255,7 +273,6 @@ const ManageConfiguration: React.FC = () => {
         )}
       </div>
 
-      
       <div className="flex justify-end gap-3">
         <Button variant="outline" onClick={handleReset}>
           <RefreshCw size={16} className="mr-2" />

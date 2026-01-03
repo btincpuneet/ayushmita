@@ -1,12 +1,16 @@
+const { getEmailSettings, renderEmailTemplate, sendMail } = require("../utils/mailer");
+
 exports.handleForm = async (req, res) => {
   try {
     const { type, data } = req.body;
 
     const settings = await getEmailSettings();
+    console.log(settings);
+    
 
     let subject = "";
     let html = "";
-    let to = settings.admin_email; 
+    let to = settings.admin_email;
 
     if (type === "consultation") {
       subject = "New Free Consultation Request";
@@ -31,7 +35,8 @@ exports.handleForm = async (req, res) => {
 
     if (type === "appointment") {
       subject = "New Appointment Booking";
-      to = settings.appointment_email || settings.admin_email; 
+      to = settings.appointment_email;
+      console.log("res",to)
 
       html = renderEmailTemplate({
         title: "Appointment Request",
@@ -49,7 +54,7 @@ exports.handleForm = async (req, res) => {
 
     if (type === "contact") {
       subject = "New Contact Us Message";
-      to = settings.contact_email || settings.admin_email;
+      to = settings.contact_email ;
 
       html = renderEmailTemplate({
         title: "Contact Us Message",
@@ -69,6 +74,8 @@ exports.handleForm = async (req, res) => {
         ],
       });
     }
+    console.log("QWERTY", to);
+    
 
     await sendMail({
       settings,

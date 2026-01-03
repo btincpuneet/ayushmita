@@ -8,7 +8,6 @@ interface ModalAppointmentProps {
   onClose: () => void;
 }
 
-
 const ModalAppointment: React.FC<ModalAppointmentProps> = ({
   isOpen,
   onClose,
@@ -20,32 +19,91 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
     agree: false,
   });
 
+  const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
+  const validateField = (name: string, value: any) => {
+    let error = "";
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) error = "Name is required";
+        else if (!/^[a-zA-Z\s]+$/.test(value))
+          error = "Only letters allowed";
+        else if (value.length < 2)
+          error = "Minimum 2 characters required";
+        break;
+
+      case "phone":
+        if (!value.trim()) error = "Phone number is required";
+        else if (!/^[0-9]{10}$/.test(value))
+          error = "Phone number must be exactly 10 digits";
+        break;
+
+      case "message":
+        if (!value.trim()) error = "Message is required";
+        else if (value.length < 10)
+          error = "Minimum 10 characters required";
+        break;
+
+      case "agree":
+        if (!value) error = "Consent is required";
+        break;
+
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type } = e.target;
+    const { name, value, type, checked } = e.target;
 
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? !form.agree : value,
+    // Phone: digits only, max 10
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) return;
+      if (value.length > 10) return;
+    }
+
+    // Name: letters & spaces only
+    if (name === "name") {
+      if (!/^[a-zA-Z\s]*$/.test(value)) return;
+    }
+
+    const fieldValue = type === "checkbox" ? checked : value;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: fieldValue,
+    }));
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: validateField(name, fieldValue),
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors: any = {};
+
+    Object.keys(form).forEach((key) => {
+      const error = validateField(key, (form as any)[key]);
+      if (error) newErrors[key] = error;
     });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.agree) {
-      Swal.fire({
-        icon: "warning",
-        title: "Consent Required",
-        text: "Please agree to receive notifications.",
-      });
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
 
@@ -79,10 +137,10 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
         agree: false,
       });
 
+      setErrors({});
       onClose();
     } catch (error) {
       console.error(error);
-
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
@@ -116,9 +174,13 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                required
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm"
+                className={`w-full border rounded-md px-3 py-2 text-sm ${
+                  errors.name ? "border-red-500" : "border-gray-400"
+                }`}
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs">{errors.name}</p>
+              )}
             </div>
 
             <div className="flex flex-col">
@@ -128,21 +190,32 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
-                required
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm"
+                maxLength={10}
+                className={`w-full border rounded-md px-3 py-2 text-sm ${
+                  errors.phone ? "border-red-500" : "border-gray-400"
+                }`}
               />
+              {errors.phone && (
+                <p className="text-red-500 text-xs">{errors.phone}</p>
+              )}
             </div>
           </div>
 
           <div>
-            <label className="form-names">Describe your treatment requirements</label>
+            <label className="form-names">
+              Describe your treatment requirements
+            </label>
             <textarea
               name="message"
               value={form.message}
               onChange={handleChange}
-              required
-              className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm h-24"
+              className={`w-full border rounded-md px-3 py-2 text-sm h-24 ${
+                errors.message ? "border-red-500" : "border-gray-400"
+              }`}
             />
+            {errors.message && (
+              <p className="text-red-500 text-xs">{errors.message}</p>
+            )}
           </div>
 
           <label className="flex items-start gap-2 text-sm">
@@ -157,6 +230,9 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
               I agree to receive updates/notifications via WhatsApp
             </span>
           </label>
+          {errors.agree && (
+            <p className="text-red-500 text-xs">{errors.agree}</p>
+          )}
 
           <button
             type="submit"
