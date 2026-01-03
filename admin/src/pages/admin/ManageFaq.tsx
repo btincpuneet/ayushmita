@@ -15,8 +15,8 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { X } from "lucide-react";
-import { API_BASE } from "../../config/api";
+import { Plus, Edit, Trash, X } from "lucide-react";
+import { API_BASE} from "../../config/api";
 
 const API_URL = `${API_BASE}/api`;
 
@@ -71,15 +71,14 @@ export default function ManageFaq() {
 
   const loadFaqs = async () => {
     const res = await axios.get(`${API_URL}/faqs`);
-    setFaqs(res.data);
+    setFaqs(res.data); 
   };
 
   useEffect(() => {
     loadFaqs();
   }, []);
 
-  /* ================= DRAG ================= */
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -101,7 +100,6 @@ export default function ManageFaq() {
     );
   };
 
-  /* ================= ADD / EDIT ================= */
   const handleAdd = () => {
     setEditing(null);
     setForm({ question: "", answer: "", status: 1 });
@@ -134,7 +132,7 @@ export default function ManageFaq() {
 
   /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Delete FAQ?")) return;
+    if (!confirm("Delete FAQ?")) return;
     await axios.delete(`${API_URL}/faqs/${id}`);
     loadFaqs();
   };

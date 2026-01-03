@@ -1,4 +1,3 @@
-// export default Header;
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { API_BASE } from "../config/api";
@@ -10,7 +9,6 @@ const Header: React.FC = () => {
   const [navItems, setNavItems] = useState<any[]>([]);
   const [appointmentButton, setAppointmentButton] = useState<string>("");
 
-  /* ================= LOAD CATEGORIES ================= */
   const loadCategories = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/categories`);
@@ -26,7 +24,6 @@ const Header: React.FC = () => {
     }
   };
 
-  /* ================= LOAD BUTTON NAME ================= */
   const loadAppointmentButton = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/button`);

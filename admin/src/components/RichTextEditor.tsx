@@ -86,12 +86,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <div className={containerClass}>
-      {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <label className="text-sm font-semibold text-foreground">{label}</label>
 
         <div className="flex items-center gap-2">
-          {/* Mode Toggle */}
+        
           <Tabs value={mode} onValueChange={(v) => setMode(v as "visual" | "html")}>
             <TabsList className="h-9 bg-muted">
               <TabsTrigger value="visual" className="text-xs px-3 gap-1.5 data-[state=active]:bg-card data-[state=active]:shadow-sm">
@@ -105,7 +104,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             </TabsList>
           </Tabs>
 
-          {/* Copy Button */}
           <Button
             variant="outline"
             size="sm"
@@ -129,7 +127,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       </div>
 
       {/* VISUAL MODE */}
-      {mode === "visual" && (
+      {/* {mode === "visual" && (
         <div className="border rounded-lg overflow-hidden bg-card shadow-card ckeditor-container">
           <CKEditor
             editor={ClassicEditor}
@@ -187,7 +185,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             }}
           />
         </div>
-      )}
+      )} */}
 
       {/* HTML MODE */}
       {mode === "html" && (

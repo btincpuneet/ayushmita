@@ -52,7 +52,6 @@ export default function ManageBlogs() {
   const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState<any>(emptyForm);
 
-  /* ================= HELPERS ================= */
   const slugify = (text: string) =>
     text
       .toLowerCase()
@@ -136,7 +135,6 @@ export default function ManageBlogs() {
     }
   };
 
-  /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this blog?")) return;
     await axios.delete(`${BLOG_API}/${id}`);
@@ -144,7 +142,6 @@ export default function ManageBlogs() {
     loadBlogs();
   };
 
-  /* ================= UI ================= */
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
@@ -160,7 +157,6 @@ export default function ManageBlogs() {
         </Button>
       </div>
 
-      {/* BLOG LIST */}
       {blogs.map((b) => (
         <div key={b.id} className="border p-4 rounded mb-3 flex gap-4">
           <div className="w-32 h-20 bg-muted flex items-center justify-center">
@@ -206,7 +202,6 @@ export default function ManageBlogs() {
         </div>
       ))}
 
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -215,7 +210,6 @@ export default function ManageBlogs() {
             </DialogTitle>
           </DialogHeader>
 
-          {/* VISIBILITY */}
           <div className="flex gap-6 mb-6">
             <label className="flex items-center gap-2">
               <input
@@ -245,7 +239,6 @@ export default function ManageBlogs() {
             </label>
           </div>
 
-          {/* DISEASE / TREATMENT */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <select
               className="border rounded px-3 py-2 disabled:bg-gray-100"
@@ -284,7 +277,6 @@ export default function ManageBlogs() {
             </select>
           </div>
 
-          {/* TITLE */}
           <div className="grid grid-cols-2 gap-4">
             <Input
               placeholder="Title *"
@@ -327,7 +319,6 @@ export default function ManageBlogs() {
             }
           />
 
-          {/* SEO */}
           <div className="mt-8 border-t pt-6">
             <h3 className="font-semibold mb-4">SEO</h3>
             <div className="grid grid-cols-2 gap-4">

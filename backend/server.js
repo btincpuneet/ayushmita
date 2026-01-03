@@ -10,6 +10,8 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 require('./models/relations');
 const footerRoutes = require("./routes/footer/footer.js");
+const globalSettingRoutes = require("./routes/globalSettings/globalSetting.routes.js");
+const { GlobalSetting } = require("./models/GlobalSetting.js"); 
 
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
@@ -24,7 +26,7 @@ const faqRoutes = require("./routes/faq/index.js");
 const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
-const familyStatsRoutes = require("./routes/familyStats/familyStats.routes.js")
+//const familyStatsRoutes = require("./routes/familyStats/familyStats.routes.js")
 const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -63,42 +65,100 @@ app.use("/api", cmsSectionRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
 app.use("/api/footer", footerRoutes); 
-app.use("/api/family-stats", familyStatsRoutes); 
+//app.use("/api/family-stats", familyStatsRoutes); 
 app.use("/api/button", buttonAppointRoutes); 
+app.use("/api/global-settings", globalSettingRoutes);
 
-app.post("/api/book-consultation", async (req, res) => {
-   console.log("BODY RECEIVED:", req.body);
-  const { name, country, city, mobile, requirement } = req.body;
+// app.post("/api/book-consultation", async (req, res) => {
+//    console.log("BODY RECEIVED:", req.body);
+//   const { name, country, city, mobile, requirement } = req.body;
 
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
 
-    await transporter.sendMail({
-      from: `"Consultation Form" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: "New Consultation Request",
-      html: `
-        <h3>New Booking Received</h3>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Country:</b> ${country}</p>
-        <p><b>City:</b> ${city}</p>
-        <p><b>Mobile:</b> ${mobile}</p>
-        <p><b>Requirement:</b> ${requirement}</p>
-      `,
-    });
+//     await transporter.sendMail({
+//       from: `"Consultation Form" <${process.env.EMAIL_USER}>`,
+//       to: process.env.EMAIL_USER,
+//       subject: "New Consultation Request",
+//       html: `
+//         <h3>New Booking Received</h3>
+//         <p><b>Name:</b> ${name}</p>
+//         <p><b>Country:</b> ${country}</p>
+//         <p><b>City:</b> ${city}</p>
+//         <p><b>Mobile:</b> ${mobile}</p>
+//         <p><b>Requirement:</b> ${requirement}</p>
+//       `,
+//     });
 
-    res.status(200).json({ success: true, message: "Email sent" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Email failed" });
-  }
-});
+//     res.status(200).json({ success: true, message: "Email sent" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Email failed" });
+//   }
+// });
+
+
+// app.post("/api/book-consultation", async (req, res) => {
+//   console.log("BODY RECEIVED:", req.body);
+
+//   const { name, country, city, mobile, requirement } = req.body;
+
+//   try {
+//     // ✅ Get global settings from DB
+//     const settings = await GlobalSetting.findOne();
+
+//     if (!settings) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Email settings not configured",
+//       });
+//     }
+
+//     // ✅ Create transporter using DB values
+//     const transporter = nodemailer.createTransport({
+//       host: settings.email_host,           // smtp.gmail.com
+//       port: settings.email_port,           // 587
+//       secure: false,                       // true for 465, false for 587
+//       auth: {
+//         user: settings.email_user,
+//         pass: settings.email_pass,
+//       },
+//     });
+
+//     // ✅ Send mail
+//     await transporter.sendMail({
+//       from: `"Consultation Form" <${settings.email_user}>`,
+//       to: settings.admin_email,             // or contact_email
+//       subject: "New Consultation Request",
+//       html: `
+//         ${settings.email_template_html || ""}
+//         <h3>New Booking Received</h3>
+//         <p><b>Name:</b> ${name}</p>
+//         <p><b>Country:</b> ${country}</p>
+//         <p><b>City:</b> ${city}</p>
+//         <p><b>Mobile:</b> ${mobile}</p>
+//         <p><b>Requirement:</b> ${requirement}</p>
+//       `,
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Email sent successfully",
+//     });
+//   } catch (error) {
+//     console.error("EMAIL ERROR:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Email failed",
+//     });
+//   }
+// });
 
 sequelize
   .sync()
