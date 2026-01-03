@@ -145,11 +145,10 @@ const ManageDoctors = () => {
     }
   };
 
-  /* SELECTED HOSPITAL NAMES */
   const selectedHospitalNames = hospitals
     .filter((h) => form.hospitals.includes(h.id))
     .map((h) => h.name)
-    .join(", ");
+    .join("");
 
   return (
     <div className="p-6">
@@ -193,7 +192,7 @@ const ManageDoctors = () => {
                 <td className="p-3">{d.specialty}</td>
                 <td className="p-3">{d.experience || "-"}</td>
                 <td className="p-3 text-xs text-gray-600">
-                  {d.hospitals?.map((h) => h.name).join(", ") || "-"}
+                  {d.hospitals?.map((h) => h.name).join("") || "-"}
                 </td>
                 <td className="p-3">
                   {d.city}, {d.country}
@@ -230,7 +229,6 @@ const ManageDoctors = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* NAME */}
             <Input
               placeholder="Doctor Name *"
               value={form.name}
