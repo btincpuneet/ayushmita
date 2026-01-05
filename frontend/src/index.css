@@ -100,4 +100,94 @@ body {
     margin: 0;
     list-style: none;
     text-align: center;
+}
+
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+  display: none !important;
+  visibility: hidden !important;
 } 
+
+#google_translate_element {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+}
+.goog-te-gadget img {
+ display:none;
+}
+/* ===============================
+   GOOGLE TRANSLATE – FULL FIX
+================================ */
+
+/* Hide Google branding */
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0 !important;
+}
+
+/* ===============================
+   MAIN DROPDOWN BUTTON
+================================ */
+#google_translate_element .goog-te-gadget-simple {
+  display: inline-flex !important;
+  align-items: center;
+  padding: 7px 12px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+  cursor: pointer;
+  margin-top:6px;
+}
+
+#google_translate_element .goog-te-gadget-simple a {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px !important;
+  font-weight: 500;
+  color: #111827 !important;
+  text-decoration: none !important;
+}
+
+/* ===============================
+   DROPDOWN MENU
+================================ */
+.goog-te-menu-frame {
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15) !important;
+}
+
+.goog-te-menu2 {
+  border: none !important;
+  padding: 6px 0 !important;
+}
+
+/* ===============================
+   REMOVE ">" ARROWS (REAL FIX)
+================================ */
+.goog-te-menu2-item div::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* ===============================
+   FIX OPTION TEXT STYLING
+================================ */
+.goog-te-menu2-item div,
+.goog-te-menu2-item div span {
+  color: #111827 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+
+
+
+
+
+

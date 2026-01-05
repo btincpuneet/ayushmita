@@ -5,8 +5,10 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/adminui/", 
+
   server: {
-    host: true, // ✅ safer than "::"
+    host: true, 
     port: 8080,
   },
 

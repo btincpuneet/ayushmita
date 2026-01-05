@@ -53,7 +53,7 @@ const Header: React.FC = () => {
             <img src={Logo} alt="Company Logo" className="w-25" />
           </Link>
 
-          <div className="hidden lg:flex flex-1 justify-end">
+          <div className="hidden lg:flex flex-1 justify-start" style={{ marginLeft: '12%' }}>
             <ul className="flex gap-[40px] items-center">
               {navItems.map((item) => (
                 <li key={item.id}>
@@ -85,12 +85,10 @@ const Header: React.FC = () => {
                 </Link>
               )}
 
-              <LanguageSelector />
-            </ul>
+               </ul>
           </div>
 
           <div className="lg:hidden flex items-center gap-2">
-            <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 text-gray-700 hover:bg-gray-100 rounded-md"
