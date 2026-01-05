@@ -59,8 +59,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       toast.error("Failed to copy");
     }
   };
-
-  // Insert image alignment helper
   const insertImageWithAlignment = (alignment: "left" | "center" | "right") => {
     const url = prompt("Enter image URL:");
     if (!url) return;
@@ -127,7 +125,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       </div>
 
       {/* VISUAL MODE */}
-      {/* {mode === "visual" && (
+      {mode === "visual" && (
         <div className="border rounded-lg overflow-hidden bg-card shadow-card ckeditor-container">
           <CKEditor
             editor={ClassicEditor}
@@ -185,7 +183,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             }}
           />
         </div>
-      )} */}
+      )}
 
       {/* HTML MODE */}
       {mode === "html" && (

@@ -34,7 +34,6 @@ export default function ManageTopPartnerHospitals() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ---------------- FETCH ----------------
   const fetchHospitals = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -48,13 +47,11 @@ export default function ManageTopPartnerHospitals() {
     fetchHospitals();
   }, []);
 
-  // ---------------- INPUT ----------------
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  // ---------------- CREATE ----------------
   const handleCreate = () => {
     setEditing(null);
     setForm(emptyForm);
@@ -62,7 +59,6 @@ export default function ManageTopPartnerHospitals() {
     setOpen(true);
   };
 
-  // ---------------- EDIT ----------------
   const handleEdit = (item: any) => {
     setEditing(item.id);
     setForm({
@@ -78,7 +74,6 @@ export default function ManageTopPartnerHospitals() {
     setOpen(true);
   };
 
-  // ---------------- DELETE ----------------
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this hospital?")) return;
     try {
@@ -90,7 +85,6 @@ export default function ManageTopPartnerHospitals() {
     }
   };
 
-  // ---------------- SUBMIT ----------------
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -120,13 +114,11 @@ export default function ManageTopPartnerHospitals() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold">Manage Top Partner Hospitals</h1>
         <Button onClick={handleCreate}>Add Hospital</Button>
       </div>
 
-      {/* TABLE */}
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm">
           <thead className="bg-gray-100">
@@ -183,7 +175,6 @@ export default function ManageTopPartnerHospitals() {
         </table>
       </div>
 
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -207,7 +198,6 @@ export default function ManageTopPartnerHospitals() {
               <Input name="hospital_beds" placeholder="Beds" value={form.hospital_beds} onChange={handleChange} />
             </div>
 
-            {/* RICH TEXT */}
             <RichTextEditor
               label="Hospital Description"
               value={form.description_html}
@@ -218,7 +208,6 @@ export default function ManageTopPartnerHospitals() {
               showWordCount
             />
 
-            {/* PREVIEW */}
             {form.description_html && (
               <div className="border rounded-lg p-4">
                 <p className="text-xs font-semibold mb-2 text-gray-500">
