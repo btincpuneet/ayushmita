@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+
 import Home from "./pages/Home";
 import HospitalPage from "./pages/HospitalPage";
 import TreatmentsLandlingPage from "./pages/TreatmentsLandlingPage";
@@ -15,12 +16,18 @@ import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
-import Header from "./components/Header";
+
+import { useSyncRTLWithGoogleTranslate } from "./hooks/useSyncRTLWithGoogleTranslate";
+
 const App: React.FC = () => {
+  // ✅ IMPORTANT: call the hook
+  useSyncRTLWithGoogleTranslate();
+
   return (
     <HelmetProvider>
       <ScrollToTop />
       <GoogleTranslate />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />

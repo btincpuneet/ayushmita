@@ -1,7 +1,5 @@
 import axios from "axios";
-
-const API_BASE = 'http://127.0.0.1:5001';
-
+import { API_BASE } from "../config/api";
 export const footerService = {
   getAll: () => {
     return axios.get(`${API_BASE}/api/footer`);
