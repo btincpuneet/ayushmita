@@ -33,6 +33,8 @@ export default function ManageTopPartnerHospitals() {
   const [form, setForm] = useState<any>(emptyForm);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
 
   const fetchHospitals = async () => {
     try {
@@ -46,6 +48,38 @@ export default function ManageTopPartnerHospitals() {
   useEffect(() => {
     fetchHospitals();
   }, []);
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/countries`);
+        setCountries(res.data.data.map((c: any) => c.country));
+      } catch {
+        toast.error("Failed to load countries");
+      }
+    };
+
+    fetchCountries();
+  }, []);
+  useEffect(() => {
+    if (!form.country) {
+      setCities([]);
+      return;
+    }
+
+    const fetchCities = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/cities`, {
+          params: { country: form.country },
+        });
+        setCities(res.data.data.map((c: any) => c.city));
+      } catch {
+        toast.error("Failed to load cities");
+      }
+    };
+
+    fetchCities();
+  }, [form.country]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -186,10 +220,43 @@ export default function ManageTopPartnerHospitals() {
           <div className="space-y-4">
             <Input name="name" placeholder="Hospital Name" value={form.name} onChange={handleChange} />
 
-            <div className="grid grid-cols-2 gap-3">
+            {/* <div className="grid grid-cols-2 gap-3">
               <Input name="country" placeholder="Country" value={form.country} onChange={handleChange} />
               <Input name="city" placeholder="City" value={form.city} onChange={handleChange} />
+            </div> */}
+            <div className="grid grid-cols-2 gap-3">
+              <select
+                className="border rounded px-3 py-2 text-sm"
+                value={form.country}
+                onChange={(e) =>
+                  setForm({ ...form, country: e.target.value, city: "" })
+                }
+              >
+                <option value="">Select Country</option>
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="border rounded px-3 py-2 text-sm"
+                value={form.city}
+                disabled={!form.country}
+                onChange={(e) =>
+                  setForm({ ...form, city: e.target.value })
+                }
+              >
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
             </div>
+
 
             <Input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
 

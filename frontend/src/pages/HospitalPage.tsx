@@ -28,10 +28,41 @@ export default function Index() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
 
-  const cities = selectedCountry
-    ? citiesByCountry[selectedCountry] || []
-    : [];
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/countries`);
+        setCountries(res.data.data.map((c: any) => c.country));
+      } catch (err) {
+        console.error("Failed to fetch countries", err);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+  useEffect(() => {
+    if (!selectedCountry) {
+      setCities([]);
+      return;
+    }
+
+    const fetchCities = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/cities`, {
+          params: { country: selectedCountry },
+        });
+        setCities(res.data.data.map((c: any) => c.city));
+      } catch (err) {
+        console.error("Failed to fetch cities", err);
+      }
+    };
+
+    fetchCities();
+  }, [selectedCountry]);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -85,6 +116,18 @@ export default function Index() {
       <Header />
 
       <main className="min-h-screen">
+        {/* <HospitalPageHeader
+          title="Best Hospitals"
+          countries={countries}
+          cities={cities}
+          selectedCountry={selectedCountry}
+          selectedCity={selectedCity}
+          onCountryChange={(e) => {
+            setSelectedCountry(e.target.value);
+            setSelectedCity("");
+          }}
+          onCityChange={(e) => setSelectedCity(e.target.value)}
+        /> */}
         <HospitalPageHeader
           title="Best Hospitals"
           countries={countries}
@@ -101,8 +144,6 @@ export default function Index() {
         <section className="py-12">
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-              {/* LEFT */}
               <div className="lg:col-span-2">
                 {loading ? (
                   <p className="text-center text-gray-600">

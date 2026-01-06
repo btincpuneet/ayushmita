@@ -23,8 +23,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDown } from "lucide-react";
 
-const DOCTOR_API = `${API_BASE}/api/doctors`;
-const HOSPITAL_API = `${API_BASE}/api/hospitals`;
 
 interface Hospital {
   id: number;
@@ -70,6 +68,12 @@ const ManageDoctors = () => {
   const [editing, setEditing] = useState<Doctor | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const DOCTOR_API = `${API_BASE}/api/doctors`;
+  const HOSPITAL_API = `${API_BASE}/api/hospitals`;
+  const COUNTRY_API = `${API_BASE}/api/countries`;
+  const CITY_API = `${API_BASE}/api/cities`;
 
   const loadDoctors = async () => {
     const res = await axios.get(DOCTOR_API);
@@ -85,6 +89,39 @@ const ManageDoctors = () => {
     loadDoctors();
     loadHospitals();
   }, []);
+
+  useEffect(() => {
+    const loadCountries = async () => {
+      try {
+        const res = await axios.get(COUNTRY_API);
+        setCountries(res.data.data.map((c: any) => c.country));
+      } catch {
+        toast.error("Failed to load countries");
+      }
+    };
+
+    loadCountries();
+  }, []);
+  useEffect(() => {
+    if (!form.country) {
+      setCities([]);
+      setForm({ ...form, city: "" });
+      return;
+    }
+
+    const loadCities = async () => {
+      try {
+        const res = await axios.get(CITY_API, {
+          params: { country: form.country },
+        });
+        setCities(res.data.data.map((c: any) => c.city));
+      } catch {
+        toast.error("Failed to load cities");
+      }
+    };
+
+    loadCities();
+  }, [form.country]);
 
   const handleAdd = () => {
     setEditing(null);
@@ -105,6 +142,14 @@ const ManageDoctors = () => {
       doctor.image_url ? `${API_BASE}${doctor.image_url}` : null
     );
     setOpen(true);
+    if (doctor.country) {
+      axios
+        .get(CITY_API, { params: { country: doctor.country } })
+        .then((res) =>
+          setCities(res.data.data.map((c: any) => c.city))
+        );
+    }
+
   };
 
   const handleDelete = async (id: number) => {
@@ -118,7 +163,6 @@ const ManageDoctors = () => {
     }
   };
 
-  /* SAVE */
   const handleSubmit = async () => {
     const fd = new FormData();
 
@@ -150,9 +194,11 @@ const ManageDoctors = () => {
     .map((h) => h.name)
     .join("");
 
+
+
+
   return (
     <div className="p-6">
-      {/* HEADER */}
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Doctors</h1>
         <Button onClick={handleAdd}>+ Add Doctor</Button>
@@ -234,7 +280,7 @@ const ManageDoctors = () => {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
-             <div className="col-span-2">
+            <div className="col-span-2">
               <label className="text-sm font-medium mb-1 block">
                 Select Hospitals
               </label>
@@ -303,21 +349,38 @@ const ManageDoctors = () => {
               }
             />
 
-            <Input
-              placeholder="Country"
+            <select
+              className="border rounded px-3 py-2 text-sm"
               value={form.country}
               onChange={(e) =>
-                setForm({ ...form, country: e.target.value })
+                setForm({ ...form, country: e.target.value, city: "" })
               }
-            />
+            >
+              <option value="">Select Country</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
 
-            <Input
-              placeholder="City"
+
+            <select
+              className="border rounded px-3 py-2 text-sm"
               value={form.city}
+              disabled={!form.country}
               onChange={(e) =>
                 setForm({ ...form, city: e.target.value })
               }
-            />
+            >
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+
 
             <select
               className="border rounded px-3 py-2 text-sm"
@@ -369,7 +432,7 @@ const ManageDoctors = () => {
               }
             />
 
-            
+
             <div className="col-span-2">
               <RichTextEditor
                 label="Doctor Full Description"
@@ -380,7 +443,7 @@ const ManageDoctors = () => {
               />
             </div>
 
-            
+
             <Input
               placeholder="SEO Title"
               value={form.seo_title}
@@ -413,7 +476,7 @@ const ManageDoctors = () => {
               }
             />
 
-           
+
           </div>
 
           <DialogFooter>

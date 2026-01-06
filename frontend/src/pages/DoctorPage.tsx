@@ -12,13 +12,7 @@ import Pagination from "../components/Pagination";
 
 const ITEMS_PER_PAGE = 4;
 
-const countries: string[] = ["India", "Turkey", "UAE"];
 
-const citiesByCountry: Record<string, string[]> = {
-  India: ["Delhi", "Gurugram", "Mumbai", "Bengaluru"],
-  Turkey: ["Istanbul", "Ankara"],
-  UAE: ["Dubai", "Abu Dhabi"],
-};
 
 interface Doctor {
   id: number;
@@ -39,10 +33,9 @@ const DoctorsPage: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
 
-  const cities = selectedCountry
-    ? citiesByCountry[selectedCountry] || []
-    : [];
 
   useEffect(() => {
     const loadDoctors = async () => {
@@ -74,6 +67,38 @@ const DoctorsPage: React.FC = () => {
 
     loadDoctors();
   }, []);
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/countries`);
+        setCountries(res.data.data.map((c: any) => c.country));
+      } catch {
+        console.error("Failed to load countries");
+      }
+    };
+
+    fetchCountries();
+  }, []);
+  useEffect(() => {
+    if (!selectedCountry) {
+      setCities([]);
+      return;
+    }
+
+    const fetchCities = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/cities`, {
+          params: { country: selectedCountry },
+        });
+        setCities(res.data.data.map((c: any) => c.city));
+      } catch {
+        console.error("Failed to load cities");
+      }
+    };
+
+    fetchCities();
+  }, [selectedCountry]);
+
 
   const filteredDoctors = doctors.filter((doctor) => {
     return (

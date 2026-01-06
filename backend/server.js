@@ -26,7 +26,9 @@ const faqRoutes = require("./routes/faq/index.js");
 const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
-const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js")
+const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js");
+const countiesCitiesRoutes = require("./routes/countryCities/countiesCitiesRoutes.js");
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -66,7 +68,7 @@ app.use("/api", formRoutes);
 app.use("/api/footer", footerRoutes); 
 app.use("/api/button", buttonAppointRoutes); 
 app.use("/api/global-settings", globalSettingRoutes);
-
+app.use("/api", countiesCitiesRoutes);
 
 const fs = require("fs");
 const { Country, State, City } = require("country-state-city");
