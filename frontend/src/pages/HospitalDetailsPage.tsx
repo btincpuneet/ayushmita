@@ -42,7 +42,24 @@ function PrevArrow({ onClick }: any) {
 
 function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/global-settings`);
+        if (res.data?.success) {
+          setWhatsAppNumber(res.data.data.whatsapp_number);
+        }
+      } catch (error) {
+        console.error("Failed to fetch WhatsApp number", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  if (!whatsAppNumber) return null;
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -210,7 +227,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
             >
               Book Appointment
             </button>
-            <button className="px-6 py-3 bg-green-500 flex gap-3 text-white rounded-lg "
+            {/* <button className="px-6 py-3 bg-green-500 flex gap-3 text-white rounded-lg "
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 500,
@@ -231,7 +248,33 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                 </defs>
               </svg>
               </span> Chat Now
-            </button>
+            </button> */}
+            <a
+              href={`https://wa.me/91${whatsAppNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button
+                className="px-6 py-3 bg-green-500 flex gap-3 text-white rounded-lg"
+                style={{
+                  fontFamily: "Ubuntu, sans-serif",
+                  fontWeight: 500,
+                  fontSize: "16px",
+                  lineHeight: "100%",
+                  letterSpacing: "2%",
+                }}
+              >
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M7 0C10.866 0 14 3.134 14 7c0 3.866-3.134 7-7 7a6.96 6.96 0 0 1-3.52-.95L0 14l.95-3.52A6.96 6.96 0 0 1 0 7C0 3.134 3.134 0 7 0Z"
+                      fill="white"
+                    />
+                  </svg>
+                </span>
+                Chat Now
+              </button>
+            </a>
           </div>
         </div>
       </div>

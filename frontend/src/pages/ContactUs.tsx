@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_BASE } from "../config/api";
 import Swal from "sweetalert2";
 // import "../css/contact.css";
+import UseSeo from '../hooks/useSeo';
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -12,7 +13,20 @@ const ContactUs = () => {
   const [cmsContent, setCmsContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [seoData, setSeoData] = useState("")
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/contact-us`);
+        setSeoData(res.data.data[0]);
+        console.log("12", res.data.data[0].seo_title)
+      } catch (error) {
+        console.error("Failed to load contact CMS content", error);
+      }
+    };
 
+    fetchStats();
+  }, []);
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -21,6 +35,7 @@ const ContactUs = () => {
     treatment: "",
     message: "",
   });
+
 
   const [errors, setErrors] = useState({});
 
@@ -34,6 +49,7 @@ const ContactUs = () => {
       if (res.data?.data?.length > 0) {
         setCmsContent(res.data.data[0].content_html);
       }
+
     } catch (error) {
       console.error("Failed to load contact CMS content", error);
     } finally {
@@ -164,6 +180,8 @@ const ContactUs = () => {
       setSubmitting(false);
     }
   };
+
+  UseSeo(seoData.seo_title, seoData.seo_description, seoData.seo_keywords);
 
   return (
     <>

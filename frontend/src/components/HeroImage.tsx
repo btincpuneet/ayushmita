@@ -3,22 +3,48 @@ import { API_BASE } from "../config/api";
 import { useTranslation } from "react-i18next";
 import ModalAppointment from "../components/Treatment/ModalAppointment"
 import "../css/responsive.css";
+import axios from "axios";
+import useSeo from '../hooks/useSeo';
+
 const HeroImage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split("-")[0] || "en";
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [banner, setBanner] = useState(null);
+  const [seoData, setSeoData] = useState({
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+  });
   useEffect(() => {
-    fetch(`${API_BASE}/api/hero-banners`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && data.data.length > 0) {
-          setBanner(data.data[0]); // get first hero banner
-        }
-      })
-      .catch((err) => console.log("Hero fetch error:", err));
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/global-settings`);
+        setSeoData(res.data.data);
+      } catch (error) {
+        console.error("Failed to load contact CMS content", error);
+      }
+    };
+
+    fetchStats();
   }, []);
+  useEffect(() => {
+    const fetchHeroBanner = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/hero-banners`);
+
+        if (res.data?.success && res.data?.data?.length > 0) {
+          setBanner(res.data.data[0]);
+        }
+      } catch (error) {
+        console.error("Hero fetch error:", error);
+      }
+    };
+
+    fetchHeroBanner();
+  }, []);
+  useSeo(seoData.seo_title, seoData.seo_description, seoData.seo_keywords);
+
 
   if (!banner) return null;
 
@@ -30,6 +56,7 @@ const HeroImage = () => {
     button_text,
     button_url,
   } = banner;
+
 
   return (
     <>
@@ -50,7 +77,6 @@ const HeroImage = () => {
         <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">
           <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-8">
 
-            {/* TEXT SECTION */}
             <div className="sticky-item-over-image">
               <p className="text-[#F0A324] mb-4" style={{
                 fontFamily: "Roboto, sans-serif",

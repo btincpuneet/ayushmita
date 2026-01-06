@@ -144,7 +144,7 @@ export default function ManageTopPartnerHospitals() {
                   </td>
 
                   <td className="p-2 border font-semibold">{h.name}</td>
-                  <td className="p-2 border">{h.city}, {h.country}</td>
+                  <td className="p-2 border">{h.city} {h.country}</td>
                   <td className="p-2 border text-center">{h.hospital_beds || "-"}</td>
                   <td className="p-2 border text-center">{h.founded_year || "-"}</td>
 

@@ -18,6 +18,18 @@ export default function TreatmentDetailsPage() {
   const [openModal, setOpenModal] = useState(false);
   const [treatment, setTreatment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
+  const fetchGlobalSettings = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success) {
+        setWhatsAppNumber(res.data.data.whatsapp_number);
+      }
+    } catch (error) {
+      console.error("Failed to fetch WhatsApp number", error);
+    }
+  };
+
 
   const fetchTreatment = async () => {
     try {
@@ -35,6 +47,8 @@ export default function TreatmentDetailsPage() {
 
   useEffect(() => {
     fetchTreatment();
+    fetchGlobalSettings();
+
   }, [slug]);
 
   if (loading) return <p className="p-6 text-xl">Loading...</p>;
@@ -90,7 +104,7 @@ export default function TreatmentDetailsPage() {
                 Book An Appointment
               </button>
 
-              <button
+              {/* <button
                 className="bg-[#25CB68] hover:bg-green-600 text-[#FFFFFF]  px-[24px] py-[12px] rounded-lg transition"
                 style={{
                   display: "flex",
@@ -109,7 +123,37 @@ export default function TreatmentDetailsPage() {
                   </defs>
                 </svg>
                 </span>  Chat Now
-              </button>
+              </button> */}
+              {whatsAppNumber && (
+                <a
+                  href={`https://wa.me/91${whatsAppNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button
+                    className="bg-[#25CB68] hover:bg-green-600 text-white px-[24px] py-[12px] rounded-lg transition"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      fontFamily: "Ubuntu",
+                      fontWeight: 500,
+                      fontSize: "16px",
+                    }}
+                  >
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path
+                          d="M7 0C10.866 0 14 3.134 14 7c0 3.866-3.134 7-7 7a6.96 6.96 0 0 1-3.52-.95L0 14l.95-3.52A6.96 6.96 0 0 1 0 7C0 3.134 3.134 0 7 0Z"
+                          fill="white"
+                        />
+                      </svg>
+                    </span>
+                    Chat Now
+                  </button>
+                </a>
+              )}
+
             </div>
           </div>
         </div>

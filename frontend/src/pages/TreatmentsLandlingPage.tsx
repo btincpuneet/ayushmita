@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import BreadCrumb from "../components/Treatment/BreadCrumb";
+import useSeo from '../hooks/useSeo';
 
 interface Treatment {
   id: number;
@@ -29,12 +30,18 @@ export default function TreatmentsLandingPage() {
   const [diseases, setDiseases] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Cancer");
-
+  const [seoData, setSeoData] = useState({
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+  });
+  ;
   const fetchData = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/diseases`);
       if (res.data?.success) {
         setDiseases(res.data.data);
+        setSeoData(res.data[0].data);
       }
       setLoading(false);
     } catch (error) {
@@ -64,6 +71,8 @@ export default function TreatmentsLandingPage() {
       sectionRefs.current[match.slug]?.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  useSeo(seoData.seo_title, seoData.seo_description, seoData.seo_keywords);
 
   useEffect(() => {
     if (!diseases.length) return;
@@ -110,8 +119,8 @@ export default function TreatmentsLandingPage() {
             >
               <div
                 className={`${disease.slug === "cardiology"
-                    ? "w-full px-4 middel-sections-mains-universe"
-                    : "max-w-7xl mx-auto middel-sections-mains"
+                  ? "w-full px-4 middel-sections-mains-universe"
+                  : "max-w-7xl mx-auto middel-sections-mains"
                   }`}
               >
                 <div

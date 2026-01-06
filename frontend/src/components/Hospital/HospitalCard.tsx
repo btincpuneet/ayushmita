@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MapPin,
   Calendar,
@@ -20,6 +20,8 @@ interface Hospital {
   hospital_beds: number;
   slug: string;
 }
+import axios from "axios";
+import { API_BASE } from "../../config/api";
 
 interface HospitalCardProps {
   hospital: Hospital;
@@ -28,10 +30,26 @@ interface HospitalCardProps {
 const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
 
   function handleViewMore() {
     navigate('/hospitals');
   }
+  const fetchGlobalSettings = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success) {
+        setWhatsAppNumber(res.data.data.whatsapp_number);
+      }
+    } catch (error) {
+      console.error("Failed to fetch WhatsApp number", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGlobalSettings();
+  }, []);
+
   return (
     <>
       <article className="bg-white rounded-xl border border-[#EFF3F6] hover:shadow-lg transition duration-200 p-4">
@@ -68,14 +86,14 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
             <div className="flex space-y-2 items-start gap-2 mb-1">
               <MapPin size={18} className="text-[#F0A324] mt-0.5" />
               <p style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 400,
-  fontStyle: "normal",
-  fontSize: "14px",
-  lineHeight: "26px",
-  letterSpacing: "0%",
-}}
->{hospital.address}</p>
+                fontFamily: "Ubuntu, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "26px",
+                letterSpacing: "0%",
+              }}
+              >{hospital.address}</p>
             </div>
 
 
@@ -146,8 +164,13 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                 >
                   Book Appointment
                 </button>
-
-                <button className="px-5 py-3 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition btn-sec-list"
+                {whatsAppNumber && (
+                  <a
+                    href={`https://wa.me/91${whatsAppNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button className="px-5 py-3 rounded-md bg-[#25CB68] text-white font-medium flex items-center gap-2 hover:bg-green-600 transition btn-sec-list"
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: 600,
@@ -168,6 +191,10 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                   </span>
                   Chat Now
                 </button>
+                  </a>
+                )}
+
+
               </div>
               <div className="flex items-center mt-4 ">
                 <Link
@@ -192,10 +219,10 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
           </div>
         </div>
         <ModalAppointment
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-      </article>
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </article >
     </>
 
   );
