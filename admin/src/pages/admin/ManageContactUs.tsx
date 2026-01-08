@@ -31,7 +31,8 @@ const ManageContactUs = () => {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState(emptyForm);
-
+  const cleanHtml = (html: string) =>
+    html.replace(/undefined(http)/g, "$1");
   useEffect(() => {
     loadSections();
   }, []);
@@ -51,18 +52,18 @@ const ManageContactUs = () => {
     setOpen(true);
   };
 
-  const handleEdit = (item: any) => {
-    setEditing(item);
-    setForm({
-      title: item.title,
-    content_html: item.content_html || "", 
-      seo_title: item.seo_title || "",
-      seo_description: item.seo_description || "",
-      seo_keywords: item.seo_keywords || "",
-      status: item.status,
-    });
-    setOpen(true);
-  };
+const handleEdit = (item: any) => {
+  setEditing(item);
+  setForm({
+    title: item.title,
+    content_html: cleanHtml(item.content_html || ""),
+    seo_title: item.seo_title || "",
+    seo_description: item.seo_description || "",
+    seo_keywords: item.seo_keywords || "",
+    status: item.status,
+  });
+  setOpen(true);
+};
 
   const handleSubmit = async () => {
     if (!form.title || !form.content_html) {

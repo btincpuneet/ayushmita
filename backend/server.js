@@ -28,6 +28,7 @@ const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
 const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js");
 const countiesCitiesRoutes = require("./routes/countryCities/countiesCitiesRoutes.js");
+const editorUploadRoutes = require("./routes/upload/imageUpload.routes.js");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -37,7 +38,8 @@ const corsOptions = {
     'http://localhost:5173',
     'http://localhost:8080',
     'http://localhost:8081',
-    'http://13.203.47.236'
+    'http://13.203.47.236',
+    'http://127.0.0.1:8080'
   ],
   methods: 'GET,POST,PUT,PATCH,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
@@ -69,6 +71,7 @@ app.use("/api/footer", footerRoutes);
 app.use("/api/button", buttonAppointRoutes); 
 app.use("/api/global-settings", globalSettingRoutes);
 app.use("/api", countiesCitiesRoutes);
+app.use("/api", editorUploadRoutes);
 
 const fs = require("fs");
 const { Country, State, City } = require("country-state-city");

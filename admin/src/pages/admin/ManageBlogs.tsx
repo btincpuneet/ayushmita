@@ -203,7 +203,7 @@ export default function ManageBlogs() {
       ))}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Blog" : "Create Blog"}
@@ -299,7 +299,6 @@ export default function ManageBlogs() {
           </div>
 
           <RichTextEditor
-            label="Content *"
             value={form.description_html}
             onChange={(v) =>
               setForm({ ...form, description_html: v })
