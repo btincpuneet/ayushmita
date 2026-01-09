@@ -203,7 +203,7 @@ export default function ManageBlogs() {
       ))}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Blog" : "Create Blog"}

@@ -24,6 +24,11 @@ const emptyForm = {
   founded_year: "",
   hospital_beds: "",
   description_html: "",
+
+  seo_title: "",
+  seo_description: "",
+  seo_keywords: "",
+  canonical_url: "",
 };
 
 export default function ManageTopPartnerHospitals() {
@@ -35,6 +40,7 @@ export default function ManageTopPartnerHospitals() {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+
 
   const fetchHospitals = async () => {
     try {
@@ -48,42 +54,32 @@ export default function ManageTopPartnerHospitals() {
   useEffect(() => {
     fetchHospitals();
   }, []);
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/countries`);
-        setCountries(res.data.data.map((c: any) => c.country));
-      } catch {
-        toast.error("Failed to load countries");
-      }
-    };
 
-    fetchCountries();
+  useEffect(() => {
+    axios
+      .get(`${API_BASE}/api/countries`)
+      .then((res) => setCountries(res.data.data.map((c: any) => c.country)))
+      .catch(() => toast.error("Failed to load countries"));
   }, []);
+
   useEffect(() => {
     if (!form.country) {
       setCities([]);
       return;
     }
 
-    const fetchCities = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/cities`, {
-          params: { country: form.country },
-        });
-        setCities(res.data.data.map((c: any) => c.city));
-      } catch {
-        toast.error("Failed to load cities");
-      }
-    };
-
-    fetchCities();
+    axios
+      .get(`${API_BASE}/api/cities`, {
+        params: { country: form.country },
+      })
+      .then((res) => setCities(res.data.data.map((c: any) => c.city)))
+      .catch(() => toast.error("Failed to load cities"));
   }, [form.country]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prev: any) => ({ ...prev, [name]: value }));
   };
 
   const handleCreate = () => {
@@ -103,6 +99,11 @@ export default function ManageTopPartnerHospitals() {
       founded_year: item.founded_year || "",
       hospital_beds: item.hospital_beds || "",
       description_html: item.description_html || "",
+
+      seo_title: item.seo_title || "",
+      seo_description: item.seo_description || "",
+      seo_keywords: item.seo_keywords || "",
+      canonical_url: item.canonical_url || "",
     });
     setFile(null);
     setOpen(true);
@@ -124,9 +125,7 @@ export default function ManageTopPartnerHospitals() {
       setLoading(true);
 
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) =>
-        fd.append(k, v as string)
-      );
+      Object.entries(form).forEach(([k, v]) => fd.append(k, v as string));
       if (file) fd.append("image", file);
 
       if (editing) {
@@ -145,6 +144,7 @@ export default function ManageTopPartnerHospitals() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="p-6 space-y-6">
@@ -176,17 +176,13 @@ export default function ManageTopPartnerHospitals() {
                       className="w-16 h-16 rounded object-cover"
                     />
                   </td>
-
                   <td className="p-2 border font-semibold">{h.name}</td>
-                  <td className="p-2 border">{h.city} {h.country}</td>
+                  <td className="p-2 border">{h.city}, {h.country}</td>
                   <td className="p-2 border text-center">{h.hospital_beds || "-"}</td>
                   <td className="p-2 border text-center">{h.founded_year || "-"}</td>
-
                   <td className="p-2 border">
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => handleEdit(h)}>
-                        Edit
-                      </Button>
+                      <Button size="sm" onClick={() => handleEdit(h)}>Edit</Button>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -209,8 +205,9 @@ export default function ManageTopPartnerHospitals() {
         </table>
       </div>
 
+      
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Hospital" : "Add Hospital"}
@@ -220,23 +217,15 @@ export default function ManageTopPartnerHospitals() {
           <div className="space-y-4">
             <Input name="name" placeholder="Hospital Name" value={form.name} onChange={handleChange} />
 
-            {/* <div className="grid grid-cols-2 gap-3">
-              <Input name="country" placeholder="Country" value={form.country} onChange={handleChange} />
-              <Input name="city" placeholder="City" value={form.city} onChange={handleChange} />
-            </div> */}
             <div className="grid grid-cols-2 gap-3">
               <select
                 className="border rounded px-3 py-2 text-sm"
                 value={form.country}
-                onChange={(e) =>
-                  setForm({ ...form, country: e.target.value, city: "" })
-                }
+                onChange={(e) => setForm({ ...form, country: e.target.value, city: "" })}
               >
                 <option value="">Select Country</option>
-                {countries.map((country) => (
-                  <option key={country} value={country}>
-                    {country}
-                  </option>
+                {countries.map((c) => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
 
@@ -244,19 +233,14 @@ export default function ManageTopPartnerHospitals() {
                 className="border rounded px-3 py-2 text-sm"
                 value={form.city}
                 disabled={!form.country}
-                onChange={(e) =>
-                  setForm({ ...form, city: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
               >
                 <option value="">Select City</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
+                {cities.map((c) => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
-
 
             <Input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
 
@@ -268,32 +252,21 @@ export default function ManageTopPartnerHospitals() {
             <RichTextEditor
               label="Hospital Description"
               value={form.description_html}
-              onChange={(html) =>
-                setForm({ ...form, description_html: html })
-              }
+              onChange={(html) => setForm({ ...form, description_html: html })}
               minHeight={250}
               showWordCount
             />
 
-            {form.description_html && (
-              <div className="border rounded-lg p-4">
-                <p className="text-xs font-semibold mb-2 text-gray-500">
-                  Live Preview
-                </p>
-                <div
-                  className="prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{
-                    __html: form.description_html,
-                  }}
-                />
-              </div>
-            )}
+            
+            <div className="border rounded-lg p-4 space-y-3">
+              <p className="text-sm font-semibold text-gray-600">SEO Settings</p>
+              <Input name="seo_title" placeholder="SEO Title" value={form.seo_title} onChange={handleChange} />
+              <Input name="seo_description" placeholder="SEO Description" value={form.seo_description} onChange={handleChange} />
+              <Input name="seo_keywords" placeholder="SEO Keywords" value={form.seo_keywords} onChange={handleChange} />
+              <Input name="canonical_url" placeholder="Canonical URL" value={form.canonical_url} onChange={handleChange} />
+            </div>
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
+            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </div>
 
           <DialogFooter>

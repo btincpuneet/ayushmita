@@ -7,6 +7,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+
 const makeSlug = (text) =>
   text
     .toLowerCase()
@@ -15,6 +16,7 @@ const makeSlug = (text) =>
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
 
+/* ================= CREATE ================= */
 const createHospital = async (req, res) => {
   try {
     const {
@@ -25,12 +27,18 @@ const createHospital = async (req, res) => {
       founded_year,
       hospital_beds,
       description_html,
+
+      seo_title,
+      seo_description,
+      seo_keywords,
+      canonical_url,
+      status,
     } = req.body;
 
     if (!name || !country || !city || !address) {
       return res.status(400).json({
         success: false,
-        message: "Name, country, city & address are required.",
+        message: "Name, country, city & address are required",
       });
     }
 
@@ -45,7 +53,7 @@ const createHospital = async (req, res) => {
     const filePath = path.join(uploadDir, fileName);
     fs.writeFileSync(filePath, req.file.buffer);
 
-    const newHospital = await TopPartnerHospital.create({
+    const hospital = await TopPartnerHospital.create({
       name,
       slug: makeSlug(name),
       country,
@@ -54,22 +62,29 @@ const createHospital = async (req, res) => {
       founded_year,
       hospital_beds,
       description_html,
+
+      // ✅ SEO fields
+      seo_title,
+      seo_description,
+      seo_keywords,
+      canonical_url,
+
+      status: status || "active",
       image_url: `/uploads/hospitals/${fileName}`,
     });
 
-    res.status(201).json({ success: true, data: newHospital });
+    res.status(201).json({ success: true, data: hospital });
   } catch (err) {
     console.error("Create Hospital Error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
+/* ================= GET BY SLUG ================= */
 const getHospitalBySlug = async (req, res) => {
   try {
-    const { slug } = req.params;
-
     const hospital = await TopPartnerHospital.findOne({
-      where: { slug },
+      where: { slug: req.params.slug, status: "active" },
     });
 
     if (!hospital) {
@@ -79,34 +94,39 @@ const getHospitalBySlug = async (req, res) => {
       });
     }
 
-    res.status(200).json({ success: true, data: hospital });
+    res.json({ success: true, data: hospital });
   } catch (err) {
-    console.error("Get Hospital By Slug Error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
+/* ================= GET ALL ================= */
 const getAllHospitals = async (req, res) => {
   try {
-    const hospitals = await TopPartnerHospital.findAll();
-    res.status(200).json({ success: true, data: hospitals });
+    const hospitals = await TopPartnerHospital.findAll({
+      order: [["id", "DESC"]],
+    });
+
+    res.json({ success: true, data: hospitals });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
+/* ================= GET BY ID ================= */
 const getHospitalById = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
     if (!hospital)
       return res.status(404).json({ success: false, message: "Not found" });
 
-    res.status(200).json({ success: true, data: hospital });
+    res.json({ success: true, data: hospital });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
+/* ================= UPDATE ================= */
 const updateHospital = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
@@ -117,8 +137,10 @@ const updateHospital = async (req, res) => {
 
     if (req.file) {
       const fileName = `hospital_${Date.now()}.jpg`;
-      const filePath = path.join(uploadDir, fileName);
-      fs.writeFileSync(filePath, req.file.buffer);
+      fs.writeFileSync(
+        path.join(uploadDir, fileName),
+        req.file.buffer
+      );
       imagePath = `/uploads/hospitals/${fileName}`;
     }
 
@@ -127,7 +149,9 @@ const updateHospital = async (req, res) => {
       image_url: imagePath,
     };
 
-    if (req.body.name) updateData.slug = makeSlug(req.body.name);
+    if (req.body.name) {
+      updateData.slug = makeSlug(req.body.name);
+    }
 
     await hospital.update(updateData);
 
@@ -137,7 +161,6 @@ const updateHospital = async (req, res) => {
   }
 };
 
-
 const deleteHospital = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
@@ -145,7 +168,6 @@ const deleteHospital = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
 
     await hospital.destroy();
-
     res.json({ success: true, message: "Deleted" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -158,5 +180,5 @@ module.exports = {
   getHospitalById,
   updateHospital,
   deleteHospital,
-  getHospitalBySlug
+  getHospitalBySlug,
 };

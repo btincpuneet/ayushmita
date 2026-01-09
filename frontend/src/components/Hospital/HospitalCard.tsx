@@ -20,8 +20,7 @@ interface Hospital {
   hospital_beds: number;
   slug: string;
 }
-import axios from "axios";
-import { API_BASE } from "../../config/api";
+
 
 interface HospitalCardProps {
   hospital: Hospital;
@@ -32,23 +31,6 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
 
-  function handleViewMore() {
-    navigate('/hospitals');
-  }
-  const fetchGlobalSettings = async () => {
-    try {
-      const res = await axios.get(`${API_BASE}/api/global-settings`);
-      if (res.data?.success) {
-        setWhatsAppNumber(res.data.data.whatsapp_number);
-      }
-    } catch (error) {
-      console.error("Failed to fetch WhatsApp number", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchGlobalSettings();
-  }, []);
 
   return (
     <>

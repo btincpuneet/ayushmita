@@ -136,9 +136,7 @@ const ManageDiseases = () => {
     }
   };
 
-  // ----------------------------------------
-  // Delete
-  // ----------------------------------------
+  
   const handleDelete = async (id) => {
     if (!confirm("Delete this disease?")) return;
     try {
@@ -152,13 +150,13 @@ const ManageDiseases = () => {
 
   return (
     <div className="p-6">
-      {/* Header */}
+     
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Diseases</h1>
         <Button onClick={handleAdd}>+ Add Disease</Button>
       </div>
 
-      {/* Table */}
+    
       <div className="bg-white shadow rounded">
         <table className="w-full text-left">
           <thead className="bg-gray-100">
@@ -218,9 +216,9 @@ const ManageDiseases = () => {
         )}
       </div>
 
-      {/* Dialog */}
+     
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Disease" : "Add New Disease"}
@@ -251,7 +249,6 @@ const ManageDiseases = () => {
               }
             />
 
-            {/* ✅ Rich Text Editor */}
             <RichTextEditor
               label="Detailed Description"
               value={form.description_html}
@@ -292,7 +289,6 @@ const ManageDiseases = () => {
               <option value={0}>Inactive</option>
             </select>
 
-            {/* Image */}
             <div>
               <Input
                 type="file"

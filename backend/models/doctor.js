@@ -88,7 +88,6 @@ const Doctor = sequelize.define(
       allowNull: true,
     },
 
-    /* STATUS */
     status: {
       type: DataTypes.TINYINT,
       defaultValue: 1,

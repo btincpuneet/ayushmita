@@ -4,6 +4,7 @@ import axios from "axios";
 import Slider from "react-slick";
 import { ArrowLeft, ArrowRight, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import useSeo from "../hooks/useSeo";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -26,6 +27,11 @@ interface Blog {
   disease_name?: string;
   published_at: string;
 }
+interface GlobalSEO {
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+}
 
 interface Disease {
   id: number;
@@ -46,7 +52,7 @@ const NextArrow: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
     onClick={onClick}
     className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 h-12 rounded-full shadow"
   >
-     <svg
+    <svg
       width="34"
       height="18"
       viewBox="0 0 34 18"
@@ -65,27 +71,40 @@ const Blog: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [categories, setCategories] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "");
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/blogs`);
-        const published = (res.data?.data || []).filter(
-          (b: Blog) => b.status === "published"
-        );
-        setBlogs(published);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const fetchGlobalSEO = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success && res.data.data) {
+        setGlobalSEO({
+          seo_title: res.data.data.seo_title,
+          seo_description: res.data.data.seo_description,
+          seo_keywords: res.data.data.seo_keywords,
+        });
       }
-    };
-
+    } catch (error) {
+      console.error("Failed to fetch global SEO", error);
+    }
+  };
+  const fetchBlogs = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/blogs`);
+      const published = (res.data?.data || []).filter(
+        (b: Blog) => b.status === "published"
+      );
+      setBlogs(published);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchGlobalSEO();
     fetchBlogs();
   }, []);
 
@@ -124,6 +143,16 @@ const Blog: React.FC = () => {
       { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
+  const seoTitle =
+    globalSEO?.seo_title || "Best Hospital";
+
+  const seoDescription =
+    globalSEO?.seo_description || "Best healthcare services";
+
+  const seoKeywords =
+    globalSEO?.seo_keywords || "hospital, Test ,healthcare";
+
+  useSeo(seoTitle, seoDescription, seoKeywords);
 
   if (loading) {
     return <div className="py-20 text-center">Loading...</div>;
@@ -134,7 +163,7 @@ const Blog: React.FC = () => {
       <Header />
 
       <TreatmentHeader
-      title="Blog"
+        title="Blog"
         breadcrumbs={[
           { label: "Home", path: "/" },
           { label: "Blog" },
@@ -168,14 +197,14 @@ const Blog: React.FC = () => {
                         className="h-48 w-full object-cover rounded-lg"
                       />
                       <div className="p-4 h-[96px] flex flex-col justify-between">
-  <h3 className="line-clamp-2 treatment-lists-headings min-h-[40px]">
-    {post.title}
-  </h3>
+                        <h3 className="line-clamp-2 treatment-lists-headings min-h-[40px]">
+                          {post.title}
+                        </h3>
 
-  <p className="text-xs text-gray-500 line-clamp-2 ">
-    {post.short_description}
-  </p>
-</div>
+                        <p className="text-xs text-gray-500 line-clamp-2 ">
+                          {post.short_description}
+                        </p>
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -194,9 +223,9 @@ const Blog: React.FC = () => {
                       <User size={24} />
                       <div className="listed-by">
                         <span>Written by: {post.author || "Admin"}</span>
-                      <span>
-                        {new Date(post.published_at).toLocaleDateString()}
-                      </span>
+                        <span>
+                          {new Date(post.published_at).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
 

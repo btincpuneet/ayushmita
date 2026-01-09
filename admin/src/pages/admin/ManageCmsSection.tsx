@@ -25,7 +25,6 @@ interface CmsPage {
   status: "active" | "inactive";
 }
 
-/* ================= COMPONENT ================= */
 
 export default function ManageCmsPage() {
   const [pages, setPages] = useState<CmsPage[]>([]);
@@ -39,7 +38,6 @@ export default function ManageCmsPage() {
     status: "active",
   });
 
-  /* ---------------- FETCH ---------------- */
 
   const fetchPages = async () => {
     try {
@@ -54,7 +52,6 @@ export default function ManageCmsPage() {
     fetchPages();
   }, []);
 
-  /* ---------------- HELPERS ---------------- */
   const createSlug = (text: string) =>
     text
       .toLowerCase()
@@ -71,7 +68,6 @@ export default function ManageCmsPage() {
     });
   };
 
-  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async () => {
     if (!form.title || !form.slug) {
       return toast.error("Title and Slug are required");
@@ -97,7 +93,6 @@ export default function ManageCmsPage() {
     }
   };
 
-  /* ---------------- EDIT ---------------- */
   const handleEdit = (page: CmsPage) => {
     setEditing(page);
     setForm({
@@ -109,7 +104,6 @@ export default function ManageCmsPage() {
     setOpen(true);
   };
 
-  /* ---------------- UI ---------------- */
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
@@ -193,7 +187,7 @@ export default function ManageCmsPage() {
 
       {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[120vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit CMS Page" : "Create CMS Page"}

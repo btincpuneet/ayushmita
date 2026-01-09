@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import UseSeo from "../hooks/useSeo";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -12,13 +13,6 @@ import Pagination from "../components/Pagination";
 
 const ITEMS_PER_PAGE = 5;
 
-const countries = ["Turkey", "India", "UAE"];
-
-const citiesByCountry: Record<string, string[]> = {
-  Turkey: ["Istanbul", "Ankara", "Izmir"],
-  India: ["Delhi", "Mumbai", "Bangalore"],
-  UAE: ["Dubai", "Abu Dhabi", "Sharjah"],
-};
 
 export default function Index() {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -116,18 +110,7 @@ export default function Index() {
       <Header />
 
       <main className="min-h-screen">
-        {/* <HospitalPageHeader
-          title="Best Hospitals"
-          countries={countries}
-          cities={cities}
-          selectedCountry={selectedCountry}
-          selectedCity={selectedCity}
-          onCountryChange={(e) => {
-            setSelectedCountry(e.target.value);
-            setSelectedCity("");
-          }}
-          onCityChange={(e) => setSelectedCity(e.target.value)}
-        /> */}
+
         <HospitalPageHeader
           title="Best Hospitals"
           countries={countries}
@@ -176,7 +159,7 @@ export default function Index() {
                 )}
               </div>
 
-              {/* RIGHT */}
+
               <div className="lg:col-span-1">
                 <BookingForm />
               </div>

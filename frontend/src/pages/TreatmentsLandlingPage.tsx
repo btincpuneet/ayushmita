@@ -23,6 +23,11 @@ interface Disease {
   description_html: string;
   treatments: Treatment[];
 }
+interface GlobalSEO {
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+}
 
 export default function TreatmentsLandingPage() {
   const navigate = useNavigate();
@@ -30,18 +35,13 @@ export default function TreatmentsLandingPage() {
   const [diseases, setDiseases] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Cancer");
-  const [seoData, setSeoData] = useState({
-    seo_title: "",
-    seo_description: "",
-    seo_keywords: "",
-  });
-  ;
+  const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
+
   const fetchData = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/diseases`);
       if (res.data?.success) {
         setDiseases(res.data.data);
-        setSeoData(res.data[0].data);
       }
       setLoading(false);
     } catch (error) {
@@ -49,9 +49,24 @@ export default function TreatmentsLandingPage() {
       setLoading(false);
     }
   };
+  const fetchGlobalSEO = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success && res.data.data) {
+        setGlobalSEO({
+          seo_title: res.data.data.seo_title,
+          seo_description: res.data.data.seo_description,
+          seo_keywords: res.data.data.seo_keywords,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch global SEO", error);
+    }
+  };
 
   useEffect(() => {
     fetchData();
+    fetchGlobalSEO();
   }, []);
 
   const handleNavigate = (slug: string) => {
@@ -72,7 +87,16 @@ export default function TreatmentsLandingPage() {
     }
   };
 
-  useSeo(seoData.seo_title, seoData.seo_description, seoData.seo_keywords);
+  const seoTitle =
+    globalSEO?.seo_title || "Best Hospital";
+
+  const seoDescription =
+    globalSEO?.seo_description || "Best healthcare services";
+
+  const seoKeywords =
+    globalSEO?.seo_keywords || "hospital, healthcare";
+
+  useSeo(seoTitle, seoDescription, seoKeywords);
 
   useEffect(() => {
     if (!diseases.length) return;

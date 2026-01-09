@@ -9,6 +9,7 @@ import Container from "../components/Container";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import SearchBar from "../components/Blog/SearchBar";
 import BookingForm from "../components/BookingForm";
+import useSeo from "../hooks/useSeo";
 
 import { API_BASE } from "../config/api";
 
@@ -21,11 +22,19 @@ interface Blog {
   disease_id?: number;
   author_name?: string;
   published_at: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
 }
 
 interface Disease {
   id: number;
   name: string;
+}
+interface GlobalSEO {
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
 }
 
 const BlogDetails: React.FC = () => {
@@ -35,15 +44,29 @@ const BlogDetails: React.FC = () => {
   const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
+  const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
-
+  const fetchGlobalSEO = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success && res.data.data) {
+        setGlobalSEO({
+          seo_title: res.data.data.seo_title,
+          seo_description: res.data.data.seo_description,
+          seo_keywords: res.data.data.seo_keywords,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch global SEO", error);
+    }
+  };
   useEffect(() => {
     if (!slug) return;
-
     setLoading(true);
     setBlog(null);
     setRecentBlogs([]);
+
 
     const fetchBlog = async () => {
       try {
@@ -53,7 +76,6 @@ const BlogDetails: React.FC = () => {
 
         const data = res.data?.data;
         const blogData: Blog = Array.isArray(data) ? data[1] : data;
-
         setBlog(blogData);
       } catch (err) {
         console.error(err);
@@ -61,7 +83,7 @@ const BlogDetails: React.FC = () => {
         setLoading(false);
       }
     };
-
+    fetchGlobalSEO()
     fetchBlog();
   }, [slug]);
 
@@ -70,8 +92,6 @@ const BlogDetails: React.FC = () => {
     txt.innerHTML = html;
     return txt.value;
   };
-
-
   useEffect(() => {
     axios
       .get(`${API_BASE}/api/diseases`)
@@ -111,6 +131,24 @@ const BlogDetails: React.FC = () => {
 
     fetchRelated();
   }, [blog?.disease_id, blog?.id]);
+  const seoTitle =
+    blog?.meta_title ||
+    globalSEO?.seo_title ||
+    blog?.title ||
+    "Best Hospital";
+
+  const seoDescription =
+    blog?.meta_description ||
+    globalSEO?.seo_description ||
+    "Best healthcare services";
+
+  const seoKeywords =
+    blog?.meta_keywords ||
+    globalSEO?.seo_keywords ||
+    "hospital, healthcare";
+
+  useSeo(seoTitle, seoDescription, seoKeywords);
+
 
   if (loading) {
     return <div className="py-20 text-center">Loading...</div>;
@@ -125,7 +163,7 @@ const BlogDetails: React.FC = () => {
       <Header />
 
       <TreatmentHeader
-        
+
         breadcrumbs={[
           { label: "Home", path: "/" },
           { label: "Blog", path: "/blogs" },

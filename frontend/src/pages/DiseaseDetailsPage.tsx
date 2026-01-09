@@ -10,12 +10,18 @@ import BlogSection from "../components/BlogSection";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import "../css/common.css";
 import "../css/doctor.css";
+import UseSeo from "../hooks/useSeo";
 
 interface Treatment {
   id: number;
   name: string;
   slug: string;
   image: string;
+}
+interface GlobalSEO {
+  seo_title: string;
+  seo_description: string;
+  seo_keywords: string;
 }
 
 interface Disease {
@@ -26,12 +32,16 @@ interface Disease {
   short_description: string;
   description_html: string;
   treatments: Treatment[];
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
 }
 
 const DiseaseDetailsPage = () => {
   const { slug } = useParams();
   const [disease, setDisease] = useState<Disease | null>(null);
   const [loading, setLoading] = useState(true);
+  const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
   const decodeHtml = (html: string) => {
     const txt = document.createElement("textarea");
@@ -50,107 +60,146 @@ const DiseaseDetailsPage = () => {
       setLoading(false);
     }
   };
+  const fetchGlobalSEO = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+
+      if (res.data?.success && res.data.data) {
+        setGlobalSEO({
+          seo_title: res.data.data.seo_title,
+          seo_description: res.data.data.seo_description,
+          seo_keywords: res.data.data.seo_keywords,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch global SEO", error);
+    }
+  };
 
   useEffect(() => {
     fetchDisease();
+    fetchGlobalSEO();
+
   }, [slug]);
 
+  
+  const seoTitle =
+    disease?.seo_title ||
+    globalSEO?.seo_title ||
+    "Best Hospital";
+
+  const seoDescription =
+    disease?.seo_description ||
+    globalSEO?.seo_description ||
+    "Best healthcare services";
+
+  const seoKeywords =
+    disease?.seo_keywords ||
+    globalSEO?.seo_keywords ||
+    "hospital, healthcare";
+
+  UseSeo(seoTitle, seoDescription, seoKeywords);
   if (loading)
     return <p className="text-center py-20 text-lg font-semibold">Loading...</p>;
 
   if (!disease) return <p className="text-center py-20">Disease Not Found</p>;
+    // UseSeo(seoTitle.seo_title, seoData.seo_description, seoData.seo_keywords);
 
   return (
-    <div className="bg-[#f8f9fa] pb-20">
-      <Header />
-      <div className="w-full">
-        <TreatmentHeader
-          title={disease?.name}
-          breadcrumbs={[
-            { label: "Home" },
-            { label: disease?.name || "Treatment", link: "/" },
-          ]}
-        />
-      </div>
+    <>
 
-      <div className="max-w-7xl mx-auto px-4 mt-10">
-        <div className="flex flex-col-reverse lg:flex-row items-center ">
-          <div class="w-full lg:w-1/2 flex justify-center">
-            <img
-              src={`${API_BASE}${disease.image}`}
-              alt={disease.name}
-              className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
-            />
-          </div>
-
-          <div className="w-full lg:w-[100%]">
-            <p
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 300,
-                fontStyle: "normal",
-                fontSize: "16px",
-                lineHeight: "27px",
-                letterSpacing: "0%",
-              }}
-            >
-              Having cancer is one of the biggest fears for humans because most people lose their lives to cancer. In cancer disease, the body develops abnormal cells that spread to other parts of the body. When a patient suffers from cancer, the patient experiences various symptoms including unexplained weight loss, fatigue, severe pain, and many more. So, patients must seek cancer treatment.
-              We know that receiving a cancer diagnosis can be enormous. So, if people face these diseases, they have to choose the best healthcare provider. At Aushmita, we have partnered with the best cancer treatment hospitals and oncologists around the world. Our medical network team provides cancer treatment options according to the patient’s needs.
-            </p>
-          </div>
+      <div className="bg-[#f8f9fa]">
+        <Header />
+        <div className="w-full">
+          <TreatmentHeader
+            title={disease?.name}
+            breadcrumbs={[
+              { label: "Home" },
+              { label: disease?.name || "Treatment", link: "/" },
+            ]}
+          />
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-16 desese-overview-sec">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-          {disease.treatments.map((t) => (
-            <Link
-              key={t.id}
-              to={`/treatment-details/${t.slug}`}
-              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-2 flex flex-col items-center text-center"
-            >
-              <div className="w-full h-24 overflow-hidden rounded-lg">
-                <img
-                  src={`${API_BASE}${t.image}`}
-                  alt={t.name}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
+        <div className="max-w-7xl mx-auto px-4 mt-10">
+          <div className="flex flex-col-reverse lg:flex-row items-center ">
+            <div class="w-full lg:w-1/2 flex justify-center">
+              <img
+                src={`${API_BASE}${disease.image}`}
+                alt={disease.name}
+                className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
+              />
+            </div>
 
+            <div className="w-full lg:w-[100%]">
               <p
-                className="mt-3"
                 style={{
                   fontFamily: "Ubuntu",
-                  fontWeight: 500,
+                  fontWeight: 300,
                   fontStyle: "normal",
                   fontSize: "16px",
                   lineHeight: "27px",
                   letterSpacing: "0%",
-                  textAlign: "center",
                 }}
               >
-                {t.name}
+                Having cancer is one of the biggest fears for humans because most people lose their lives to cancer. In cancer disease, the body develops abnormal cells that spread to other parts of the body. When a patient suffers from cancer, the patient experiences various symptoms including unexplained weight loss, fatigue, severe pain, and many more. So, patients must seek cancer treatment.
+                We know that receiving a cancer diagnosis can be enormous. So, if people face these diseases, they have to choose the best healthcare provider. At Aushmita, we have partnered with the best cancer treatment hospitals and oncologists around the world. Our medical network team provides cancer treatment options according to the patient’s needs.
               </p>
-            </Link>
-          ))}
+            </div>
+          </div>
         </div>
+
+        <div className="max-w-7xl mx-auto px-4 mt-16 desese-overview-sec">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            {disease.treatments.map((t) => (
+              <Link
+                key={t.id}
+                to={`/treatment-details/${t.slug}`}
+                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-2 flex flex-col items-center text-center"
+              >
+                <div className="w-full h-24 overflow-hidden rounded-lg">
+                  <img
+                    src={`${API_BASE}${t.image}`}
+                    alt={t.name}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+
+                <p
+                  className="mt-3"
+                  style={{
+                    fontFamily: "Ubuntu",
+                    fontWeight: 500,
+                    fontStyle: "normal",
+                    fontSize: "16px",
+                    lineHeight: "27px",
+                    letterSpacing: "0%",
+                    textAlign: "center",
+                  }}
+                >
+                  {t.name}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{
+            __html: disease?.description_html || "",
+          }}
+        />
+
+        <div>
+          <ConsultationForm />
+        </div>
+
+        <TestimonialSlider />
+        <BlogSection diseaseId={disease.id} />
+
+        <Footer />
       </div>
-      <div
-        className="prose max-w-none"
-        dangerouslySetInnerHTML={{
-          __html: disease?.description_html || "",
-        }}
-      />
+    </>
 
-      <div>
-        <ConsultationForm />
-      </div>
-
-      <TestimonialSlider />
-      <BlogSection diseaseId={disease.id} />
-
-      <Footer />
-    </div>
   );
 };
 

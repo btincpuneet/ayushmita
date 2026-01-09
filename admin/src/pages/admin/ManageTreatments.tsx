@@ -64,7 +64,6 @@ const ManageTreatments = () => {
   const [form, setForm] = useState(emptyForm);
   const [preview, setPreview] = useState<string | null>(null);
 
-  /* ---------------- LOADERS ---------------- */
 
   useEffect(() => {
     loadDiseases();
@@ -255,10 +254,8 @@ const ManageTreatments = () => {
           </div>
         </div>
 
-        {/* Treatment Details View */}
         {singleTreatment && (
           <div className="bg-card rounded-xl shadow-card border overflow-hidden animate-fade-in">
-            {/* Treatment Header */}
             <div className="bg-gradient-to-r from-primary/5 to-accent/50 p-6 border-b">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
@@ -334,9 +331,8 @@ const ManageTreatments = () => {
           </div>
         )}
       </main>
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {editing ? <Edit3 className="w-5 h-5 text-primary" /> : <Plus className="w-5 h-5 text-primary" />}
@@ -345,7 +341,6 @@ const ManageTreatments = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-            {/* Disease Selection */}
             <div className="col-span-2 space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Disease *</Label>
               <select
@@ -364,7 +359,6 @@ const ManageTreatments = () => {
               </select>
             </div>
 
-            {/* Name & Slug */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Treatment Name *</Label>
               <Input
@@ -393,7 +387,6 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* SHORT DESCRIPTION */}
             <div className="col-span-2">
               <RichTextEditor
                 label="Short Description"
@@ -406,7 +399,6 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* FULL DESCRIPTION */}
             <div className="col-span-2">
               <RichTextEditor
                 label="Full Description (HTML with Image Alignment)"
@@ -419,7 +411,6 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* SEO Fields */}
             <div className="col-span-2 pt-4 border-t">
               <h4 className="text-sm font-semibold text-foreground mb-4">SEO Settings</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -469,7 +460,6 @@ const ManageTreatments = () => {
               </div>
             </div>
 
-            {/* Status & Image */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Status</Label>
               <select
@@ -499,7 +489,6 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* Image Preview */}
             {(preview || editing?.image) && (
               <div className="col-span-2">
                 <Label className="text-xs font-medium text-muted-foreground mb-2 block">Image Preview</Label>

@@ -5,13 +5,12 @@ import { API_BASE } from "../config/api";
 import Slider from "react-slick";
 import { Briefcase, Stethoscope, MapPin, Building2, Globe, ChevronRight } from "lucide-react";
 import ModalAppointment from "../components/Treatment/ModalAppointment"
-
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
+import useSeo from "../hooks/useSeo";
 
 interface Doctor {
     id: number;
@@ -25,6 +24,10 @@ interface Doctor {
     description: string;
     description_html: string;
     image_url: string | null;
+    seo_title?: string;
+    seo_description?: string;
+    seo_keywords?: string;
+
 }
 
 const NextArrow = ({ onClick }: any) => (
@@ -50,6 +53,25 @@ const DoctorDetailsPage: React.FC = () => {
     const [similarDoctors, setSimilarDoctors] = useState<Doctor[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [globalSEO, setGlobalSEO] = useState<{
+        seo_title?: string;
+        seo_description?: string;
+        seo_keywords?: string;
+    } | null>(null);
+    const fetchGlobalSEO = async () => {
+        try {
+            const res = await axios.get(`${API_BASE}/api/global-settings`);
+            if (res.data?.success && res.data.data) {
+                setGlobalSEO({
+                    seo_title: res.data.data.seo_title,
+                    seo_description: res.data.data.seo_description,
+                    seo_keywords: res.data.data.seo_keywords,
+                });
+            }
+        } catch (error) {
+            console.error("Failed to fetch global SEO", error);
+        }
+    };
 
     useEffect(() => {
         const loadData = async () => {
@@ -74,7 +96,25 @@ const DoctorDetailsPage: React.FC = () => {
         };
 
         loadData();
+        fetchGlobalSEO();
     }, [slug]);
+    const seoTitle =
+        doctor?.seo_title ||
+        globalSEO?.seo_title ||
+        doctor?.name ||
+        "Best Doctor";
+
+    const seoDescription =
+        doctor?.seo_description ||
+        globalSEO?.seo_description ||
+        `Consult ${doctor?.name || "our expert doctor"} for treatment`;
+
+    const seoKeywords =
+        doctor?.seo_keywords ||
+        globalSEO?.seo_keywords ||
+        "doctor, hospital, treatment";
+
+    useSeo(seoTitle, seoDescription, seoKeywords);
 
     if (loading) {
         return (

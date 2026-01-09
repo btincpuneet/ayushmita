@@ -48,6 +48,7 @@ const ContactUs = () => {
       const res = await axios.get(`${API_BASE}/api/contact-us`);
       if (res.data?.data?.length > 0) {
         setCmsContent(res.data.data[0].content_html);
+        
       }
 
     } catch (error) {

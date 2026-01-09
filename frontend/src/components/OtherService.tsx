@@ -26,7 +26,6 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
       const res = await axios.get<{ treatments: Treatment[] }>(
         `${API_BASE}/api/treatments/disease/${diseaseId}`
       );
-      console.log("res", res.data.treatments)
       const filtered = res.data.treatments.filter(
         (t) => t.slug !== currentSlug
       );

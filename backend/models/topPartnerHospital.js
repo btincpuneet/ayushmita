@@ -51,6 +51,25 @@ const TopPartnerHospital = sequelize.define(
       type: DataTypes.TEXT("long"),
       allowNull: true,
     },
+    seo_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    seo_description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    seo_keywords: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    canonical_url: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
    
     status: {
       type: DataTypes.STRING,
