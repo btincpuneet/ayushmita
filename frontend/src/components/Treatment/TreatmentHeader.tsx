@@ -13,7 +13,7 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
 
   return (
     <div
-      className="relative mt-20 "
+      className="relative mt-10 "
       style={{ backgroundColor: bgColor }}
     >
       <div className="max-w-7xl mx-auto  text-center pt-10 pb-10">

@@ -13,6 +13,17 @@ input[type="checkbox"] {
   cursor: pointer;
   position: relative;
 }
+.goog-te-gadget-simple .VIpgJd-ZVi9od-xl07Ob-lTBxed span {
+    text-decoration: none;
+ font-family: Ubuntu;
+font-weight: 500;
+font-style: Medium;
+font-size: 15px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0px;
+
+}
 img.rounded-xl.object-cover.treatment-list-image {
     height: 370px;
     width: 370px;

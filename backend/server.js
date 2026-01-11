@@ -11,8 +11,6 @@ require("dotenv").config();
 require('./models/relations');
 const footerRoutes = require("./routes/footer/footer.js");
 const globalSettingRoutes = require("./routes/globalSettings/globalSetting.routes.js");
-const { GlobalSetting } = require("./models/GlobalSetting.js"); 
-
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
 const promoSliderRoutes = require('./routes/promoSlider/index.js');

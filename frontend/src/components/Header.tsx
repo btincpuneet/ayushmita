@@ -54,51 +54,49 @@ const Header: React.FC = () => {
             <img src={Logo} alt="Company Logo" className="w-25" />
           </Link>
 
-      <div className="hidden lg:flex flex-1 justify-start" style={{ marginLeft: "12%" }}>
-  <ul className="flex gap-[40px] items-center">
-    {navItems.map((item) => (
-      <li key={item.id} className="relative">
-        <NavLink
-          to={item.url}
-          className={({ isActive }) =>
-            `relative pb-1 ${
-              isActive ? "text-[#F0A324]" : "text-[#333333]"
-            }
+          <div className="hidden lg:flex flex-1 justify-start" style={{ marginLeft: "12%" }}>
+            <ul className="flex gap-[40px] items-center">
+              {navItems.map((item) => (
+                <li key={item.id} className="relative min-w-max">
+                  <NavLink
+                    to={item.url}
+                    className={({ isActive }) =>
+                      `relative pb-1 ${isActive ? "text-[#F0A324]" : "text-[#333333]"
+                      }
             after:content-[''] after:absolute after:left-0 after:-bottom-1
             after:h-[2px] after:bg-[#F0A324] after:transition-all after:duration-300
             ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`
-          }
-          style={{
-            fontFamily: "Ubuntu, sans-serif",
-            fontWeight: 400,
-            fontSize: "14px",
-          }}
-        >
-          {item.name}
-        </NavLink>
-      </li>
-    ))}
- 
-    {appointmentButton && (
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          `px-5 py-3 rounded-lg ${
-            isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
-          }`
-        }
-        style={{
-          fontFamily: "Poppins, sans-serif",
-          fontWeight: 500,
-          fontSize: "14px",
-          letterSpacing: "2%",
-        }}
-      >
-        {appointmentButton}
-      </NavLink>
-    )}
-  </ul>
-</div>
+                    }
+                    style={{
+                      fontFamily: "Ubuntu, sans-serif",
+                      fontWeight: 400,
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
+
+              {appointmentButton && (
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    `px-5 py-3 rounded-lg min-w-max ${isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
+                    }`
+                  }
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    letterSpacing: "2%",
+                  }}
+                >
+                  {appointmentButton}
+                </NavLink>
+              )}
+            </ul>
+          </div>
 
           <div className="lg:hidden flex items-center gap-2">
             <button

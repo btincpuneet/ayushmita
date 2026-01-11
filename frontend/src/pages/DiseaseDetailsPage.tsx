@@ -115,7 +115,7 @@ const DiseaseDetailsPage = () => {
             title={disease?.name}
             breadcrumbs={[
               { label: "Home" },
-              { label: disease?.name || "Treatment", link: "/" },
+              { label: disease?.name || "Treatment", link: "" },
             ]}
           />
         </div>
