@@ -72,28 +72,7 @@ app.use("/api/global-settings", globalSettingRoutes);
 app.use("/api", countiesCitiesRoutes);
 app.use("/api", editorUploadRoutes);
 
-const fs = require("fs");
-const { Country, State, City } = require("country-state-city");
 
-let csv = "country,country_code,city,state\n";
-
-const countries = Country.getAllCountries();
-
-countries.forEach((country) => {
-  const states = State.getStatesOfCountry(country.isoCode);
-
-  states.forEach((state) => {
-    const cities = City.getCitiesOfState(country.isoCode, state.isoCode);
-
-    cities.forEach((city) => {
-      csv += `"${country.name}",${country.isoCode},"${city.name}","${state.name}"\n`;
-    });
-  });
-});
-
-fs.writeFileSync("countries_cities.csv", csv);
-
-console.log("CSV file generated successfully!");
 
 sequelize
   .sync()

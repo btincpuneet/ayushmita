@@ -109,7 +109,7 @@ const DiseaseDetailsPage = () => {
 
       <div className="bg-[#f8f9fa]">
         <Header />
-        <div className="w-full">
+        <div className="w-full ">
           <TreatmentHeader
             title={disease?.name}
             breadcrumbs={[
@@ -119,9 +119,10 @@ const DiseaseDetailsPage = () => {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 mt-10">
-          <div className="flex flex-col-reverse lg:flex-row items-center ">
-            <div class="w-full lg:w-1/2 flex justify-center">
+       <div className="container-fluid bg-white">
+         <div className="max-w-7xl mx-auto px-4 mt-10 bg-white">
+          <div className="flex flex-col-reverse lg:flex-row items-start ">
+            <div className="w-full lg:w-1/2 flex justify-center">
               <img
                 src={`${API_BASE}${disease.image}`}
                 alt={disease.name}
@@ -146,8 +147,9 @@ const DiseaseDetailsPage = () => {
             </div>
           </div>
         </div>
+       </div>
 
-        <div className="max-w-7xl mx-auto px-4 mt-16 desese-overview-sec">
+        <div className="max-w-7xl mx-auto px-4 mt-16 mb-16 desese-overview-sec">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {disease.treatments.map((t) => (
               <Link

@@ -220,12 +220,12 @@ const BlogDetails: React.FC = () => {
               className="w-full h-[360px] object-cover rounded-lg mb-6"
             />
 
-            {blog.disease_id && (
+            {/* {blog.disease_id && (
               <p className="text-sm text-gray-600 mb-3">
                 Disease:{" "}
                 <strong>{diseaseMap[blog.disease_id]}</strong>
               </p>
-            )}
+            )} */}
 
 
 
