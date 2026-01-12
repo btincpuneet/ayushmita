@@ -165,7 +165,7 @@ const BlogDetails: React.FC = () => {
       <TreatmentHeader
 
         breadcrumbs={[
-          { label: "Home", path: "/" },
+          { label: "Home", path: "" },
           { label: "Blog", path: "/blogs" },
           { label: blog.title },
         ]}

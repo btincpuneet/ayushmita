@@ -568,7 +568,7 @@ export default function HospitalDetailsPage() {
         breadcrumbs={[
           { label: "Home" },
           { label: "Hospitals", },
-          { label: hospital.name, link: "/" },
+          { label: hospital.name, link: "" },
         ]}
       />
 

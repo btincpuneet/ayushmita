@@ -9,7 +9,6 @@ const GoogleTranslate: React.FC = () => {
       if (!container || container.childNodes.length > 0) return;
 
       try {
-        // @ts-ignore
         new window.google.translate.TranslateElement(
           {
             pageLanguage: "en",
@@ -23,11 +22,9 @@ const GoogleTranslate: React.FC = () => {
       }
     }
 
-    // Google callback
-    // @ts-ignore
+   
     window.googleTranslateElementInit = initWidget;
 
-    // Load script once
     if (!document.querySelector('script[src*="translate_a/element.js"]')) {
       const script = document.createElement("script");
       script.src =
@@ -37,7 +34,7 @@ const GoogleTranslate: React.FC = () => {
     } else {
       initWidget();
     }
-  }, []); // ✅ ONLY ONCE
+  }, []); 
 
   return <div id="google_translate_element" />;
 };

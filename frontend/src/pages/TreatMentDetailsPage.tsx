@@ -80,7 +80,7 @@ export default function TreatmentDetailsPage() {
           breadcrumbs={[
             { label: "Home" },
             { label: treatment?.disease?.name || "Treatments" },
-            { label: treatment?.name || "Treatment", link: "/" },
+            { label: treatment?.name || "Treatment", link: "" },
           ]}
         />
       </div>
