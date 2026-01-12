@@ -103,7 +103,6 @@ const DiseaseDetailsPage = () => {
     return <p className="text-center py-20 text-lg font-semibold">Loading...</p>;
 
   if (!disease) return <p className="text-center py-20">Disease Not Found</p>;
-    // UseSeo(seoTitle.seo_title, seoData.seo_description, seoData.seo_keywords);
 
   return (
     <>

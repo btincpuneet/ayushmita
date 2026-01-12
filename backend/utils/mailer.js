@@ -3,57 +3,48 @@
 
 // const BASE_URL = "http://127.0.0.1:5001/api";
 
-// let cachedSettings = null;
-
-
 // const getEmailSettings = async () => {
-//   if (!cachedSettings) {
-//     const response = await axios.get(`${BASE_URL}/global-settings`);
+//   const response = await axios.get(`${BASE_URL}/global-settings`);
 
-//     if (!response.data?.success) {
-//       throw new Error("Failed to fetch global settings");
-//     }
-
-//     cachedSettings = response.data.data;
+//   if (!response.data?.success) {
+//     throw new Error("Failed to fetch global settings");
 //   }
 
-//   return cachedSettings;
+//   return response.data.data;
 // };
 
-// /**
-//  * Send mail
-//  * @param {Object} params
-//  * @param {"admin"|"contact"|"appointment"} params.type
-//  * @param {string} params.subject
-//  * @param {string} params.html 
-//  */
+// const renderEmailTemplate = ({ title, subtitle, fields }) => {
+//   const rows = fields
+//     .map(
+//       (f) => `
+//       <tr>
+//         <td style="padding:8px;font-weight:bold;border:1px solid #ddd;">${f.label}</td>
+//         <td style="padding:8px;border:1px solid #ddd;">${f.value || "-"}</td>
+//       </tr>
+//     `
+//     )
+//     .join("");
 
+//   return `
+//     <div style="font-family:Arial;padding:20px;background:#f6f8fb">
+//       <div style="max-width:600px;margin:auto;background:white;padding:20px;border-radius:8px">
+//         <h2 style="color:#0f172a">${title}</h2>
+//         <p>${subtitle}</p>
+//         <table width="100%" style="border-collapse:collapse;margin-top:15px">
+//           ${rows}
+//         </table>
+//       </div>
+//     </div>
+//   `;
+// };
 
-
-// const sendMail = async ({ type = "admin", subject, html }) => {
+// const sendMail = async ({ to, subject, html }) => {
 //   const settings = await getEmailSettings();
-//   const replyTo = "no-reply@gmail.com"
-
-//   let to;
-//   switch (type) {
-//     case "contact":
-//       to = settings.contact_email;
-//       break;
-//     case "appointment":
-//       to = settings.appointment_email;
-//       break;
-//     default:
-//       to = settings.admin_email;
-//   }
-
-//   if (!to) {
-//     throw new Error(`Recipient email not configured for type: ${type}`);
-//   }
 
 //   const transporter = nodemailer.createTransport({
 //     host: settings.email_host,
 //     port: settings.email_port,
-//     secure: false,
+//     secure: settings.email_port == 465, // important
 //     auth: {
 //       user: settings.email_user,
 //       pass: settings.email_pass,
@@ -63,39 +54,81 @@
 //   return transporter.sendMail({
 //     from: `"Website Forms" <${settings.email_user}>`,
 //     to,
-//     replyTo: replyTo,
 //     subject,
 //     html,
 //   });
 // };
 
-// const renderEmailTemplate = ({ title, subtitle, fields }) => {
-// };
 // module.exports = { sendMail, getEmailSettings, renderEmailTemplate };
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 
 const BASE_URL = "http://127.0.0.1:5001/api";
-let cachedSettings = null;
 
+/**
+ * Fetch email settings from backend
+ */
 const getEmailSettings = async () => {
-  if (!cachedSettings) {
+  try {
     const response = await axios.get(`${BASE_URL}/global-settings`);
-    if (!response.data?.success) {
+
+    if (!response.data || response.data.success !== true) {
       throw new Error("Failed to fetch global settings");
     }
-    cachedSettings = response.data.data;
+
+    return response.data.data;
+  } catch (error) {
+    console.error("❌ Email settings fetch error:", error.message);
+    throw error;
   }
-  return cachedSettings;
 };
 
+/**
+ * Render reusable email template
+ */
+const renderEmailTemplate = ({ title, subtitle, fields = [] }) => {
+  const rows = fields
+    .map(
+      (f) => `
+        <tr>
+          <td style="padding:8px;font-weight:bold;border:1px solid #ddd;">
+            ${f.label}
+          </td>
+          <td style="padding:8px;border:1px solid #ddd;">
+            ${f.value || "-"}
+          </td>
+        </tr>
+      `
+    )
+    .join("");
+
+  return `
+    <div style="font-family:Arial;padding:20px;background:#f6f8fb">
+      <div style="max-width:600px;margin:auto;background:white;padding:20px;border-radius:8px">
+        <h2 style="color:#0f172a">${title}</h2>
+        <p>${subtitle}</p>
+        <table width="100%" style="border-collapse:collapse;margin-top:15px">
+          ${rows}
+        </table>
+      </div>
+    </div>
+  `;
+};
+
+/**
+ * Send email using dynamic SMTP settings
+ */
 const sendMail = async ({ to, subject, html }) => {
   const settings = await getEmailSettings();
 
+  if (!settings?.email_host) {
+    throw new Error("Email settings are missing or invalid");
+  }
+
   const transporter = nodemailer.createTransport({
     host: settings.email_host,
-    port: settings.email_port,
-    secure: false,
+    port: Number(settings.email_port),
+    secure: Number(settings.email_port) === 465, // SSL only for 465
     auth: {
       user: settings.email_user,
       pass: settings.email_pass,
@@ -105,13 +138,13 @@ const sendMail = async ({ to, subject, html }) => {
   return transporter.sendMail({
     from: `"Website Forms" <${settings.email_user}>`,
     to,
-    replyTo: "no-reply@gmail.com",
     subject,
     html,
   });
 };
 
-const renderEmailTemplate = ({ title, subtitle, fields }) => {
+module.exports = {
+  sendMail,
+  getEmailSettings,
+  renderEmailTemplate,
 };
-
-module.exports = { sendMail, getEmailSettings, renderEmailTemplate };

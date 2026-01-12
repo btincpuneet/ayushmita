@@ -368,7 +368,7 @@ button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.roun
  
 img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
     width: 158px;
-    height: 158px;
+    /* height: 158px; */
 }
  
 h2.related-items-more.mb-6 {

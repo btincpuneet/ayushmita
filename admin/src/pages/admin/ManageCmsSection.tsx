@@ -16,7 +16,6 @@ import RichTextEditor from "@/components/RichTextEditor";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
 
-
 interface CmsPage {
   id: number;
   title: string;
@@ -24,7 +23,6 @@ interface CmsPage {
   content_html: string;
   status: "active" | "inactive";
 }
-
 
 export default function ManageCmsPage() {
   const [pages, setPages] = useState<CmsPage[]>([]);
@@ -37,7 +35,6 @@ export default function ManageCmsPage() {
     content_html: "",
     status: "active",
   });
-
 
   const fetchPages = async () => {
     try {
@@ -104,6 +101,22 @@ export default function ManageCmsPage() {
     setOpen(true);
   };
 
+  const handleDelete = async (page: CmsPage) => {
+    const confirmDelete = window.confirm(
+      `This will permanently delete "${page.title}".\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API_BASE}/api/cms-pages/${page.id}`);
+      toast.success("Page permanently deleted");
+      fetchPages();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Delete failed");
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
@@ -120,7 +133,6 @@ export default function ManageCmsPage() {
         </Button>
       </div>
 
-      {/* TABLE */}
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-100">
@@ -137,6 +149,7 @@ export default function ManageCmsPage() {
             {pages.map((page, i) => (
               <tr key={page.id} className="border-t">
                 <td className="p-3">{i + 1}</td>
+
                 <td className="p-3 font-medium">{page.title}</td>
 
                 <td className="p-3">
@@ -162,13 +175,21 @@ export default function ManageCmsPage() {
                   </span>
                 </td>
 
-                <td className="p-3">
+                <td className="p-3 space-x-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleEdit(page)}
                   >
                     Edit
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(page)}
+                  >
+                    Delete
                   </Button>
                 </td>
               </tr>
@@ -185,7 +206,6 @@ export default function ManageCmsPage() {
         </table>
       </div>
 
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-7xl max-h-[120vh] overflow-y-auto">
           <DialogHeader>

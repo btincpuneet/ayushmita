@@ -37,7 +37,8 @@ const corsOptions = {
     'http://localhost:8080',
     'http://localhost:8081',
     'http://13.203.47.236',
-    'http://127.0.0.1:8080'
+    'http://127.0.0.1:8080',
+    'http://13.203.47.236'
   ],
   methods: 'GET,POST,PUT,PATCH,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
