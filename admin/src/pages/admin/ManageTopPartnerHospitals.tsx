@@ -149,7 +149,7 @@ export default function ManageTopPartnerHospitals() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">Manage Top Partner Hospitals</h1>
+        <h1 className="text-xl font-bold">Manage Hospitals</h1>
         <Button onClick={handleCreate}>Add Hospital</Button>
       </div>
 

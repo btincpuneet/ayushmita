@@ -21,6 +21,9 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
   onCityChange,
 }) => {
   return (
+    <div
+      className="relative border border-[#fef9e8] bg-[#fef9e8]"
+    >
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       <div className="text-center mb-9">
         <p className="text-[#87898C]"
@@ -97,6 +100,7 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
         </div>
       </div>
     </section>
+    </div>
   );
 };
 

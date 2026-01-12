@@ -368,7 +368,7 @@ button.flex.flex-col.items-center.justify-center.text-center.gap-3.bg-white.roun
  
 img.md\:h-full.object-cover.rounded-lg.image-hospital-list {
     width: 158px;
-    height: 158px;
+    /* height: 158px; */
 }
  
 h2.related-items-more.mb-6 {
@@ -865,3 +865,9 @@ h3.have-a-questionss.mb-4{
     line-height: 100%;
 }
 }
+.ayu-appointment-card p span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+ 

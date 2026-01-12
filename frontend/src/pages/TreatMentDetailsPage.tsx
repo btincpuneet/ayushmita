@@ -76,14 +76,26 @@ export default function TreatmentDetailsPage() {
 
       <div className="w-full">
         <TreatmentHeader
-          title={treatment?.name}
+          title={treatment?.name || "Treatment"}
           breadcrumbs={[
-            { label: "Home" },
-            { label: treatment?.disease?.name || "Treatments" },
-            { label: treatment?.name || "Treatment", link: "" },
+            {
+              label: "Home",
+              link: "/",
+            },
+            {
+              label: treatment?.disease?.name || "Treatments",
+              link: treatment?.disease
+                ? `/disease/${treatment.disease.slug}`
+                : "/treatments",
+            },
+            {
+              label: treatment?.name || "Treatment",
+              link: "",
+            },
           ]}
         />
       </div>
+
 
       <div className="max-w-7xl mx-auto px-4 py-12">
 

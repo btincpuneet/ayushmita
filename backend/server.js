@@ -27,30 +27,31 @@ const formRoutes = require("./routes/form/forms.js")
 const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js");
 const countiesCitiesRoutes = require("./routes/countryCities/countiesCitiesRoutes.js");
 const editorUploadRoutes = require("./routes/upload/imageUpload.routes.js");
-
+ 
 const app = express();
 const PORT = process.env.PORT || 5001;
-
+ 
 const corsOptions = {
   origin: [
     'http://localhost:5173',
     'http://localhost:8080',
     'http://localhost:8081',
     'http://13.203.47.236',
-    'http://127.0.0.1:8080'
+    'http://127.0.0.1:8080',
+    'http://13.203.47.236'
   ],
   methods: 'GET,POST,PUT,PATCH,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
   credentials: true,
 };
 app.use(express.json());
-
+ 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
+ 
+ 
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', heroBannerRoutes);
@@ -65,40 +66,20 @@ app.use("/api", blogRoutes);
 app.use("/api", cmsSectionRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
-app.use("/api/footer", footerRoutes); 
-app.use("/api/button", buttonAppointRoutes); 
+app.use("/api/footer", footerRoutes);
+app.use("/api/button", buttonAppointRoutes);
 app.use("/api/global-settings", globalSettingRoutes);
 app.use("/api", countiesCitiesRoutes);
 app.use("/api", editorUploadRoutes);
-
-const fs = require("fs");
-const { Country, State, City } = require("country-state-city");
-
-let csv = "country,country_code,city,state\n";
-
-const countries = Country.getAllCountries();
-
-countries.forEach((country) => {
-  const states = State.getStatesOfCountry(country.isoCode);
-
-  states.forEach((state) => {
-    const cities = City.getCitiesOfState(country.isoCode, state.isoCode);
-
-    cities.forEach((city) => {
-      csv += `"${country.name}",${country.isoCode},"${city.name}","${state.name}"\n`;
-    });
-  });
-});
-
-// fs.writeFileSync("countries_cities.csv", csv);
-
-console.log("CSV file generated successfully!");
-
+ 
+ 
+ 
 sequelize
   .sync()
   .then(() => console.log('Database synced successfully'))
   .catch((err) => console.error('Database sync error:', err));
-
+ 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+ 

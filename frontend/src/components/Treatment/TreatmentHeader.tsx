@@ -12,11 +12,10 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div
-      className="relative mt-10 "
-      style={{ backgroundColor: bgColor }}
+   <div
+      className="relative border border-[#fef9e8] bg-[#fef9e8]"
     >
-      <div className="max-w-7xl mx-auto  mt-20 text-center pt-10 pb-10">
+      <div className="max-w-7xl mx-auto mt-20 text-center pt-10 pb-10">
         <p className={`text-sm ${breadcrumbColor} mb-2`}>
           {breadcrumbs.map((item, index) => (
             <span key={index}>

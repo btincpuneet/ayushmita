@@ -1,5 +1,9 @@
 import JoditEditor from "jodit-react";
 import { useMemo, useRef } from "react";
+import { API_BASE } from "../config/api";
+
+const API_URL = `${API_BASE}/api/upload/editor-image`;
+
 
 interface RichTextEditorProps {
   value: string;
@@ -82,7 +86,7 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
       ],
 
       uploader: {
-        url: "http://127.0.0.1:5001/api/upload/editor-image",
+        url: API_URL,
         method: "POST",
         format: "json",
         filesVariableName: () => "image",

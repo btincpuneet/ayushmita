@@ -7,9 +7,7 @@ const { Doctor } = require("../models/doctor");
 const { TopPartnerHospital } = require("../models/topPartnerHospital");
 const { RelationHospitalDoctor } = require("../models/relationHospitalDoctor");
 
-/* ======================================================
-   CREATE DOCTOR
-====================================================== */
+
 const createDoctor = async (req, res) => {
   try {
     const {

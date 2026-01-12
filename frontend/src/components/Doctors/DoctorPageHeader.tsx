@@ -21,6 +21,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
   onCityChange,
 }) => {
   return (
+    
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       <div className="text-center mb-9">
         <p className="text-[#87898C]"

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UseSeo from "../hooks/useSeo";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";

@@ -262,7 +262,6 @@ const ManagePromoSlider = () => {
               <option value="inactive">Inactive</option>
             </select>
 
-            {/* Image Upload */}
             <div>
               <Input
                 type="file"
