@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface ManageButtonName {
   id: number;
@@ -121,17 +122,16 @@ export default function ManageButtonName() {
                 <td className="p-3 font-medium">{row.name}</td>
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      row.status
+                    className={`px-2 py-1 rounded text-xs ${row.status
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
-                    }`}
+                      }`}
                   >
                     {row.status ? "Active" : "Inactive"}
                   </span>
                 </td>
                 <td className="p-3 text-right space-x-3">
-                  <button
+                  {/* <button
                     className="text-blue-600 hover:underline"
                     onClick={() => handleEdit(row)}
                   >
@@ -143,6 +143,20 @@ export default function ManageButtonName() {
                   >
                     Delete
                   </button>
+                </td> */}
+                  <Button size="sm" onClick={() => handleEdit(row)}>
+                    <Pencil className="w-4 h-4 mr-1" />
+                    Edit
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(row.id)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}

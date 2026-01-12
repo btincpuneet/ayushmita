@@ -112,9 +112,7 @@ const ManageDiseases = () => {
     setOpen(true);
   };
 
-  // ----------------------------------------
-  // Submit
-  // ----------------------------------------
+ 
   const handleSubmit = async () => {
     const fd = new FormData();
     Object.entries(form).forEach(([key, value]) => {
@@ -190,19 +188,18 @@ const ManageDiseases = () => {
                     <span className="text-red-600 font-semibold">Inactive</span>
                   )}
                 </td>
-                <td className="p-3 text-right">
-                  <button
-                    className="text-blue-600 mr-3"
-                    onClick={() => handleEdit(d)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="text-red-600"
-                    onClick={() => handleDelete(d.id)}
-                  >
-                    Delete
-                  </button>
+                <td className="p-3 space-x-3 text-right">
+                   <Button size="sm" onClick={() => handleEdit(d)}>
+                        Edit
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(d.id)}
+                      >
+                        Delete
+                      </Button>
                 </td>
               </tr>
             ))}

@@ -50,7 +50,7 @@
 .ayu-about-badge {
   position: absolute;
   bottom: -20px;
-  right: -20%;
+  right: -22%;
   transform: translateX(-50%);
   background: #ffffff;
   color: #f39c12;
@@ -87,7 +87,7 @@
 }
 
 img.map-details-image {
-    max-width: 776px;
+    max-width: 776px !important;
 }
 .ayu-about-text {
   font-family: Ubuntu;
@@ -119,6 +119,9 @@ img.map-details-image {
 @media (max-width: 576px) {
   .ayu-about-title {
     font-size: 24px;
+  }
+  .cms-content img{
+    width: 100%;
   }
 
   .ayu-about-text {
@@ -276,8 +279,8 @@ img.map-details-image {
 
 /* Section background */
 .obj-section-bg {
-  background: #F6F7F9;
-  padding: 130px 20px;
+  /* background: #F6F7F9; */
+  padding: 40px 20px;
 }
 
 /* Card */
@@ -300,6 +303,7 @@ img.map-details-image {
   font-size: 28px;
   line-height: 100%;
   color: #1f2937;
+  margin-top: 20px;
 }
 
 /* Subtitle */
@@ -322,6 +326,7 @@ img.map-details-image {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-bottom: 20px;
 }
 
 /* Item */
@@ -381,7 +386,7 @@ line-height: 27px;
 
 .ayu-img img {
   width: 100%;
-  height: 202px;
+  height: 202px !important;
   object-fit: cover;
   display: block;
 }
@@ -490,9 +495,7 @@ line-height: 27px;
     flex-direction: column;
   }
 
-  img.map-details-image {
-    width: 100%;
-  }
+ 
 
   .info-wrapper {
     flex-direction: column;

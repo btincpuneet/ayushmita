@@ -59,7 +59,6 @@ const createDoctor = async (req, res) => {
       imageUrl = `/uploads/doctors/${imageName}`;
     }
 
-    /* ---------- CREATE DOCTOR ---------- */
     const doctor = await Doctor.create({
       name,
       slug,
@@ -79,7 +78,6 @@ const createDoctor = async (req, res) => {
       status: status ?? 1,
     });
 
-    /* ---------- HOSPITAL RELATION (SAFE) ---------- */
     if (!Array.isArray(hospitals)) hospitals = [hospitals];
 
     hospitals = hospitals

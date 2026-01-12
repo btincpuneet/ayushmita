@@ -71,9 +71,7 @@ app.use("/api/button", buttonAppointRoutes);
 app.use("/api/global-settings", globalSettingRoutes);
 app.use("/api", countiesCitiesRoutes);
 app.use("/api", editorUploadRoutes);
- 
- 
- 
+
 sequelize
   .sync()
   .then(() => console.log('Database synced successfully'))

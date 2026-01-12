@@ -17,6 +17,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Plus, Edit, Trash, X } from "lucide-react";
 import { API_BASE} from "../../config/api";
+import { Button } from "@/components/ui/button";
 
 const API_URL = `${API_BASE}/api`;
 
@@ -178,18 +179,17 @@ export default function ManageFaq() {
                       {faq.status === 1 ? "Active" : "Inactive"}
                     </td>
                     <td className="p-3 text-right space-x-3">
-                      <button
-                        className="text-blue-600"
-                        onClick={() => handleEdit(faq)}
-                      >
+                      <Button size="sm" onClick={() => handleEdit(faq)}>
                         Edit
-                      </button>
-                      <button
-                        className="text-red-600"
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="destructive"
                         onClick={() => handleDelete(faq.id)}
                       >
                         Delete
-                      </button>
+                      </Button>
                     </td>
                   </SortableRow>
                 ))}

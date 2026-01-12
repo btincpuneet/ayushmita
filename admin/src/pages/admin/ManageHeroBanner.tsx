@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { heroBannerApi } from "@/services/banner";
 import { API_BASE } from "../../config/api";
+import { Button } from "@/components/ui/button";
 
 export default function ManageHeroBanner() {
   const [banners, setBanners] = useState<any[]>([]);
@@ -8,7 +9,7 @@ export default function ManageHeroBanner() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  
+
 
   const [form, setForm] = useState({
     title: "",
@@ -202,31 +203,32 @@ export default function ManageHeroBanner() {
                 <td className="p-3">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${banner.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-200 text-gray-600"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-200 text-gray-600"
                       }`}
                   >
                     {banner.status}
                   </span>
                 </td>
 
-               
 
-                {/* Actions */}
+
                 <td className="p-3 flex gap-2">
-                  <button
+                  <Button
+                    size="sm"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
                     onClick={() => handleEdit(banner)}
-                    className="px-3 py-1 bg-yellow-500 text-white rounded"
                   >
                     Edit
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    size="sm"
+                    variant="destructive"
                     onClick={() => handleDelete(banner.id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
 
               </tr>

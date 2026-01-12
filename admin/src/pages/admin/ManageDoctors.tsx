@@ -246,19 +246,18 @@ const ManageDoctors = () => {
                 <td className="p-3">
                   {d.status === 1 ? "Active" : "Inactive"}
                 </td>
-                <td className="p-3 text-right">
-                  <button
-                    onClick={() => handleEdit(d)}
-                    className="text-blue-600 mr-3"
-                  >
+                <td className="p-3 space-x-3 text-right">
+                  <Button size="sm" onClick={() => handleEdit(d)}>
                     Edit
-                  </button>
-                  <button
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
                     onClick={() => handleDelete(d.id)}
-                    className="text-red-600"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

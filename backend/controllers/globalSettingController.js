@@ -4,7 +4,6 @@ const getSingleSetting = async () => {
   return await GlobalSetting.findOne();
 };
 
-// helper: map API body → DB fields
 const mapPayload = (body) => ({
   email_host: body.emailHost,
   email_port: body.emailPort,
@@ -20,9 +19,7 @@ const mapPayload = (body) => ({
   email_template_html: body.emailTemplateHtml,
 });
 
-/**
- * CREATE (only once)
- */
+
 exports.create = async (req, res) => {
   try {
     const existing = await getSingleSetting();
@@ -69,9 +66,7 @@ exports.get = async (req, res) => {
   }
 };
 
-/**
- * UPDATE
- */
+
 exports.update = async (req, res) => {
   try {
     const setting = await getSingleSetting();

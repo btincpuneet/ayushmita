@@ -110,7 +110,7 @@ const ManagePromoSlider = () => {
     }
   };
 
-  // Delete
+
   const handleDelete = async (id) => {
     if (!confirm("Delete this slider?")) return;
     try {
@@ -166,30 +166,32 @@ const ManagePromoSlider = () => {
 
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 text-sm rounded ${
-                      item.status === "active"
+                    className={`px-2 py-1 text-sm rounded ${item.status === "active"
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-600"
-                    }`}
+                      }`}
                   >
                     {item.status}
                   </span>
                 </td>
 
                 <td className="p-3 text-right">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="text-blue-600 mr-4"
-                  >
-                    Edit
-                  </button>
+                  <td className="p-3 text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" onClick={() => handleEdit(item)}>
+                        Edit
+                      </Button>
 
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="text-red-600"
-                  >
-                    Delete
-                  </button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </td>
+
                 </td>
               </tr>
             ))}
