@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ModalAppointment from "../Treatment/ModalAppointment";
-
+ 
 interface Hospital {
   id: number;
   name: string;
@@ -20,18 +20,36 @@ interface Hospital {
   hospital_beds: number;
   slug: string;
 }
-
-
+import axios from "axios";
+import { API_BASE } from "../../config/api";
+ 
 interface HospitalCardProps {
   hospital: Hospital;
 }
-
+ 
 const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
-
-
+ 
+  function handleViewMore() {
+    navigate('/hospitals');
+  }
+  const fetchGlobalSettings = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success) {
+        setWhatsAppNumber(res.data.data.whatsapp_number);
+      }
+    } catch (error) {
+      console.error("Failed to fetch WhatsApp number", error);
+    }
+  };
+ 
+  useEffect(() => {
+    fetchGlobalSettings();
+  }, []);
+ 
   return (
     <>
       <article className="bg-white rounded-xl border border-[#EFF3F6] hover:shadow-lg transition duration-200 p-4">
@@ -47,7 +65,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               }}
             />
           </div>
-
+ 
           <div className="flex-1">
             {/* Title */}
             <h3 className="mb-1 space-y-2"
@@ -59,11 +77,11 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                 lineHeight: "26px",
                 letterSpacing: "0%",
               }}
-
+ 
             >
               {hospital.name}, {hospital.city}, {hospital.country}
             </h3>
-
+ 
             {/* Address */}
             <div className="flex space-y-2 items-start gap-2 mb-1">
               <MapPin size={18} className="text-[#F0A324] mt-0.5" />
@@ -77,8 +95,8 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               }}
               >{hospital.address}</p>
             </div>
-
-
+ 
+ 
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex space-y-2 items-center gap-2">
                 <Calendar size={18} className="text-[#F0A324]" />
@@ -91,7 +109,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                     lineHeight: "26px",
                     letterSpacing: "0%",
                   }}
-
+ 
                 >
                   <strong
                     style={{
@@ -102,11 +120,11 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                       lineHeight: "26px",
                       letterSpacing: "0%",
                     }}
-
+ 
                   >Founded in:</strong> {hospital.founded_year}
                 </span>
               </div>
-
+ 
               <div className="flex space-y-2 items-center gap-2">
                 <Bed size={18} className="text-[#F0A324]" />
                 <span
@@ -132,7 +150,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                 </span>
               </div>
             </div>
-
+ 
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3 mt-4 list-page-button">
                 <button onClick={() => setIsModalOpen(true)} className="px-5 py-3 rounded-md bg-[#F0A324] hover:bg-yellow-600 transition btn-sec-list"
@@ -175,8 +193,8 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                 </button>
                   </a>
                 )}
-
-
+ 
+ 
               </div>
               <div className="flex items-center mt-4 ">
                 <Link
@@ -194,7 +212,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
                   <svg width="19" height="10" viewBox="0 0 19 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15.3615 6L12.9105 8.59L14.25 10L19 5L14.25 0L12.9105 1.41L15.3615 4H0V6H15.3615Z" fill="#F0A324" />
                   </svg>
-
+ 
                 </Link>
               </div>
             </div>
@@ -206,8 +224,8 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
         />
       </article >
     </>
-
+ 
   );
 };
-
+ 
 export default HospitalCard;
