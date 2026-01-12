@@ -92,7 +92,7 @@ countries.forEach((country) => {
   });
 });
 
-fs.writeFileSync("countries_cities.csv", csv);
+// fs.writeFileSync("countries_cities.csv", csv);
 
 console.log("CSV file generated successfully!");
 
