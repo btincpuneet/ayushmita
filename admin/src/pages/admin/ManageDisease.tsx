@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authHeader } from "../../utils/auth";
 
 import RichTextEditor from "@/components/RichTextEditor";
 
@@ -112,33 +113,47 @@ const ManageDiseases = () => {
     setOpen(true);
   };
 
- 
+
   const handleSubmit = async () => {
     const fd = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) fd.append(key, value);
     });
-
     try {
       if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, fd);
+        await axios.put(`${API_URL}/${editing.id}`, fd, {
+          headers: {
+            ...authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Disease updated");
       } else {
-        await axios.post(API_URL, fd);
+        await axios.post(API_URL, fd, {
+          headers: {
+            ...authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Disease added");
       }
+
       setOpen(false);
       loadDiseases();
+
     } catch {
       toast.error("Save failed");
     }
   };
 
-  
+
   const handleDelete = async (id) => {
     if (!confirm("Delete this disease?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: authHeader(),
+      });
+
       toast.success("Deleted successfully");
       loadDiseases();
     } catch {
@@ -148,13 +163,13 @@ const ManageDiseases = () => {
 
   return (
     <div className="p-6">
-     
+
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Diseases</h1>
         <Button onClick={handleAdd}>+ Add Disease</Button>
       </div>
 
-    
+
       <div className="bg-white shadow rounded">
         <table className="w-full text-left">
           <thead className="bg-gray-100">
@@ -189,17 +204,17 @@ const ManageDiseases = () => {
                   )}
                 </td>
                 <td className="p-3 space-x-3 text-right">
-                   <Button size="sm" onClick={() => handleEdit(d)}>
-                        Edit
-                      </Button>
+                  <Button size="sm" onClick={() => handleEdit(d)}>
+                    Edit
+                  </Button>
 
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(d.id)}
-                      >
-                        Delete
-                      </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(d.id)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -213,7 +228,7 @@ const ManageDiseases = () => {
         )}
       </div>
 
-     
+
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>

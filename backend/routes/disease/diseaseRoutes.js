@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -22,13 +23,30 @@ const upload = multer({
   }
 });
 
-router.post("/", upload.single("image"), createDisease);
-
 router.get("/", getAllDiseasesWithTreatments);
-router.get("/:slug", getDiseaseWithTreatments);
-router.get("/:id", getDiseaseById);
 
-router.put("/:id", upload.single("image"), updateDisease);
-router.delete("/:id", deleteDisease);
+router.get("/slug/:slug", getDiseaseWithTreatments);
+
+router.get("/id/:id", getDiseaseById);
+
+router.post(
+  "/",
+  authenticateToken,
+  upload.single("image"),
+  createDisease
+);
+
+router.put(
+  "/:id",
+  authenticateToken,
+  upload.single("image"),
+  updateDisease
+);
+
+router.delete(
+  "/:id",
+  authenticateToken,
+  deleteDisease
+);
 
 module.exports = router;

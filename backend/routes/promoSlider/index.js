@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
-const fs = require("fs");
-const path = require("path");
+
+
 const {
   createPromoSlider,
   getPromoSliders,
@@ -9,6 +9,8 @@ const {
   updatePromoSlider,
   deletePromoSlider
 } = require('../../controllers/promoSliderController');
+
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -22,10 +24,27 @@ const upload = multer({
   }
 });
 
-router.post('/promo-sliders', upload.single('image'), createPromoSlider);
 router.get('/promo-sliders', getPromoSliders);
 router.get('/promo-sliders/:id', getPromoSliderById);
-router.put('/promo-sliders/:id', upload.single('image'), updatePromoSlider);
-router.delete('/promo-sliders/:id', deletePromoSlider);
+
+router.post(
+  '/promo-sliders',
+  authenticateToken,
+  upload.single('image'),
+  createPromoSlider
+);
+
+router.put(
+  '/promo-sliders/:id',
+  authenticateToken,
+  upload.single('image'),
+  updatePromoSlider
+);
+
+router.delete(
+  '/promo-sliders/:id',
+  authenticateToken,
+  deletePromoSlider
+);
 
 module.exports = router;

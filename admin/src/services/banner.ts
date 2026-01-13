@@ -1,4 +1,3 @@
-// src/services/banner.ts
 import axios from "axios";
 import { API_BASE } from "../config/api";
 
@@ -10,7 +9,6 @@ export const heroBannerApi = {
     return res.data.data;
 
   },
-
 
   create: async (formData) => {
     const res = await axios.post(API_URL, formData, {

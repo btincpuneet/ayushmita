@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
+import { authHeader } from "../../utils/auth";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
 
@@ -74,11 +75,16 @@ export default function ManageCmsPage() {
       if (editing) {
         await axios.put(
           `${API_BASE}/api/cms-pages/${editing.id}`,
-          form
+          form,
+          {
+            headers: authHeader(),
+          }
         );
         toast.success("Page updated");
       } else {
-        await axios.post(`${API_BASE}/api/cms-pages`, form);
+        await axios.post(`${API_BASE}/api/cms-pages`, form, {
+          headers: authHeader(),
+        });
         toast.success("Page created");
       }
 
@@ -109,7 +115,9 @@ export default function ManageCmsPage() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${API_BASE}/api/cms-pages/${page.id}`);
+      await axios.delete(`${API_BASE}/api/cms-pages/${page.id}`, {
+        headers: authHeader(),
+      });
       toast.success("Page permanently deleted");
       fetchPages();
     } catch (err: any) {
@@ -165,11 +173,10 @@ export default function ManageCmsPage() {
 
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      page.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
+                    className={`px-2 py-1 rounded text-xs ${page.status === "active"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                      }`}
                   >
                     {page.status}
                   </span>

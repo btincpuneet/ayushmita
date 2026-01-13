@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authHeader } from "../../utils/auth";
 
 const API_URL = `${API_BASE}/api/promo-sliders`;
 
@@ -49,7 +50,6 @@ const ManagePromoSlider = () => {
     loadData();
   }, []);
 
-  // Open Modal for Create
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -65,8 +65,34 @@ const ManagePromoSlider = () => {
     setPreview(null);
     setOpen(true);
   };
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    Object.keys(form).forEach((k) => {
+      if (form[k] !== null) formData.append(k, form[k]);
+    });
 
-  // Open Modal for Update
+    try {
+      const config = {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      if (editing) {
+        await axios.put(`${API_URL}/${editing.id}`, formData, config);
+        toast.success("Slider updated!");
+      } else {
+        await axios.post(API_URL, formData, config);
+        toast.success("Slider created!");
+      }
+
+      setOpen(false);
+      loadData();
+    } catch (err) {
+      toast.error("Error saving");
+    }
+  };
   const handleEdit = (item) => {
     setEditing(item);
     setForm({
@@ -80,7 +106,6 @@ const ManagePromoSlider = () => {
       image: null,
     });
 
-    // FIXED: Show image from uploads folder
     if (item.image_url) {
       setPreview(`${API_BASE}${item.image_url}`);
     }
@@ -88,33 +113,12 @@ const ManagePromoSlider = () => {
     setOpen(true);
   };
 
-  // Create or Update
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    Object.keys(form).forEach((k) => {
-      if (form[k] !== null) formData.append(k, form[k]);
-    });
-
-    try {
-      if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, formData);
-        toast.success("Slider updated!");
-      } else {
-        await axios.post(API_URL, formData);
-        toast.success("Slider created!");
-      }
-      setOpen(false);
-      loadData();
-    } catch (err) {
-      toast.error("Error saving");
-    }
-  };
-
-
   const handleDelete = async (id) => {
     if (!confirm("Delete this slider?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: authHeader(),
+      });
       toast.success("Deleted!");
       loadData();
     } catch (err) {
@@ -167,8 +171,8 @@ const ManagePromoSlider = () => {
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 text-sm rounded ${item.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-600"
                       }`}
                   >
                     {item.status}
