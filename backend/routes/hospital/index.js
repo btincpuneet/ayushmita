@@ -10,6 +10,7 @@ const {
   deleteHospital,
   getHospitalBySlug,
 } = require("../../controllers/topPartnerHospitalController");
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -21,11 +22,11 @@ const upload = multer({
   },
 });
 
-router.post("/hospitals", upload.single("image"), createHospital);
+router.post("/hospitals", upload.single("image"), authenticateToken ,createHospital);
 router.get("/hospitals", getAllHospitals);
 router.get("/hospitals/:slug", getHospitalBySlug);
 router.get("/hospitals/:id", getHospitalById);
-router.put("/hospitals/:id", upload.single("image"), updateHospital);
-router.delete("/hospitals/:id", deleteHospital);
+router.put("/hospitals/:id", upload.single("image"),authenticateToken , updateHospital);
+router.delete("/hospitals/:id", authenticateToken ,deleteHospital);
 
 module.exports = router;

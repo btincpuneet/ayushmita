@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";
-
 import {
   Dialog,
   DialogContent,
@@ -13,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
+import { authHeader } from "@/utils/auth";
 
 const API_URL = `${API_BASE}/api/hospitals`;
 
@@ -112,7 +112,9 @@ export default function ManageTopPartnerHospitals() {
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this hospital?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: authHeader(),
+      });
       toast.success("Deleted successfully");
       fetchHospitals();
     } catch {
@@ -120,30 +122,39 @@ export default function ManageTopPartnerHospitals() {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
 
-      const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v as string));
-      if (file) fd.append("image", file);
+const handleSubmit = async () => {
+  try {
+    setLoading(true);
 
-      if (editing) {
-        await axios.put(`${API_URL}/${editing}`, fd);
-        toast.success("Updated successfully");
-      } else {
-        await axios.post(API_URL, fd);
-        toast.success("Created successfully");
-      }
+    const fd = new FormData();
+    Object.entries(form).forEach(([k, v]) => fd.append(k, v as string));
+    if (file) fd.append("image", file);
 
-      setOpen(false);
-      fetchHospitals();
-    } catch {
-      toast.error("Failed to save data");
-    } finally {
-      setLoading(false);
+    const config = {
+      headers: {
+        ...authHeader(),
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    if (editing) {
+      await axios.put(`${API_URL}/${editing}`, fd, config);
+      toast.success("Updated successfully");
+    } else {
+      await axios.post(API_URL, fd, config);
+      toast.success("Created successfully");
     }
-  };
+
+    setOpen(false);
+    fetchHospitals();
+  } catch {
+    toast.error("Failed to save data");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
   return (
@@ -205,7 +216,7 @@ export default function ManageTopPartnerHospitals() {
         </table>
       </div>
 
-      
+
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -257,7 +268,7 @@ export default function ManageTopPartnerHospitals() {
               showWordCount
             />
 
-            
+
             <div className="border rounded-lg p-4 space-y-3">
               <p className="text-sm font-semibold text-gray-600">SEO Settings</p>
               <Input name="seo_title" placeholder="SEO Title" value={form.seo_title} onChange={handleChange} />

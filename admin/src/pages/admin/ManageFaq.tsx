@@ -16,8 +16,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Plus, Edit, Trash, X } from "lucide-react";
-import { API_BASE} from "../../config/api";
+import { API_BASE } from "../../config/api";
 import { Button } from "@/components/ui/button";
+import { authHeader } from "../../utils/auth";
 
 const API_URL = `${API_BASE}/api`;
 
@@ -72,7 +73,7 @@ export default function ManageFaq() {
 
   const loadFaqs = async () => {
     const res = await axios.get(`${API_URL}/faqs`);
-    setFaqs(res.data); 
+    setFaqs(res.data);
   };
 
   useEffect(() => {
@@ -119,11 +120,13 @@ export default function ManageFaq() {
 
   const handleSubmit = async () => {
     if (editing) {
-      await axios.put(`${API_URL}/faqs/${editing.id}`, form);
+      await axios.put(`${API_URL}/faqs/${editing.id}`, form, { headers: authHeader() });
     } else {
       await axios.post(`${API_URL}/faqs`, {
         ...form,
         sort_order: faqs.length + 1,
+      }, {
+        headers: authHeader(),
       });
     }
 
@@ -131,14 +134,14 @@ export default function ManageFaq() {
     loadFaqs();
   };
 
-  /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete FAQ?")) return;
-    await axios.delete(`${API_URL}/faqs/${id}`);
+    await axios.delete(`${API_URL}/faqs/${id}`, {
+      headers: authHeader(),
+    });
     loadFaqs();
   };
 
-  /* ================= UI ================= */
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
@@ -199,7 +202,6 @@ export default function ManageFaq() {
         </DndContext>
       </div>
 
-      {/* MODAL */}
       {open && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
           <div className="bg-white p-6 w-[420px] rounded">

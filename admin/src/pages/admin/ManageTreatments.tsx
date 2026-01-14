@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";
+import { authHeader } from "@/utils/auth";
 
 import {
   Dialog,
@@ -82,6 +83,7 @@ const ManageTreatments = () => {
     }
   };
 
+
   const loadTreatmentsByDisease = async (id: number) => {
     try {
       const res = await axios.get(`${API_TREATMENT}/disease/${id}`);
@@ -146,12 +148,18 @@ const ManageTreatments = () => {
       });
 
       fd.set("status", form.status === "active" ? "1" : "0");
+      const config = {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
 
       if (editing) {
-        await axios.put(`${API_TREATMENT}/${editing.id}`, fd);
+        await axios.put(`${API_TREATMENT}/${editing.id}`, fd, config);
         toast.success("Treatment updated");
       } else {
-        await axios.post(API_TREATMENT, fd);
+        await axios.post(API_TREATMENT, fd, config);
         toast.success("Treatment created");
       }
 
@@ -170,7 +178,9 @@ const ManageTreatments = () => {
     if (!window.confirm("Delete this treatment?")) return;
 
     try {
-      await axios.delete(`${API_TREATMENT}/${singleTreatment.id}`);
+      await axios.delete(`${API_TREATMENT}/${singleTreatment.id}`, {
+        headers: authHeader(),
+      });
       toast.success("Deleted");
       setSingleTreatment(null);
       setSelectedTreatmentSlug("");
@@ -273,8 +283,8 @@ const ManageTreatments = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${singleTreatment.status === 1
-                          ? "bg-success/10 text-success"
-                          : "bg-muted text-muted-foreground"
+                        ? "bg-success/10 text-success"
+                        : "bg-muted text-muted-foreground"
                         }`}>
                         {singleTreatment.status === 1 ? "Active" : "Inactive"}
                       </span>

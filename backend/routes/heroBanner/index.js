@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const heroController = require("../../controllers/heroBannerController");
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 
 const uploadPath = "uploads/hero-banners/";
@@ -29,6 +30,7 @@ const upload = multer({ storage });
 router.post(
   "/hero-banners",
   upload.single("image"),
+  authenticateToken,
   heroController.createHeroBanner
 );
 
@@ -40,9 +42,10 @@ router.get("/hero-banners/:id", heroController.getHeroBannerById);
 router.put(
   "/hero-banners/:id",
   upload.single("image"),
+  authenticateToken,
   heroController.updateHeroBanner
 );
 
-router.delete("/hero-banners/:id", heroController.deleteHeroBanner);
+router.delete("/hero-banners/:id", authenticateToken ,heroController.deleteHeroBanner);
 
 module.exports = router;

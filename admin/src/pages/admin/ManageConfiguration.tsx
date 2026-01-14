@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE } from "../../config/api";
+import { authHeader } from "@/utils/auth";
 
 const API_URL = `${API_BASE}/api/global-settings`;
 
@@ -134,11 +135,14 @@ const ManageConfiguration: React.FC = () => {
       setSaving(true);
       setErrors({});
       const validated = configSchema.parse(form);
+      const config = {
+        headers: authHeader(),
+      };
       if (exists) {
-        await axios.put(API_URL, validated);
+        await axios.put(API_URL, validated, config);
         toast.success("Configuration updated");
       } else {
-        await axios.post(API_URL, validated);
+        await axios.post(API_URL, validated, config);
         toast.success("Configuration created");
       }
       fetchSettings();
@@ -160,7 +164,9 @@ const ManageConfiguration: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(API_URL);
+      await axios.delete(API_URL, {
+        headers: authHeader(),
+      });
       setForm(defaultForm);
       setExists(false);
       toast.success("Configuration deleted");
@@ -197,11 +203,10 @@ const ManageConfiguration: React.FC = () => {
           </div>
         </div>
         <div
-          className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-            exists
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-100 text-yellow-700"
-          }`}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${exists
+            ? "bg-green-100 text-green-700"
+            : "bg-yellow-100 text-yellow-700"
+            }`}
         >
           {exists ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
           {exists ? "Configured" : "Not Configured"}
@@ -215,11 +220,10 @@ const ManageConfiguration: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 pb-2 border-b-2 transition ${
-                activeTab === tab.id
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
+              className={`flex items-center gap-2 pb-2 border-b-2 transition ${activeTab === tab.id
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
             >
               <Icon size={16} />
               {tab.label}

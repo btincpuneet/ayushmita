@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
 import { API_BASE } from "../../config/api";
+import { authHeader } from "../../utils/auth";
 
 const BLOG_API = `${API_BASE}/api/blogs`;
 const DISEASE_API = `${API_BASE}/api/diseases`;
@@ -122,8 +123,8 @@ export default function ManageBlogs() {
 
     try {
       editing
-        ? await axios.put(`${BLOG_API}/${editing.id}`, fd)
-        : await axios.post(BLOG_API, fd);
+        ? await axios.put(`${BLOG_API}/${editing.id}`, fd , { headers: authHeader() })
+        : await axios.post(BLOG_API, fd ,{ headers: authHeader() });
 
       toast.success(editing ? "Blog updated" : "Blog created");
       setOpen(false);
@@ -137,7 +138,7 @@ export default function ManageBlogs() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this blog?")) return;
-    await axios.delete(`${BLOG_API}/${id}`);
+    await axios.delete(`${BLOG_API}/${id}` ,{ headers: authHeader() });
     toast.success("Blog deleted");
     loadBlogs();
   };

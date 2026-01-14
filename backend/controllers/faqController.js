@@ -1,6 +1,5 @@
 const { FAQ } = require('../models/faq');
 console.log('FAQ Model:', FAQ);
-// CREATE FAQ
 exports.createFAQ = async (req, res) => {
   try {
     const { question, answer, sort_order, status } = req.body;
