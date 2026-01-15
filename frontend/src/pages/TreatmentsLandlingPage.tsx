@@ -124,7 +124,7 @@ export default function TreatmentsLandingPage() {
     <div>
       <Header />
       <TreatmentHeader title="Treatments In India at Low Cost" breadcrumbs={[
-        { label: "Home" },
+        { label: "Home", link: "/" },
         { label: "Treatments" },
       ]} />
 
@@ -151,14 +151,17 @@ export default function TreatmentsLandingPage() {
                   className={` w-7xl  py-10 m-auto flex gap-6 flex-col-reverse lg:flex-row items-start ${index % 2 !== 0 ? "lg:flex-row-reverse" : ""
                     }`}
                 >
-                  {/* Image */}
-                  <div className="w-full lg:w-1/2 flex justify-center">
-                    <img
-                      src={`${API_BASE}${disease.image}`}
-                      alt={disease.name}
-                      className="rounded-xl object-cover treatment-list-image"
-                    />
-                  </div>
+                  <img
+                    src={
+                      disease.image
+                        ? `${API_BASE}${disease.image}`
+                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                    }
+                    alt={disease.name ? `${disease.name} Treatment in India` : "Medical Treatment"}
+                    title={disease.name ? `${disease.name} Treatment` : "Medical Treatment"}
+                    className="rounded-xl object-cover treatment-list-image"
+                    loading="lazy"
+                  />
 
                   {/* Content */}
                   <div className="w-full">

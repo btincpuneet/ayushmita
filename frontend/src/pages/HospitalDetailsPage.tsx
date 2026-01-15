@@ -41,7 +41,6 @@ function PrevArrow({ onClick }: any) {
 }
 
 function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
 
   useEffect(() => {
@@ -282,42 +281,19 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
   );
 }
 
-function ContentSection({ title, html }: any) {
+function ContentSection({ html }: { html: string }) {
   if (!html) return null;
+
   return (
-    <div>
-      <div
-        className="text-sm leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    </div>
+    <div
+      className="cms-content leading-relaxed"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+
   );
 }
 
-function FacilitiesSection({ facilities }: any) {
-  return (
-    <div>
-      <h2 className="related-items-more mb-6">Facilities</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
-        {Object.entries(facilities).map(([title, items]: any) => (
-          <div key={title}>
-            <h4 className="font-semibold text-orange-500 mb-3 uppercase">
-              {title}
-            </h4>
-            <ul className="space-y-2">
-              {items.map((item: string) => (
-                <li key={item} className="flex gap-2">
-                  <Check size={16} className="text-green-600 mt-0.5" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+
 
 function SimilarHospitals({ hospitals }: any) {
   const settings = {
@@ -354,10 +330,17 @@ function SimilarHospitals({ hospitals }: any) {
           <div key={h.name} className="pr-6 similar-hospital">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <img
-                src={h.image}
-                alt={h.name}
+                src={
+                  h.image
+                    ? h.image
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                }
+                alt={h.name ? `${h.name} Hospital` : "Hospital Image"}
+                title={h.name ? h.name : "Hospital"}
                 className="h-[280px] w-full object-cover rounded-2xl"
+                loading="lazy"
               />
+
               <div className="p-4">
                 <h4 style={{
                   fontFamily: "Ubuntu, sans-serif",
@@ -414,10 +397,21 @@ function DoctorsSection({ doctors }: any) {
           <div key={d.name} className="pr-6 mb-20 similar-hospital">
             <div className="bg-white shadow rounded-lg text-center">
               <img
-                src={d.image}
-                alt={d.name}
-                className="w-full h-[233px]  object-cover mb-3 rounded-2xl"
+                src={
+                  d.image
+                    ? `${API_BASE}${d.image}`
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                }
+                alt={d.name ? `${d.name} Treatment` : "Medical Treatment"}
+                title={d.name ? d.name : "Medical Treatment"}
+                className="w-full h-[233px] object-cover mb-3 rounded-2xl"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s";
+                }}
               />
+
               <div >
                 <h4 style={{
                   fontFamily: "Ubuntu, sans-serif",
@@ -566,7 +560,7 @@ export default function HospitalDetailsPage() {
       <TreatmentHeader
         title={hospital.name}
         breadcrumbs={[
-          { label: "Home" },
+          { label: "Home" ,link: "/"},
           { label: "Hospitals", },
           { label: hospital.name, link: "" },
         ]}
@@ -583,7 +577,7 @@ export default function HospitalDetailsPage() {
               <ContentSection
                 html={hospital.description_html}
               />
-              {/* <FacilitiesSection facilities={facilities} /> */}
+
             </div>
           </div>
           <div className="lg:col-span-1 sticky top-24">

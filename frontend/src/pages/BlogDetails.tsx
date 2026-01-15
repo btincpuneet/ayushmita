@@ -25,6 +25,7 @@ interface Blog {
   meta_title?: string;
   meta_description?: string;
   meta_keywords?: string;
+  canonical_url?: string;
 }
 
 interface Disease {
@@ -35,6 +36,7 @@ interface GlobalSEO {
   seo_title?: string;
   seo_description?: string;
   seo_keywords?: string;
+  caronical_url?: string;
 }
 
 const BlogDetails: React.FC = () => {
@@ -147,7 +149,14 @@ const BlogDetails: React.FC = () => {
     globalSEO?.seo_keywords ||
     "hospital, healthcare";
 
-  useSeo(seoTitle, seoDescription, seoKeywords);
+  const canonicalUrl =
+    blog?.canonical_url ||
+    (blog?.slug
+      ? `${window.location.origin}/blogs/${blog.slug}`
+      : undefined);
+
+  useSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
+
 
 
   if (loading) {
@@ -165,8 +174,8 @@ const BlogDetails: React.FC = () => {
       <TreatmentHeader
 
         breadcrumbs={[
-          { label: "Home", path: "" },
-          { label: "Blog", path: "/blogs" },
+          { label: "Home", link: "/" },
+          { label: "Blog", link: "/blogs" },
           { label: blog.title },
         ]}
       >
@@ -230,7 +239,7 @@ const BlogDetails: React.FC = () => {
 
 
             <div
-              className="prose max-w-none"
+              className="cms-content prose max-w-none"
               dangerouslySetInnerHTML={{
                 __html: decodeHtml(blog.description_html),
               }}

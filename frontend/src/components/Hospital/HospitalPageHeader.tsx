@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   title: string;
@@ -10,6 +11,7 @@ interface HeaderProps {
   onCountryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onCityChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
+
 
 const HospitalPageHeader: React.FC<HeaderProps> = ({
   title,
@@ -32,7 +34,9 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
             lineHeight: "100%",
             letterSpacing: "0%",
           }}>
-          Home <span className="text-[#F0A324]" style={{
+          <Link to="/" className="hover:underline">
+            Home
+          </Link>{" "} <span className="text-[#F0A324]" style={{
             fontFamily: "Ubuntu, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",

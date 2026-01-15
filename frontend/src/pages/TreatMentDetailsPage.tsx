@@ -110,7 +110,7 @@ export default function TreatmentDetailsPage() {
 
           <div className="w-full lg:w-[100%]">
             <div
-              className="prose max-w-none"
+              className="cms-content prose max-w-none"
               dangerouslySetInnerHTML={{
                 __html: treatment?.short_description || "",
               }}
@@ -167,7 +167,7 @@ export default function TreatmentDetailsPage() {
           </div>
         </div>
         <div
-          className="prose max-w-none"
+          className="cms-content prose max-w-none"
           dangerouslySetInnerHTML={{
             __html: treatment?.description_html || "",
           }}

@@ -181,8 +181,8 @@ const DoctorDetailsPage: React.FC = () => {
             <TreatmentHeader
                 title={doctor.name}
                 breadcrumbs={[
-                    { label: "Home" },
-                    { label: "Doctor" },
+                    { label: "Home" , link: "/"},
+                    { label: "Doctor" , link: "doctors" },
                     { label: doctor.name },
                 ]}
             />
@@ -193,13 +193,19 @@ const DoctorDetailsPage: React.FC = () => {
                             <div className="lg:col-span-2  p-6 ">
                                 <div className="flex flex-col md:flex-row gap-6 items-start">
 
-                                    <div className="flex-shrink-0">
+                                    <div className="flex-shrink-0 ">
                                         <img
-                                            src={image}
-                                            alt={doctor.name}
+                                            src={
+                                                doctor?.image_url
+                                                    ? `${API_BASE}${doctor.image_url}`
+                                                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                                            }
+                                            alt={`${doctor.name} - ${doctor.specialty || "Doctor"} Doctor`}
+                                            title={`${doctor.name} - ${doctor.specialty || "Doctor"} Doctor`}
                                             className="object-cover rounded-2xl doctor-detail-page-image-1"
                                         />
                                     </div>
+
 
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-1 text-sm">
@@ -331,14 +337,21 @@ const DoctorDetailsPage: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="mt-10 ">
+                                {/* <div className="mt-10 ">
                                     <div
-                                        className="mt-10  space-y-8 prose prose-sm max-w-none"
+                                        className="mt-10  space-y-8 prose prose-sm max-w-none border"
                                         dangerouslySetInnerHTML={{ __html: doctor.description_html }}
                                     />
 
 
+                                </div> */}
+                                <div className="mt-10">
+                                    <div
+                                        className="cms-content "
+                                        dangerouslySetInnerHTML={{ __html: doctor.description_html }}
+                                    />
                                 </div>
+
                             </div>
 
                             <BookingForm />

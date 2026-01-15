@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface DoctorPageHeaderProps {
   title: string;
@@ -33,7 +34,9 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
             letterSpacing: "0%",
           }}
         >
-          Home <span className="text-[#F0A324]">/ Doctors</span>
+          <Link to="/" className="hover:underline">
+            Home
+          </Link>{" "} <span className="text-[#F0A324]">/ Doctors</span>
         </p>
 
         <h1 className="mt-2" style={{

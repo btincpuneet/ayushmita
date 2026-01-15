@@ -64,7 +64,7 @@ const CmsPage: React.FC = () => {
       <TreatmentHeader
         title={page.title}
         breadcrumbs={[
-          { label: "Home" },
+          { label: "Home" , link: "/"},
           { label: "About Us" },
         ]}
       />

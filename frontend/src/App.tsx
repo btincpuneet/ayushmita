@@ -18,9 +18,9 @@ import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
 
 import { useSyncRTLWithGoogleTranslate } from "./hooks/useSyncRTLWithGoogleTranslate";
+import TestimonialPage from "./pages/TestimonialPage";
 
 const App: React.FC = () => {
-  // ✅ IMPORTANT: call the hook
   useSyncRTLWithGoogleTranslate();
 
   return (
@@ -42,6 +42,7 @@ const App: React.FC = () => {
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/:slug" element={<CmsPage />} />
+        <Route path="/testimonail" element={<TestimonialPage />} />
       </Routes>
     </HelmetProvider>
   );

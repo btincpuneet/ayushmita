@@ -206,7 +206,7 @@ const ContactUs = () => {
                   <p className="text-gray-500">Loading...</p>
                 ) : (
                   <div
-                    className="max-w-none text-sm"
+                    className="cms-content max-w-none text-sm"
                     dangerouslySetInnerHTML={{ __html: cmsContent }}
                   />
                 )}

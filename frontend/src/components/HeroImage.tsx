@@ -7,8 +7,7 @@ import axios from "axios";
 import useSeo from '../hooks/useSeo';
 
 const HeroImage = () => {
-  const { i18n } = useTranslation();
-  const lang = i18n.language.split("-")[0] || "en";
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [banner, setBanner] = useState(null);
   const [seoData, setSeoData] = useState({
@@ -31,7 +30,7 @@ const HeroImage = () => {
   useEffect(() => {
     const fetchHeroBanner = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/hero-banners`);
+        const res = await axios.get(`${API_BASE}/api/hero-active-banners`);
 
         if (res.data?.success && res.data?.data?.length > 0) {
           setBanner(res.data.data[0]);

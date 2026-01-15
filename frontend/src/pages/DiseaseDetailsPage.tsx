@@ -82,7 +82,7 @@ const DiseaseDetailsPage = () => {
 
   }, [slug]);
 
-  
+
   const seoTitle =
     disease?.seo_title ||
     globalSEO?.seo_title ||
@@ -113,41 +113,46 @@ const DiseaseDetailsPage = () => {
           <TreatmentHeader
             title={disease?.name}
             breadcrumbs={[
-              { label: "Home" },
+              { label: "Home" , link: "/" },
               { label: disease?.name || "Treatment", link: "" },
             ]}
           />
         </div>
 
-       <div className="container-fluid bg-white">
-         <div className="max-w-7xl mx-auto px-4 mt-10 bg-white">
-          <div className="flex flex-col-reverse lg:flex-row items-start ">
-            <div className="w-full lg:w-1/2 flex justify-center">
-              <img
-                src={`${API_BASE}${disease.image}`}
-                alt={disease.name}
-                className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
-              />
-            </div>
+        <div className="container-fluid bg-white">
+          <div className="max-w-7xl mx-auto px-4 mt-10 bg-white">
+            <div className="flex flex-col-reverse lg:flex-row items-start ">
+              <div className="w-full lg:w-1/2 flex justify-center">
+                <img
+                  src={
+                    disease?.image
+                      ? `${API_BASE}${disease.image}`
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                  }
+                  alt={`${disease.name} Disease`}
+                  title={`${disease.name} Disease`}
+                  className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
+                />
 
-            <div className="w-full lg:w-[100%]">
-              <p
-                style={{
-                  fontFamily: "Ubuntu",
-                  fontWeight: 300,
-                  fontStyle: "normal",
-                  fontSize: "16px",
-                  lineHeight: "27px",
-                  letterSpacing: "0%",
-                }}
-              >
-                Having cancer is one of the biggest fears for humans because most people lose their lives to cancer. In cancer disease, the body develops abnormal cells that spread to other parts of the body. When a patient suffers from cancer, the patient experiences various symptoms including unexplained weight loss, fatigue, severe pain, and many more. So, patients must seek cancer treatment.
-                We know that receiving a cancer diagnosis can be enormous. So, if people face these diseases, they have to choose the best healthcare provider. At Aushmita, we have partnered with the best cancer treatment hospitals and oncologists around the world. Our medical network team provides cancer treatment options according to the patient’s needs.
-              </p>
+              </div>
+
+              <div className="w-full lg:w-[100%] ">
+                <p
+                  style={{
+                    fontFamily: "Ubuntu",
+                    fontWeight: 300,
+                    fontStyle: "normal",
+                    fontSize: "16px",
+                    lineHeight: "27px",
+                    letterSpacing: "0%",
+                  }}
+                >
+                  {disease?.short_description}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-       </div>
 
         <div className="max-w-7xl mx-auto px-4 mt-16 mb-16 desese-overview-sec">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
@@ -157,12 +162,18 @@ const DiseaseDetailsPage = () => {
                 to={`/treatment-details/${t.slug}`}
                 className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-2 flex flex-col items-center text-center"
               >
-                <div className="w-full h-24 overflow-hidden rounded-lg">
+                <div className="w-full h-24 border overflow-hidden rounded-lg">
                   <img
-                    src={`${API_BASE}${t.image}`}
-                    alt={t.name}
+                    src={
+                      t.image
+                        ? `${API_BASE}${t.image}`
+                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                    }
+                    alt={`${t.name} Treatment`}
+                    title={`${t.name} Treatment`}
                     className="w-full h-full object-cover rounded-lg"
                   />
+
                 </div>
 
                 <p
@@ -184,7 +195,7 @@ const DiseaseDetailsPage = () => {
           </div>
         </div>
         <div
-          className="prose max-w-none"
+          className="cms-content prose max-w-none"
           dangerouslySetInnerHTML={{
             __html: disease?.description_html || "",
           }}

@@ -1,14 +1,15 @@
-// import { Link } from "react-router-dom";
 import { Link, NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { API_BASE } from "../config/api";
 import Logo from "../assets/logo.png";
-import LanguageSelector from "./LanguageSelector";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState<any[]>([]);
-  const [appointmentButton, setAppointmentButton] = useState<string>("");
+  const [appointmentButton, setAppointmentButton] = useState<{
+    name: string;
+    linkUrl: string;
+  } | null>(null);
 
   const loadCategories = async () => {
     try {
@@ -32,8 +33,12 @@ const Header: React.FC = () => {
 
       if (json.success && json.data.length > 0) {
         const activeButton = json.data.find((b: any) => b.status === true);
+
         if (activeButton) {
-          setAppointmentButton(activeButton.name);
+          setAppointmentButton({
+            name: activeButton.name,
+            linkUrl: activeButton.linkUrl,
+          });
         }
       }
     } catch (error) {
@@ -80,9 +85,9 @@ const Header: React.FC = () => {
 
               {appointmentButton && (
                 <NavLink
-                  to="/"
+                  to={appointmentButton.linkUrl}
                   className={({ isActive }) =>
-                    `px-5 py-3 rounded-lg min-w-max ${isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
+                    `px-5 py-3 rounded-lg min-w-max  ${isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
                     }`
                   }
                   style={{
@@ -92,9 +97,10 @@ const Header: React.FC = () => {
                     letterSpacing: "2%",
                   }}
                 >
-                  {appointmentButton}
+                  {appointmentButton.name}
                 </NavLink>
               )}
+
             </ul>
           </div>
 
@@ -124,13 +130,14 @@ const Header: React.FC = () => {
 
               {appointmentButton && (
                 <Link
-                  to="/"
+                  to={appointmentButton.linkUrl}
                   onClick={() => setIsOpen(false)}
                   className="block w-full text-center mt-3 px-4 py-2 rounded-md bg-[#ff8a00] text-white"
                 >
-                  {appointmentButton}
+                  {appointmentButton.name}
                 </Link>
               )}
+
             </nav>
           </div>
         )}
