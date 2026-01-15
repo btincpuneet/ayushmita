@@ -38,14 +38,16 @@ const App = () => (
             <Route path="/login" element={<Login />} />
 
             <Route
-              path="/admin"
-              element={
+                path="/admin"
+                element={
                 <ProtectedRoute>
                   <AdminLayout />
                 </ProtectedRoute>
-              }
-            >
-              <Route index element={<ManageCategory />} />
+                }
+                >
+                {/* DEFAULT PAGE FOR /admin */}
+                <Route index element={<ManageCategory />} />
+
               <Route path="promo-slider" element={<ManagePromoSlider />} />
               <Route path="hero-banner" element={<ManageHeroBanner />} />
               <Route path="manage-doctor" element={<ManageDoctors />} />
