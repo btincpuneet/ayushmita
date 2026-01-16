@@ -71,17 +71,17 @@ export default function ManageBlogs() {
     axios.get(DISEASE_API).then((r) => setDiseases(r.data.data || []));
   }, []);
 
- useEffect(() => {
-  if (!form.is_global && form.disease_id !== "0") {
-    axios
-      .get(`${TREATMENT_API}/disease/${form.disease_id}`)
-      .then((r) => {
-        setTreatments(r.data.treatments || []);
-      });
-  } else {
-    setTreatments([]);
-  }
-}, [form.disease_id, form.is_global]);
+  useEffect(() => {
+    if (!form.is_global && form.disease_id !== "0") {
+      axios
+        .get(`${TREATMENT_API}/disease/${form.disease_id}`)
+        .then((r) => {
+          setTreatments(r.data.treatments || []);
+        });
+    } else {
+      setTreatments([]);
+    }
+  }, [form.disease_id, form.is_global]);
 
 
   const handleSubmit = async () => {
@@ -294,6 +294,7 @@ export default function ManageBlogs() {
             </select>
           </div>
 
+
           <div className="grid grid-cols-2 gap-4">
             <Input
               placeholder="Title *"
@@ -334,6 +335,21 @@ export default function ManageBlogs() {
               })
             }
           />
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Status</label>
+              <select
+                className="border rounded px-3 py-2 w-full"
+                value={form.status}
+                onChange={(e) =>
+                  setForm({ ...form, status: e.target.value })
+                }
+              >
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
 
           <div className="mt-8 border-t pt-6">
             <h3 className="font-semibold mb-4">SEO</h3>

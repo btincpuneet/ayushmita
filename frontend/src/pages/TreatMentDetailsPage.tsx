@@ -104,6 +104,8 @@ export default function TreatmentDetailsPage() {
             <img
               src={`${API_BASE}${treatment.image}`}
               alt={treatment.name}
+              title={treatment.name}
+
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
           </div>

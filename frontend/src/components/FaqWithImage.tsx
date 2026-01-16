@@ -71,6 +71,7 @@ const FaqWithImage = ({
                 <img
                   src={imageUrl}
                   alt="doctor and patient"
+                  title="doctor and patient"
                   className="block object-cover rounded-xl"
                   style={{
                     width: 500,
@@ -91,7 +92,7 @@ const FaqWithImage = ({
                   boxShadow: "0 14px 30px rgba(2,6,23,0.12)",
                 }}
               >
-                <img src={care} alt="care" className="w-11 h-11" />
+                <img src={care} alt="care" title="care" className="w-11 h-11" />
               </div>
 
               <div
@@ -102,7 +103,7 @@ const FaqWithImage = ({
                   minWidth: 220,
                 }}
               >
-                <img src={Smile} alt="smile" className="w-11 h-11" />
+                <img src={Smile} alt="smile"  title ="smiel" className="w-11 h-11" />
                 <div>
                   <div
                     style={{
@@ -152,9 +153,8 @@ const FaqWithImage = ({
                         {f.q}
                       </span>
                       <span
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[#F0A324] transition-transform ${
-                          isOpen ? "rotate-45" : ""
-                        }`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[#F0A324] transition-transform ${isOpen ? "rotate-45" : ""
+                          }`}
                       >
                         <svg className="w-4 h-4" viewBox="0 0 24 24">
                           <path
@@ -167,9 +167,8 @@ const FaqWithImage = ({
                     </button>
 
                     <div
-                      className={`mt-2 px-6 overflow-hidden transition-all ${
-                        isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                      }`}
+                      className={`mt-2 px-6 overflow-hidden transition-all ${isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                        }`}
                     >
                       <p className="text-gray-600 pb-3">{f.a}</p>
                     </div>

@@ -81,7 +81,7 @@ const DoctorDetailsPage: React.FC = () => {
                 );
 
                 const listRes = await axios.get(
-                    `${API_BASE}/api/doctors`
+                    `${API_BASE}/api/doctors/active`
                 );
 
                 setDoctor(doctorRes.data.data);
@@ -181,11 +181,12 @@ const DoctorDetailsPage: React.FC = () => {
             <TreatmentHeader
                 title={doctor.name}
                 breadcrumbs={[
-                    { label: "Home" , link: "/"},
-                    { label: "Doctor" , link: "doctors" },
+                    { label: "Home", link: "/" },
+                    { label: "Doctor", link: "/doctors" },
                     { label: doctor.name },
                 ]}
             />
+
             <main className="main-sec-det-pg">
                 <section className="py-10 doctor-details-page-list-items-sec">
                     <Container>

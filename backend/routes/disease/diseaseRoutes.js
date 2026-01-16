@@ -11,6 +11,7 @@ const {
   updateDisease,
   deleteDisease,
   getAllDiseasesWithTreatments,
+  getAllDiseases,
 } = require("../../controllers/diseaseController");
 
 const upload = multer({
@@ -21,6 +22,7 @@ const upload = multer({
     cb(null, true);
   }
 });
+router.get("/get-active-disease", getAllDiseases);
 
 router.get("/", getAllDiseasesWithTreatments);
 

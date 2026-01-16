@@ -184,9 +184,14 @@ const ManageDoctors = () => {
       }
       setOpen(false);
       loadDoctors();
-    } catch {
-      toast.error("Save failed");
-    }
+    } catch (error: any) {
+          const message =
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            "Something went wrong. Please try again.";
+    
+          toast.error(message);
+        }
   };
 
   const selectedHospitalNames = hospitals
@@ -205,7 +210,7 @@ const ManageDoctors = () => {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white rounded shadow overflow-x-auto">
+      <div className="bg-white rounded border shadow overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
@@ -249,7 +254,7 @@ const ManageDoctors = () => {
                 <td className="p-3">
                   {d.status === 1 ? "Active" : "Inactive"}
                 </td>
-                <td className="space-x-2 text-right">
+                <td className="flex gap-[10px] p-[15px]">
                   <Button size="sm" onClick={() => handleEdit(d)}>
                     Edit
                   </Button>
@@ -269,7 +274,7 @@ const ManageDoctors = () => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Doctor" : "Add Doctor"}
@@ -442,6 +447,8 @@ const ManageDoctors = () => {
                 onChange={(html) =>
                   setForm({ ...form, description_html: html })
                 }
+                minHeight={250}
+                showWordCount
               />
             </div>
 

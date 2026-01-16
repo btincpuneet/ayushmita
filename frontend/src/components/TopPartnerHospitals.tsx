@@ -103,6 +103,7 @@ const TopPartnerHospitals = () => {
                       <img
                         src={`${API_BASE}${h.image_url}`}
                         alt={h.name}
+                        title={h.name}
                         className="w-[369px] h-[280px] object-cover rounded-lg"
                       />
                     </div>

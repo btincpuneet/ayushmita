@@ -7,7 +7,7 @@ import axios from "axios";
 import useSeo from '../hooks/useSeo';
 
 const HeroImage = () => {
- 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [banner, setBanner] = useState(null);
   const [seoData, setSeoData] = useState({
@@ -67,8 +67,10 @@ const HeroImage = () => {
           <img
             src={`${API_BASE}${image}`}
             alt={title}
+            title={title}
             className="w-full h-full object-cover object-center"
           />
+
 
           <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
         </div>

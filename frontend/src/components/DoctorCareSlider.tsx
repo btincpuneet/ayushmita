@@ -129,8 +129,10 @@ export default function DoctorCareSlider() {
                     <img
                       src={d.image}
                       alt={d.name}
+                      title={d.name}
                       className="w-272px h-[233px] object-cover object-top"
                     />
+
                   </div>
 
                   <div className="p-5 text-center">

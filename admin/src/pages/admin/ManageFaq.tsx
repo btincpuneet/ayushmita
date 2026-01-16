@@ -72,7 +72,7 @@ export default function ManageFaq() {
   );
 
   const loadFaqs = async () => {
-    const res = await axios.get(`${API_URL}/faqs`);
+    const res = await axios.get(`${API_URL}/get-active-faqs`);
     setFaqs(res.data);
   };
 

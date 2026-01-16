@@ -65,6 +65,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
         <img
           src={`${API_BASE}${hospital.image_url}`}
           alt={hospital.name}
+          title={hospital.name}
           className="w-full lg:w-[370px] h-[276px] object-cover rounded-xl"
         />
 
@@ -561,7 +562,7 @@ export default function HospitalDetailsPage() {
         title={hospital.name}
         breadcrumbs={[
           { label: "Home" ,link: "/"},
-          { label: "Hospitals", },
+          { label: "Hospitals", link: "/hospital"},
           { label: hospital.name, link: "" },
         ]}
       />

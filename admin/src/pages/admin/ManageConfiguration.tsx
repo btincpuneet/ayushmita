@@ -155,7 +155,12 @@ const ManageConfiguration: React.FC = () => {
         setErrors(fieldErrors);
         toast.error("Please fix validation errors");
       } else {
-        toast.error("Save failed");
+        const message =
+          err?.response?.data?.message ||
+          err?.response?.data?.error ||
+          "Something went wrong. Please try again.";
+
+        toast.error(message);
       }
     } finally {
       setSaving(false);

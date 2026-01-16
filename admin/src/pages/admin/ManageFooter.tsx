@@ -77,8 +77,13 @@ const ManageFooter = () => {
       toast.success(editing ? "Updated" : "Created");
       setOpen(false);
       loadItems();
-    } catch {
-      toast.error("Save failed");
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
     }
   };
 

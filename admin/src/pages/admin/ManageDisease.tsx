@@ -44,7 +44,7 @@ const ManageDiseases = () => {
   const loadDiseases = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API_URL);
+      const res = await axios.get(`${API_URL}/get-active-disease`);
       setDiseases(res.data?.data || []);
     } catch {
       toast.error("Failed to load diseases");
@@ -57,9 +57,7 @@ const ManageDiseases = () => {
     loadDiseases();
   }, []);
 
-  // ----------------------------------------
-  // Helpers
-  // ----------------------------------------
+
   const updateForm = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -71,9 +69,7 @@ const ManageDiseases = () => {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
 
-  // ----------------------------------------
-  // Add
-  // ----------------------------------------
+  
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -91,9 +87,7 @@ const ManageDiseases = () => {
     setOpen(true);
   };
 
-  // ----------------------------------------
-  // Edit
-  // ----------------------------------------
+
   const handleEdit = (item) => {
     setEditing(item);
     setForm({

@@ -226,6 +226,8 @@ const BlogDetails: React.FC = () => {
                   : "/placeholder.jpg"
               }
               alt={blog.title}
+              title={blog.title}
+
               className="w-full h-[360px] object-cover rounded-lg mb-6"
             />
 

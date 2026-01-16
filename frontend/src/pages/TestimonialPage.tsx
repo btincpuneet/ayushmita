@@ -229,8 +229,9 @@ const TestimonialPage: React.FC = () => {
                   <div className="flex justify-center mb-4">
                     {item.image_url ? (
                       <img
-                        src={`${API_BASE}${item.image_url}`}
-                        alt={item.name}
+                        src={`${API_BASE}${item?.image_url}`}
+                        alt={item?.name}
+                        title={item?.name}
                         className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-100"
                       />
                     ) : (

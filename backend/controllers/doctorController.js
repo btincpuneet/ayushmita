@@ -136,9 +136,26 @@ const getDoctors = async (req, res) => {
   }
 };
 
-/* ======================================================
-   GET DOCTOR BY SLUG
-====================================================== */
+const getActiveDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.findAll({
+      where: { status: 1 },
+      order: [["id", "DESC"]],
+    });
+
+    res.json({
+      success: true,
+      count: doctors.length,
+      data: doctors,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const getDoctorBySlug = async (req, res) => {
   try {
     const doctor = await Doctor.findOne({
@@ -167,9 +184,7 @@ const getDoctorBySlug = async (req, res) => {
   }
 };
 
-/* ======================================================
-   UPDATE DOCTOR
-====================================================== */
+
 const updateDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByPk(req.params.id);
@@ -184,7 +199,6 @@ const updateDoctor = async (req, res) => {
     let updateData = { ...req.body };
     let hospitals = req.body.hospitals || [];
 
-    /* ---------- SLUG UPDATE ---------- */
     if (req.body.name && req.body.name !== doctor.name) {
       let baseSlug = slugify(req.body.name);
       let slug = baseSlug;
@@ -285,4 +299,5 @@ module.exports = {
   getDoctorBySlug,
   updateDoctor,
   deleteDoctor,
+  getActiveDoctors
 };

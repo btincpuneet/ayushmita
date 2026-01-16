@@ -36,7 +36,7 @@ const DoctorsPage: React.FC = () => {
   useEffect(() => {
     const loadDoctors = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/doctors`);
+        const res = await axios.get(`${API_BASE}/api/doctors/active`);
 
         const list: Doctor[] = res.data?.data ?? [];
         setDoctors(list);

@@ -1,4 +1,4 @@
-const { CountryCity } = require("../models/CountryCity");
+const { CountryCity } = require("../models/countryCity");
 
 exports.getCountries = async (req, res) => {
   try {

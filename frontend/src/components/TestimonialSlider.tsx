@@ -134,6 +134,7 @@ const TestimonialSlider: React.FC = () => {
                       <img
                         src={`${API_BASE}${t.image_url}`}
                         alt={t.name}
+                        title={t.name}
                         className="w-[70px] h-[70px] rounded-full object-cover mb-4"
                         loading="lazy"
                       />

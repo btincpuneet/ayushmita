@@ -80,9 +80,14 @@ const handleEdit = (item: any) => {
       toast.success(editing ? "Updated" : "Created");
       setOpen(false);
       loadSections();
-    } catch {
-      toast.error("Save failed");
-    }
+    } catch (error: any) {
+          const message =
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            "Something went wrong. Please try again.";
+    
+          toast.error(message);
+        }
   };
 
   const handleDelete = async (id: number) => {

@@ -194,6 +194,8 @@ const Blog: React.FC = () => {
                             ? `${API_BASE}${post.blog_image}`
                             : "/placeholder.jpg"
                         }
+                        alt={post.title || "Blog image"}
+                        title={post.title || "Blog image"}
                         className="h-48 w-full object-cover rounded-lg"
                       />
                       <div className="p-4 h-[96px] flex flex-col justify-between">
@@ -250,6 +252,8 @@ const Blog: React.FC = () => {
                         ? `${API_BASE}${post.blog_image}`
                         : "/placeholder.jpg"
                     }
+                    alt={post.title || "Blog image"}
+                    title={post.title || "Blog image"}
                     className="blog-listing-page-image object-cover rounded-lg"
                   />
                 </div>

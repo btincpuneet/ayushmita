@@ -125,9 +125,14 @@ const ManageTestimonials: React.FC = () => {
 
     setModalOpen(false);
     fetchTestimonials();
-  } catch {
-    toast.error("Save failed");
-  }
+  } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
+    }
 };
 
 

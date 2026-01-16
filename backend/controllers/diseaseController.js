@@ -80,6 +80,26 @@ const getDiseaseById = async (req, res) => {
   }
 };
 
+const getAllDiseases = async (req, res) => {
+  try {
+    const diseases = await Disease.findAll({
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      success: true,
+      data: diseases,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch diseases",
+      error: error.message,
+    });
+  }
+};
+
+
 const getAllDiseasesWithTreatments = async (req, res) => {
   try {
     const diseases = await Disease.findAll({
@@ -205,4 +225,5 @@ module.exports = {
   getDiseaseById,
   updateDisease,
   deleteDisease,
+  getAllDiseases
 };

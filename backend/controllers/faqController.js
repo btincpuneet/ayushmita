@@ -24,7 +24,7 @@ exports.createFAQ = async (req, res) => {
 exports.getFAQs = async (req, res) => {
   try {
     const data = await FAQ.findAll({
-      where: { status: 1 }, 
+      where: { status: 1 },
       order: [
         ["sort_order", "ASC"],
         ["id", "DESC"],
@@ -34,6 +34,22 @@ exports.getFAQs = async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+exports.getAllFAQs = async (req, res) => {
+  try {
+    const faqs = await FAQ.findAll({
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(faqs);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch FAQs",
+      error: error.message,
+    });
   }
 };
 

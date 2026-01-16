@@ -67,14 +67,14 @@ const PromoSlider: React.FC = () => {
     ],
     appendDots: (dots: React.ReactNode) => (
       <div>
-         <ul className="flex items-center justify-center mt-20">{dots}</ul>
+        <ul className="flex items-center justify-center mt-20">{dots}</ul>
       </div>
     ),
- customPaging: (i: number) => (
-  <div className="dot-outer">
-    <div className="dot-inner" />
-  </div>
-),
+    customPaging: (i: number) => (
+      <div className="dot-outer">
+        <div className="dot-inner" />
+      </div>
+    ),
   };
 
   return (
@@ -88,8 +88,9 @@ const PromoSlider: React.FC = () => {
                   <div className="relative flex items-center">
                     <div className="overflow-hidden flex-shrink-0 border-[10px] border-white rounded-2xl w-full">
                       <img
-                        src={p.image}
+                        src={p?.image}
                         alt="slider"
+                        title="slider"
                         style={{
                           width: "100%",
                           height: "199.15px",
