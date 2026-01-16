@@ -16,6 +16,8 @@ import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
+import TawkTestWidget from "./components/TawkTestWidget";
+
 
 import { useSyncRTLWithGoogleTranslate } from "./hooks/useSyncRTLWithGoogleTranslate";
 import TestimonialPage from "./pages/TestimonialPage";
@@ -27,6 +29,7 @@ const App: React.FC = () => {
     <HelmetProvider>
       <ScrollToTop />
       <GoogleTranslate />
+      <TawkTestWidget />
 
       <Routes>
         <Route path="/" element={<Home />} />

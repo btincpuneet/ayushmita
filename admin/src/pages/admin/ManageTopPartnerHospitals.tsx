@@ -29,6 +29,8 @@ const emptyForm = {
   seo_description: "",
   seo_keywords: "",
   canonical_url: "",
+  status: "active",
+
 };
 
 export default function ManageTopPartnerHospitals() {
@@ -106,6 +108,8 @@ export default function ManageTopPartnerHospitals() {
       seo_description: item.seo_description || "",
       seo_keywords: item.seo_keywords || "",
       canonical_url: item.canonical_url || "",
+      status: item.status || "active",
+
     });
     setPreview(item.image_url ? `${API_BASE}${item.image_url}` : null);
 
@@ -177,6 +181,8 @@ export default function ManageTopPartnerHospitals() {
               <th className="p-2 border">Location</th>
               <th className="p-2 border">Beds</th>
               <th className="p-2 border">Founded</th>
+              <th className="p-2 border">Status</th>
+
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -195,6 +201,17 @@ export default function ManageTopPartnerHospitals() {
                   <td className="p-2 border">{h.city}, {h.country}</td>
                   <td className="p-2 border text-center">{h.hospital_beds || "-"}</td>
                   <td className="p-2 border text-center">{h.founded_year || "-"}</td>
+                  <td className="p-2 border text-center">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${h.status === "active"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                        }`}
+                    >
+                      {h.status}
+                    </span>
+                  </td>
+
                   <td className="p-2 border">
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => handleEdit(h)}>Edit</Button>
@@ -271,6 +288,20 @@ export default function ManageTopPartnerHospitals() {
               minHeight={250}
               showWordCount
             />
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">
+                Status
+              </label>
+
+              <select
+                className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
 
 
             <div className="border rounded-lg p-4 space-y-3">

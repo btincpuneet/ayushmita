@@ -28,7 +28,7 @@ export default function Index() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/hospitals`);
+        const res = await axios.get(`${API_BASE}/api/hospitals/active`);
 
         const formatted = res.data.data.map((h: any) => ({
           id: h.id,

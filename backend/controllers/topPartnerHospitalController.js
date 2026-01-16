@@ -63,7 +63,7 @@ const createHospital = async (req, res) => {
       hospital_beds,
       description_html,
 
-      
+
       seo_title,
       seo_description,
       seo_keywords,
@@ -80,7 +80,18 @@ const createHospital = async (req, res) => {
   }
 };
 
-/* ================= GET BY SLUG ================= */
+const getActiveHospitals = async (req, res) => {
+  try {
+    const hospitals = await TopPartnerHospital.findAll({
+      where: { status: "active" },
+      order: [["id", "DESC"]],
+    });
+
+    res.json({ success: true, data: hospitals });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 const getHospitalBySlug = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findOne({
@@ -181,4 +192,6 @@ module.exports = {
   updateHospital,
   deleteHospital,
   getHospitalBySlug,
+  getActiveHospitals,
+
 };
