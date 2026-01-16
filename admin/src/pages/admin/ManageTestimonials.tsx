@@ -40,12 +40,10 @@ const ManageTestimonials: React.FC = () => {
     fetchTestimonials();
   }, []);
 
-  // Handle text input
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle image upload
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     if (file) {
@@ -54,7 +52,6 @@ const ManageTestimonials: React.FC = () => {
     }
   };
 
-  // Open Add Modal
   const openAddModal = () => {
     setForm({
       id: null,
@@ -67,7 +64,6 @@ const ManageTestimonials: React.FC = () => {
     setModalOpen(true);
   };
 
-  // Edit Modal
   const handleEdit = (t: Testimonial) => {
     setForm({
       id: t.id,

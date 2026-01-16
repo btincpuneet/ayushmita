@@ -115,12 +115,8 @@ const renderEmailTemplate = ({ title, subtitle, fields = [] }) => {
   `;
 };
 
-/**
- * Send email using dynamic SMTP settings
- */
-const sendMail = async ({ to, subject, html }) => {
-  const settings = await getEmailSettings();
 
+const sendMail = async ({ settings, to, subject, html }) => {
   if (!settings?.email_host) {
     throw new Error("Email settings are missing or invalid");
   }
@@ -128,7 +124,7 @@ const sendMail = async ({ to, subject, html }) => {
   const transporter = nodemailer.createTransport({
     host: settings.email_host,
     port: Number(settings.email_port),
-    secure: Number(settings.email_port) === 465, // SSL only for 465
+    secure: Number(settings.email_port) === 465,
     auth: {
       user: settings.email_user,
       pass: settings.email_pass,
@@ -139,9 +135,10 @@ const sendMail = async ({ to, subject, html }) => {
     from: `"Website Forms" <${settings.email_user}>`,
     to,
     subject,
-    html,
+    html, // ✅ this WILL be rendered now
   });
 };
+
 
 module.exports = {
   sendMail,

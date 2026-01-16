@@ -39,10 +39,8 @@ const ManageDiseases = () => {
   });
 
   const [preview, setPreview] = useState(null);
+  const fileRef = React.useRef<HTMLInputElement | null>(null);
 
-  // ----------------------------------------
-  // Fetch Diseases
-  // ----------------------------------------
   const loadDiseases = async () => {
     try {
       setLoading(true);
@@ -141,9 +139,15 @@ const ManageDiseases = () => {
       setOpen(false);
       loadDiseases();
 
-    } catch {
-      toast.error("Save failed");
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
     }
+
   };
 
 
@@ -303,6 +307,7 @@ const ManageDiseases = () => {
 
             <div>
               <Input
+                ref={fileRef}
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
@@ -311,12 +316,38 @@ const ManageDiseases = () => {
                   if (file) setPreview(URL.createObjectURL(file));
                 }}
               />
-              {preview && (
-                <img
-                  src={preview}
-                  className="w-40 mt-3 rounded"
-                />
+              {(preview || editing?.image) && (
+                <div className="mt-3">
+                  <img
+                    src={preview ? preview : `${API_BASE}${editing.image}`}
+                    className="w-40 rounded border"
+                    alt="Disease"
+                  />
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => {
+                      setPreview(null);
+
+                      updateForm("image", null);
+
+                      if (editing) {
+                        setEditing({ ...editing, image: null });
+                      }
+
+                      if (fileRef.current) {
+                        fileRef.current.value = "";
+                      }
+                    }}
+                  >
+                    Remove Image
+                  </Button>
+                </div>
               )}
+
             </div>
           </div>
 

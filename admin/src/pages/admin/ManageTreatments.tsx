@@ -59,6 +59,7 @@ const ManageTreatments = () => {
     useState<number | null>(null);
   const [selectedTreatmentSlug, setSelectedTreatmentSlug] = useState("");
   const [singleTreatment, setSingleTreatment] = useState<any | null>(null);
+const fileRef = React.useRef<HTMLInputElement | null>(null);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
@@ -111,19 +112,38 @@ const ManageTreatments = () => {
   };
 
   const handleEdit = () => {
-    if (!singleTreatment) return;
+    if (!singleTreatment) {
+      toast.error("Please select a treatment to edit");
+      return;
+    }
+
+    if (!singleTreatment.disease_id) {
+      toast.error("This treatment is not linked to any disease");
+      return;
+    }
+
+    if (!singleTreatment.name) {
+      toast.error("Treatment name is missing");
+      return;
+    }
+
+    if (!singleTreatment.slug) {
+      toast.error("Treatment slug is missing");
+      return;
+    }
 
     setEditing(singleTreatment);
+
     setForm({
-      disease_id: singleTreatment.disease_id,
-      name: singleTreatment.name,
-      slug: singleTreatment.slug,
-      short_description: singleTreatment.short_description || "",
-      description_html: singleTreatment.description_html || "",
-      seo_title: singleTreatment.seo_title || "",
-      seo_description: singleTreatment.seo_description || "",
-      seo_keywords: singleTreatment.seo_keywords || "",
-      canonical_url: singleTreatment.canonical_url || "",
+      disease_id: singleTreatment.disease_id ?? null,
+      name: singleTreatment.name ?? "",
+      slug: singleTreatment.slug ?? "",
+      short_description: singleTreatment.short_description ?? "",
+      description_html: singleTreatment.description_html ?? "",
+      seo_title: singleTreatment.seo_title ?? "",
+      seo_description: singleTreatment.seo_description ?? "",
+      seo_keywords: singleTreatment.seo_keywords ?? "",
+      canonical_url: singleTreatment.canonical_url ?? "",
       status: singleTreatment.status === 1 ? "active" : "inactive",
       image: null,
     });
@@ -132,22 +152,66 @@ const ManageTreatments = () => {
     setOpen(true);
   };
 
+
   const handleSubmit = async () => {
     try {
+
       if (!form.disease_id) {
-        toast.error("Select a disease");
+        toast.error("Please select a disease");
         return;
       }
 
+      if (!form.name.trim()) {
+        toast.error("Treatment name is required");
+        return;
+      }
+
+      if (!form.slug.trim()) {
+        toast.error("Slug is required");
+        return;
+      }
+
+      if (!form.short_description) {
+        toast.error("Short description is required");
+        return;
+      }
+
+      if (!form.description_html) {
+        toast.error("Full description is required");
+        return;
+      }
+
+      if (!form.seo_title.trim()) {
+        toast.error("SEO title is required");
+        return;
+      }
+
+      if (!form.seo_description.trim()) {
+        toast.error("SEO description is required");
+        return;
+      }
+
+      if (!form.seo_keywords.trim()) {
+        toast.error("SEO keywords are required");
+        return;
+      }
+
+      if (!form.canonical_url.trim()) {
+        toast.error("Canonical URL is required");
+        return;
+      }
+
+
       const fd = new FormData();
 
-      Object.entries(form).forEach(([k, v]) => {
-        if (v !== null && v !== undefined) {
-          fd.append(k, v instanceof File ? v : String(v));
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          fd.append(key, value instanceof File ? value : String(value));
         }
       });
 
       fd.set("status", form.status === "active" ? "1" : "0");
+
       const config = {
         headers: {
           ...authHeader(),
@@ -155,12 +219,13 @@ const ManageTreatments = () => {
         },
       };
 
+
       if (editing) {
         await axios.put(`${API_TREATMENT}/${editing.id}`, fd, config);
-        toast.success("Treatment updated");
+        toast.success("Treatment updated successfully");
       } else {
         await axios.post(API_TREATMENT, fd, config);
-        toast.success("Treatment created");
+        toast.success("Treatment created successfully");
       }
 
       setOpen(false);
@@ -168,10 +233,17 @@ const ManageTreatments = () => {
       if (selectedDiseaseForFilter) {
         loadTreatmentsByDisease(selectedDiseaseForFilter);
       }
-    } catch {
-      toast.error("Save failed");
+    } catch (error: any) {
+
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+
+      toast.error(message);
     }
   };
+
 
   const handleDelete = async () => {
     if (!singleTreatment) return;
@@ -391,10 +463,23 @@ const ManageTreatments = () => {
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">URL Slug</Label>
               <Input
-                placeholder="e.g., chemotherapy"
-                value={form.slug}
-                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="e.g., Chemotherapy"
+                value={form.name}
+                onChange={(e) => {
+                  const name = e.target.value;
+
+                  setForm((prev) => ({
+                    ...prev,
+                    name,
+                    slug:
+
+                      e.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-"),
+                  }))
+                }}
               />
+
             </div>
 
             <div className="col-span-2">
@@ -487,6 +572,7 @@ const ManageTreatments = () => {
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Featured Image</Label>
               <Input
+                ref={fileRef}
                 type="file"
                 accept="image/*"
                 className="cursor-pointer"
@@ -499,16 +585,32 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {(preview || editing?.image) && (
-              <div className="col-span-2">
-                <Label className="text-xs font-medium text-muted-foreground mb-2 block">Image Preview</Label>
+            {preview && (
+              <div style={{ marginTop: 10 }}>
                 <img
-                  src={preview || `${API_BASE}${editing.image}`}
-                  className="w-48 h-32 object-cover rounded-lg border shadow-sm"
-                  alt="Preview"
+                  src={preview}
+                  alt="preview"
+                  style={{ width: 200, height: 120, objectFit: "cover" }}
                 />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreview(null);
+                    setForm({ ...form, image: null });
+
+                    // clear input
+                    if (fileRef.current) {
+                      fileRef.current.value = "";
+                    }
+                  }}
+                  style={{ display: "block", marginTop: 8 }}
+                >
+                  Remove Image
+                </button>
               </div>
             )}
+
           </div>
 
           <DialogFooter>

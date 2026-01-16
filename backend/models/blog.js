@@ -89,6 +89,10 @@ const Blog = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    canonical_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     meta_keywords: {
       type: DataTypes.STRING,

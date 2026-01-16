@@ -137,17 +137,57 @@ export default function ManageCategory() {
     setOpen(true);
   };
 
+ 
+
   const handleSubmit = async () => {
-    if (editing) {
-      await categoryApi.update(editing.id, form);
-      toast({ title: "Category updated" });
-    } else {
-      await categoryApi.create(form);
-      toast({ title: "Category created" });
+    // Frontend validation
+    if (!form.name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Category name is required",
+        variant: "destructive",
+      });
+      return;
     }
 
-    setOpen(false);
-    loadData();
+    if (!form.status) {
+      toast({
+        title: "Validation Error",
+        description: "Please select category status",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (editing) {
+        await categoryApi.update(editing.id, form);
+        toast({
+          title: "Success",
+          description: "Category updated successfully",
+        });
+      } else {
+        await categoryApi.create(form);
+        toast({
+          title: "Success",
+          description: "Category created successfully",
+        });
+      }
+
+      setOpen(false);
+      loadData();
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -195,11 +235,10 @@ export default function ManageCategory() {
 
                     <td className="p-3">
                       <span
-                        className={`px-2 py-1 rounded text-xs font-medium ${
-                          cat.status === "active"
+                        className={`px-2 py-1 rounded text-xs font-medium ${cat.status === "active"
                             ? "bg-green-100 text-green-700"
                             : "bg-gray-100 text-gray-600"
-                        }`}
+                          }`}
                       >
                         {cat.status}
                       </span>

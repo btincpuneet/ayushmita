@@ -14,7 +14,11 @@ const ButtonAppointment = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
+    linkUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: "link_url",
+    },
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

@@ -63,7 +63,7 @@ const createHospital = async (req, res) => {
       hospital_beds,
       description_html,
 
-      // ✅ SEO fields
+      
       seo_title,
       seo_description,
       seo_keywords,

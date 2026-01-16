@@ -6,7 +6,7 @@ exports.handleForm = async (req, res) => {
 
     const settings = await getEmailSettings();
     console.log(settings);
-    
+
 
     let subject = "";
     let html = "";
@@ -36,7 +36,7 @@ exports.handleForm = async (req, res) => {
     if (type === "appointment") {
       subject = "New Appointment Booking";
       to = settings.appointment_email;
-      console.log("res",to)
+      console.log("res", to)
 
       html = renderEmailTemplate({
         title: "Appointment Request",
@@ -44,9 +44,9 @@ exports.handleForm = async (req, res) => {
         fields: [
           { label: "Full Name", value: data.name },
           { label: "Phone Number", value: data.mobile },
-          { label: "Email", value: data.email },
-          { label: "Country", value: data.country },
-          { label: "Treatment", value: data.treatment },
+          // { label: "Email", value: data.email },
+          // { label: "Country", value: data.country },
+          // { label: "Treatment", value: data.treatment },
           { label: "Message", value: data.message },
         ],
       });
@@ -54,7 +54,7 @@ exports.handleForm = async (req, res) => {
 
     if (type === "contact") {
       subject = "New Contact Us Message";
-      to = settings.contact_email ;
+      to = settings.contact_email;
 
       html = renderEmailTemplate({
         title: "Contact Us Message",
@@ -67,15 +67,17 @@ exports.handleForm = async (req, res) => {
           {
             label: "Message",
             value: `
-              Treatment Looking For: ${data.treatment || "-"}<br/>
-              Description: ${data.message || "-"}
-            `,
-          },
+    Treatment Looking For: ${data.treatment || "-"}
+    <br/><br/>
+    Description: ${data.message || "-"}
+  `,
+          }
+
         ],
       });
     }
     console.log("QWERTY", to);
-    
+
 
     await sendMail({
       settings,

@@ -120,11 +120,11 @@ export default function ManageHeroBanner() {
       console.error(err);
     }
   };
-
+ 
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      {/* <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Hero Banner Management</h1>
         <button
           onClick={openCreateModal}
@@ -132,7 +132,7 @@ export default function ManageHeroBanner() {
         >
           + Add Banner
         </button>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="bg-white shadow-xl rounded-lg overflow-hidden">
@@ -155,7 +155,6 @@ export default function ManageHeroBanner() {
             {banners.map((banner) => (
               <tr key={banner.id} className="border hover:bg-gray-50 align-top">
 
-                {/* Image */}
                 <td className="p-3">
                   {banner.image ? (
                     <img
@@ -168,27 +167,22 @@ export default function ManageHeroBanner() {
                   )}
                 </td>
 
-                {/* Title */}
                 <td className="p-3 whitespace-pre-line font-semibold">
                   {banner.title}
                 </td>
 
-                {/* Subtitle */}
                 <td className="p-3">
                   {banner.subtitle || "-"}
                 </td>
 
-                {/* Description */}
                 <td className="p-3 max-w-xs text-sm text-gray-600">
                   {banner.description || "-"}
                 </td>
 
-                {/* Button Text */}
                 <td className="p-3">
                   {banner.button_text || "-"}
                 </td>
 
-                {/* Button URL */}
                 <td className="p-3 text-blue-600 underline break-all">
                   {banner.button_url ? (
                     <a href={banner.button_url} target="_blank" rel="noreferrer">

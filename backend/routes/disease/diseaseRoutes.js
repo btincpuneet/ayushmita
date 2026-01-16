@@ -6,7 +6,6 @@ const router = express.Router();
 
 const {
   createDisease,
-  getAllDiseases,
   getDiseaseWithTreatments,
   getDiseaseById,
   updateDisease,
@@ -25,7 +24,7 @@ const upload = multer({
 
 router.get("/", getAllDiseasesWithTreatments);
 
-router.get("/slug/:slug", getDiseaseWithTreatments);
+router.get("/:slug", getDiseaseWithTreatments);
 
 router.get("/id/:id", getDiseaseById);
 

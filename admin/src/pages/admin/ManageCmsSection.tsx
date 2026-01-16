@@ -162,8 +162,8 @@ export default function ManageCmsPage() {
 
                 <td className="p-3">
                   <a
-                    href={`${FRONTEND_BASE}/${page.slug}`}
-                    target="_blank"
+                    // href={`${FRONTEND_BASE}/${page.slug}`}
+                    // target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
                   >

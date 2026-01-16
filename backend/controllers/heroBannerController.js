@@ -2,9 +2,7 @@ const { HeroBanner } = require("../models/heroBanner");
 const { sequelize } = require("../models/index");
 const { Op } = require("sequelize");
 
-/* =========================
-   CREATE HERO BANNER
-========================= */
+
 const createHeroBanner = async (req, res) => {
   try {
     const {
@@ -70,9 +68,7 @@ const createHeroBanner = async (req, res) => {
   }
 };
 
-/* =========================
-   GET ALL HERO BANNERS
-========================= */
+
 const getAllHeroBanners = async (req, res) => {
   try {
     const heroes = await HeroBanner.findAll({
@@ -95,9 +91,7 @@ const getAllHeroBanners = async (req, res) => {
   }
 };
 
-/* =========================
-   GET HERO BY ID
-========================= */
+
 const getHeroBannerById = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -122,9 +116,7 @@ const getHeroBannerById = async (req, res) => {
   }
 };
 
-/* =========================
-   UPDATE HERO BANNER
-========================= */
+
 const updateHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -202,9 +194,7 @@ const updateHeroBanner = async (req, res) => {
   }
 };
 
-/* =========================
-   DELETE HERO BANNER
-========================= */
+
 const deleteHeroBanner = async (req, res) => {
   try {
     const hero = await HeroBanner.findByPk(req.params.id);
@@ -229,6 +219,27 @@ const deleteHeroBanner = async (req, res) => {
     });
   }
 };
+const getActiveHeroBanners = async (req, res) => {
+  try {
+    const heroes = await HeroBanner.findAll({
+      where: { status: "active" }, 
+      order: [
+        ["sort_order", "ASC"],
+        ["id", "DESC"],
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      data: heroes,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
 
 module.exports = {
   createHeroBanner,
@@ -236,4 +247,5 @@ module.exports = {
   getHeroBannerById,
   updateHeroBanner,
   deleteHeroBanner,
+  getActiveHeroBanners
 };

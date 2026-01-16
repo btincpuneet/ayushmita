@@ -40,6 +40,8 @@ export default function ManageTopPartnerHospitals() {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+  const fileRef = React.useRef<HTMLInputElement | null>(null);
 
 
   const fetchHospitals = async () => {
@@ -105,6 +107,8 @@ export default function ManageTopPartnerHospitals() {
       seo_keywords: item.seo_keywords || "",
       canonical_url: item.canonical_url || "",
     });
+    setPreview(item.image_url ? `${API_BASE}${item.image_url}` : null);
+
     setFile(null);
     setOpen(true);
   };
@@ -123,37 +127,37 @@ export default function ManageTopPartnerHospitals() {
   };
 
 
-const handleSubmit = async () => {
-  try {
-    setLoading(true);
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
 
-    const fd = new FormData();
-    Object.entries(form).forEach(([k, v]) => fd.append(k, v as string));
-    if (file) fd.append("image", file);
+      const fd = new FormData();
+      Object.entries(form).forEach(([k, v]) => fd.append(k, v as string));
+      if (file) fd.append("image", file);
 
-    const config = {
-      headers: {
-        ...authHeader(),
-        "Content-Type": "multipart/form-data",
-      },
-    };
+      const config = {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
 
-    if (editing) {
-      await axios.put(`${API_URL}/${editing}`, fd, config);
-      toast.success("Updated successfully");
-    } else {
-      await axios.post(API_URL, fd, config);
-      toast.success("Created successfully");
+      if (editing) {
+        await axios.put(`${API_URL}/${editing}`, fd, config);
+        toast.success("Updated successfully");
+      } else {
+        await axios.post(API_URL, fd, config);
+        toast.success("Created successfully");
+      }
+
+      setOpen(false);
+      fetchHospitals();
+    } catch {
+      toast.error("Failed to save data");
+    } finally {
+      setLoading(false);
     }
-
-    setOpen(false);
-    fetchHospitals();
-  } catch {
-    toast.error("Failed to save data");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
 
@@ -277,7 +281,34 @@ const handleSubmit = async () => {
               <Input name="canonical_url" placeholder="Canonical URL" value={form.canonical_url} onChange={handleChange} />
             </div>
 
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const selectedFile = e.target.files?.[0] || null;
+                setFile(selectedFile);
+
+                if (selectedFile) {
+                  setPreview(URL.createObjectURL(selectedFile));
+                }
+              }}
+
+            />
+            {preview && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  {editing ? "Current Hospital Image" : "Selected Image"}
+                </p>
+
+                <img
+                  src={preview}
+                  alt="Hospital Preview"
+                  className="w-40 h-40 object-cover rounded border"
+                />
+              </div>
+            )}
+
           </div>
 
           <DialogFooter>

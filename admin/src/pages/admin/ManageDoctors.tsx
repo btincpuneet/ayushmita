@@ -227,8 +227,11 @@ const ManageDoctors = () => {
                   {d.image_url ? (
                     <img
                       src={`${API_BASE}${d.image_url}`}
+                      alt={`${d.name} - ${d.specialty || "Doctor"}`}
+                      title={`${d.name} - ${d.specialty || "Doctor"}`}
                       className="w-14 h-14 rounded object-cover"
                     />
+
                   ) : (
                     <div className="w-14 h-14 bg-gray-200 rounded" />
                   )}
@@ -246,7 +249,7 @@ const ManageDoctors = () => {
                 <td className="p-3">
                   {d.status === 1 ? "Active" : "Inactive"}
                 </td>
-                <td className="p-3 space-x-3 text-right">
+                <td className="space-x-2 text-right">
                   <Button size="sm" onClick={() => handleEdit(d)}>
                     Edit
                   </Button>

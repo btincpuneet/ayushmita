@@ -20,7 +20,7 @@ exports.createBlog = async (req, res) => {
       fs.writeFileSync(
         path.join(uploadDir, imageName),
         req.file.buffer
-      );
+      )
 
       imageUrl = `/uploads/${imageName}`;
     }
@@ -55,8 +55,17 @@ exports.createBlog = async (req, res) => {
       disease_id: isGlobal ? null : req.body.disease_id,
       disease_name: diseaseName,
 
-      treatment_id: isGlobal ? null : req.body.treatment_id,
-      treatment_name: treatmentName,
+      treatment_id:
+        isGlobal || req.body.treatment_id === "0"
+          ? null
+          : req.body.treatment_id,
+
+      treatment_name:
+        isGlobal || req.body.treatment_id === "0"
+          ? null
+          : treatmentName,
+
+      canonical_url: req.body.canonical_url,
 
       status: req.body.status || "published",
       published_at: new Date(),
@@ -133,6 +142,7 @@ exports.updateBlog = async (req, res) => {
 
       treatment_id: isGlobal ? null : req.body.treatment_id,
       treatment_name: treatmentName,
+      canonical_url: req.body.canonical_url,
 
       status: req.body.status,
       meta_title: req.body.meta_title,
@@ -213,7 +223,7 @@ exports.deleteBlog = async (req, res) => {
       }
     }
 
-    
+
     await blog.destroy();
 
     res.json({
@@ -239,11 +249,11 @@ exports.getBlogBySlug = async (req, res) => {
 
     const blog = await Blog.findOne({
       where: {
-        slug: slug.trim(),        
+        slug: slug.trim(),
         status: "published",
         deleted_at: null,
       },
-      raw: true,                 
+      raw: true,
     });
 
     if (!blog) {

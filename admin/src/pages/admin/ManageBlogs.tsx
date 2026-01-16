@@ -35,6 +35,7 @@ const emptyForm = {
   disease_id: "0",
   treatment_id: "0",
   author_name: "Admin",
+  canonical_url: "",
   is_global: false,
   is_featured: false,
   status: "published",
@@ -70,15 +71,18 @@ export default function ManageBlogs() {
     axios.get(DISEASE_API).then((r) => setDiseases(r.data.data || []));
   }, []);
 
-  useEffect(() => {
-    if (!form.is_global && form.disease_id !== "0") {
-      axios
-        .get(`${TREATMENT_API}/disease/${form.disease_id}`)
-        .then((r) => setTreatments(r.data.treatments || []));
-    } else {
-      setTreatments([]);
-    }
-  }, [form.disease_id, form.is_global]);
+ useEffect(() => {
+  if (!form.is_global && form.disease_id !== "0") {
+    axios
+      .get(`${TREATMENT_API}/disease/${form.disease_id}`)
+      .then((r) => {
+        setTreatments(r.data.treatments || []);
+      });
+  } else {
+    setTreatments([]);
+  }
+}, [form.disease_id, form.is_global]);
+
 
   const handleSubmit = async () => {
     if (
@@ -105,6 +109,7 @@ export default function ManageBlogs() {
       meta_title: form.meta_title,
       meta_description: form.meta_description,
       meta_keywords: form.meta_keywords,
+      canonical_url: form.canonical_url,
       tags: form.tags,
       is_global: form.is_global ? "1" : "0",
       is_featured: form.is_featured ? "1" : "0",
@@ -123,8 +128,8 @@ export default function ManageBlogs() {
 
     try {
       editing
-        ? await axios.put(`${BLOG_API}/${editing.id}`, fd , { headers: authHeader() })
-        : await axios.post(BLOG_API, fd ,{ headers: authHeader() });
+        ? await axios.put(`${BLOG_API}/${editing.id}`, fd, { headers: authHeader() })
+        : await axios.post(BLOG_API, fd, { headers: authHeader() });
 
       toast.success(editing ? "Blog updated" : "Blog created");
       setOpen(false);
@@ -138,7 +143,7 @@ export default function ManageBlogs() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this blog?")) return;
-    await axios.delete(`${BLOG_API}/${id}` ,{ headers: authHeader() });
+    await axios.delete(`${BLOG_API}/${id}`, { headers: authHeader() });
     toast.success("Blog deleted");
     loadBlogs();
   };
@@ -175,7 +180,9 @@ export default function ManageBlogs() {
             <h3 className="font-semibold">{b.title}</h3>
             <p className="text-sm text-muted-foreground">
               {b.is_global ? "🌍 Global" : `Disease ID: ${b.disease_id}`}
-              {b.treatment_id && ` | Treatment ID: ${b.treatment_id}`}
+              {b.treatment_id && b.treatment_id !== "0" && (
+                <> | Treatment ID: {b.treatment_id}</>
+              )}
               {b.is_featured && " ⭐ Featured"}
             </p>
           </div>
@@ -185,8 +192,17 @@ export default function ManageBlogs() {
               size="sm"
               onClick={() => {
                 setEditing(b);
-                setForm({ ...emptyForm, ...b, blog_image: null });
+
+                setForm({
+                  ...emptyForm,
+                  ...b,
+                  disease_id: b.disease_id ? String(b.disease_id) : "0",
+                  treatment_id: b.treatment_id ? String(b.treatment_id) : "0",
+                  blog_image: null,
+                });
+
                 setOpen(true);
+
               }}
             >
               <Edit className="w-4 h-4 mr-1" /> Edit
@@ -321,6 +337,7 @@ export default function ManageBlogs() {
 
           <div className="mt-8 border-t pt-6">
             <h3 className="font-semibold mb-4">SEO</h3>
+
             <div className="grid grid-cols-2 gap-4">
               <Input
                 placeholder="Meta Title"
@@ -337,17 +354,25 @@ export default function ManageBlogs() {
                 }
               />
             </div>
+
             <Input
               className="mt-4"
               placeholder="Meta Description"
               value={form.meta_description}
               onChange={(e) =>
-                setForm({
-                  ...form,
-                  meta_description: e.target.value,
-                })
+                setForm({ ...form, meta_description: e.target.value })
               }
             />
+
+            <Input
+              className="mt-4"
+              placeholder="Canonical URL (https://example.com/blog/slug)"
+              value={form.canonical_url}
+              onChange={(e) =>
+                setForm({ ...form, canonical_url: e.target.value })
+              }
+            />
+
             <Input
               className="mt-4"
               placeholder="Tags"
@@ -357,6 +382,7 @@ export default function ManageBlogs() {
               }
             />
           </div>
+
 
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setOpen(false)}>

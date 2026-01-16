@@ -2,11 +2,12 @@ const { ButtonAppointment } = require("../models/buttonAppointment");
 
 const createButton = async (req, res) => {
   try {
-    const { name, status } = req.body;
+    const { name, status, linkUrl } = req.body;
 
     const button = await ButtonAppointment.create({
       name,
       status,
+      linkUrl,
     });
 
     res.status(201).json({
@@ -73,7 +74,13 @@ const updateButton = async (req, res) => {
       });
     }
 
-    await button.update(req.body);
+    const { name, status, linkUrl } = req.body;
+
+    await button.update({
+      name,
+      status,
+      linkUrl,
+    });
 
     res.json({
       success: true,
@@ -86,6 +93,7 @@ const updateButton = async (req, res) => {
     });
   }
 };
+
 
 const deleteButton = async (req, res) => {
   try {

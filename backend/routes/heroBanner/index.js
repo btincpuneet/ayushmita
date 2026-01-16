@@ -42,8 +42,12 @@ router.get("/hero-banners/:id", heroController.getHeroBannerById);
 router.put(
   "/hero-banners/:id",
   upload.single("image"),
-  authenticateToken,
+  
   heroController.updateHeroBanner
+);
+router.get(
+  "/hero-active-banners",
+  heroController.getActiveHeroBanners
 );
 
 router.delete("/hero-banners/:id", authenticateToken ,heroController.deleteHeroBanner);

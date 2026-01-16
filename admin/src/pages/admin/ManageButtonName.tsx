@@ -17,13 +17,17 @@ import { Pencil, Trash2 } from "lucide-react";
 interface ManageButtonName {
   id: number;
   name: string;
+  linkUrl: string;
   status: boolean;
 }
 
+
 const emptyForm: Omit<ManageButtonName, "id"> = {
   name: "",
+  linkUrl: "",
   status: true,
 };
+
 
 export default function ManageButtonName() {
   const [data, setData] = useState<ManageButtonName[]>([]);
@@ -51,15 +55,16 @@ export default function ManageButtonName() {
     setForm(emptyForm);
     setOpen(true);
   };
-
   const handleEdit = (row: ManageButtonName) => {
     setEditing(row);
     setForm({
       name: row.name,
+      linkUrl: row.linkUrl,
       status: row.status,
     });
     setOpen(true);
   };
+
 
   const handleSubmit = async () => {
     try {
@@ -103,6 +108,8 @@ export default function ManageButtonName() {
             <tr>
               <th className="p-3 text-left">ID</th>
               <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Link</th>
+
               <th className="p-3 text-left">Status</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
@@ -120,11 +127,15 @@ export default function ManageButtonName() {
               <tr key={row.id} className="border-b">
                 <td className="p-3">{row.id}</td>
                 <td className="p-3 font-medium">{row.name}</td>
+                <td className="p-3 text-blue-600">
+                  {row.linkUrl || "-"}
+                </td>
+
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded text-xs ${row.status
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                       }`}
                   >
                     {row.status ? "Active" : "Inactive"}
@@ -181,6 +192,16 @@ export default function ManageButtonName() {
                   setForm({ ...form, name: e.target.value })
                 }
                 placeholder="Enter button name"
+              />
+            </div>
+            <div>
+              <Label>Link URL</Label>
+              <Input
+                value={form.linkUrl}
+                onChange={(e) =>
+                  setForm({ ...form, linkUrl: e.target.value })
+                }
+                placeholder="/book-appointment"
               />
             </div>
 

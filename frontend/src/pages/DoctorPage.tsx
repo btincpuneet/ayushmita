@@ -92,6 +92,10 @@ const DoctorsPage: React.FC = () => {
       <main className="min-h-screen">
         <DoctorPageHeader
           title="Best Doctors"
+          breadcrumbs={[
+            { label: "Home", link: "/" },
+            { label: "Doctors" },
+          ]}
           countries={countries}
           cities={cities}
           selectedCountry={selectedCountry}
@@ -102,6 +106,7 @@ const DoctorsPage: React.FC = () => {
           }}
           onCityChange={(e) => setSelectedCity(e.target.value)}
         />
+
 
         <section className="py-12">
           <Container>
