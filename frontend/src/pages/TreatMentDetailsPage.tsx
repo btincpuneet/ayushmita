@@ -64,8 +64,18 @@ export default function TreatmentDetailsPage() {
   const seoKeywords =
     treatment?.seo_keywords ||
     `${treatment?.name || "treatment"}, healthcare, hospital`;
+  const canonicalUrl =
+    treatment?.canonical_url ||
+    `${window.location.origin}/treatment/${treatment?.slug}`;
 
-  UseSeo(seoTitle, seoDescription, seoKeywords);
+  UseSeo(
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    canonicalUrl
+  );
+
+  UseSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
 
   if (loading) return <p className="p-6 text-xl">Loading...</p>;
   if (!treatment) return <p className="p-6 text-xl">Treatment not found</p>;
@@ -102,12 +112,22 @@ export default function TreatmentDetailsPage() {
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-              src={`${API_BASE}${treatment.image}`}
-              alt={treatment.name}
-              title={treatment.name}
-
+              src={
+                treatment.image
+                  ? `${API_BASE}${treatment.image}`
+                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+              }
+              alt={
+                treatment.image_alt ||
+                `${treatment.name} Treatment`
+              }
+              title={
+                treatment.image_title ||
+                treatment.name
+              }
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
+
           </div>
 
           <div className="w-full lg:w-[100%]">

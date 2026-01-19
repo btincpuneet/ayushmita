@@ -50,7 +50,10 @@ const emptyForm = {
   canonical_url: "",
   status: "active",
   image: null as File | null,
+  image_alt: "",
+  image_title: "",
 };
+
 
 const ManageTreatments = () => {
   const [diseases, setDiseases] = useState<any[]>([]);
@@ -59,7 +62,7 @@ const ManageTreatments = () => {
     useState<number | null>(null);
   const [selectedTreatmentSlug, setSelectedTreatmentSlug] = useState("");
   const [singleTreatment, setSingleTreatment] = useState<any | null>(null);
-const fileRef = React.useRef<HTMLInputElement | null>(null);
+  const fileRef = React.useRef<HTMLInputElement | null>(null);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
@@ -146,6 +149,8 @@ const fileRef = React.useRef<HTMLInputElement | null>(null);
       canonical_url: singleTreatment.canonical_url ?? "",
       status: singleTreatment.status === 1 ? "active" : "inactive",
       image: null,
+      image_alt: singleTreatment.image_alt ?? "",
+      image_title: singleTreatment.image_title ?? "",
     });
 
     setPreview(null);
@@ -589,9 +594,10 @@ const fileRef = React.useRef<HTMLInputElement | null>(null);
               <div style={{ marginTop: 10 }}>
                 <img
                   src={preview}
-                  alt="preview"
-                  style={{ width: 200, height: 120, objectFit: "cover" }}
+                  alt={form.image_alt || "preview"}
+                  title={form.image_title || ""}
                 />
+
 
                 <button
                   type="button"
@@ -599,7 +605,6 @@ const fileRef = React.useRef<HTMLInputElement | null>(null);
                     setPreview(null);
                     setForm({ ...form, image: null });
 
-                    // clear input
                     if (fileRef.current) {
                       fileRef.current.value = "";
                     }
@@ -610,6 +615,32 @@ const fileRef = React.useRef<HTMLInputElement | null>(null);
                 </button>
               </div>
             )}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Image Alt Text
+              </Label>
+              <Input
+                placeholder="Describe the image for accessibility"
+                value={form.image_alt}
+                onChange={(e) =>
+                  setForm({ ...form, image_alt: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Image Title
+              </Label>
+              <Input
+                placeholder="Image title (optional)"
+                value={form.image_title}
+                onChange={(e) =>
+                  setForm({ ...form, image_title: e.target.value })
+                }
+              />
+            </div>
+
 
           </div>
 

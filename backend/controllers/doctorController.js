@@ -25,6 +25,8 @@ const createDoctor = async (req, res) => {
       seo_keywords,
       canonical_url,
       status,
+      image_alt,
+      image_title,
     } = req.body;
 
     let hospitals = req.body.hospitals || [];
@@ -71,6 +73,8 @@ const createDoctor = async (req, res) => {
       city,
       experience,
       image_url: imageUrl,
+      image_alt,
+      image_title,
       seo_title,
       seo_description,
       seo_keywords,
@@ -78,6 +82,7 @@ const createDoctor = async (req, res) => {
       status: status ?? 1,
     });
 
+    /* ---------- HOSPITAL RELATION ---------- */
     if (!Array.isArray(hospitals)) hospitals = [hospitals];
 
     hospitals = hospitals
@@ -99,22 +104,14 @@ const createDoctor = async (req, res) => {
       await RelationHospitalDoctor.bulkCreate(relations);
     }
 
-    res.status(201).json({
-      success: true,
-      data: doctor,
-    });
+    res.status(201).json({ success: true, data: doctor });
   } catch (err) {
     console.error("Create Doctor Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-/* ======================================================
-   GET ALL DOCTORS
-====================================================== */
+
 const getDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.findAll({
@@ -188,7 +185,6 @@ const getDoctorBySlug = async (req, res) => {
 const updateDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByPk(req.params.id);
-
     if (!doctor) {
       return res.status(404).json({
         success: false,
@@ -199,6 +195,7 @@ const updateDoctor = async (req, res) => {
     let updateData = { ...req.body };
     let hospitals = req.body.hospitals || [];
 
+    /* ---------- SLUG UPDATE ---------- */
     if (req.body.name && req.body.name !== doctor.name) {
       let baseSlug = slugify(req.body.name);
       let slug = baseSlug;
@@ -211,7 +208,6 @@ const updateDoctor = async (req, res) => {
       ) {
         slug = `${baseSlug}-${count++}`;
       }
-
       updateData.slug = slug;
     }
 
@@ -230,7 +226,7 @@ const updateDoctor = async (req, res) => {
 
     await doctor.update(updateData);
 
-    /* ---------- RESET RELATIONS ---------- */
+    /* ---------- RESET HOSPITAL RELATION ---------- */
     await RelationHospitalDoctor.destroy({
       where: { doctor_id: doctor.id },
     });
@@ -263,9 +259,6 @@ const updateDoctor = async (req, res) => {
   }
 };
 
-/* ======================================================
-   DELETE DOCTOR
-====================================================== */
 const deleteDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findByPk(req.params.id);

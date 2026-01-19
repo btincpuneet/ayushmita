@@ -9,8 +9,6 @@ export default function ManageHeroBanner() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-
-
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
@@ -18,6 +16,11 @@ export default function ManageHeroBanner() {
     button_text: "",
     button_url: "",
     status: "inactive",
+
+    image_alt: "",
+    image_title: "",
+    image_caption: "",
+
     image: null as File | null,
   });
 
@@ -29,25 +32,8 @@ export default function ManageHeroBanner() {
   }, []);
 
   const loadBanners = async () => {
-    try {
-      const res = await heroBannerApi.getAll();
-      setBanners(res || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const openCreateModal = () => {
-    clearForm();
-    setModalOpen(true);
-  };
-
-  const handleImage = (e: any) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setForm((prev) => ({ ...prev, image: file }));
-    setPreviewImage(URL.createObjectURL(file));
+    const res = await heroBannerApi.getAll();
+    setBanners(res || []);
   };
 
   const clearForm = () => {
@@ -58,12 +44,25 @@ export default function ManageHeroBanner() {
       button_text: "",
       button_url: "",
       status: "inactive",
+
+      image_alt: "",
+      image_title: "",
+      image_caption: "",
+
       image: null,
     });
 
     setPreviewImage(null);
     setEditingId(null);
     setErrorMsg("");
+  };
+
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setForm((prev) => ({ ...prev, image: file }));
+    setPreviewImage(URL.createObjectURL(file));
   };
 
   const handleSubmit = async () => {
@@ -103,6 +102,11 @@ export default function ManageHeroBanner() {
       button_text: banner.button_text,
       button_url: banner.button_url,
       status: banner.status,
+
+      image_alt: banner.image_alt || "",
+      image_title: banner.image_title || "",
+      image_caption: banner.image_caption || "",
+
       image: null,
     });
 
@@ -112,30 +116,28 @@ export default function ManageHeroBanner() {
 
   const handleDelete = async (id: number) => {
     if (!window.confirm("Delete this banner?")) return;
-
-    try {
-      await heroBannerApi.delete(id);
-      loadBanners();
-    } catch (err) {
-      console.error(err);
-    }
+    await heroBannerApi.delete(id);
+    loadBanners();
   };
- 
+
   return (
     <div className="p-6">
-      {/* Header */}
-      {/* <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Hero Banner Management</h1>
-        <button
-          onClick={openCreateModal}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700"
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Hero Banner Management</h1>
+        <Button
+          onClick={() => {
+            clearForm();
+            setModalOpen(true);
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           + Add Banner
-        </button>
-      </div> */}
+        </Button>
+      </div>
 
-      {/* Table */}
-      <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+      {/* TABLE */}
+      <div className="bg-white shadow-xl rounded-lg overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="bg-gray-100 text-left">
             <tr>
@@ -143,6 +145,8 @@ export default function ManageHeroBanner() {
               <th className="border p-3">Title</th>
               <th className="border p-3">Subtitle</th>
               <th className="border p-3">Description</th>
+              <th className="border p-3">Image ALT</th>
+              <th className="border p-3">Image Title</th>
               <th className="border p-3">Button Text</th>
               <th className="border p-3">Button URL</th>
               <th className="border p-3">Status</th>
@@ -150,72 +154,44 @@ export default function ManageHeroBanner() {
             </tr>
           </thead>
 
-
           <tbody>
             {banners.map((banner) => (
               <tr key={banner.id} className="border hover:bg-gray-50 align-top">
-
                 <td className="p-3">
-                  {banner.image ? (
-                    <img
-                      src={`${API_BASE}${banner.image}`}
-                      alt={banner.title}
-                      className="w-24 h-16 object-cover rounded"
-                    />
-                  ) : (
-                    <span>-</span>
-                  )}
+                  <img
+                    src={`${API_BASE}${banner.image}`}
+                    alt={banner.image_alt || banner.title}
+                    title={banner.image_title || banner.title}
+                    className="w-24 h-16 object-cover rounded"
+                  />
                 </td>
 
-                <td className="p-3 whitespace-pre-line font-semibold">
-                  {banner.title}
+                <td className="p-3 font-semibold">{banner.title}</td>
+                <td className="p-3">{banner.subtitle || "-"}</td>
+                <td className="p-3">{banner.description || "-"}</td>
+                <td className="p-3">{banner.image_alt || "-"}</td>
+                <td className="p-3">{banner.image_title || "-"}</td>
+                <td className="p-3">{banner.button_text || "-"}</td>
+                <td className="p-3 break-all">
+                  {banner.button_url || "-"}
                 </td>
 
-                <td className="p-3">
-                  {banner.subtitle || "-"}
-                </td>
-
-                <td className="p-3 max-w-xs text-sm text-gray-600">
-                  {banner.description || "-"}
-                </td>
-
-                <td className="p-3">
-                  {banner.button_text || "-"}
-                </td>
-
-                <td className="p-3 text-blue-600 underline break-all">
-                  {banner.button_url ? (
-                    <a href={banner.button_url} target="_blank" rel="noreferrer">
-                      {banner.button_url}
-                    </a>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-
-                {/* Status */}
                 <td className="p-3">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${banner.status === "active"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-200 text-gray-600"
-                      }`}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      banner.status === "active"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
                   >
                     {banner.status}
                   </span>
                 </td>
 
-
-
                 <td className="p-3 flex gap-2">
-                  <Button
-                    size="sm"
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                    onClick={() => handleEdit(banner)}
-                  >
+                  <Button size="sm" onClick={() => handleEdit(banner)}>
                     Edit
                   </Button>
-
                   <Button
                     size="sm"
                     variant="destructive"
@@ -224,107 +200,78 @@ export default function ManageHeroBanner() {
                     Delete
                   </Button>
                 </td>
-
               </tr>
             ))}
 
             {!banners.length && (
               <tr>
-                <td colSpan={9} className="text-center p-6 text-gray-500">
-                  No hero banners found
+                <td colSpan={10} className="text-center p-6 text-gray-500">
+                  No banners found
                 </td>
               </tr>
             )}
           </tbody>
-
         </table>
       </div>
 
-      {/* Modal */}
+      {/* MODAL */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[600px]">
-            <h2 className="text-xl font-bold mb-3">
+          <div className="bg-white p-6 rounded-lg w-[650px]">
+            <h2 className="text-xl font-bold mb-4">
               {editingId ? "Edit Hero Banner" : "Create Hero Banner"}
             </h2>
 
             {errorMsg && (
-              <p className="bg-red-100 text-red-600 p-2 rounded mb-3">
+              <p className="bg-red-100 text-red-600 p-2 mb-3 rounded">
                 {errorMsg}
               </p>
             )}
 
             <div className="grid grid-cols-2 gap-4">
-              <input
-                className="border p-2 rounded"
-                placeholder="Title *"
+              <input className="border p-2" placeholder="Title *"
                 value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
 
-              <select
-                className="border p-2 rounded"
+              <select className="border p-2"
                 value={form.status}
-                onChange={(e) =>
-                  setForm({ ...form, status: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
               >
                 <option value="inactive">Inactive</option>
                 <option value="active">Active</option>
               </select>
 
-              <input
-                className="border p-2 rounded col-span-2"
-                placeholder="Subtitle"
+              <input className="border p-2 col-span-2" placeholder="Subtitle"
                 value={form.subtitle}
-                onChange={(e) =>
-                  setForm({ ...form, subtitle: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
               />
 
-              <textarea
-                className="border p-2 rounded col-span-2"
-                placeholder="Description"
+              <textarea className="border p-2 col-span-2" placeholder="Description"
                 value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
 
-              <input
-                className="border p-2 rounded"
-                placeholder="Button Text"
-                value={form.button_text}
-                onChange={(e) =>
-                  setForm({ ...form, button_text: e.target.value })
-                }
+              <input className="border p-2" placeholder="Image ALT"
+                value={form.image_alt}
+                onChange={(e) => setForm({ ...form, image_alt: e.target.value })}
               />
 
-              <input
-                className="border p-2 rounded"
-                placeholder="Button URL"
-                value={form.button_url}
-                onChange={(e) =>
-                  setForm({ ...form, button_url: e.target.value })
-                }
+              <input className="border p-2" placeholder="Image Title"
+                value={form.image_title}
+                onChange={(e) => setForm({ ...form, image_title: e.target.value })}
               />
 
-              <div className="col-span-2">
-                <label className="font-semibold">
-                  Image {editingId ? "" : "*"}
-                </label>
-                <input type="file" onChange={handleImage} className="mt-2" />
+              <input className="border p-2 col-span-2" placeholder="Image Caption"
+                value={form.image_caption}
+                onChange={(e) => setForm({ ...form, image_caption: e.target.value })}
+              />
 
-                {previewImage && (
-                  <img
-                    src={previewImage}
-                    className="w-40 mt-4 rounded shadow border"
-                    alt="Preview"
-                  />
-                )}
-              </div>
+              <input type="file" onChange={handleImage} />
+
+              {previewImage && (
+                <img src={previewImage} className="w-40 rounded border" />
+              )}
             </div>
 
             <div className="mt-6 flex justify-end gap-3">

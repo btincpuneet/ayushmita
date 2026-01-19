@@ -16,7 +16,6 @@ const makeSlug = (text) =>
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
 
-/* ================= CREATE ================= */
 const createHospital = async (req, res) => {
   try {
     const {
@@ -27,13 +26,15 @@ const createHospital = async (req, res) => {
       founded_year,
       hospital_beds,
       description_html,
-
       seo_title,
       seo_description,
       seo_keywords,
       canonical_url,
       status,
+      image_alt,
+      image_title,
     } = req.body;
+
 
     if (!name || !country || !city || !address) {
       return res.status(400).json({
@@ -62,16 +63,16 @@ const createHospital = async (req, res) => {
       founded_year,
       hospital_beds,
       description_html,
-
-
       seo_title,
       seo_description,
       seo_keywords,
       canonical_url,
-
       status: status || "active",
       image_url: `/uploads/hospitals/${fileName}`,
+      image_alt,
+      image_title,
     });
+
 
     res.status(201).json({ success: true, data: hospital });
   } catch (err) {
@@ -111,7 +112,6 @@ const getHospitalBySlug = async (req, res) => {
   }
 };
 
-/* ================= GET ALL ================= */
 const getAllHospitals = async (req, res) => {
   try {
     const hospitals = await TopPartnerHospital.findAll({
@@ -124,7 +124,6 @@ const getAllHospitals = async (req, res) => {
   }
 };
 
-/* ================= GET BY ID ================= */
 const getHospitalById = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
@@ -137,7 +136,6 @@ const getHospitalById = async (req, res) => {
   }
 };
 
-/* ================= UPDATE ================= */
 const updateHospital = async (req, res) => {
   try {
     const hospital = await TopPartnerHospital.findByPk(req.params.id);
@@ -158,7 +156,10 @@ const updateHospital = async (req, res) => {
     const updateData = {
       ...req.body,
       image_url: imagePath,
+      image_alt: req.body.image_alt,
+      image_title: req.body.image_title,
     };
+
 
     if (req.body.name) {
       updateData.slug = makeSlug(req.body.name);

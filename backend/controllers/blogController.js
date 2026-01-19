@@ -7,6 +7,41 @@ const { Treatment } = require("../models/treatment");
 
 exports.createBlog = async (req, res) => {
   try {
+    const { title, slug } = req.body;
+
+    // 🔒 Validate required fields
+    if (!title || !slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and slug are required",
+      });
+    }
+
+    // ❌ Prevent duplicate TITLE
+    const existingTitle = await Blog.findOne({
+      where: { title },
+    });
+
+    if (existingTitle) {
+      return res.status(409).json({
+        success: false,
+        message: "Blog with this title already exists",
+      });
+    }
+
+    // ❌ Prevent duplicate SLUG
+    const existingSlug = await Blog.findOne({
+      where: { slug },
+    });
+
+    if (existingSlug) {
+      return res.status(409).json({
+        success: false,
+        message: "Blog with this slug already exists",
+      });
+    }
+
+    // 📸 Image upload
     let imageUrl = null;
 
     if (req.file) {
@@ -20,7 +55,7 @@ exports.createBlog = async (req, res) => {
       fs.writeFileSync(
         path.join(uploadDir, imageName),
         req.file.buffer
-      )
+      );
 
       imageUrl = `/uploads/${imageName}`;
     }
@@ -32,25 +67,29 @@ exports.createBlog = async (req, res) => {
 
     if (!isGlobal && req.body.disease_id) {
       const disease = await Disease.findByPk(req.body.disease_id);
-      diseaseName = disease ? disease.name : null;
+      diseaseName = disease?.name || null;
     }
 
     if (!isGlobal && req.body.treatment_id && req.body.treatment_id !== "0") {
       const treatment = await Treatment.findByPk(req.body.treatment_id);
-      treatmentName = treatment ? treatment.name : null;
+      treatmentName = treatment?.name || null;
     }
-    console.log(req.body);
+
+    // ✅ CREATE BLOG
     const blog = await Blog.create({
-      title: req.body.title,
-      slug: req.body.slug,
+      title,
+      slug,
       short_description: req.body.short_description,
       description_html: req.body.description_html,
 
       blog_image: imageUrl,
+      blog_image_alt: req.body.blog_image_alt || title,
+      blog_image_title: req.body.blog_image_title || title,
+
       author_name: req.body.author_name || "Admin",
 
       is_global: isGlobal,
-      is_featured: req.body.is_featured === "true",
+      is_featured: ["1", 1, true, "true"].includes(req.body.is_featured),
 
       disease_id: isGlobal ? null : req.body.disease_id,
       disease_name: diseaseName,
@@ -66,23 +105,34 @@ exports.createBlog = async (req, res) => {
           : treatmentName,
 
       canonical_url: req.body.canonical_url,
+      meta_title: req.body.meta_title,
+      meta_description: req.body.meta_description,
+      meta_keywords: req.body.meta_keywords,
+      tags: req.body.tags,
 
       status: req.body.status || "published",
       published_at: new Date(),
     });
 
-    res.status(201).json({ success: true, data: blog });
+    return res.status(201).json({
+      success: true,
+      message: "Blog created successfully",
+      data: blog,
+    });
+
   } catch (err) {
     console.error("Create Blog Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-
-
-
 exports.updateBlog = async (req, res) => {
   try {
+    const { title, slug } = req.body;
+
     const blog = await Blog.findByPk(req.params.id);
 
     if (!blog) {
@@ -92,6 +142,41 @@ exports.updateBlog = async (req, res) => {
       });
     }
 
+    // ❌ Prevent duplicate TITLE (ignore same blog)
+    if (title) {
+      const titleExists = await Blog.findOne({
+        where: {
+          title,
+          id: { [require("sequelize").Op.ne]: blog.id },
+        },
+      });
+
+      if (titleExists) {
+        return res.status(409).json({
+          success: false,
+          message: "Another blog with this title already exists",
+        });
+      }
+    }
+
+    // ❌ Prevent duplicate SLUG (ignore same blog)
+    if (slug) {
+      const slugExists = await Blog.findOne({
+        where: {
+          slug,
+          id: { [require("sequelize").Op.ne]: blog.id },
+        },
+      });
+
+      if (slugExists) {
+        return res.status(409).json({
+          success: false,
+          message: "Another blog with this slug already exists",
+        });
+      }
+    }
+
+    // 📸 Image upload
     let imageUrl = blog.blog_image;
 
     if (req.file) {
@@ -117,21 +202,25 @@ exports.updateBlog = async (req, res) => {
 
     if (!isGlobal && req.body.disease_id) {
       const disease = await Disease.findByPk(req.body.disease_id);
-      diseaseName = disease ? disease.name : null;
+      diseaseName = disease?.name || null;
     }
 
     if (!isGlobal && req.body.treatment_id && req.body.treatment_id !== "0") {
       const treatment = await Treatment.findByPk(req.body.treatment_id);
-      treatmentName = treatment ? treatment.name : null;
+      treatmentName = treatment?.name || null;
     }
 
+    // ✅ UPDATE BLOG
     await blog.update({
-      title: req.body.title,
-      slug: req.body.slug,
+      title,
+      slug,
       short_description: req.body.short_description,
       description_html: req.body.description_html,
 
       blog_image: imageUrl,
+      blog_image_alt: req.body.blog_image_alt || title,
+      blog_image_title: req.body.blog_image_title || title,
+
       author_name: req.body.author_name || "Admin",
 
       is_global: isGlobal,
@@ -142,26 +231,31 @@ exports.updateBlog = async (req, res) => {
 
       treatment_id: isGlobal ? null : req.body.treatment_id,
       treatment_name: treatmentName,
-      canonical_url: req.body.canonical_url,
 
-      status: req.body.status,
+      canonical_url: req.body.canonical_url,
       meta_title: req.body.meta_title,
       meta_description: req.body.meta_description,
       meta_keywords: req.body.meta_keywords,
       tags: req.body.tags,
+
+      status: req.body.status,
     });
 
-    res.json({
+    return res.json({
       success: true,
       message: "Blog updated successfully",
       data: blog,
     });
+
   } catch (err) {
     console.error("Update Blog Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
-;
+
 
 exports.getAllBlogs = async (_req, res) => {
   try {

@@ -24,14 +24,15 @@ const emptyForm = {
   founded_year: "",
   hospital_beds: "",
   description_html: "",
-
   seo_title: "",
   seo_description: "",
   seo_keywords: "",
   canonical_url: "",
   status: "active",
-
+  image_alt: "",
+  image_title: "",
 };
+
 
 export default function ManageTopPartnerHospitals() {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -103,14 +104,15 @@ export default function ManageTopPartnerHospitals() {
       founded_year: item.founded_year || "",
       hospital_beds: item.hospital_beds || "",
       description_html: item.description_html || "",
-
       seo_title: item.seo_title || "",
       seo_description: item.seo_description || "",
       seo_keywords: item.seo_keywords || "",
       canonical_url: item.canonical_url || "",
       status: item.status || "active",
-
+      image_alt: item.image_alt || "",
+      image_title: item.image_title || "",
     });
+
     setPreview(item.image_url ? `${API_BASE}${item.image_url}` : null);
 
     setFile(null);
@@ -156,9 +158,15 @@ export default function ManageTopPartnerHospitals() {
 
       setOpen(false);
       fetchHospitals();
-    } catch {
-      toast.error("Failed to save data");
-    } finally {
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Unable to save hospital details. Please check the form and try again.";
+
+      toast.error(message);
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -177,6 +185,8 @@ export default function ManageTopPartnerHospitals() {
           <thead className="bg-gray-100">
             <tr>
               <th className="p-2 border">Image</th>
+              <th className="p-2 border">Image Alt</th>
+              <th className="p-2 border">Image Title</th>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Location</th>
               <th className="p-2 border">Beds</th>
@@ -194,8 +204,18 @@ export default function ManageTopPartnerHospitals() {
                   <td className="p-2 border">
                     <img
                       src={`${API_BASE}${h.image_url}`}
+                      alt={h.image_alt || h.name}
+                      title={h.image_title || h.name}
                       className="w-16 h-16 rounded object-cover"
                     />
+
+                  </td>
+                  <td className="p-2 border text-sm">
+                    {h.image_alt || "-"}
+                  </td>
+
+                  <td className="p-2 border text-sm">
+                    {h.image_title || "-"}
                   </td>
                   <td className="p-2 border font-semibold">{h.name}</td>
                   <td className="p-2 border">{h.city}, {h.country}</td>
@@ -311,7 +331,9 @@ export default function ManageTopPartnerHospitals() {
               <Input name="seo_keywords" placeholder="SEO Keywords" value={form.seo_keywords} onChange={handleChange} />
               <Input name="canonical_url" placeholder="Canonical URL" value={form.canonical_url} onChange={handleChange} />
             </div>
-
+            <label className="text-sm font-medium mb-1 block">
+              Image
+            </label>
             <input
               ref={fileRef}
               type="file"
@@ -339,6 +361,31 @@ export default function ManageTopPartnerHospitals() {
                 />
               </div>
             )}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Image ALT (SEO)
+                </label>
+                <Input
+                  name="image_alt"
+                  value={form.image_alt}
+                  onChange={handleChange}
+                  placeholder="Hospital image alt text"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Image Title
+                </label>
+                <Input
+                  name="image_title"
+                  value={form.image_title}
+                  onChange={handleChange}
+                  placeholder="Hospital image title"
+                />
+              </div>
+            </div>
 
           </div>
 

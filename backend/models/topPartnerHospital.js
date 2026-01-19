@@ -37,7 +37,15 @@ const TopPartnerHospital = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
+    image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     founded_year: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -70,7 +78,7 @@ const TopPartnerHospital = sequelize.define(
       type: DataTypes.STRING(500),
       allowNull: true,
     },
-   
+
     status: {
       type: DataTypes.STRING,
       defaultValue: "active",

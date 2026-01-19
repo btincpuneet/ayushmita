@@ -61,13 +61,21 @@ const Doctor = sequelize.define(
       allowNull: true,
     },
 
-    
+
     image_url: {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
-    
+    image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     seo_title: {
       type: DataTypes.STRING,
       allowNull: true,

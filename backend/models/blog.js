@@ -44,7 +44,15 @@ const Blog = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    blog_image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
+    blog_image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     short_description: {
       type: DataTypes.TEXT,
       allowNull: true,

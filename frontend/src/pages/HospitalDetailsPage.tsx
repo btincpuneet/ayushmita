@@ -63,11 +63,22 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         <img
-          src={`${API_BASE}${hospital.image_url}`}
-          alt={hospital.name}
-          title={hospital.name}
+          src={
+            hospital.image_url
+              ? `${API_BASE}${hospital.image_url}`
+              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+          }
+          alt={
+            hospital.image_alt ||
+            `${hospital.name} Hospital`
+          }
+          title={
+            hospital.image_title ||
+            hospital.name
+          }
           className="w-full lg:w-[370px] h-[276px] object-cover rounded-xl"
         />
+
 
         <div className="flex-1 details-page-section-description">
           {/* <h1 className="text-2xl font-bold mb-4">{hospital.name}</h1> */}
@@ -561,8 +572,8 @@ export default function HospitalDetailsPage() {
       <TreatmentHeader
         title={hospital.name}
         breadcrumbs={[
-          { label: "Home" ,link: "/"},
-          { label: "Hospitals", link: "/hospital"},
+          { label: "Home", link: "/" },
+          { label: "Hospitals", link: "/hospital" },
           { label: hospital.name, link: "" },
         ]}
       />

@@ -16,8 +16,11 @@ interface Treatment {
   id: number;
   name: string;
   slug: string;
-  image: string;
+  image?: string | null;
+  image_alt?: string | null;
+  image_title?: string | null;
 }
+
 interface GlobalSEO {
   seo_title: string;
   seo_description: string;
@@ -28,13 +31,16 @@ interface Disease {
   id: number;
   name: string;
   slug: string;
-  image: string;
+  image?: string | null;
+  image_alt?: string | null;
+  image_title?: string | null;
   short_description: string;
   description_html: string;
   treatments: Treatment[];
   seo_title?: string;
   seo_description?: string;
   seo_keywords?: string;
+  canonical_url?: string
 }
 
 const DiseaseDetailsPage = () => {
@@ -43,11 +49,7 @@ const DiseaseDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
-  const decodeHtml = (html: string) => {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  };
+
 
   const fetchDisease = async () => {
     try {
@@ -97,12 +99,23 @@ const DiseaseDetailsPage = () => {
     disease?.seo_keywords ||
     globalSEO?.seo_keywords ||
     "hospital, healthcare";
+  const canonicalUrl =
+    disease?.canonical_url ||
+    `${window.location.origin}/diseases/${disease?.slug}`;
 
-  UseSeo(seoTitle, seoDescription, seoKeywords);
+  UseSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
+
   if (loading)
     return <p className="text-center py-20 text-lg font-semibold">Loading...</p>;
 
   if (!disease) return <p className="text-center py-20">Disease Not Found</p>;
+  const diseaseImageAlt =
+    disease.image_alt ||
+    `${disease.name} Disease`;
+
+  const diseaseImageTitle =
+    disease.image_title ||
+    `${disease.name} Disease`;
 
   return (
     <>
@@ -113,7 +126,7 @@ const DiseaseDetailsPage = () => {
           <TreatmentHeader
             title={disease?.name}
             breadcrumbs={[
-              { label: "Home" , link: "/" },
+              { label: "Home", link: "/" },
               { label: disease?.name || "Treatment", link: "" },
             ]}
           />
@@ -129,10 +142,11 @@ const DiseaseDetailsPage = () => {
                       ? `${API_BASE}${disease.image}`
                       : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
                   }
-                  alt={`${disease.name} Disease`}
-                  title={`${disease.name} Disease`}
+                  alt={diseaseImageAlt}
+                  title={diseaseImageTitle}
                   className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
                 />
+
 
               </div>
 
@@ -169,10 +183,17 @@ const DiseaseDetailsPage = () => {
                         ? `${API_BASE}${t.image}`
                         : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
                     }
-                    alt={`${t.name} Treatment`}
-                    title={`${t.name} Treatment`}
+                    alt={
+                      t.image_alt ||
+                      `${t.name} Treatment`
+                    }
+                    title={
+                      t.image_title ||
+                      `${t.name} Treatment`
+                    }
                     className="w-full h-full object-cover rounded-lg"
                   />
+
 
                 </div>
 

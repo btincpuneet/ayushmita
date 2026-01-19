@@ -14,11 +14,19 @@ const PromoSlider = sequelize.define('PromoSlider', {
   discount_text: DataTypes.STRING,
   code_text: DataTypes.STRING,
 
-  image_url: {
-    type: DataTypes.BLOB('long'),
-    allowNull: true
+   image_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+  image_alt: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 
+  image_title: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   button_text: {
     type: DataTypes.STRING,
     defaultValue: "GRAB NOW"

@@ -39,6 +39,9 @@ interface Doctor {
   experience: string;
   status: number;
   image_url?: string;
+  image_alt?: string;
+  image_title?: string;
+
   hospitals?: Hospital[];
 }
 
@@ -52,6 +55,10 @@ const emptyForm = {
   short_description: "",
   description: "",
   description_html: "",
+
+  image_alt: "",
+  image_title: "",
+
   seo_title: "",
   seo_description: "",
   seo_keywords: "",
@@ -60,6 +67,7 @@ const emptyForm = {
   hospitals: [] as number[],
   image: null as File | null,
 };
+
 
 const ManageDoctors = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -132,16 +140,24 @@ const ManageDoctors = () => {
 
   const handleEdit = (doctor: Doctor) => {
     setEditing(doctor);
+
     setForm({
       ...emptyForm,
       ...doctor,
+
+      image_alt: doctor.image_alt || "",
+      image_title: doctor.image_title || "",
+
       hospitals: doctor.hospitals?.map((h) => h.id) || [],
       image: null,
     });
+
     setPreview(
       doctor.image_url ? `${API_BASE}${doctor.image_url}` : null
     );
+
     setOpen(true);
+
     if (doctor.country) {
       axios
         .get(CITY_API, { params: { country: doctor.country } })
@@ -149,8 +165,8 @@ const ManageDoctors = () => {
           setCities(res.data.data.map((c: any) => c.city))
         );
     }
-
   };
+
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this doctor?")) return;
@@ -185,13 +201,13 @@ const ManageDoctors = () => {
       setOpen(false);
       loadDoctors();
     } catch (error: any) {
-          const message =
-            error?.response?.data?.message ||
-            error?.response?.data?.error ||
-            "Something went wrong. Please try again.";
-    
-          toast.error(message);
-        }
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
+    }
   };
 
   const selectedHospitalNames = hospitals
@@ -214,7 +230,9 @@ const ManageDoctors = () => {
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3">Image</th>
+              <th className="p-3">Image </th>
+              <th className="p-3">Img Alt</th>
+              <th className="p-3">Img Title</th>
               <th className="p-3">Name</th>
               <th className="p-3">Specialty</th>
               <th className="p-3">Experience</th>
@@ -232,16 +250,20 @@ const ManageDoctors = () => {
                   {d.image_url ? (
                     <img
                       src={`${API_BASE}${d.image_url}`}
-                      alt={`${d.name} - ${d.specialty || "Doctor"}`}
-                      title={`${d.name} - ${d.specialty || "Doctor"}`}
+                      alt={d.image_alt || d.name}
+                      title={d.image_title || d.name}
                       className="w-14 h-14 rounded object-cover"
                     />
-
                   ) : (
                     <div className="w-14 h-14 bg-gray-200 rounded" />
                   )}
                 </td>
-
+                <td className="p-3 text-xs">
+                  {d.image_alt || "-"}
+                </td>
+                <td className="p-3 text-xs">
+                  {d.image_title || "-"}
+                </td>
                 <td className="p-3 font-medium">{d.name}</td>
                 <td className="p-3">{d.specialty}</td>
                 <td className="p-3">{d.experience || "-"}</td>
@@ -282,11 +304,26 @@ const ManageDoctors = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-2 gap-4">
-            <Input
-              placeholder="Doctor Name *"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Doctor Name *
+              </label>
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Title / Designation
+              </label>
+              <Input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+            </div>
+
             <div className="col-span-2">
               <label className="text-sm font-medium mb-1 block">
                 Select Hospitals
@@ -317,9 +354,7 @@ const ManageDoctors = () => {
                             setForm({
                               ...form,
                               hospitals: checked
-                                ? form.hospitals.filter(
-                                  (id) => id !== h.id
-                                )
+                                ? form.hospitals.filter(id => id !== h.id)
                                 : [...form.hospitals, h.id],
                             })
                           }
@@ -334,82 +369,110 @@ const ManageDoctors = () => {
               </Popover>
             </div>
 
-            <Input
-              placeholder="Title / Designation"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Specialty *
+              </label>
+              <Input
+                value={form.specialty}
+                onChange={(e) =>
+                  setForm({ ...form, specialty: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Specialty *"
-              value={form.specialty}
-              onChange={(e) =>
-                setForm({ ...form, specialty: e.target.value })
-              }
-            />
-
-            <Input
-              placeholder="Experience (e.g. 10 Years)"
-              value={form.experience}
-              onChange={(e) =>
-                setForm({ ...form, experience: e.target.value })
-              }
-            />
-
-            <select
-              className="border rounded px-3 py-2 text-sm"
-              value={form.country}
-              onChange={(e) =>
-                setForm({ ...form, country: e.target.value, city: "" })
-              }
-            >
-              <option value="">Select Country</option>
-              {countries.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Experience
+              </label>
+              <Input
+                type="number"
+                min={0}
+                step={1}
+                value={form.experience}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    experience: e.target.value === ""
+                      ? ""
+                      : Math.max(0, Number(e.target.value)),
+                  })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e") e.preventDefault();
+                }}
+              />
+            </div>
 
 
-            <select
-              className="border rounded px-3 py-2 text-sm"
-              value={form.city}
-              disabled={!form.country}
-              onChange={(e) =>
-                setForm({ ...form, city: e.target.value })
-              }
-            >
-              <option value="">Select City</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Country
+              </label>
+              <select
+                className="border rounded px-3 py-2 text-sm w-full"
+                value={form.country}
+                onChange={(e) =>
+                  setForm({ ...form, country: e.target.value, city: "" })
+                }
+              >
+                <option value="">Select Country</option>
+                {countries.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
 
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                City
+              </label>
+              <select
+                className="border rounded px-3 py-2 text-sm w-full"
+                value={form.city}
+                disabled={!form.country}
+                onChange={(e) =>
+                  setForm({ ...form, city: e.target.value })
+                }
+              >
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              className="border rounded px-3 py-2 text-sm"
-              value={form.status}
-              onChange={(e) =>
-                setForm({ ...form, status: Number(e.target.value) })
-              }
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Status
+              </label>
+              <select
+                className="border rounded px-3 py-2 text-sm w-full"
+                value={form.status}
+                onChange={(e) =>
+                  setForm({ ...form, status: Number(e.target.value) })
+                }
+              >
+                <option value={1}>Active</option>
+                <option value={0}>Inactive</option>
+              </select>
+            </div>
 
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                setForm({ ...form, image: file });
-                setPreview(URL.createObjectURL(file));
-              }}
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Doctor Image
+              </label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setForm({ ...form, image: file });
+                  setPreview(URL.createObjectURL(file));
+                }}
+              />
+            </div>
 
             {preview && (
               <img
@@ -418,31 +481,59 @@ const ManageDoctors = () => {
               />
             )}
 
-            <Textarea
-              className="col-span-2"
-              placeholder="Short Description"
-              value={form.short_description}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  short_description: e.target.value,
-                })
-              }
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image ALT (SEO)
+              </label>
+              <Input
+                value={form.image_alt}
+                onChange={(e) =>
+                  setForm({ ...form, image_alt: e.target.value })
+                }
+              />
+            </div>
 
-            <Textarea
-              className="col-span-2"
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-            />
-
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image Title
+              </label>
+              <Input
+                value={form.image_title}
+                onChange={(e) =>
+                  setForm({ ...form, image_title: e.target.value })
+                }
+              />
+            </div>
 
             <div className="col-span-2">
+              <label className="text-sm font-medium mb-1 block">
+                Short Description
+              </label>
+              <Textarea
+                value={form.short_description}
+                onChange={(e) =>
+                  setForm({ ...form, short_description: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="text-sm font-medium mb-1 block">
+                Description
+              </label>
+              <Textarea
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="text-sm font-medium mb-1 block">
+                Doctor Full Description
+              </label>
               <RichTextEditor
-                label="Doctor Full Description"
                 value={form.description_html}
                 onChange={(html) =>
                   setForm({ ...form, description_html: html })
@@ -452,40 +543,53 @@ const ManageDoctors = () => {
               />
             </div>
 
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                SEO Title
+              </label>
+              <Input
+                value={form.seo_title}
+                onChange={(e) =>
+                  setForm({ ...form, seo_title: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="SEO Title"
-              value={form.seo_title}
-              onChange={(e) =>
-                setForm({ ...form, seo_title: e.target.value })
-              }
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Canonical URL
+              </label>
+              <Input
+                value={form.canonical_url}
+                onChange={(e) =>
+                  setForm({ ...form, canonical_url: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Canonical URL"
-              value={form.canonical_url}
-              onChange={(e) =>
-                setForm({ ...form, canonical_url: e.target.value })
-              }
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                SEO Description
+              </label>
+              <Textarea
+                value={form.seo_description}
+                onChange={(e) =>
+                  setForm({ ...form, seo_description: e.target.value })
+                }
+              />
+            </div>
 
-            <Textarea
-              placeholder="SEO Description"
-              value={form.seo_description}
-              onChange={(e) =>
-                setForm({ ...form, seo_description: e.target.value })
-              }
-            />
-
-            <Textarea
-              placeholder="SEO Keywords"
-              value={form.seo_keywords}
-              onChange={(e) =>
-                setForm({ ...form, seo_keywords: e.target.value })
-              }
-            />
-
-
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                SEO Keywords
+              </label>
+              <Textarea
+                value={form.seo_keywords}
+                onChange={(e) =>
+                  setForm({ ...form, seo_keywords: e.target.value })
+                }
+              />
+            </div>
           </div>
 
           <DialogFooter>
@@ -495,6 +599,7 @@ const ManageDoctors = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
 
     </div>
   );

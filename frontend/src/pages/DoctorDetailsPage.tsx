@@ -24,11 +24,16 @@ interface Doctor {
     description: string;
     description_html: string;
     image_url: string | null;
+    image_alt?: string | null;
+    image_title?: string | null;
     seo_title?: string;
     seo_description?: string;
     seo_keywords?: string;
-
+    canonical_url?: string;
+    hospitals?: any[];
 }
+
+
 
 const NextArrow = ({ onClick }: any) => (
     <button
@@ -113,10 +118,14 @@ const DoctorDetailsPage: React.FC = () => {
         doctor?.seo_keywords ||
         globalSEO?.seo_keywords ||
         "doctor, hospital, treatment";
+    const canonicalUrl =
+        doctor?.canonical_url ||
+        `${window.location.origin}/doctors/${doctor?.slug}`;
 
-    useSeo(seoTitle, seoDescription, seoKeywords);
+    useSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
 
     if (loading) {
+
         return (
             <>
                 <Header />
@@ -174,6 +183,13 @@ const DoctorDetailsPage: React.FC = () => {
             { breakpoint: 640, settings: { slidesToShow: 1 } },
         ],
     };
+    const imageAlt =
+        doctor.image_alt ||
+        `${doctor.name} - ${doctor.specialty || "Doctor"} in ${doctor.city}`;
+
+    const imageTitle =
+        doctor.image_title ||
+        `${doctor.name} - ${doctor.specialty || "Doctor"}`;
 
     return (
         <>
@@ -201,10 +217,11 @@ const DoctorDetailsPage: React.FC = () => {
                                                     ? `${API_BASE}${doctor.image_url}`
                                                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
                                             }
-                                            alt={`${doctor.name} - ${doctor.specialty || "Doctor"} Doctor`}
-                                            title={`${doctor.name} - ${doctor.specialty || "Doctor"} Doctor`}
+                                            alt={imageAlt}
+                                            title={imageTitle}
                                             className="object-cover rounded-2xl doctor-detail-page-image-1"
                                         />
+
                                     </div>
 
 
@@ -380,13 +397,18 @@ const DoctorDetailsPage: React.FC = () => {
                                     <div key={d.id} className="px-3" >
                                         <div className="bg-white rounded-xl shadow text-center">
                                             <img
-                                                src={
-                                                    d.image_url
-                                                        ? `${API_BASE}${d.image_url}`
-                                                        : image
+                                                src={d.image_url ? `${API_BASE}${d.image_url}` : image}
+                                                alt={
+                                                    d.image_alt ||
+                                                    `${d.name} - ${d.specialty || "Doctor"} in ${doctor.city}`
+                                                }
+                                                title={
+                                                    d.image_title ||
+                                                    `${d.name} - ${d.specialty || "Doctor"}`
                                                 }
                                                 className="h-[233px] w-full object-cover rounded-2xl"
                                             />
+
                                             <h3 style={{
                                                 fontFamily: "Ubuntu, sans-serif",
                                                 fontWeight: 700,

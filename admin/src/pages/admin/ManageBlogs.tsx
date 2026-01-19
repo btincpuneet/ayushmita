@@ -44,6 +44,8 @@ const emptyForm = {
   meta_keywords: "",
   tags: "",
   blog_image: null as File | null,
+  blog_image_alt: "",
+  blog_image_title: "",
 };
 
 export default function ManageBlogs() {
@@ -113,6 +115,8 @@ export default function ManageBlogs() {
       tags: form.tags,
       is_global: form.is_global ? "1" : "0",
       is_featured: form.is_featured ? "1" : "0",
+      blog_image_alt: form.blog_image_alt,
+      blog_image_title: form.blog_image_title,
     }).forEach(([k, v]) => fd.append(k, v));
 
     if (!form.is_global) {
@@ -220,7 +224,10 @@ export default function ManageBlogs() {
       ))}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-7xl max-h-[90vh] overflow-y-auto">
+        <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="max-w-7xl max-h-[90vh] overflow-y-auto"
+        >
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Blog" : "Create Blog"}
@@ -228,7 +235,7 @@ export default function ManageBlogs() {
           </DialogHeader>
 
           <div className="flex gap-6 mb-6">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.is_global}
@@ -244,7 +251,7 @@ export default function ManageBlogs() {
               <Globe className="w-4 h-4" /> Global
             </label>
 
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.is_featured}
@@ -257,84 +264,126 @@ export default function ManageBlogs() {
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <select
-              className="border rounded px-3 py-2 disabled:bg-gray-100"
-              value={form.disease_id}
-              disabled={form.is_global}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  disease_id: e.target.value,
-                  treatment_id: "0",
-                })
-              }
-            >
-              <option value="0">Select Disease *</option>
-              {diseases.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Disease *</label>
+              <select
+                className="border rounded px-3 py-2 w-full disabled:bg-gray-100"
+                value={form.disease_id}
+                disabled={form.is_global}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    disease_id: e.target.value,
+                    treatment_id: "0",
+                  })
+                }
+              >
+                <option value="0">Select Disease</option>
+                {diseases.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              className="border rounded px-3 py-2 disabled:bg-gray-100"
-              value={form.treatment_id}
-              disabled={form.is_global || form.disease_id === "0"}
-              onChange={(e) =>
-                setForm({ ...form, treatment_id: e.target.value })
-              }
-            >
-              <option value="0">Select Treatment</option>
-              {treatments.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Treatment</label>
+              <select
+                className="border rounded px-3 py-2 w-full disabled:bg-gray-100"
+                value={form.treatment_id}
+                disabled={form.is_global || form.disease_id === "0"}
+                onChange={(e) =>
+                  setForm({ ...form, treatment_id: e.target.value })
+                }
+              >
+                <option value="0">Select Treatment</option>
+                {treatments.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-
 
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Title *</label>
+              <Input
+                value={form.title}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    title: e.target.value,
+                    slug: slugify(e.target.value),
+                  })
+                }
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1 block">Slug *</label>
+              <Input
+                value={form.slug}
+                onChange={(e) =>
+                  setForm({ ...form, slug: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <label className="text-sm font-medium mb-2 block">Description *</label>
+            <RichTextEditor
+              value={form.description_html}
+              onChange={(v) =>
+                setForm({ ...form, description_html: v })
+              }
+              minHeight={300}
+            />
+          </div>
+
+          <div className="mt-6">
+            <label className="text-sm font-medium mb-1 block">Blog Image</label>
             <Input
-              placeholder="Title *"
-              value={form.title}
+              type="file"
+              accept="image/*"
               onChange={(e) =>
                 setForm({
                   ...form,
-                  title: e.target.value,
-                  slug: slugify(e.target.value),
+                  blog_image: e.target.files?.[0] || null,
                 })
-              }
-            />
-            <Input
-              placeholder="Slug *"
-              value={form.slug}
-              onChange={(e) =>
-                setForm({ ...form, slug: e.target.value })
               }
             />
           </div>
 
-          <RichTextEditor
-            value={form.description_html}
-            onChange={(v) =>
-              setForm({ ...form, description_html: v })
-            }
-            minHeight={300}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image Alt Text
+              </label>
+              <Input
+                value={form.blog_image_alt}
+                onChange={(e) =>
+                  setForm({ ...form, blog_image_alt: e.target.value })
+                }
+              />
+            </div>
 
-          <Input
-            type="file"
-            accept="image/*"
-            className="mt-6"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                blog_image: e.target.files?.[0] || null,
-              })
-            }
-          />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image Title
+              </label>
+              <Input
+                value={form.blog_image_title}
+                onChange={(e) =>
+                  setForm({ ...form, blog_image_title: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Status</label>
@@ -355,50 +404,63 @@ export default function ManageBlogs() {
             <h3 className="font-semibold mb-4">SEO</h3>
 
             <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">Meta Title</label>
+                <Input
+                  value={form.meta_title}
+                  onChange={(e) =>
+                    setForm({ ...form, meta_title: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Meta Keywords
+                </label>
+                <Input
+                  value={form.meta_keywords}
+                  onChange={(e) =>
+                    setForm({ ...form, meta_keywords: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">
+                Meta Description
+              </label>
               <Input
-                placeholder="Meta Title"
-                value={form.meta_title}
+                value={form.meta_description}
                 onChange={(e) =>
-                  setForm({ ...form, meta_title: e.target.value })
-                }
-              />
-              <Input
-                placeholder="Meta Keywords"
-                value={form.meta_keywords}
-                onChange={(e) =>
-                  setForm({ ...form, meta_keywords: e.target.value })
+                  setForm({ ...form, meta_description: e.target.value })
                 }
               />
             </div>
 
-            <Input
-              className="mt-4"
-              placeholder="Meta Description"
-              value={form.meta_description}
-              onChange={(e) =>
-                setForm({ ...form, meta_description: e.target.value })
-              }
-            />
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">
+                Canonical URL
+              </label>
+              <Input
+                value={form.canonical_url}
+                onChange={(e) =>
+                  setForm({ ...form, canonical_url: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              className="mt-4"
-              placeholder="Canonical URL (https://example.com/blog/slug)"
-              value={form.canonical_url}
-              onChange={(e) =>
-                setForm({ ...form, canonical_url: e.target.value })
-              }
-            />
-
-            <Input
-              className="mt-4"
-              placeholder="Tags"
-              value={form.tags}
-              onChange={(e) =>
-                setForm({ ...form, tags: e.target.value })
-              }
-            />
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">Tags</label>
+              <Input
+                value={form.tags}
+                onChange={(e) =>
+                  setForm({ ...form, tags: e.target.value })
+                }
+              />
+            </div>
           </div>
-
 
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -410,6 +472,7 @@ export default function ManageBlogs() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }

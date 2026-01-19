@@ -34,9 +34,13 @@ const ManageDiseases = () => {
     seo_title: "",
     seo_description: "",
     seo_keywords: "",
+    canonical_url: "",
+    image_alt: "",
+    image_title: "",
     status: 1,
     image: null,
   });
+
 
   const [preview, setPreview] = useState(null);
   const fileRef = React.useRef<HTMLInputElement | null>(null);
@@ -69,7 +73,7 @@ const ManageDiseases = () => {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
 
-  
+
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -80,9 +84,13 @@ const ManageDiseases = () => {
       seo_title: "",
       seo_description: "",
       seo_keywords: "",
+      canonical_url: "",
+      image_alt: "",
+      image_title: "",
       status: 1,
       image: null,
     });
+
     setPreview(null);
     setOpen(true);
   };
@@ -98,9 +106,13 @@ const ManageDiseases = () => {
       seo_title: item.seo_title,
       seo_description: item.seo_description,
       seo_keywords: item.seo_keywords,
+      canonical_url: item.canonical_url,
+      image_alt: item.image_alt,
+      image_title: item.image_title,
       status: item.status,
       image: null,
     });
+
     setPreview(item.image ? `${API_BASE}${item.image}` : null);
     setOpen(true);
   };
@@ -173,6 +185,8 @@ const ManageDiseases = () => {
           <thead className="bg-gray-100">
             <tr>
               <th className="p-3">Image</th>
+              <th className="p-3">Image Alt</th>
+              <th className="p-3">Image Title</th>
               <th className="p-3">Name</th>
               <th className="p-3">Slug</th>
               <th className="p-3">Status</th>
@@ -190,6 +204,17 @@ const ManageDiseases = () => {
                     />
                   ) : (
                     <div className="w-20 h-20 bg-gray-200 rounded" />
+                  )}
+                </td>
+                <td className="p-3 text-sm">
+                  {d.image_alt || (
+                    <span className="text-gray-400 italic">Not set</span>
+                  )}
+                </td>
+
+                <td className="p-3 text-sm">
+                  {d.image_title || (
+                    <span className="text-gray-400 italic">Not set</span>
                   )}
                 </td>
                 <td className="p-3">{d.name}</td>
@@ -235,30 +260,42 @@ const ManageDiseases = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-4 max-h-[75vh] overflow-y-auto pr-2">
-            <Input
-              placeholder="Disease Name"
-              value={form.name}
-              onChange={(e) => {
-                updateForm("name", e.target.value);
-                updateForm("slug", generateSlug(e.target.value));
-              }}
-            />
+          <div className="grid gap-6 max-h-[75vh] overflow-y-auto pr-2">
 
-            <Input
-              placeholder="Slug"
-              value={form.slug}
-              onChange={(e) => updateForm("slug", e.target.value)}
-            />
+            {/* Basic Info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Disease Name</label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => {
+                    updateForm("name", e.target.value);
+                    updateForm("slug", generateSlug(e.target.value));
+                  }}
+                />
+              </div>
 
-            <Textarea
-              placeholder="Short Description"
-              value={form.short_description}
-              onChange={(e) =>
-                updateForm("short_description", e.target.value)
-              }
-            />
+              <div>
+                <label className="text-sm font-medium">Slug</label>
+                <Input
+                  value={form.slug}
+                  onChange={(e) => updateForm("slug", e.target.value)}
+                />
+              </div>
+            </div>
 
+            {/* Short Description */}
+            <div>
+              <label className="text-sm font-medium">Short Description</label>
+              <Textarea
+                value={form.short_description}
+                onChange={(e) =>
+                  updateForm("short_description", e.target.value)
+                }
+              />
+            </div>
+
+            {/* Detailed Description */}
             <RichTextEditor
               label="Detailed Description"
               value={form.description_html}
@@ -266,40 +303,67 @@ const ManageDiseases = () => {
               minHeight={300}
             />
 
-            <Input
-              placeholder="SEO Title"
-              value={form.seo_title}
-              onChange={(e) => updateForm("seo_title", e.target.value)}
-            />
+            {/* SEO Section */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">SEO Title</label>
+                <Input
+                  value={form.seo_title}
+                  onChange={(e) => updateForm("seo_title", e.target.value)}
+                />
+              </div>
 
-            <Textarea
-              placeholder="SEO Description"
-              value={form.seo_description}
-              onChange={(e) =>
-                updateForm("seo_description", e.target.value)
-              }
-            />
-
-            <Input
-              placeholder="SEO Keywords"
-              value={form.seo_keywords}
-              onChange={(e) =>
-                updateForm("seo_keywords", e.target.value)
-              }
-            />
-
-            <select
-              className="border p-2 rounded"
-              value={form.status}
-              onChange={(e) =>
-                updateForm("status", Number(e.target.value))
-              }
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
+              <div>
+                <label className="text-sm font-medium">SEO Keywords</label>
+                <Input
+                  value={form.seo_keywords}
+                  onChange={(e) =>
+                    updateForm("seo_keywords", e.target.value)
+                  }
+                />
+              </div>
+            </div>
 
             <div>
+              <label className="text-sm font-medium">SEO Description</label>
+              <Textarea
+                value={form.seo_description}
+                onChange={(e) =>
+                  updateForm("seo_description", e.target.value)
+                }
+              />
+            </div>
+
+            {/* Canonical + Status */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Canonical URL</label>
+                <Input
+                  value={form.canonical_url}
+                  onChange={(e) =>
+                    updateForm("canonical_url", e.target.value)
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Status</label>
+                <select
+                  className="border p-2 rounded w-full"
+                  value={form.status}
+                  onChange={(e) =>
+                    updateForm("status", Number(e.target.value))
+                  }
+                >
+                  <option value={1}>Active</option>
+                  <option value={0}>Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="text-sm font-medium">Disease Image</label>
               <Input
                 ref={fileRef}
                 type="file"
@@ -310,6 +374,7 @@ const ManageDiseases = () => {
                   if (file) setPreview(URL.createObjectURL(file));
                 }}
               />
+
               {(preview || editing?.image) && (
                 <div className="mt-3">
                   <img
@@ -325,25 +390,42 @@ const ManageDiseases = () => {
                     className="mt-2"
                     onClick={() => {
                       setPreview(null);
-
                       updateForm("image", null);
-
-                      if (editing) {
-                        setEditing({ ...editing, image: null });
-                      }
-
-                      if (fileRef.current) {
-                        fileRef.current.value = "";
-                      }
+                      if (editing) setEditing({ ...editing, image: null });
+                      if (fileRef.current) fileRef.current.value = "";
                     }}
                   >
                     Remove Image
                   </Button>
                 </div>
               )}
-
             </div>
+
+            {/* Image SEO */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Image Alt Text</label>
+                <Input
+                  value={form.image_alt}
+                  onChange={(e) =>
+                    updateForm("image_alt", e.target.value)
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Image Title</label>
+                <Input
+                  value={form.image_title}
+                  onChange={(e) =>
+                    updateForm("image_title", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
           </div>
+
 
           <DialogFooter>
             <Button onClick={handleSubmit}>
