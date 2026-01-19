@@ -149,8 +149,15 @@ const ManageTreatments = () => {
       canonical_url: singleTreatment.canonical_url ?? "",
       status: singleTreatment.status === 1 ? "active" : "inactive",
       image: null,
-      image_alt: singleTreatment.image_alt ?? "",
-      image_title: singleTreatment.image_title ?? "",
+      image_alt:
+        singleTreatment.image_alt && singleTreatment.image_alt !== "null"
+          ? singleTreatment.image_alt
+          : "",
+
+      image_title:
+        singleTreatment.image_title && singleTreatment.image_title !== "null"
+          ? singleTreatment.image_title
+          : "",
     });
 
     setPreview(null);
@@ -621,11 +628,12 @@ const ManageTreatments = () => {
               </Label>
               <Input
                 placeholder="Describe the image for accessibility"
-                value={form.image_alt}
+                value={form.image_alt || ""}
                 onChange={(e) =>
                   setForm({ ...form, image_alt: e.target.value })
                 }
               />
+
             </div>
 
             <div className="space-y-2">
@@ -633,12 +641,13 @@ const ManageTreatments = () => {
                 Image Title
               </Label>
               <Input
-                placeholder="Image title (optional)"
-                value={form.image_title}
+                placeholder="Image title"
+                value={form.image_title || ""}
                 onChange={(e) =>
                   setForm({ ...form, image_title: e.target.value })
                 }
               />
+
             </div>
 
 
