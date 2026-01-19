@@ -18,6 +18,8 @@ interface Blog {
   title: string;
   slug: string;
   blog_image: string | null;
+  blog_image_alt?: string | null;
+  blog_image_title?: string | null;
   description_html: string;
   disease_id?: number;
   author_name?: string;
@@ -170,9 +172,7 @@ const BlogDetails: React.FC = () => {
   return (
     <>
       <Header />
-
       <TreatmentHeader
-
         breadcrumbs={[
           { label: "Home", link: "/" },
           { label: "Blog", link: "/blogs" },
@@ -225,11 +225,20 @@ const BlogDetails: React.FC = () => {
                   ? `${API_BASE}${blog.blog_image}`
                   : "/placeholder.jpg"
               }
-              alt={blog.title}
-              title={blog.title}
-
+              alt={
+                blog.blog_image_alt && blog.blog_image_alt !== "null"
+                  ? blog.blog_image_alt
+                  : blog.title
+              }
+              title={
+                blog.blog_image_title && blog.blog_image_title !== "null"
+                  ? blog.blog_image_title
+                  : blog.title
+              }
+              loading="lazy"
               className="w-full h-[360px] object-cover rounded-lg mb-6"
             />
+
 
             {/* {blog.disease_id && (
               <p className="text-sm text-gray-600 mb-3">
