@@ -113,6 +113,16 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
+        {appointmentButton && (
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
+            <Link
+              to={appointmentButton.linkUrl}
+              className="block w-full text-center py-4 bg-[#ff4d4f] text-white font-semibold text-lg"
+            >
+              {appointmentButton.name}
+            </Link>
+          </div>
+        )}
 
         {isOpen && (
           <div className="lg:hidden border-t border-gray-200 pb-4">
@@ -128,7 +138,7 @@ const Header: React.FC = () => {
                 </Link>
               ))}
 
-              {appointmentButton && (
+              {/* {appointmentButton && (
                 <Link
                   to={appointmentButton.linkUrl}
                   onClick={() => setIsOpen(false)}
@@ -136,7 +146,7 @@ const Header: React.FC = () => {
                 >
                   {appointmentButton.name}
                 </Link>
-              )}
+              )} */}
 
             </nav>
           </div>

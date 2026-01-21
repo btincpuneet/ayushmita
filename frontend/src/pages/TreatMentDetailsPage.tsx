@@ -162,7 +162,7 @@ export default function TreatmentDetailsPage() {
                   rel="noopener noreferrer"
                 >
                   <button
-                    className="bg-[#25CB68] hover:bg-green-600 text-white px-[24px] py-[12px] rounded-lg transition"
+                    className="bg-[#25CB68] hover:bg-green-600 text-white px-[24px] py-[12px] rounded-lg transition chat-now-btn"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -170,6 +170,7 @@ export default function TreatmentDetailsPage() {
                       fontFamily: "Ubuntu",
                       fontWeight: 500,
                       fontSize: "16px",
+                      
                     }}
                   >
                     <span>

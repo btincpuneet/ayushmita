@@ -63,6 +63,7 @@ const ManageTreatments = () => {
   const [selectedTreatmentSlug, setSelectedTreatmentSlug] = useState("");
   const [singleTreatment, setSingleTreatment] = useState<any | null>(null);
   const fileRef = React.useRef<HTMLInputElement | null>(null);
+  const [existingImage, setExistingImage] = useState<string | null>(null);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
@@ -159,6 +160,9 @@ const ManageTreatments = () => {
           ? singleTreatment.image_title
           : "",
     });
+    setExistingImage(
+      singleTreatment.image ? `${API_BASE}${singleTreatment.image}` : null
+    );
 
     setPreview(null);
     setOpen(true);
@@ -495,6 +499,9 @@ const ManageTreatments = () => {
             </div>
 
             <div className="col-span-2">
+              <label className="text-sm font-medium mb-2 block">
+                Short Description
+              </label>
               <RichTextEditor
                 label="Short Description"
                 value={form.short_description}
@@ -507,6 +514,9 @@ const ManageTreatments = () => {
             </div>
 
             <div className="col-span-2">
+              <label className="text-sm font-medium mb-2 block">
+                Full Description
+              </label>
               <RichTextEditor
                 label="Full Description (HTML with Image Alignment)"
                 value={form.description_html}
@@ -596,32 +606,44 @@ const ManageTreatments = () => {
                 }}
               />
             </div>
+            {(preview || existingImage) && (
+              <div className="col-span-2 mt-4 space-y-3">
+                <div className="relative w-fit">
+                  <img
+                    src={preview || existingImage!}
+                    alt={form.image_alt || "Treatment image"}
+                    title={form.image_title || ""}
+                    className="max-w-xs rounded-lg border shadow"
+                  />
 
-            {preview && (
-              <div style={{ marginTop: 10 }}>
-                <img
-                  src={preview}
-                  alt={form.image_alt || "preview"}
-                  title={form.image_title || ""}
-                />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    className="absolute -top-2 -right-2"
+                    onClick={() => {
+                      setPreview(null);
+                      setExistingImage(null);
+                      setForm({ ...form, image: null });
 
+                      if (fileRef.current) {
+                        fileRef.current.value = "";
+                      }
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPreview(null);
-                    setForm({ ...form, image: null });
-
-                    if (fileRef.current) {
-                      fileRef.current.value = "";
-                    }
-                  }}
-                  style={{ display: "block", marginTop: 8 }}
-                >
-                  Remove Image
-                </button>
+                {!preview && (
+                  <p className="text-xs text-muted-foreground">
+                    Existing image (upload a new one to replace)
+                  </p>
+                )}
               </div>
             )}
+
+
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">
                 Image Alt Text

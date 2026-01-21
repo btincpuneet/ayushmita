@@ -1,7 +1,5 @@
 const { Treatment } = require("../models/treatment");
 const { Disease } = require("../models/disease");
-
-
 const { Op } = require("sequelize");
 
 
@@ -119,7 +117,6 @@ const createTreatment = async (req, res) => {
       image_title,
     } = req.body;
 
-    /* ---------- Validation ---------- */
     if (!disease_id)
       return res.status(400).json({ success: false, message: "Disease is required" });
 
@@ -147,7 +144,6 @@ const createTreatment = async (req, res) => {
     if (!canonical_url)
       return res.status(400).json({ success: false, message: "Canonical URL is required" });
 
-    /* ---------- Disease Check ---------- */
     const disease = await Disease.findByPk(disease_id);
     if (!disease) {
       return res.status(404).json({
@@ -156,7 +152,6 @@ const createTreatment = async (req, res) => {
       });
     }
 
-    /* ---------- Slug Check ---------- */
     const existingSlug = await Treatment.findOne({ where: { slug } });
     if (existingSlug) {
       return res.status(409).json({
@@ -165,10 +160,8 @@ const createTreatment = async (req, res) => {
       });
     }
 
-    /* ---------- Image ---------- */
     const image = req.file ? `/uploads/treatments/${req.file.filename}` : null;
 
-    /* ---------- Create ---------- */
     const treatment = await Treatment.create({
       disease_id: Number(disease_id),
       name: name.trim(),

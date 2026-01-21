@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
 import { authHeader } from "@/utils/auth";
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 const API_URL = `${API_BASE}/api/hospitals`;
 
@@ -35,14 +36,34 @@ const emptyForm = {
 
 
 export default function ManageTopPartnerHospitals() {
+
+
+  function useDebounce<T>(value: T, delay = 400) {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setDebounced(value), delay);
+      return () => clearTimeout(timer);
+    }, [value, delay]);
+
+    return debounced;
+  }
+
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState<any>(emptyForm);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+  const [citySearch, setCitySearch] = useState("");
+
+  const debouncedCountry = useDebounce(countrySearch);
+  const debouncedCity = useDebounce(citySearch);
+
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+
   const [preview, setPreview] = useState<string | null>(null);
   const fileRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -62,10 +83,14 @@ export default function ManageTopPartnerHospitals() {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE}/api/countries`)
-      .then((res) => setCountries(res.data.data.map((c: any) => c.country)))
+      .get(`${API_BASE}/api/countries`, {
+        params: debouncedCountry ? { search: debouncedCountry } : {},
+      })
+      .then((res) =>
+        setCountries(res.data.data.map((c: any) => c.country))
+      )
       .catch(() => toast.error("Failed to load countries"));
-  }, []);
+  }, [debouncedCountry]);
 
   useEffect(() => {
     if (!form.country) {
@@ -75,11 +100,15 @@ export default function ManageTopPartnerHospitals() {
 
     axios
       .get(`${API_BASE}/api/cities`, {
-        params: { country: form.country },
+        params: debouncedCity
+          ? { country: form.country, search: debouncedCity }
+          : { country: form.country },
       })
-      .then((res) => setCities(res.data.data.map((c: any) => c.city)))
+      .then((res) =>
+        setCities(res.data.data.map((c: any) => c.city))
+      )
       .catch(() => toast.error("Failed to load cities"));
-  }, [form.country]);
+  }, [debouncedCity, form.country]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -268,7 +297,7 @@ export default function ManageTopPartnerHospitals() {
 
           <div className="space-y-4">
             <Input name="name" placeholder="Hospital Name" value={form.name} onChange={handleChange} />
-
+            {/* 
             <div className="grid grid-cols-2 gap-3">
               <select
                 className="border rounded px-3 py-2 text-sm"
@@ -292,7 +321,34 @@ export default function ManageTopPartnerHospitals() {
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
+            </div> */}
+            <div className="grid grid-cols-2 gap-3">
+              <SearchableSelect
+                options={countries}
+                value={form.country}
+                placeholder="Select Country"
+                searchPlaceholder="Search country..."
+                onSearch={setCountrySearch}
+                onChange={(value) => {
+                  setForm({ ...form, country: value, city: "" });
+                  setCitySearch("");
+                }}
+              />
+
+              <SearchableSelect
+                options={cities}
+                value={form.city}
+                placeholder="Select City"
+                searchPlaceholder={
+                  form.country ? "Search city..." : "Select country first"
+                }
+                disabled={!form.country}
+                onSearch={setCitySearch}
+                onChange={(value) => setForm({ ...form, city: value })}
+              />
+
             </div>
+
 
             <Input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
 

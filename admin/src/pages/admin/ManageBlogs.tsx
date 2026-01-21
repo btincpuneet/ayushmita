@@ -44,6 +44,8 @@ const emptyForm = {
   meta_keywords: "",
   tags: "",
   blog_image: null as File | null,
+  existing_image: "",
+  remove_image: false,
   blog_image_alt: "",
   blog_image_title: "",
 };
@@ -203,6 +205,8 @@ export default function ManageBlogs() {
                   disease_id: b.disease_id ? String(b.disease_id) : "0",
                   treatment_id: b.treatment_id ? String(b.treatment_id) : "0",
                   blog_image: null,
+                  existing_image: b.blog_image ? `${API_BASE}${b.blog_image}` : "",
+                  remove_image: false,
                 });
 
                 setOpen(true);
@@ -344,7 +348,7 @@ export default function ManageBlogs() {
             />
           </div>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <label className="text-sm font-medium mb-1 block">Blog Image</label>
             <Input
               type="file"
@@ -353,6 +357,49 @@ export default function ManageBlogs() {
                 setForm({
                   ...form,
                   blog_image: e.target.files?.[0] || null,
+                })
+              }
+            />
+          </div> */}
+          <div className="mt-6">
+            <label className="text-sm font-medium mb-2 block">Blog Image</label>
+
+            {(form.blog_image || form.existing_image) && (
+              <div className="relative w-64 h-40 mb-3 border rounded overflow-hidden">
+                <img
+                  src={
+                    form.blog_image
+                      ? URL.createObjectURL(form.blog_image)
+                      : form.existing_image
+                  }
+                  className="w-full h-full object-cover"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      blog_image: null,
+                      existing_image: "",
+                      remove_image: true,
+                    })
+                  }
+                  className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  blog_image: e.target.files?.[0] || null,
+                  remove_image: false,
                 })
               }
             />

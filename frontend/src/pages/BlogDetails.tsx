@@ -189,7 +189,7 @@ const BlogDetails: React.FC = () => {
       <Container>
 
 
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col lg:flex-row gap-10 border">
 
           <article className="lg:w-[68%]">
             <div className="flex items-center justify-between mb-6">

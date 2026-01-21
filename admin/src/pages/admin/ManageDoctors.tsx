@@ -22,6 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDown } from "lucide-react";
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 
 interface Hospital {
@@ -70,6 +71,16 @@ const emptyForm = {
 
 
 const ManageDoctors = () => {
+  function useDebounce<T>(value: T, delay = 400) {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setDebounced(value), delay);
+      return () => clearTimeout(timer);
+    }, [value, delay]);
+
+    return debounced;
+  }
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [open, setOpen] = useState(false);
@@ -82,6 +93,11 @@ const ManageDoctors = () => {
   const HOSPITAL_API = `${API_BASE}/api/hospitals`;
   const COUNTRY_API = `${API_BASE}/api/countries`;
   const CITY_API = `${API_BASE}/api/cities`;
+  const [countrySearch, setCountrySearch] = useState("");
+  const [citySearch, setCitySearch] = useState("");
+
+  const debouncedCountry = useDebounce(countrySearch);
+  const debouncedCity = useDebounce(citySearch);
 
   const loadDoctors = async () => {
     const res = await axios.get(DOCTOR_API);
@@ -98,39 +114,69 @@ const ManageDoctors = () => {
     loadHospitals();
   }, []);
 
-  useEffect(() => {
-    const loadCountries = async () => {
-      try {
-        const res = await axios.get(COUNTRY_API);
-        setCountries(res.data.data.map((c: any) => c.country));
-      } catch {
-        toast.error("Failed to load countries");
-      }
-    };
+  // useEffect(() => {
+  //   if (!form.country) {
+  //     setCities([]);
+  //     return;
+  //   }
 
-    loadCountries();
-  }, []);
+  //   axios
+  //     .get(CITY_API, {
+  //       params: debouncedCity
+  //         ? { country: form.country, search: debouncedCity }
+  //         : { country: form.country },
+  //     })
+  //     .then((res) =>
+  //       setCities(res.data.data.map((c: any) => c.city))
+  //     )
+  //     .catch(() => toast.error("Failed to load cities"));
+  // }, [debouncedCity, form.country]);
+
+  // useEffect(() => {
+  //   if (!form.country) {
+  //     setCities([]);
+  //     return;
+  //   }
+
+  //   axios
+  //     .get(CITY_API, {
+  //       params: debouncedCity
+  //         ? { country: form.country, search: debouncedCity }
+  //         : { country: form.country },
+  //     })
+  //     .then((res) =>
+  //       setCities(res.data.data.map((c: any) => c.city))
+  //     )
+  //     .catch(() => toast.error("Failed to load cities"));
+  // }, [debouncedCity, form.country]);
+  useEffect(() => {
+    axios
+      .get(`${API_BASE}/api/countries`, {
+        params: debouncedCountry ? { search: debouncedCountry } : {},
+      })
+      .then((res) =>
+        setCountries(res.data.data.map((c: any) => c.country))
+      )
+      .catch(() => toast.error("Failed to load countries"));
+  }, [debouncedCountry]);
+
   useEffect(() => {
     if (!form.country) {
       setCities([]);
-      setForm({ ...form, city: "" });
       return;
     }
 
-    const loadCities = async () => {
-      try {
-        const res = await axios.get(CITY_API, {
-          params: { country: form.country },
-        });
-        setCities(res.data.data.map((c: any) => c.city));
-      } catch {
-        toast.error("Failed to load cities");
-      }
-    };
-
-    loadCities();
-  }, [form.country]);
-
+    axios
+      .get(`${API_BASE}/api/cities`, {
+        params: debouncedCity
+          ? { country: form.country, search: debouncedCity }
+          : { country: form.country },
+      })
+      .then((res) =>
+        setCities(res.data.data.map((c: any) => c.city))
+      )
+      .catch(() => toast.error("Failed to load cities"));
+  }, [debouncedCity, form.country]);
   const handleAdd = () => {
     setEditing(null);
     setForm(emptyForm);
@@ -409,38 +455,41 @@ const ManageDoctors = () => {
               <label className="text-sm font-medium mb-1 block">
                 Country
               </label>
-              <select
-                className="border rounded px-3 py-2 text-sm w-full"
+
+              <SearchableSelect
+                options={countries}
                 value={form.country}
-                onChange={(e) =>
-                  setForm({ ...form, country: e.target.value, city: "" })
-                }
-              >
-                <option value="">Select Country</option>
-                {countries.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+                placeholder="Select country"
+                searchPlaceholder="Search country..."
+                onSearch={setCountrySearch}
+                onChange={(value) => {
+                  setForm({ ...form, country: value, city: "" });
+                  setCitySearch("");
+                }}
+              />
             </div>
 
             <div>
               <label className="text-sm font-medium mb-1 block">
                 City
               </label>
-              <select
-                className="border rounded px-3 py-2 text-sm w-full"
+
+              <SearchableSelect
+                options={cities}
                 value={form.city}
                 disabled={!form.country}
-                onChange={(e) =>
-                  setForm({ ...form, city: e.target.value })
+                placeholder={
+                  form.country ? "Select city" : "Select country first"
                 }
-              >
-                <option value="">Select City</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
+                searchPlaceholder="Search city..."
+                onSearch={setCitySearch}
+                onChange={(value) =>
+                  setForm({ ...form, city: value })
+                }
+              />
             </div>
+
+
 
             <div>
               <label className="text-sm font-medium mb-1 block">

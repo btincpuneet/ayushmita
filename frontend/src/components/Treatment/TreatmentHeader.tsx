@@ -33,9 +33,12 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 className="hospital-treatment-low-price text-2xl">
-          {title}
-        </h1>
+        {title && (
+          <h1 className="hospital-treatment-low-price text-2xl">
+            {title}
+          </h1>
+        )}
+
 
         {children && (
           <div className="mt-8 flex justify-center">

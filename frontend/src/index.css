@@ -141,6 +141,7 @@ body {
   background: #fff !important;
   cursor: pointer;
   margin-top:6px;
+  margin-right: 20px;
 }
 
 #google_translate_element .goog-te-gadget-simple a {

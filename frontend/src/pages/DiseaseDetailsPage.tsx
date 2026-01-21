@@ -11,6 +11,7 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import "../css/common.css";
 import "../css/doctor.css";
 import UseSeo from "../hooks/useSeo";
+import ModalAppointment from "../components/Treatment/ModalAppointment";
 
 interface Treatment {
   id: number;
@@ -49,6 +50,23 @@ const DiseaseDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/global-settings`);
+        if (res.data?.success) {
+          setWhatsAppNumber(res.data.data.whatsapp_number);
+        }
+      } catch (err) {
+        console.error("WhatsApp fetch failed", err);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
 
   const fetchDisease = async () => {
@@ -134,8 +152,8 @@ const DiseaseDetailsPage = () => {
 
         <div className="container-fluid bg-white">
           <div className="max-w-7xl mx-auto px-4 mt-10 bg-white">
-            <div className="flex flex-col-reverse lg:flex-row items-start ">
-              <div className="w-full lg:w-1/2 flex justify-center">
+            <div className="flex gap-10 flex-col-reverse lg:flex-row items-start ">
+              <div >
                 <img
                   src={
                     disease?.image
@@ -149,21 +167,70 @@ const DiseaseDetailsPage = () => {
 
 
               </div>
+              <div>
+                <div className="w-full lg:w-[100%] ">
+                  <p
+                    style={{
+                      fontFamily: "Ubuntu",
+                      fontWeight: 300,
+                      fontStyle: "normal",
+                      fontSize: "16px",
+                      lineHeight: "27px",
+                      letterSpacing: "0%",
+                    }}
+                  >
+                    {disease?.short_description}
+                  </p>
+                </div>
+                <div className="flex gap-4 mt-6 details-pgs-btn-1 flex-wrap">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                   className="px-6 py-3 bg-[#F0A324] rounded-lg "
+                    style={{
+                      fontFamily: "Ubuntu, sans-serif",
+                      fontWeight: 500,
+                      fontStyle: "normal",
+                      fontSize: "16px",
+                      lineHeight: "100%",
+                      letterSpacing: "2%",
+                    }}
 
-              <div className="w-full lg:w-[100%] ">
-                <p
-                  style={{
-                    fontFamily: "Ubuntu",
-                    fontWeight: 300,
-                    fontStyle: "normal",
-                    fontSize: "16px",
-                    lineHeight: "27px",
-                    letterSpacing: "0%",
-                  }}
-                >
-                  {disease?.short_description}
-                </p>
+                  >
+                    Book Appointment
+                  </button>
+
+                  {whatsAppNumber && (
+                    <a
+                      href={`https://wa.me/91${whatsAppNumber}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button
+                className="px-6 py-3 bg-green-500 flex gap-3 text-white rounded-lg"
+                style={{
+                  fontFamily: "Ubuntu, sans-serif",
+                  fontWeight: 500,
+                  fontSize: "16px",
+                  lineHeight: "100%",
+                  letterSpacing: "2%",
+                }}
+              >
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M7 0C10.866 0 14 3.134 14 7c0 3.866-3.134 7-7 7a6.96 6.96 0 0 1-3.52-.95L0 14l.95-3.52A6.96 6.96 0 0 1 0 7C0 3.134 3.134 0 7 0Z"
+                      fill="white"
+                    />
+                  </svg>
+                </span>
+                Chat Now
+              </button>
+                    </a>
+                  )}
+                </div>
               </div>
+
+
             </div>
           </div>
         </div>
@@ -176,7 +243,7 @@ const DiseaseDetailsPage = () => {
                 to={`/treatment-details/${t.slug}`}
                 className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-2 flex flex-col items-center text-center"
               >
-                <div className="w-full h-24 border overflow-hidden rounded-lg">
+                <div className="w-full h-24  overflow-hidden rounded-lg">
                   <img
                     src={
                       t.image
@@ -216,7 +283,7 @@ const DiseaseDetailsPage = () => {
           </div>
         </div>
         <div
-          className="cms-content prose max-w-none"
+          className="cms-content container prose max-w-none"
           dangerouslySetInnerHTML={{
             __html: disease?.description_html || "",
           }}
@@ -230,6 +297,11 @@ const DiseaseDetailsPage = () => {
         <BlogSection diseaseId={disease.id} />
 
         <Footer />
+        <ModalAppointment
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+
       </div>
     </>
 

@@ -77,7 +77,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
               }}
 
             >
-              {hospital.name} {hospital.city}, {hospital.country}
+              {hospital.name}
             </h3>
 
             <div className="flex space-y-2 items-start gap-2 mb-1">

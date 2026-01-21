@@ -390,6 +390,12 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     .max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
         padding: 0;
     }
+    button.chat-now-btn {
+    width: 100%;
+    margin-bottom: 20px;
+    justify-content: center;
+    padding: 9px;
+}
  
     .rounded-xl.contact-us-main-content-cont {
         padding: 0;
