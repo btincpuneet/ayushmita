@@ -26,10 +26,11 @@ const Doctor = sequelize.define(
       allowNull: true,
     },
 
-    specialty: {
-      type: DataTypes.STRING,
+    speciality_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
+
 
     experience: {
       type: DataTypes.INTEGER,
@@ -57,6 +58,10 @@ const Doctor = sequelize.define(
     },
 
     description_html: {
+      type: DataTypes.TEXT("long"),
+      allowNull: true,
+    },
+    faq_html: {
       type: DataTypes.TEXT("long"),
       allowNull: true,
     },

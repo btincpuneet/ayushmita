@@ -74,6 +74,14 @@ const Blog: React.FC = () => {
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "");
   const fetchGlobalSEO = async () => {
@@ -130,19 +138,24 @@ const Blog: React.FC = () => {
 
   const sliderSettings = {
     dots: false,
-    infinite: false,
+    infinite: filteredBlogs.length > 3,
     speed: 500,
-    slidesToShow: Math.min(3, filteredBlogs.length),
     slidesToScroll: 1,
-    arrows: true,
+    arrows: !isMobile,
+
+    slidesToShow: isMobile
+      ? 1
+      : Math.min(3, filteredBlogs.length),
+
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
+
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
+
   const seoTitle =
     globalSEO?.seo_title || "Best Hospital";
 
@@ -161,7 +174,6 @@ const Blog: React.FC = () => {
   return (
     <>
       <Header />
-
       <TreatmentHeader
         title="Blog"
         breadcrumbs={[
@@ -182,8 +194,11 @@ const Blog: React.FC = () => {
         {filteredBlogs.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xl font-bold mb-4 tips-about-health">Latest Health Tips</h2>
+            <Slider
+              {...sliderSettings}
+              key={`${filteredBlogs.length}-${isMobile}`}
+            >
 
-            <Slider {...sliderSettings}>
               {filteredBlogs.map((post) => (
                 <div key={post.id} className="px-2">
                   <Link to={`/blogs/${post.slug}`}>

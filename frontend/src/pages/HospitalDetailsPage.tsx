@@ -3,10 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import Slider from "react-slick";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
@@ -23,22 +21,30 @@ import {
 } from "lucide-react";
 import ModalAppointment from "../components/Treatment/ModalAppointment";
 
-function NextArrow({ onClick }: any) {
+interface ArrowProps {
+  onClick?: () => void;
+}
+
+interface ArrowProps {
+  onClick?: () => void;
+}
+
+function NextArrow({ onClick }: ArrowProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
+      className="absolute -right-5 top-1/2 -translate-y-1/2 z-20 
+      w-10 h-10 rounded-full bg-white shadow flex items-center justify-center"
     >
       <ArrowRight size={20} className="text-[#F0A324]" />
     </button>
   );
 }
 
-function PrevArrow({ onClick }: any) {
-  return (
-    <span></span>
-  );
+function PrevArrow() {
+  return <span />;
 }
+
 
 function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
@@ -148,7 +154,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
               >{hospital.hospital_beds}</b>
             </li>
 
-            <li className="flex gap-3"
+            {/* <li className="flex gap-3"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 400,
@@ -171,7 +177,24 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                 }}
 
               >Multi Specialty</b>
+            </li> */}
+            <li className="flex gap-3" style={{
+              fontFamily: "Ubuntu, sans-serif",
+              fontWeight: 400,
+              fontStyle: "normal",
+              fontSize: "14px",
+              lineHeight: "26px",
+              letterSpacing: "0%",
+            }}>
+              <Building2 size={18} className="text-[#F0A324]" />
+              Specialty:
+              <b className="ml-1">
+                {hospital.specialities && hospital.specialities.length > 0
+                  ? hospital.specialities.map((s: any) => s.name).join(", ")
+                  : "N/A"}
+              </b>
             </li>
+
 
             <li className="flex gap-3"
               style={{
@@ -283,18 +306,27 @@ function ContentSection({ html }: { html: string }) {
   );
 }
 
+function SimilarHospitals({
+  hospitals,
+  isMobile,
+}: {
+  hospitals: any[];
+  isMobile: boolean;
+}) {
+  if (!hospitals.length) return null;
 
-
-function SimilarHospitals({ hospitals }: any) {
   const settings = {
     dots: false,
-    arrows: true,
-    infinite: true,
+    arrows: !isMobile,
+    infinite: hospitals.length > 3,
     speed: 500,
-    slidesToShow: 3,
     slidesToScroll: 1,
+
+    slidesToShow: isMobile ? 1 : 3,
+
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 2 } },
       { breakpoint: 640, settings: { slidesToShow: 1 } },
@@ -303,53 +335,27 @@ function SimilarHospitals({ hospitals }: any) {
 
   return (
     <div className="mt-16">
-      <h2 className="mb-6"
-        style={{
-          fontFamily: "Ubuntu, sans-serif",
-          fontWeight: 700,
-          fontStyle: "normal",
-          fontSize: "28px",
-          lineHeight: "100%",
-          letterSpacing: "0%",
-        }}
+      <h2 className="mb-6 text-[28px] font-bold">Similar Hospitals</h2>
 
-      >Similar Hospitals</h2>
-
-      <Slider {...settings}>
-        {hospitals.map((h: any) => (
-          <div key={h.name} className="pr-6 similar-hospital">
+      <Slider
+        {...settings}
+        key={`${hospitals.length}-${isMobile}`} // 🔥 reload-safe
+      >
+        {hospitals.map((h) => (
+          <div key={h.id} className="pr-6">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <img
                 src={
-                  h.image
-                    ? h.image
+                  h.image_url
+                    ? `${API_BASE}${h.image_url}`
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
                 }
-                alt={h.name ? `${h.name} Hospital` : "Hospital Image"}
-                title={h.name ? h.name : "Hospital"}
+                alt={h.name}
                 className="h-[280px] w-full object-cover rounded-2xl"
-                loading="lazy"
               />
-
               <div className="p-4">
-                <h4 style={{
-                  fontFamily: "Ubuntu, sans-serif",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  fontSize: "20px",
-                  lineHeight: "28px",
-                  letterSpacing: "0%",
-                }}
-                >{h.name}</h4>
-                <p className="mt-3" style={{
-                  fontFamily: "Ubuntu, sans-serif",
-                  fontWeight: 400,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "10px",
-                  letterSpacing: "0%",
-                }}
-                >
+                <h4 className="text-[20px] font-bold">{h.name}</h4>
+                <p className="mt-2 text-sm">
                   {h.city}, {h.country}
                 </p>
               </div>
@@ -361,18 +367,28 @@ function SimilarHospitals({ hospitals }: any) {
   );
 }
 
-function DoctorsSection({ doctors }: any) {
-  console.log("doctors", doctors);
+
+function DoctorsSection({
+  doctors,
+  isMobile,
+}: {
+  doctors: any[];
+  isMobile: boolean;
+}) {
+  if (!doctors.length) return null;
 
   const settings = {
     dots: false,
-    arrows: true,
-    infinite: true,
+    arrows: !isMobile,
+    infinite: doctors.length > 4,
     speed: 500,
-    slidesToShow: 4,
     slidesToScroll: 1,
+
+    slidesToShow: isMobile ? 1 : 4,
+
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 2 } },
@@ -382,51 +398,28 @@ function DoctorsSection({ doctors }: any) {
 
   return (
     <div className="mt-16">
-      <h2 className="related-items-more mb-6">Doctors</h2>
+      <h2 className="mb-6 text-[28px] font-bold">Doctors</h2>
 
-      <Slider {...settings}>
-        {doctors.map((d: any) => (
-          <div key={d.name} className="pr-6 mb-20 similar-hospital">
+      <Slider
+        {...settings}
+        key={`${doctors.length}-${isMobile}`}
+      >
+        {doctors.map((d) => (
+          <div key={d.id} className="pr-6 mb-20">
             <div className="bg-white shadow rounded-lg text-center">
               <img
                 src={
-                  d.image
-                    ? d.image.startsWith("http")
-                      ? d.image
-                      : `${API_BASE}${d.image}`
+                  d.image_url
+                    ? `${API_BASE}${d.image_url}`
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
                 }
-                alt={d.name ? `${d.name} Treatment` : "Medical Treatment"}
-                title={d.name ? d.name : "Medical Treatment"}
+                alt={d.name}
                 className="w-full h-[233px] object-cover mb-3 rounded-2xl"
-                loading="lazy"
-                onError={(e) => {y
-                  e.currentTarget.src =
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s";
-                }}
               />
-
-              <div >
-                <h4 style={{
-                  fontFamily: "Ubuntu, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "20px",
-                  lineHeight: "55px",
-                  letterSpacing: "0px",
-                  textAlign: "center",
-                }}
-                >{d.name}</h4>
-                <p style={{
-                  fontFamily: "Ubuntu, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "15px",
-                  lineHeight: "55px",
-                  letterSpacing: "0px",
-                  textAlign: "center",
-                  color: "#F0A324",
-                }}
-                >{d.dept}</p>
-              </div>
+              <h4 className="text-[20px] font-bold">{d.name}</h4>
+              <p className="text-[#F0A324] font-semibold">
+                {d.speciality?.name}
+              </p>
             </div>
           </div>
         ))}
@@ -435,117 +428,69 @@ function DoctorsSection({ doctors }: any) {
   );
 }
 
+
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
   const [hospital, setHospital] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [similarHospitals, setSimilarHospitals] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     axios
       .get(`${API_BASE}/api/hospitals/${slug}`)
-      .then((res) => setHospital(res.data.data));
+      .then((res) => setHospital(res.data.data))
+      .catch(console.error);
   }, [slug]);
 
+  useEffect(() => {
+    if (!hospital?.id || !hospital?.city || !hospital?.country) return;
+
+    axios
+      .get(
+        `${API_BASE}/api/hospitals/by-city/${hospital.city}?country=${hospital.country}`
+      )
+      .then((res) => {
+        if (res.data?.success && Array.isArray(res.data.data)) {
+          const filtered = res.data.data.filter(
+            (h: any) => h.id !== hospital.id
+          );
+          setSimilarHospitals(filtered);
+        }
+      })
+      .catch((err) => {
+        console.error("Similar hospitals fetch error:", err);
+      });
+  }, [hospital]);
+
+
+  useEffect(() => {
+    if (!hospital?.specialities?.length) return;
+
+    const specialityId = hospital.specialities[0].id;
+
+    axios
+      .get(`${API_BASE}/api/doctors/by-speciality/${specialityId}`)
+      .then((res) => {
+        if (res.data?.success) {
+          setDoctors(res.data.data || []);
+        }
+      })
+      .catch((err) => {
+        console.error("Doctors fetch error:", err);
+      });
+  }, [hospital]);
+
   if (!hospital) return null;
-
-
-
-  const similarHospitals = [
-    {
-      name: "LIV Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1576765607924-3f7b8410a787",
-    },
-    {
-      name: "American Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc",
-    },
-    {
-      name: "Acibadem International Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc",
-    },
-    {
-      name: "Medical Park Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d",
-    },
-    {
-      name: "Florence Nightingale Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1584433144859-1fc3ab64a957",
-    },
-    {
-      name: "Memorial Sisli Hospital",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1580281658351-fd6c7f59a83f",
-    },
-    {
-      name: "Medicana International",
-      city: "Istanbul",
-      country: "Turkey",
-      image:
-        "https://images.unsplash.com/photo-1551601651-2a8555f1a136",
-    },
-  ];
-
-  const doctors = [
-    {
-      name: "Dr. Jonathan Alves",
-      dept: "Cardiology",
-      image:
-        "https://images.unsplash.com/photo-1550831107-1553da8c8464",
-    },
-    {
-      name: "Dr. Jonathan Alves",
-      dept: "Cardiology",
-      image:
-        "https://images.unsplash.com/photo-1550831107-1553da8c8464",
-    },
-    {
-      name: "Dr. Sophia Martinez",
-      dept: "Orthopedics",
-      image:
-        "https://images.unsplash.com/photo-1607746882042-944635dfe10e",
-    },
-    {
-      name: "Dr. Ahmed Khan",
-      dept: "Oncology",
-      image:
-        "https://images.unsplash.com/photo-1622253692010-333f2da6031d",
-    },
-    {
-      name: "Dr. Emily Watson",
-      dept: "Gynecology",
-      image:
-        "https://images.unsplash.com/photo-1584515933487-779824d29309",
-    },
-    {
-      name: "Dr. Michael Chen",
-      dept: "Gastroenterology",
-      image:
-        "https://images.unsplash.com/photo-1594824476967-48c8b964273f",
-    },
-    {
-      name: "Dr. Rajesh Verma",
-      dept: "Urology",
-      image:
-        "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d",
-    },
-  ];
 
 
   return (
@@ -579,8 +524,12 @@ export default function HospitalDetailsPage() {
           </div>
         </div>
 
-        <SimilarHospitals hospitals={similarHospitals} />
-        <DoctorsSection doctors={doctors} />
+        {similarHospitals.length > 0 && (
+          <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} />
+        )}
+
+        <DoctorsSection doctors={doctors} isMobile={isMobile} />
+
       </div>
       <ModalAppointment
         isOpen={isModalOpen}

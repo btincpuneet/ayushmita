@@ -6,6 +6,7 @@ const slugify = require("../utils/slugify");
 const { Doctor } = require("../models/doctor");
 const { TopPartnerHospital } = require("../models/topPartnerHospital");
 const { RelationHospitalDoctor } = require("../models/relationHospitalDoctor");
+const {Disease} = require("../models/disease");
 
 
 const createDoctor = async (req, res) => {
@@ -13,10 +14,11 @@ const createDoctor = async (req, res) => {
     const {
       name,
       title,
-      specialty,
+      speciality_id,
       short_description,
       description,
       description_html,
+      faq_html,
       country,
       city,
       experience,
@@ -31,14 +33,13 @@ const createDoctor = async (req, res) => {
 
     let hospitals = req.body.hospitals || [];
 
-    if (!name || !specialty) {
+    if (!name || !speciality_id) {
       return res.status(400).json({
         success: false,
-        message: "Name and specialty are required",
+        message: "Name and speciality are required",
       });
     }
 
-    /* ---------- SLUG ---------- */
     let baseSlug = slugify(name);
     let slug = baseSlug;
     let count = 1;
@@ -47,7 +48,6 @@ const createDoctor = async (req, res) => {
       slug = `${baseSlug}-${count++}`;
     }
 
-    /* ---------- IMAGE ---------- */
     let imageUrl = null;
     if (req.file) {
       const imageName = `doctor_${Date.now()}.jpg`;
@@ -65,10 +65,11 @@ const createDoctor = async (req, res) => {
       name,
       slug,
       title,
-      specialty,
+      speciality_id,
       short_description,
       description,
       description_html,
+      faq_html,
       country,
       city,
       experience,
@@ -82,7 +83,6 @@ const createDoctor = async (req, res) => {
       status: status ?? 1,
     });
 
-    /* ---------- HOSPITAL RELATION ---------- */
     if (!Array.isArray(hospitals)) hospitals = [hospitals];
 
     hospitals = hospitals
@@ -104,13 +104,18 @@ const createDoctor = async (req, res) => {
       await RelationHospitalDoctor.bulkCreate(relations);
     }
 
-    res.status(201).json({ success: true, data: doctor });
+    res.status(201).json({
+      success: true,
+      data: doctor,
+    });
   } catch (err) {
     console.error("Create Doctor Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
-
 
 const getDoctors = async (req, res) => {
   try {
@@ -156,8 +161,28 @@ const getActiveDoctors = async (req, res) => {
 const getDoctorBySlug = async (req, res) => {
   try {
     const doctor = await Doctor.findOne({
-      where: { slug: req.params.slug, status: 1 },
+      where: {
+        slug: req.params.slug,
+        status: 1,
+      },
+      attributes: [
+        "id",
+        "name",
+        "slug",
+        "speciality_id",
+        "experience",
+        "city",
+        "country",
+        "image_url",
+        "description_html",
+        "faq_html",
+      ],
       include: [
+        {
+          model: Disease,
+          as: "speciality", 
+          attributes: ["id", "name", "slug"],
+        },
         {
           model: TopPartnerHospital,
           as: "hospitals",
@@ -174,13 +199,18 @@ const getDoctorBySlug = async (req, res) => {
       });
     }
 
-    res.json({ success: true, data: doctor });
+    res.json({
+      success: true,
+      data: doctor,
+    });
   } catch (err) {
     console.error("Get Doctor By Slug Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
-
 
 const updateDoctor = async (req, res) => {
   try {
@@ -193,9 +223,9 @@ const updateDoctor = async (req, res) => {
     }
 
     let updateData = { ...req.body };
+    delete updateData.specialty;
     let hospitals = req.body.hospitals || [];
 
-    /* ---------- SLUG UPDATE ---------- */
     if (req.body.name && req.body.name !== doctor.name) {
       let baseSlug = slugify(req.body.name);
       let slug = baseSlug;
@@ -211,7 +241,6 @@ const updateDoctor = async (req, res) => {
       updateData.slug = slug;
     }
 
-    /* ---------- IMAGE UPDATE ---------- */
     if (req.file) {
       const imageName = `doctor_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads/doctors");
@@ -286,11 +315,147 @@ const deleteDoctor = async (req, res) => {
   }
 };
 
+const getSimilarDoctors = async (req, res) => {
+  try {
+    const doctor = await Doctor.findOne({
+      where: {
+        slug: req.params.slug,
+        status: 1,
+      },
+      attributes: ["id", "speciality_id", "city"],
+    });
+
+    if (!doctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor not found",
+      });
+    }
+
+    let similarDoctors = await Doctor.findAll({
+      where: {
+        speciality_id: doctor.speciality_id,
+        id: { [Op.ne]: doctor.id },
+        status: 1,
+      },
+      limit: 10,
+      attributes: [
+        "id",
+        "name",
+        "slug",
+        "experience",
+        "city",
+        "country",
+        "image_url",
+        "image_alt",
+        "image_title",
+      ],
+      include: [
+        {
+          model: Disease,
+          as: "speciality",
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    // 3️⃣ 🔥 FALLBACK: If no similar doctors → get all doctors
+    if (!similarDoctors || similarDoctors.length === 0) {
+      similarDoctors = await Doctor.findAll({
+        where: {
+          id: { [Op.ne]: doctor.id },
+          status: 1,
+        },
+        limit: 10,
+        attributes: [
+          "id",
+          "name",
+          "slug",
+          "experience",
+          "city",
+          "country",
+          "image_url",
+          "image_alt",
+          "image_title",
+        ],
+        include: [
+          {
+            model: Disease,
+            as: "speciality",
+            attributes: ["name"],
+          },
+        ],
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        doctors: similarDoctors,
+      },
+    });
+
+  } catch (err) {
+    console.error("getSimilarDoctors error:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+
+const getDoctorsBySpeciality = async (req, res) => {
+  try {
+    const { specialityId } = req.params;
+
+    const doctors = await Doctor.findAll({
+      where: {
+        speciality_id: specialityId,
+        status: 1,
+      },
+      limit: 12,
+      attributes: [
+        "id",
+        "name",
+        "slug",
+        "experience",
+        "city",
+        "country",
+        "image_url",
+        "image_alt",
+        "image_title",
+      ],
+      include: [
+        {
+          model: Disease,
+          as: "speciality",
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    return res.json({
+      success: true,
+      data: doctors,
+    });
+  } catch (error) {
+    console.error("getDoctorsBySpeciality error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createDoctor,
   getDoctors,
   getDoctorBySlug,
   updateDoctor,
   deleteDoctor,
-  getActiveDoctors
+  getActiveDoctors,
+  getSimilarDoctors,
+  getDoctorsBySpeciality
 };

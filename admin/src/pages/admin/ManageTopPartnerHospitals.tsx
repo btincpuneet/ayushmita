@@ -14,6 +14,10 @@ import { toast } from "sonner";
 import RichTextEditor from "@/components/RichTextEditor";
 import { authHeader } from "@/utils/auth";
 import { SearchableSelect } from "@/components/SearchableSelect";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDown } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const API_URL = `${API_BASE}/api/hospitals`;
 
@@ -32,7 +36,9 @@ const emptyForm = {
   status: "active",
   image_alt: "",
   image_title: "",
+  specialities: [] as number[],
 };
+
 
 
 export default function ManageTopPartnerHospitals() {
@@ -57,6 +63,7 @@ export default function ManageTopPartnerHospitals() {
   const [loading, setLoading] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
+  const [diseases, setDiseases] = useState<any[]>([]);
 
   const debouncedCountry = useDebounce(countrySearch);
   const debouncedCity = useDebounce(citySearch);
@@ -67,6 +74,12 @@ export default function ManageTopPartnerHospitals() {
   const [preview, setPreview] = useState<string | null>(null);
   const fileRef = React.useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    axios
+      .get(`${API_BASE}/api/diseases?status=1`)
+      .then((res) => setDiseases(res.data.data || []))
+      .catch(() => toast.error("Failed to load specialities"));
+  }, []);
 
   const fetchHospitals = async () => {
     try {
@@ -140,7 +153,11 @@ export default function ManageTopPartnerHospitals() {
       status: item.status || "active",
       image_alt: item.image_alt || "",
       image_title: item.image_title || "",
+      specialities: item.specialities
+        ? item.specialities.map((s: any) => s.id)
+        : [],
     });
+
 
     setPreview(item.image_url ? `${API_BASE}${item.image_url}` : null);
 
@@ -200,6 +217,10 @@ export default function ManageTopPartnerHospitals() {
     }
   };
 
+  const selectedSpecialityNames = diseases
+    .filter((d) => form.specialities?.includes(d.id))
+    .map((d) => d.name)
+    .join(", ");
 
 
   return (
@@ -218,6 +239,7 @@ export default function ManageTopPartnerHospitals() {
               <th className="p-2 border">Image Title</th>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Location</th>
+              <th className="p-2 border">Specialities</th>
               <th className="p-2 border">Beds</th>
               <th className="p-2 border">Founded</th>
               <th className="p-2 border">Status</th>
@@ -248,7 +270,14 @@ export default function ManageTopPartnerHospitals() {
                   </td>
                   <td className="p-2 border font-semibold">{h.name}</td>
                   <td className="p-2 border">{h.city}, {h.country}</td>
+                  <td className="p-2 border text-sm">
+                    {h.specialities?.length
+                      ? h.specialities.map((s) => s.name).join(", ")
+                      : "-"}
+                  </td>
+
                   <td className="p-2 border text-center">{h.hospital_beds || "-"}</td>
+
                   <td className="p-2 border text-center">{h.founded_year || "-"}</td>
                   <td className="p-2 border text-center">
                     <span
@@ -351,6 +380,51 @@ export default function ManageTopPartnerHospitals() {
 
 
             <Input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
+            <div className="col-span-2">
+              <label className="text-sm font-medium mb-1 block">
+                Select Specialities
+              </label>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between text-left"
+                  >
+                    <span className="truncate">
+                      {selectedSpecialityNames || "Select specialities"}
+                    </span>
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-2">
+                  <ScrollArea className="h-52">
+                    {diseases.map((d) => {
+                      const checked = form.specialities?.includes(d.id) ?? false;
+                      return (
+                        <div
+                          key={d.id}
+                          className="flex items-center gap-2 p-2 hover:bg-muted rounded cursor-pointer"
+                          onClick={() =>
+                            setForm({
+                              ...form,
+                              specialities: checked
+                                ? form.specialities.filter(id => id !== d.id)
+                                : [...form.specialities, d.id],
+                            })
+                          }
+                        >
+                          <Checkbox checked={checked} />
+                          <span className="text-sm">{d.name}</span>
+                        </div>
+                      );
+                    })}
+                  </ScrollArea>
+                </PopoverContent>
+              </Popover>
+            </div>
+
 
             <div className="grid grid-cols-2 gap-3">
               <Input name="founded_year" placeholder="Founded Year" value={form.founded_year} onChange={handleChange} />

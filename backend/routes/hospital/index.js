@@ -10,6 +10,7 @@ const {
   deleteHospital,
   getHospitalBySlug,
   getActiveHospitals,
+  getHospitalsByCity,
 } = require("../../controllers/topPartnerHospitalController");
 const { authenticateToken } = require('../../middleware/authMiddleware');
 
@@ -23,13 +24,29 @@ const upload = multer({
   },
 });
 
-router.post("/hospitals", upload.single("image"), authenticateToken ,createHospital);
-router.get("/hospitals/active", getActiveHospitals);
+router.post(
+  "/hospitals",
+  upload.single("image"),
+  authenticateToken,
+  createHospital
+);
 
 router.get("/hospitals", getAllHospitals);
+router.get("/hospitals/active", getActiveHospitals);
 router.get("/hospitals/:slug", getHospitalBySlug);
-router.get("/hospitals/:id", getHospitalById);
-router.put("/hospitals/:id", upload.single("image"),authenticateToken , updateHospital);
-router.delete("/hospitals/:id", authenticateToken ,deleteHospital);
+router.get("/hospitals/by-city/:city", getHospitalsByCity);
+
+router.put(
+  "/hospitals/:id",
+  upload.single("image"),
+  authenticateToken,
+  updateHospital
+);
+
+router.delete(
+  "/hospitals/:id",
+  authenticateToken,
+  deleteHospital
+);
 
 module.exports = router;

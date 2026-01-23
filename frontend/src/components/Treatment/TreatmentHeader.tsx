@@ -21,11 +21,11 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           {breadcrumbs.map((item, index) => (
             <span key={index}>
               <span
-                className={`cursor-pointer ${item.link ? "hover:underline" : ""
-                  }`}
+                className={`${index === 0 ? "cursor-pointer hover:underline" : ""}`}
                 style={index !== 0 ? { color: highlightColor } : {}}
-                onClick={() => item.link && navigate(item.link)}
+                onClick={() => index === 0 && item.link && navigate(item.Link)}
               >
+
                 {item.label}
               </span>
               {index !== breadcrumbs.length - 1 && " / "}

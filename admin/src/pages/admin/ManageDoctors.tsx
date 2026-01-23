@@ -34,7 +34,7 @@ interface Doctor {
   id: number;
   name: string;
   title: string;
-  specialty: string;
+  speciality_id: number;
   country: string;
   city: string;
   experience: string;
@@ -42,21 +42,21 @@ interface Doctor {
   image_url?: string;
   image_alt?: string;
   image_title?: string;
-
   hospitals?: Hospital[];
 }
+
 
 const emptyForm = {
   name: "",
   title: "",
-  specialty: "",
+  speciality_id: "",
   country: "",
   city: "",
   experience: "",
   short_description: "",
   description: "",
   description_html: "",
-
+  faq_html: "",
   image_alt: "",
   image_title: "",
 
@@ -68,6 +68,10 @@ const emptyForm = {
   hospitals: [] as number[],
   image: null as File | null,
 };
+interface Speciality {
+  id: number;
+  name: string;
+}
 
 
 const ManageDoctors = () => {
@@ -99,6 +103,11 @@ const ManageDoctors = () => {
   const debouncedCountry = useDebounce(countrySearch);
   const debouncedCity = useDebounce(citySearch);
 
+
+
+  const [specialities, setSpecialities] = useState<Speciality[]>([]);
+  const SPECIALITY_API = `${API_BASE}/api/diseases`;
+
   const loadDoctors = async () => {
     const res = await axios.get(DOCTOR_API);
     setDoctors(res.data.data || []);
@@ -108,6 +117,11 @@ const ManageDoctors = () => {
     const res = await axios.get(HOSPITAL_API);
     setHospitals(res.data.data || []);
   };
+  useEffect(() => {
+    axios.get(SPECIALITY_API)
+      .then(res => setSpecialities(res.data.data || []))
+      .catch(() => toast.error("Failed to load specialities"));
+  }, []);
 
   useEffect(() => {
     loadDoctors();
@@ -190,6 +204,7 @@ const ManageDoctors = () => {
     setForm({
       ...emptyForm,
       ...doctor,
+      speciality_id: doctor.speciality_id,
 
       image_alt: doctor.image_alt || "",
       image_title: doctor.image_title || "",
@@ -262,8 +277,6 @@ const ManageDoctors = () => {
     .join("");
 
 
-
-
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
@@ -311,7 +324,9 @@ const ManageDoctors = () => {
                   {d.image_title || "-"}
                 </td>
                 <td className="p-3 font-medium">{d.name}</td>
-                <td className="p-3">{d.specialty}</td>
+                <td className="p-3">
+                  {specialities.find(s => s.id === d.speciality_id)?.name || "-"}
+                </td>
                 <td className="p-3">{d.experience || "-"}</td>
                 <td className="p-3 text-xs text-gray-600">
                   {d.hospitals?.map((h) => h.name).join("") || "-"}
@@ -342,310 +357,339 @@ const ManageDoctors = () => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editing ? "Edit Doctor" : "Add Doctor"}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent className="max-w-7xl">
+          <div className="max-h-[70vh] overflow-y-auto pr-2">
+            <DialogHeader>
+              <DialogTitle>
+                {editing ? "Edit Doctor" : "Add Doctor"}
+              </DialogTitle>
+            </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Doctor Name *
-              </label>
-              <Input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Doctor Name *
+                </label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Title / Designation
+                </label>
+                <Input
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Select Hospitals
+                </label>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between text-left"
+                    >
+                      <span className="truncate">
+                        {selectedHospitalNames || "Select hospitals"}
+                      </span>
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+
+                  <PopoverContent className="w-full p-2">
+                    <ScrollArea className="h-52">
+                      {hospitals.map((h) => {
+                        const checked = form.hospitals.includes(h.id);
+                        return (
+                          <div
+                            key={h.id}
+                            className="flex items-center gap-2 p-2 hover:bg-muted rounded cursor-pointer"
+                            onClick={() =>
+                              setForm({
+                                ...form,
+                                hospitals: checked
+                                  ? form.hospitals.filter(id => id !== h.id)
+                                  : [...form.hospitals, h.id],
+                              })
+                            }
+                          >
+                            <Checkbox checked={checked} />
+                            <span className="text-sm">{h.name}</span>
+                          </div>
+                        );
+                      })}
+                    </ScrollArea>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Speciality *
+                </label>
+
+                <select
+                  className="border rounded px-3 py-2 text-sm w-full"
+                  value={form.speciality_id}
+                  onChange={(e) =>
+                    setForm({ ...form, speciality_id: Number(e.target.value) })
+                  }
+                >
+                  <option value="">Select speciality</option>
+                  {specialities.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Experience
+                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={form.experience}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      experience: e.target.value === ""
+                        ? ""
+                        : Math.max(0, Number(e.target.value)),
+                    })
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") e.preventDefault();
+                  }}
+                />
+              </div>
+
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Country
+                </label>
+
+                <SearchableSelect
+                  options={countries}
+                  value={form.country}
+                  placeholder="Select country"
+                  searchPlaceholder="Search country..."
+                  onSearch={setCountrySearch}
+                  onChange={(value) => {
+                    setForm({ ...form, country: value, city: "" });
+                    setCitySearch("");
+                  }}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  City
+                </label>
+
+                <SearchableSelect
+                  options={cities}
+                  value={form.city}
+                  disabled={!form.country}
+                  placeholder={
+                    form.country ? "Select city" : "Select country first"
+                  }
+                  searchPlaceholder="Search city..."
+                  onSearch={setCitySearch}
+                  onChange={(value) =>
+                    setForm({ ...form, city: value })
+                  }
+                />
+              </div>
+
+
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Status
+                </label>
+                <select
+                  className="border rounded px-3 py-2 text-sm w-full"
+                  value={form.status}
+                  onChange={(e) =>
+                    setForm({ ...form, status: Number(e.target.value) })
+                  }
+                >
+                  <option value={1}>Active</option>
+                  <option value={0}>Inactive</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Doctor Image
+                </label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setForm({ ...form, image: file });
+                    setPreview(URL.createObjectURL(file));
+                  }}
+                  name="filename"
+                />
+              </div>
+
+              {preview && (
+                <img
+                  src={preview}
+                  className="col-span-2 h-40 rounded object-cover"
+                />
+              )}
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Image ALT (SEO)
+                </label>
+                <Input
+                  value={form.image_alt}
+                  onChange={(e) =>
+                    setForm({ ...form, image_alt: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Image Title
+                </label>
+                <Input
+                  value={form.image_title}
+                  onChange={(e) =>
+                    setForm({ ...form, image_title: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Short Description
+                </label>
+                <Textarea
+                  value={form.short_description}
+                  onChange={(e) =>
+                    setForm({ ...form, short_description: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Description
+                </label>
+                <Textarea
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Doctor Full Description
+                </label>
+                <RichTextEditor
+                  value={form.description_html}
+                  onChange={(html) =>
+                    setForm({ ...form, description_html: html })
+                  }
+                  minHeight={250}
+                  showWordCount
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Doctor FAQ
+                </label>
+                <RichTextEditor
+                  value={form.faq_html}
+                  onChange={(html) =>
+                    setForm({ ...form, faq_html: html })
+                  }
+                  minHeight={200}
+                  showWordCount
+                />
+              </div>
+
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  SEO Title
+                </label>
+                <Input
+                  value={form.seo_title}
+                  onChange={(e) =>
+                    setForm({ ...form, seo_title: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Canonical URL
+                </label>
+                <Input
+                  value={form.canonical_url}
+                  onChange={(e) =>
+                    setForm({ ...form, canonical_url: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  SEO Description
+                </label>
+                <Textarea
+                  value={form.seo_description}
+                  onChange={(e) =>
+                    setForm({ ...form, seo_description: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  SEO Keywords
+                </label>
+                <Textarea
+                  value={form.seo_keywords}
+                  onChange={(e) =>
+                    setForm({ ...form, seo_keywords: e.target.value })
+                  }
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Title / Designation
-              </label>
-              <Input
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-              />
-            </div>
+            <DialogFooter>
+              <Button onClick={handleSubmit}>
+                {editing ? "Update Doctor" : "Create Doctor"}
+              </Button>
+            </DialogFooter>
 
-            <div className="col-span-2">
-              <label className="text-sm font-medium mb-1 block">
-                Select Hospitals
-              </label>
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between text-left"
-                  >
-                    <span className="truncate">
-                      {selectedHospitalNames || "Select hospitals"}
-                    </span>
-                    <ChevronDown className="h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-
-                <PopoverContent className="w-full p-2">
-                  <ScrollArea className="h-52">
-                    {hospitals.map((h) => {
-                      const checked = form.hospitals.includes(h.id);
-                      return (
-                        <div
-                          key={h.id}
-                          className="flex items-center gap-2 p-2 hover:bg-muted rounded cursor-pointer"
-                          onClick={() =>
-                            setForm({
-                              ...form,
-                              hospitals: checked
-                                ? form.hospitals.filter(id => id !== h.id)
-                                : [...form.hospitals, h.id],
-                            })
-                          }
-                        >
-                          <Checkbox checked={checked} />
-                          <span className="text-sm">{h.name}</span>
-                        </div>
-                      );
-                    })}
-                  </ScrollArea>
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Specialty *
-              </label>
-              <Input
-                value={form.specialty}
-                onChange={(e) =>
-                  setForm({ ...form, specialty: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Experience
-              </label>
-              <Input
-                type="number"
-                min={0}
-                step={1}
-                value={form.experience}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    experience: e.target.value === ""
-                      ? ""
-                      : Math.max(0, Number(e.target.value)),
-                  })
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "-" || e.key === "e") e.preventDefault();
-                }}
-              />
-            </div>
-
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Country
-              </label>
-
-              <SearchableSelect
-                options={countries}
-                value={form.country}
-                placeholder="Select country"
-                searchPlaceholder="Search country..."
-                onSearch={setCountrySearch}
-                onChange={(value) => {
-                  setForm({ ...form, country: value, city: "" });
-                  setCitySearch("");
-                }}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                City
-              </label>
-
-              <SearchableSelect
-                options={cities}
-                value={form.city}
-                disabled={!form.country}
-                placeholder={
-                  form.country ? "Select city" : "Select country first"
-                }
-                searchPlaceholder="Search city..."
-                onSearch={setCitySearch}
-                onChange={(value) =>
-                  setForm({ ...form, city: value })
-                }
-              />
-            </div>
-
-
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Status
-              </label>
-              <select
-                className="border rounded px-3 py-2 text-sm w-full"
-                value={form.status}
-                onChange={(e) =>
-                  setForm({ ...form, status: Number(e.target.value) })
-                }
-              >
-                <option value={1}>Active</option>
-                <option value={0}>Inactive</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Doctor Image
-              </label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  setForm({ ...form, image: file });
-                  setPreview(URL.createObjectURL(file));
-                }}
-              />
-            </div>
-
-            {preview && (
-              <img
-                src={preview}
-                className="col-span-2 h-40 rounded object-cover"
-              />
-            )}
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Image ALT (SEO)
-              </label>
-              <Input
-                value={form.image_alt}
-                onChange={(e) =>
-                  setForm({ ...form, image_alt: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Image Title
-              </label>
-              <Input
-                value={form.image_title}
-                onChange={(e) =>
-                  setForm({ ...form, image_title: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium mb-1 block">
-                Short Description
-              </label>
-              <Textarea
-                value={form.short_description}
-                onChange={(e) =>
-                  setForm({ ...form, short_description: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium mb-1 block">
-                Description
-              </label>
-              <Textarea
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium mb-1 block">
-                Doctor Full Description
-              </label>
-              <RichTextEditor
-                value={form.description_html}
-                onChange={(html) =>
-                  setForm({ ...form, description_html: html })
-                }
-                minHeight={250}
-                showWordCount
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                SEO Title
-              </label>
-              <Input
-                value={form.seo_title}
-                onChange={(e) =>
-                  setForm({ ...form, seo_title: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Canonical URL
-              </label>
-              <Input
-                value={form.canonical_url}
-                onChange={(e) =>
-                  setForm({ ...form, canonical_url: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                SEO Description
-              </label>
-              <Textarea
-                value={form.seo_description}
-                onChange={(e) =>
-                  setForm({ ...form, seo_description: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                SEO Keywords
-              </label>
-              <Textarea
-                value={form.seo_keywords}
-                onChange={(e) =>
-                  setForm({ ...form, seo_keywords: e.target.value })
-                }
-              />
-            </div>
           </div>
 
-          <DialogFooter>
-            <Button onClick={handleSubmit}>
-              {editing ? "Update Doctor" : "Create Doctor"}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 

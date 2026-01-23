@@ -218,10 +218,10 @@ export default function ManageCategory() {
             <table className="w-full">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="p-3">Order</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">URL</th>
-                  <th className="p-3">Status</th>
+                  <th className="p-3 text-left">Order</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">URL</th>
+                  <th className="p-3 text-left">Status</th>
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>

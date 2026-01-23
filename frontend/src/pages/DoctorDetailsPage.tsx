@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import Slider from "react-slick";
@@ -11,18 +11,19 @@ import Footer from "../components/Footer";
 import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
 import useSeo from "../hooks/useSeo";
+interface Speciality {
+    name: string;
+}
 
 interface Doctor {
     id: number;
     name: string;
     slug: string;
-    title: string;
-    specialty: string;
     experience: number;
     country: string;
     city: string;
-    description: string;
     description_html: string;
+    faq_html?: string;
     image_url: string | null;
     image_alt?: string | null;
     image_title?: string | null;
@@ -31,33 +32,84 @@ interface Doctor {
     seo_keywords?: string;
     canonical_url?: string;
     hospitals?: any[];
+    speciality?: Speciality;
 }
 
 
+interface Hospital {
+    id: number;
+    name: string;
+    slug: string;
+    city: string;
+    country: string;
+    image_url?: string | null;
+}
 
-const NextArrow = ({ onClick }: any) => (
+
+interface ArrowProps {
+    onClick?: () => void;
+}
+
+const NextArrow: React.FC<ArrowProps> = ({ onClick }) => (
     <button
         onClick={onClick}
         className="absolute -right-5 top-1/2 -translate-y-1/2 z-10
-               w-10 h-10 bg-white rounded-full shadow
-               flex items-center justify-center"
+      w-10 h-10 bg-white rounded-full shadow
+      flex items-center justify-center"
     >
-        <svg width="19" height="10" viewBox="0 0 19 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.3615 6L12.9105 8.59L14.25 10L19 5L14.25 0L12.9105 1.41L15.3615 4H0V6H15.3615Z" fill="#F0A324" />
+        <svg width="19" height="10" viewBox="0 0 19 10" fill="none">
+            <path
+                d="M15.3615 6L12.9105 8.59L14.25 10L19 5L14.25 0L12.9105 1.41L15.3615 4H0V6H15.3615Z"
+                fill="#F0A324"
+            />
         </svg>
     </button>
 );
 
-const PrevArrow = ({ onClick }: any) => (
-    <span></span>
-);
+const PrevArrow: React.FC = () => <span />;
+
 
 const DoctorDetailsPage: React.FC = () => {
+
+    const rankSimilarDoctors = (baseDoctor: Doctor, doctors: Doctor[]) => {
+        return doctors
+            .map((d) => {
+                let score = 0;
+
+                if (
+                    d.speciality?.name &&
+                    baseDoctor.speciality?.name &&
+                    d.speciality.name === baseDoctor.speciality.name
+                ) {
+                    score += 3;
+                }
+
+                if (d.country === baseDoctor.country) score += 2;
+                if (d.city === baseDoctor.city) score += 1;
+
+                return { ...d, score };
+            })
+            .filter((d: any) => d.score > 0)
+            .sort((a: any, b: any) => b.score - a.score);
+    };
+
+
     const { slug } = useParams();
+
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [similarDoctors, setSimilarDoctors] = useState<Doctor[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [similarHospitals, setSimilarHospitals] = useState<Hospital[]>([]);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
     const [globalSEO, setGlobalSEO] = useState<{
         seo_title?: string;
         seo_description?: string;
@@ -85,16 +137,35 @@ const DoctorDetailsPage: React.FC = () => {
                     `${API_BASE}/api/doctors/${slug}`
                 );
 
-                const listRes = await axios.get(
-                    `${API_BASE}/api/doctors/active`
+                const baseDoctor = doctorRes.data.data;
+                setDoctor(baseDoctor);
+
+                const similarDoctorRes = await axios.get(
+                    `${API_BASE}/api/doctors/similar/${slug}`
                 );
 
-                setDoctor(doctorRes.data.data);
-                setSimilarDoctors(
-                    listRes.data.data.filter((d: Doctor) => d.slug !== slug)
+                const rankedDoctors = rankSimilarDoctors(
+                    baseDoctor,
+                    similarDoctorRes.data.data.doctors || []
                 );
+
+                setSimilarDoctors(rankedDoctors);
+
+                if (baseDoctor.city) {
+                    const hospitalRes = await axios.get(
+                        `${API_BASE}/api/hospitals/by-city/${baseDoctor.city}`,
+                        {
+                            params: {
+                                country: baseDoctor.country,
+                            },
+                        }
+                    );
+                    setSimilarHospitals(hospitalRes.data.data || []);
+
+                }
+
             } catch (error) {
-                console.error(error);
+                console.error("Doctor details error:", error);
             } finally {
                 setLoading(false);
             }
@@ -155,13 +226,16 @@ const DoctorDetailsPage: React.FC = () => {
 
     const doctorSlider = {
         dots: false,
-        infinite: true,
+        infinite: similarDoctors.length > 4,
         speed: 500,
-        slidesToShow: 4,
         slidesToScroll: 1,
-        arrows: true,
+        arrows: !isMobile,
+
+        slidesToShow: isMobile ? 1 : 4,
+
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
+
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 3 } },
             { breakpoint: 768, settings: { slidesToShow: 2 } },
@@ -169,20 +243,25 @@ const DoctorDetailsPage: React.FC = () => {
         ],
     };
 
+
     const hospitalSlider = {
         dots: false,
-        infinite: true,
+        infinite: similarHospitals.length > 3,
         speed: 500,
-        slidesToShow: 3,
         slidesToScroll: 1,
-        arrows: true,
+        arrows: !isMobile,
+
+        slidesToShow: isMobile ? 1 : 3,
+
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
+
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 2 } },
             { breakpoint: 640, settings: { slidesToShow: 1 } },
         ],
     };
+
     const imageAlt =
         doctor.image_alt ||
         `${doctor.name} - ${doctor.specialty || "Doctor"} in ${doctor.city}`;
@@ -267,7 +346,8 @@ const DoctorDetailsPage: React.FC = () => {
                                                     fontSize: "14px",
                                                     lineHeight: "26px",
                                                     letterSpacing: "0%",
-                                                }}>{doctor.specialty}</strong>
+                                                }}>{doctor.speciality?.name || "Specialist"}
+                                                </strong>
                                             </span>
                                         </div>
 
@@ -355,20 +435,23 @@ const DoctorDetailsPage: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                {/* <div className="mt-10 ">
-                                    <div
-                                        className="mt-10  space-y-8 prose prose-sm max-w-none border"
-                                        dangerouslySetInnerHTML={{ __html: doctor.description_html }}
-                                    />
 
-
-                                </div> */}
                                 <div className="mt-10">
                                     <div
                                         className="cms-content "
                                         dangerouslySetInnerHTML={{ __html: doctor.description_html }}
                                     />
                                 </div>
+
+                                {doctor.faq_html && (
+                                    <div className="mt-2">
+                                        <div
+                                            className="conatiner cms-content "
+                                            dangerouslySetInnerHTML={{ __html: doctor.faq_html }}
+                                        />
+                                    </div>
+                                )}
+
 
                             </div>
 
@@ -392,105 +475,113 @@ const DoctorDetailsPage: React.FC = () => {
                         </h2>
 
                         <div className="relative">
-                            <Slider {...doctorSlider}>
+                            <Slider {...doctorSlider} key={`${similarDoctors.length}-${isMobile}`}>
                                 {similarDoctors.map((d) => (
-                                    <div key={d.id} className="px-3" >
-                                        <div className="bg-white rounded-xl shadow text-center">
-                                            <img
-                                                src={d.image_url ? `${API_BASE}${d.image_url}` : image}
-                                                alt={
-                                                    d.image_alt ||
-                                                    `${d.name} - ${d.specialty || "Doctor"} in ${doctor.city}`
-                                                }
-                                                title={
-                                                    d.image_title ||
-                                                    `${d.name} - ${d.specialty || "Doctor"}`
-                                                }
-                                                className="h-[233px] w-full object-cover rounded-2xl"
-                                            />
+                                    <div key={d.id} className="px-3">
+                                        <Link to={`/doctors/${d.slug}`}>
+                                            <div className="bg-white rounded-xl shadow text-center">
+                                                <img
+                                                    src={d.image_url ? `${API_BASE}${d.image_url}` : image}
+                                                    alt={d.image_alt || d.name}
+                                                    title={d.image_title || d.name}
+                                                    className="h-[233px] w-full object-cover rounded-2xl"
+                                                />
+                                                <h3 className="text-[20px] font-bold">{d.name}</h3>
+                                                <p className="text-[#F0A324] font-bold pb-3">
+                                                    {d.speciality?.name || "Specialist"}
+                                                </p>
 
-                                            <h3 style={{
-                                                fontFamily: "Ubuntu, sans-serif",
-                                                fontWeight: 700,
-                                                fontSize: "20px",
-                                                lineHeight: "55px",
-                                                letterSpacing: "0px",
-                                                textAlign: "center",
-                                            }}
-                                            >{d.name}</h3>
-                                            <p style={{
-                                                fontFamily: "Ubuntu, sans-serif",
-                                                fontWeight: 700,
-                                                fontSize: "15px",
-                                                letterSpacing: "0px",
-                                                textAlign: "center",
-                                                color: "#F0A324",
-                                                paddingBottom: "10px",
-                                            }}
-                                            >{d.specialty}</p>
-
-                                        </div>
+                                            </div>
+                                        </Link>
                                     </div>
                                 ))}
                             </Slider>
+
                         </div>
                     </Container>
                 </section>
 
-                <section className="py-10 bg-white">
-                    <Container>
-                        <h2 className="mb-6" style={{
-                            fontFamily: "Ubuntu, sans-serif",
-                            fontWeight: 700,
-                            fontStyle: "normal",
-                            fontSize: "28px",
-                            lineHeight: "100%",
-                            letterSpacing: "0%",
-                        }}
-                        >
-                            Similar Hospitals in {doctor.city}
-                        </h2>
+                {similarHospitals.length > 0 && (
+                    <section className="py-10 bg-white">
 
-                        <div className="relative">
-                            <Slider {...hospitalSlider}>
-                                {["LIV Hospital", "American Hospital", "American Hospital", "Emsey Hospital"].map(
-                                    (name, i) => (
-                                        <div key={i} className="px-3 related-cards-1">
-                                            <div className="rounded-xl overflow-hidden shadow">
-                                                <img
-                                                    src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
-                                                    className="h-[280px] w-full object-cover rounded-2xl"
-                                                />
-                                                <div className="p-4">
-                                                    <h3 style={{
-                                                        fontFamily: "Ubuntu, sans-serif",
-                                                        fontWeight: 700,
-                                                        fontStyle: "normal",
-                                                        fontSize: "20px",
-                                                        lineHeight: "28px",
-                                                        letterSpacing: "0%",
-                                                    }}
-                                                    >{name}</h3>
-                                                    <p className="mt-3" style={{
-                                                        fontFamily: "Ubuntu, sans-serif",
-                                                        fontWeight: 400,
-                                                        fontStyle: "normal",
-                                                        fontSize: "14px",
-                                                        lineHeight: "10px",
-                                                        letterSpacing: "0%",
-                                                    }}
-                                                    >
-                                                        {doctor.city}
-                                                    </p>
-                                                </div>
+                        <Container>
+                            <h2 className="mb-6" style={{
+                                fontFamily: "Ubuntu, sans-serif",
+                                fontWeight: 700,
+                                fontStyle: "normal",
+                                fontSize: "28px",
+                                lineHeight: "100%",
+                                letterSpacing: "0%",
+                            }}
+                            >
+                                Similar Hospitals in {doctor.city}
+                            </h2>
+
+                            <div className="relative">
+                                {/* {similarHospitals.length > 0 && (
+                                    <Slider {...hospitalSlider}>
+                                        {similarHospitals.map((h) => (
+                                            <div key={h.id} className="px-3 related-cards-1">
+                                                <Link to={`/hospital/${h.slug}`}>
+                                                    <div className="rounded-xl overflow-hidden shadow">
+                                                        <img
+                                                            src={
+                                                                h.image_url
+                                                                    ? `${API_BASE}${h.image_url}`
+                                                                    : "https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
+                                                            }
+                                                            alt={h.name}
+                                                            className="h-[280px] w-full object-cover rounded-2xl"
+                                                        />
+
+                                                        <div className="p-4">
+                                                            <h3 className="text-[20px] font-bold">{h.name}</h3>
+                                                            <p className="mt-2 text-sm">
+                                                                {h.city}, {h.country}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
                                             </div>
-                                        </div>
-                                    )
+                                        ))}
+                                    </Slider>
+                                )} */}
+                                {similarHospitals.length > 0 && (
+                                    <Slider
+                                        {...hospitalSlider}
+                                        key={`${similarHospitals.length}-${isMobile}`}
+                                    >
+                                        {similarHospitals.map((h) => (
+                                            <div key={h.id} className="px-3 related-cards-1">
+                                                <Link to={`/hospital/${h.slug}`}>
+                                                    <div className="rounded-xl overflow-hidden shadow">
+                                                        <img
+                                                            src={
+                                                                h.image_url
+                                                                    ? `${API_BASE}${h.image_url}`
+                                                                    : "https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
+                                                            }
+                                                            alt={h.name}
+                                                            className="h-[280px] w-full object-cover rounded-2xl"
+                                                        />
+                                                        <div className="p-4">
+                                                            <h3 className="text-[20px] font-bold">{h.name}</h3>
+                                                            <p className="mt-2 text-sm">
+                                                                {h.city}, {h.country}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </Slider>
                                 )}
-                            </Slider>
-                        </div>
-                    </Container>
-                </section>
+
+                            </div>
+                        </Container>
+                    </section>
+                )}
+
             </main>
 
             <Footer />

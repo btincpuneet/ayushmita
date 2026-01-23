@@ -48,13 +48,19 @@ const TestimonialSlider: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const toggleReadMore = (id: number) => {
     setExpanded((prev) => (prev === id ? null : id));
   };
 
   const MAX_LENGTH = 90;
-
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [])
   const fetchTestimonials = async () => {
     try {
       const res = await fetch(API);
@@ -71,33 +77,41 @@ const TestimonialSlider: React.FC = () => {
     fetchTestimonials();
   }, []);
 
-  const settings = {
+ const settings: Settings = {
     dots: true,
-    infinite: true,
+    infinite: testimonials.length > 3,
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true,
     autoplay: true,
     autoplaySpeed: 3500,
+    arrows: !isMobile,
+
+    slidesToShow: isMobile ? 1 : 3,
+    slidesToScroll: 1,
+
     nextArrow: <OverlapNextArrow />,
     prevArrow: <PrevArrow />,
+
+    responsive: [
+      { breakpoint: 1200, settings: { slidesToShow: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 1 } },
+    ],
+
     customPaging: () => (
       <div className="dot-outer">
         <div className="dot-inner" />
       </div>
     ),
+
     appendDots: (dots: React.ReactNode) => (
       <div className="dots-wrapper home-page-sliders-sections">
-        <ul className="flex items-center justify-center gap-2 sections">{dots}</ul>
+        <ul className="flex items-center justify-center gap-2 sections">
+          {dots}
+        </ul>
       </div>
     ),
-    responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 1 } },
-      { breakpoint: 375, settings: { slidesToShow: 1 } },
-    ],
   };
+
+
 
   return (
     <section
@@ -126,7 +140,10 @@ const TestimonialSlider: React.FC = () => {
             )}
 
             {!loading && testimonials.length > 0 && (
-              <Slider {...settings}>
+              <Slider
+                {...settings}
+                key={`${testimonials.length}-${isMobile}`}
+              >
                 {testimonials.map((t) => (
                   <div key={t.id} className="px-3 md:px-4">
                     <div className="bg-white rounded-2xl p-4 min-h-[24rem] hover:scale-105 transition-transform flex flex-col items-center text-center"
@@ -164,7 +181,7 @@ const TestimonialSlider: React.FC = () => {
                           }`}
                       >
                         <p
-                         className="slider-message-section-1"
+                          className="slider-message-section-1"
                           style={{
                             fontFamily: "Inter",
                             fontWeight: 400,

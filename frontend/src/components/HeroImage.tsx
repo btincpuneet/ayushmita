@@ -71,8 +71,9 @@ const HeroImage = () => {
             className="w-full h-full object-cover object-center"
           />
 
-
-          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
+<div className="absolute inset-0 
+  bg-gradient-to-r from-white/50 via-white/30 to-transparent
+  md:from-white/95 md:via-white/80 md:to-transparent"></div>
         </div>
 
         <div className="relative z-10 h-full max-w-7xl mx-auto px-25 flex items-center over-image-section">

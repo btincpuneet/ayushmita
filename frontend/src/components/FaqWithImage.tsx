@@ -61,122 +61,37 @@ const FaqWithImage = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start [overflow-anchor:none]">
 
-          {/* Left Image Section */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-start">
-            <div className="relative">
-              <div
-                className="bg-white rounded-xl"
-                style={{ boxShadow: "0 30px 80px rgba(15,23,42,0.08)" }}
-              >
-                <img
-                  src={imageUrl}
-                  alt="doctor and patient"
-                  title="doctor and patient"
-                  className="block object-cover rounded-xl"
-                  style={{
-                    width: 500,
-                    height: 480,
-                    maxWidth: "100%",
-                    border: "10px solid #ffffff",
-                    boxShadow: "0 18px 40px rgba(2,6,23,0.06)",
-                  }}
-                />
-              </div>
 
-              {/* Sticker Icons */}
-              <div
-                className="absolute -right-10 top-45 -translate-y-1/2 flex items-center justify-center rounded-full bg-white emoji-help"
-                style={{
-                  width: 70,
-                  height: 70,
-                  boxShadow: "0 14px 30px rgba(2,6,23,0.12)",
-                }}
-              >
-                <img src={care} alt="care" title="care" className="w-11 h-11" />
-              </div>
 
-              <div
-                className="absolute -left-7 top-80 bg-white rounded-xl flex items-center gap-4 happy-image"
-                style={{
-                  padding: "14px 10px",
-                  boxShadow: "0 20px 50px rgba(2,6,23,0.08)",
-                  minWidth: 220,
-                }}
-              >
-                <img src={Smile} alt="smile"  title ="smiel" className="w-11 h-11" />
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "Poppins",
-                      fontWeight: 600,
-                      fontSize: "24px",
-                      lineHeight: "33px",
-                    }}
-                  >
-                    {highlight.count}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "Poppins",
-                      fontWeight: 400,
-                      fontSize: "17px",
-                      lineHeight: "28px",
-                    }}
-                  >
-                    {highlight.label}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right FAQ Section */}
           <div className="lg:col-span-7">
-            <div className="space-y-5">
+            <div className="faq-grid-right">
               {faqs.map((f) => {
-                const isOpen = open === f.id;
-                return (
-                  <div key={f.id}>
-                    <button
-                      onClick={() => toggle(f.id)}
-                      aria-expanded={isOpen}
-                      className="w-full text-left flex items-center justify-between py-5 bg-white fa-questions"
-                    >
-                      <span
-                        style={{
-                          fontFamily: "Ubuntu",
-                          fontWeight: 700,
-                          fontSize: "18px",
-                          lineHeight: "30px",
-                        }}
-                      >
-                        {f.q}
-                      </span>
-                      <span
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[#F0A324] transition-transform ${isOpen ? "rotate-45" : ""
-                          }`}
-                      >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24">
-                          <path
-                            d="M12 5v14M5 12h14"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          />
-                        </svg>
-                      </span>
-                    </button>
+                const isActive = open === f.id;
 
+                return (
+                  <div
+                    key={f.id}
+                    className={`faq-item ${isActive ? "active" : ""}`}
+                  >
                     <div
-                      className={`mt-2 px-6 overflow-hidden transition-all ${isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                        }`}
+                      className="faq-question"
+                      onClick={() => toggle(f.id)}
                     >
-                      <p className="text-gray-600 pb-3">{f.a}</p>
+                      {f.q}
+                      <span className="faq-icon">
+                        {isActive ? "−" : "+"}
+                      </span>
+                    </div>
+
+                    <div className="faq-answer">
+                      {f.a}
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
+
 
         </div>
       </div>

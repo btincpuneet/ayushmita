@@ -27,7 +27,7 @@ const formRoutes = require("./routes/form/forms.js")
 const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js");
 const countiesCitiesRoutes = require("./routes/countryCities/countiesCitiesRoutes.js");
 const editorUploadRoutes = require("./routes/upload/imageUpload.routes.js");
-
+// const specialitiesRoutes = require("./routes/specialities/index.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -71,6 +71,7 @@ app.use("/api/button", buttonAppointRoutes);
 app.use("/api/global-settings", globalSettingRoutes);
 app.use("/api", countiesCitiesRoutes);
 app.use("/api", editorUploadRoutes);
+// app.use("/api", specialitiesRoutes); 
 
 
 
