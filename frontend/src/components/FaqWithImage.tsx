@@ -61,10 +61,10 @@ const FaqWithImage = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start [overflow-anchor:none]">
 
+         
 
-
-          <div className="lg:col-span-7">
-            <div className="faq-grid-right">
+          <div className="lg:col-span-12">
+            <div className="faq-grid-right grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
               {faqs.map((f) => {
                 const isActive = open === f.id;
 

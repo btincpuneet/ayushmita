@@ -167,7 +167,7 @@ const DiseaseDetailsPage = () => {
 
 
               </div>
-              <div>
+              <div className="btn-sec-details-pge">
                 <div className="w-full lg:w-[100%] ">
                   <p
                     style={{
@@ -182,7 +182,7 @@ const DiseaseDetailsPage = () => {
                     {disease?.short_description}
                   </p>
                 </div>
-                <div className="flex gap-4 mt-6 details-pgs-btn-1 flex-wrap">
+                <div className="flex gap-4 mt-6 details-pgs-btn-2">
                   <button
                     onClick={() => setIsModalOpen(true)}
                    className="px-6 py-3 bg-[#F0A324] rounded-lg "
@@ -213,6 +213,7 @@ const DiseaseDetailsPage = () => {
                   fontSize: "16px",
                   lineHeight: "100%",
                   letterSpacing: "2%",
+                  width:"100%",
                 }}
               >
                 <span>

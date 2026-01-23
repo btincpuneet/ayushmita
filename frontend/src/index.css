@@ -14,7 +14,7 @@ body {
 @media (max-width: 768px) {
   .dots-wrapper { margin-top: 18px; }
   .slick-dots li .dot-outer { width: 16px; height: 16px; }
-  .slick-dots li .dot-inner { width: 4px; height: 4px; }
+  .slick-dots li .dot-inner { width: 6px; height: 6px; }
 }
 
 .promoslider-sections .slick-dots {

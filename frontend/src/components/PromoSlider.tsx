@@ -56,7 +56,7 @@ const PromoSlider: React.FC = () => {
 
   const settings: Settings = {
     centerMode: true,
-    centerPadding: isMobile ? "24px" : "0px",
+    centerPadding: isMobile ? "0px" : "0px",
     slidesToShow: isMobile ? 1 : Math.min(3, promos.length),
     slidesToScroll: 1,
     infinite: promos.length > 3,
@@ -101,14 +101,14 @@ const PromoSlider: React.FC = () => {
           >
             {promos.map((promo, idx) => (
               <div key={idx} className="images">
-                <div className="relative flex items-center">
+                <div className="relative w-full">
                   <div className="overflow-hidden flex-shrink-0 border-[10px] border-white rounded-2xl w-full">
                     <img
                       src={promo.image}
                       alt="slider"
                       title="slider"
                       className="rounded object-cover w-full"
-                      style={{ height: "199.15px" }}
+                      style={{ height: "199.15px"}}
                     />
                   </div>
                 </div>
@@ -133,7 +133,7 @@ const PromoSlider: React.FC = () => {
           width: 10px;
           height: 10px;
           border-radius: 9999px;
-          background: #fbbf24;
+          // background: #fbbf24;
           opacity: 0.7;
           display: flex;
           align-items: center;

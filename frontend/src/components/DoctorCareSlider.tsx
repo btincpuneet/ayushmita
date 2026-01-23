@@ -385,7 +385,7 @@ const DoctorCareSlider: React.FC = () => {
           width: 10px;
           height: 10px;
           border-radius: 9999px;
-          background: #fbbf24;
+          // background: #fbbf24;
           opacity: 0.7;
           display: flex;
           align-items: center;
