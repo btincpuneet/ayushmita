@@ -127,6 +127,11 @@ const getDoctors = async (req, res) => {
           attributes: ["id", "name"],
           through: { attributes: [] },
         },
+        {
+          model: Disease,
+          as: "speciality",
+          attributes: ["id", "name"], 
+        },
       ],
       order: [["id", "DESC"]],
     });
@@ -137,6 +142,7 @@ const getDoctors = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 const getActiveDoctors = async (req, res) => {
   try {

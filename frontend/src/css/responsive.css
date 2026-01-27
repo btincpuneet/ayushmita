@@ -383,7 +383,12 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     height: 370px;
 }
  
- 
+ @media (min-width: 500px) and (max-width: 1024px){
+#google_translate_element{
+  right: 100px !important;
+}
+
+ }
  
 /* responsive */
 @media (max-width: 768px) {
@@ -396,6 +401,7 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     justify-content: center;
     padding: 9px;
 }
+
  
     .rounded-xl.contact-us-main-content-cont {
         padding: 0;
@@ -521,6 +527,9 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     .flex.gap-4.mt-6.details-pgs-btn-1 {
         flex-direction: column;
     }
+    #google_translate_element{
+  right:88px !important;
+}
  
     button.px-6.py-3.bg-green-500.flex.gap-3.text-white.rounded-lg {
         justify-content: center;

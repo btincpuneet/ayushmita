@@ -1,5 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+interface BreadcrumbItem {
+  label: string;
+  link?: string;
+}
+
+interface TreatmentHeaderProps {
+  title?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  children?: React.ReactNode;
+  bgColor?: string;
+  breadcrumbColor?: string;
+  highlightColor?: string;
+}
 
 const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   title,
@@ -21,10 +34,16 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           {breadcrumbs.map((item, index) => (
             <span key={index}>
               <span
-                className={`${index === 0 ? "cursor-pointer hover:underline" : ""}`}
-                style={index !== 0 ? { color: highlightColor } : {}}
-                onClick={() => index === 0 && item.link && navigate(item.Link)}
+                className={`${index < breadcrumbs.length - 1
+                    ? "cursor-pointer hover:underline"
+                    : ""
+                  }`}
+                style={index === breadcrumbs.length - 1 ? { color: highlightColor } : {}}
+                onClick={() =>
+                  index < breadcrumbs.length - 1 && item.link && navigate(item.link)
+                }
               >
+
 
                 {item.label}
               </span>

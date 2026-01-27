@@ -12,6 +12,7 @@ import BookingForm from "../components/BookingForm";
 import useSeo from "../hooks/useSeo";
 
 import { API_BASE } from "../config/api";
+import ShareButton from "../components/Blog/ShareButton";
 
 interface Blog {
   id: number;
@@ -135,6 +136,8 @@ const BlogDetails: React.FC = () => {
 
     fetchRelated();
   }, [blog?.disease_id, blog?.id]);
+
+  
   const seoTitle =
     blog?.meta_title ||
     globalSEO?.seo_title ||
@@ -211,10 +214,13 @@ const BlogDetails: React.FC = () => {
                 </div>
               </div>
 
-              <button className="flex items-center bg-[#FBF6DD] gap-2 px-4 py-2 rounded-lg share-blog-btn">
+              {/* <button className="flex items-center bg-[#FBF6DD] gap-2 px-4 py-2 rounded-lg share-blog-btn">
                 <Share2 size={16} />
                 Share
-              </button>
+              </button> */}
+              <ShareButton />
+
+
             </div>
             <h1 className="page-details-section-item mb-6">
               {blog.title}

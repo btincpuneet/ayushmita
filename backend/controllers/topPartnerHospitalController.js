@@ -2,7 +2,7 @@ const { TopPartnerHospital } = require("../models/topPartnerHospital");
 const { Disease } = require("../models/disease");
 const fs = require("fs");
 const path = require("path");
-const { Op, fn, col } = require("sequelize");
+const { Op, fn, col , where} = require("sequelize");
 
 const uploadDir = path.join(__dirname, "../uploads/hospitals");
 if (!fs.existsSync(uploadDir)) {
@@ -217,8 +217,13 @@ const getHospitalBySlug = async (req, res) => {
 
 const getHospitalsByCity = async (req, res) => {
   try {
-    const { city } = req.params;
-    const { country } = req.query;
+    const city = decodeURIComponent(req.params.city || "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+
+    const country = decodeURIComponent(req.query.country || "")
+      .trim()
+      .toLowerCase();
 
     let hospitals = [];
 
@@ -226,9 +231,17 @@ const getHospitalsByCity = async (req, res) => {
     if (city && country) {
       hospitals = await TopPartnerHospital.findAll({
         where: {
-          city: city.trim(),
-          country: country.trim(),
-        },
+          [Op.and]: [
+            where(
+              fn("REPLACE", fn("LOWER", col("city")), " ", ""),
+              city
+            ),
+            where(
+              fn("LOWER", col("country")),
+              country
+            )
+          ]
+        }
       });
     }
 

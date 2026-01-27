@@ -38,7 +38,7 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
           {breadcrumbs.map((item, index) => (
             <span key={index}>
               <span
-                className={`cursor-pointer ${
+                className={`${
                   item.link ? "hover:underline" : ""
                 }`}
                 style={index !== 0 ? { color: "#F0A324" } : {}}

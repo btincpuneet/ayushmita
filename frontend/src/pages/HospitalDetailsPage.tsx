@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Links } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import Slider from "react-slick";
@@ -18,6 +18,7 @@ import {
   Check,
   ArrowRight,
   ArrowLeft,
+  Hospital,
 } from "lucide-react";
 import ModalAppointment from "../components/Treatment/ModalAppointment";
 
@@ -309,6 +310,7 @@ function ContentSection({ html }: { html: string }) {
 function SimilarHospitals({
   hospitals,
   isMobile,
+  city
 }: {
   hospitals: any[];
   isMobile: boolean;
@@ -335,31 +337,35 @@ function SimilarHospitals({
 
   return (
     <div className="mt-16">
-      <h2 className="mb-6 text-[28px] font-bold">Similar Hospitals</h2>
+      <h2 className="mb-6 text-[28px] font-bold"> Similar Hospitals in {city}
+      </h2>
 
       <Slider
         {...settings}
-        key={`${hospitals.length}-${isMobile}`} // 🔥 reload-safe
+        key={`${hospitals.length}-${isMobile}`}
       >
         {hospitals.map((h) => (
           <div key={h.id} className="pr-6">
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-              <img
-                src={
-                  h.image_url
-                    ? `${API_BASE}${h.image_url}`
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
-                }
-                alt={h.name}
-                className="h-[280px] w-full object-cover rounded-2xl"
-              />
-              <div className="p-4">
-                <h4 className="text-[20px] font-bold">{h.name}</h4>
-                <p className="mt-2 text-sm">
-                  {h.city}, {h.country}
-                </p>
+            <Link to={`/hospitals/${h.slug}`}>
+              <div className="bg-white shadow rounded-lg overflow-hidden">
+                <img
+                  src={
+                    h.image_url
+                      ? `${API_BASE}${h.image_url}`
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                  }
+                  alt={h.name}
+                  className="h-[280px] w-full object-cover rounded-2xl"
+                />
+                <div className="p-4">
+                  <h4 className="text-[20px] font-bold">{h.name}</h4>
+                  <p className="mt-2 text-sm">
+                    {h.city}, {h.country}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
+
           </div>
         ))}
       </Slider>
@@ -371,12 +377,14 @@ function SimilarHospitals({
 function DoctorsSection({
   doctors,
   isMobile,
+  city,
 }: {
   doctors: any[];
   isMobile: boolean;
+  city: string;
 }) {
-  if (!doctors.length) return null;
 
+  if (!doctors.length) return null;
   const settings = {
     dots: false,
     arrows: !isMobile,
@@ -398,7 +406,9 @@ function DoctorsSection({
 
   return (
     <div className="mt-16">
-      <h2 className="mb-6 text-[28px] font-bold">Doctors</h2>
+      <h2 className="mb-6 text-[28px] font-bold">
+        Similar Doctors in {city}
+      </h2>
 
       <Slider
         {...settings}
@@ -406,21 +416,24 @@ function DoctorsSection({
       >
         {doctors.map((d) => (
           <div key={d.id} className="pr-6 mb-20">
-            <div className="bg-white shadow rounded-lg text-center">
-              <img
-                src={
-                  d.image_url
-                    ? `${API_BASE}${d.image_url}`
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
-                }
-                alt={d.name}
-                className="w-full h-[233px] object-cover mb-3 rounded-2xl"
-              />
-              <h4 className="text-[20px] font-bold">{d.name}</h4>
-              <p className="text-[#F0A324] font-semibold">
-                {d.speciality?.name}
-              </p>
-            </div>
+            <Link to={`/doctor/${d.slug}`}>
+              <div className="bg-white shadow rounded-lg text-center">
+                <img
+                  src={
+                    d.image_url
+                      ? `${API_BASE}${d.image_url}`
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+                  }
+                  alt={d.name}
+                  className="w-full h-[233px] object-cover mb-3 rounded-2xl"
+                />
+                <h4 className="text-[20px] font-bold">{d.name}</h4>
+                <p className="text-[#F0A324] font-bold pb-3">
+                  {d.speciality?.name || "Specialist"}
+                </p>
+
+              </div>
+            </Link>
           </div>
         ))}
       </Slider>
@@ -455,9 +468,13 @@ export default function HospitalDetailsPage() {
   useEffect(() => {
     if (!hospital?.id || !hospital?.city || !hospital?.country) return;
 
+    const citySlug = hospital.city
+      .replace(/%20/g, "")   
+      .replace(/\s+/g, ""); 
+
     axios
       .get(
-        `${API_BASE}/api/hospitals/by-city/${hospital.city}?country=${hospital.country}`
+        `${API_BASE}/api/hospitals/by-city/${citySlug}?country=${encodeURIComponent(hospital.country)}`
       )
       .then((res) => {
         if (res.data?.success && Array.isArray(res.data.data)) {
@@ -474,9 +491,26 @@ export default function HospitalDetailsPage() {
 
 
   useEffect(() => {
-    if (!hospital?.specialities?.length) return;
+    if (!hospital) return;
 
-    const specialityId = hospital.specialities[0].id;
+    if (!hospital.specialities || hospital.specialities.length === 0) {
+      axios
+        .get(`${API_BASE}/api/doctors`)
+        .then((res) => {
+          if (res.data?.success) {
+            setDoctors(res.data.data || []);
+          }
+        })
+        .catch((err) => {
+          console.error("All doctors fetch error:", err);
+        });
+
+      return;
+    }
+
+    const specialityId = hospital.specialities[0]?.id;
+
+    if (!specialityId) return;
 
     axios
       .get(`${API_BASE}/api/doctors/by-speciality/${specialityId}`)
@@ -488,7 +522,9 @@ export default function HospitalDetailsPage() {
       .catch((err) => {
         console.error("Doctors fetch error:", err);
       });
+
   }, [hospital]);
+
 
   if (!hospital) return null;
 
@@ -525,10 +561,11 @@ export default function HospitalDetailsPage() {
         </div>
 
         {similarHospitals.length > 0 && (
-          <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} />
+          <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} city={hospital.city}
+          />
         )}
 
-        <DoctorsSection doctors={doctors} isMobile={isMobile} />
+        <DoctorsSection doctors={doctors} isMobile={isMobile} city={hospital.city} />
 
       </div>
       <ModalAppointment

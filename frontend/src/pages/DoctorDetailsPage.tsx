@@ -71,27 +71,41 @@ const PrevArrow: React.FC = () => <span />;
 
 const DoctorDetailsPage: React.FC = () => {
 
-    const rankSimilarDoctors = (baseDoctor: Doctor, doctors: Doctor[]) => {
-        return doctors
-            .map((d) => {
-                let score = 0;
+   const rankSimilarDoctors = (baseDoctor: Doctor, doctors: Doctor[]) => {
 
-                if (
-                    d.speciality?.name &&
-                    baseDoctor.speciality?.name &&
-                    d.speciality.name === baseDoctor.speciality.name
-                ) {
-                    score += 3;
-                }
+  // ✅ CASE 1: Base doctor has NO
+  //  speciality
+  if (!baseDoctor.speciality?.name) {
+    return doctors;
+  }
 
-                if (d.country === baseDoctor.country) score += 2;
-                if (d.city === baseDoctor.city) score += 1;
+  const ranked = doctors.map((d) => {
+    let score = 0;
 
-                return { ...d, score };
-            })
-            .filter((d: any) => d.score > 0)
-            .sort((a: any, b: any) => b.score - a.score);
-    };
+    if (d.speciality?.name === baseDoctor.speciality?.name) {
+      score += 3;
+    }
+
+    if (d.country === baseDoctor.country) score += 2;
+    if (d.city === baseDoctor.city) score += 1;
+
+    return { ...d, score };
+  });
+
+  // ✅ CASE 2: No similar doctors found → show all
+  const hasSimilar = ranked.some(d => d.score > 0);
+
+  if (!hasSimilar) {
+    return doctors;
+  }
+
+  // ✅ CASE 3: Show only ranked doctors
+  return ranked
+    .filter(d => d.score > 0)
+    .sort((a, b) => b.score - a.score);
+};
+
+
 
 
     const { slug } = useParams();
@@ -152,6 +166,8 @@ const DoctorDetailsPage: React.FC = () => {
                 setSimilarDoctors(rankedDoctors);
 
                 if (baseDoctor.city) {
+
+
                     const hospitalRes = await axios.get(
                         `${API_BASE}/api/hospitals/by-city/${baseDoctor.city}`,
                         {
@@ -264,11 +280,11 @@ const DoctorDetailsPage: React.FC = () => {
 
     const imageAlt =
         doctor.image_alt ||
-        `${doctor.name} - ${doctor.specialty || "Doctor"} in ${doctor.city}`;
+        `${doctor.name} - ${doctor.speciality || "Doctor"} in ${doctor.city}`;
 
     const imageTitle =
         doctor.image_title ||
-        `${doctor.name} - ${doctor.specialty || "Doctor"}`;
+        `${doctor.name} - ${doctor.speciality || "Doctor"}`;
 
     return (
         <>
@@ -346,7 +362,7 @@ const DoctorDetailsPage: React.FC = () => {
                                                     fontSize: "14px",
                                                     lineHeight: "26px",
                                                     letterSpacing: "0%",
-                                                }}>{doctor.speciality?.name || "Specialist"}
+                                                }}>{doctor.speciality?.name || "Not Mention"}
                                                 </strong>
                                             </span>
                                         </div>
@@ -478,7 +494,7 @@ const DoctorDetailsPage: React.FC = () => {
                             <Slider {...doctorSlider} key={`${similarDoctors.length}-${isMobile}`}>
                                 {similarDoctors.map((d) => (
                                     <div key={d.id} className="px-3">
-                                        <Link to={`/doctors/${d.slug}`}>
+                                        <Link to={`/doctor/${d.slug}`}>
                                             <div className="bg-white rounded-xl shadow text-center">
                                                 <img
                                                     src={d.image_url ? `${API_BASE}${d.image_url}` : image}
@@ -518,34 +534,7 @@ const DoctorDetailsPage: React.FC = () => {
                             </h2>
 
                             <div className="relative">
-                                {/* {similarHospitals.length > 0 && (
-                                    <Slider {...hospitalSlider}>
-                                        {similarHospitals.map((h) => (
-                                            <div key={h.id} className="px-3 related-cards-1">
-                                                <Link to={`/hospital/${h.slug}`}>
-                                                    <div className="rounded-xl overflow-hidden shadow">
-                                                        <img
-                                                            src={
-                                                                h.image_url
-                                                                    ? `${API_BASE}${h.image_url}`
-                                                                    : "https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
-                                                            }
-                                                            alt={h.name}
-                                                            className="h-[280px] w-full object-cover rounded-2xl"
-                                                        />
 
-                                                        <div className="p-4">
-                                                            <h3 className="text-[20px] font-bold">{h.name}</h3>
-                                                            <p className="mt-2 text-sm">
-                                                                {h.city}, {h.country}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            </div>
-                                        ))}
-                                    </Slider>
-                                )} */}
                                 {similarHospitals.length > 0 && (
                                     <Slider
                                         {...hospitalSlider}
@@ -553,7 +542,7 @@ const DoctorDetailsPage: React.FC = () => {
                                     >
                                         {similarHospitals.map((h) => (
                                             <div key={h.id} className="px-3 related-cards-1">
-                                                <Link to={`/hospital/${h.slug}`}>
+                                                <Link to={`/hospitals/${h.slug}`}>
                                                     <div className="rounded-xl overflow-hidden shadow">
                                                         <img
                                                             src={
