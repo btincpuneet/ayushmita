@@ -13,13 +13,15 @@ import {
   Calendar,
   Bed,
   Building2,
-  Map,
+  
   Globe,
   Check,
   ArrowRight,
   ArrowLeft,
   Hospital,
 } from "lucide-react";
+import { Map as MapIcon } from "lucide-react";
+
 import ModalAppointment from "../components/Treatment/ModalAppointment";
 
 interface ArrowProps {
@@ -208,7 +210,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
               }}
             >
 
-              <Map size={18} className="text-[#F0A324]" />
+              <MapIcon size={18} className="text-[#F0A324]" />
               City: <b
                 style={{
                   fontFamily: "Ubuntu, sans-serif",
@@ -490,41 +492,82 @@ export default function HospitalDetailsPage() {
   }, [hospital]);
 
 
-  useEffect(() => {
-    if (!hospital) return;
+  // useEffect(() => {
+  //   if (!hospital) return;
 
-    if (!hospital.specialities || hospital.specialities.length === 0) {
-      axios
-        .get(`${API_BASE}/api/doctors`)
-        .then((res) => {
-          if (res.data?.success) {
-            setDoctors(res.data.data || []);
-          }
-        })
-        .catch((err) => {
-          console.error("All doctors fetch error:", err);
-        });
+  //   if (!hospital.specialities || hospital.specialities.length === 0) {
+  //     axios
+  //       .get(`${API_BASE}/api/doctors`)
+  //       .then((res) => {
+  //         if (res.data?.success) {
+  //           setDoctors(res.data.data || []);
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.error("All doctors fetch error:", err);
+  //       });
 
-      return;
-    }
+  //     return;
+  //   }
 
-    const specialityId = hospital.specialities[0]?.id;
+  //   const specialityId = hospital.specialities[0]?.id;
 
-    if (!specialityId) return;
+  //   if (!specialityId) return;
 
+  //   axios
+  //     .get(`${API_BASE}/api/doctors/by-speciality/${specialityId}`)
+  //     .then((res) => {
+  //       if (res.data?.success) {
+  //         setDoctors(res.data.data || []);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error("Doctors fetch error:", err);
+  //     });
+
+  // }, [hospital]);
+
+useEffect(() => {
+  if (!hospital) return;
+
+  // ❗ Agar speciality hi nahi hai → sab doctors
+  if (!hospital.specialities || hospital.specialities.length === 0) {
     axios
-      .get(`${API_BASE}/api/doctors/by-speciality/${specialityId}`)
+      .get(`${API_BASE}/api/doctors`)
       .then((res) => {
         if (res.data?.success) {
           setDoctors(res.data.data || []);
         }
       })
-      .catch((err) => {
-        console.error("Doctors fetch error:", err);
-      });
+      .catch(console.error);
+    return;
+  }
 
-  }, [hospital]);
+  const specialityIds = hospital.specialities.map((s: any) => s.id);
 
+  Promise.all(
+    specialityIds.map((id: number) =>
+      axios.get(`${API_BASE}/api/doctors/by-speciality/${id}`)
+    )
+  )
+    .then((responses) => {
+      // 🔹 saare doctors ko ek array me merge karo
+      const allDoctors = responses.flatMap(
+        (res) => res.data?.data || []
+      );
+
+      // 🔹 duplicate doctors hatao (agar same doctor multiple speciality me ho)
+      const uniqueDoctors = Array.from(
+        new Map(allDoctors.map((d: any) => [d.id, d])).values()
+      );
+
+      setDoctors(uniqueDoctors);
+    })
+    .catch((err) => {
+      console.error("Doctors fetch error:", err);
+    });
+
+}, [hospital]);
 
   if (!hospital) return null;
 
