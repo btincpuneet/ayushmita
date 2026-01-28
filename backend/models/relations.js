@@ -4,6 +4,7 @@ const { Doctor } = require("./doctor");
 const { TopPartnerHospital } = require("./topPartnerHospital");
 const { RelationHospitalDoctor } = require("./relationHospitalDoctor");
 const { TopPartnerHospitalSpecialities } = require("./topPartnerHospitalSpecialities");
+const { FAQ } = require("./faq");
 
 Disease.hasMany(Treatment, {
   as: "treatments",
@@ -55,12 +56,30 @@ Disease.belongsToMany(TopPartnerHospital, {
   otherKey: "top_partner_hospital_id",
 });
 
+FAQ.belongsTo(TopPartnerHospital, {
+  foreignKey: "hospital_id",
+  as: "hospital",
+});
+
+FAQ.belongsTo(Doctor, {
+  foreignKey: "doctor_id",
+  as: "doctor",
+});
+
+TopPartnerHospital.hasMany(FAQ, {
+  foreignKey: "hospital_id",
+});
+
+Doctor.hasMany(FAQ, {
+  foreignKey: "doctor_id",
+});
 
 
 module.exports = {
   Disease,
   Treatment,
   Doctor,
+  FAQ,
   TopPartnerHospital,
   RelationHospitalDoctor,
   TopPartnerHospitalSpecialities,

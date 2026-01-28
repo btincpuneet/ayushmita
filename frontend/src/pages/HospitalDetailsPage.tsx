@@ -13,7 +13,7 @@ import {
   Calendar,
   Bed,
   Building2,
-  
+
   Globe,
   Check,
   ArrowRight,
@@ -23,6 +23,7 @@ import {
 import { Map as MapIcon } from "lucide-react";
 
 import ModalAppointment from "../components/Treatment/ModalAppointment";
+import FaqWithImage from "../components/FaqWithImage";
 
 interface ArrowProps {
   onClick?: () => void;
@@ -471,8 +472,8 @@ export default function HospitalDetailsPage() {
     if (!hospital?.id || !hospital?.city || !hospital?.country) return;
 
     const citySlug = hospital.city
-      .replace(/%20/g, "")   
-      .replace(/\s+/g, ""); 
+      .replace(/%20/g, "")
+      .replace(/\s+/g, "");
 
     axios
       .get(
@@ -492,82 +493,47 @@ export default function HospitalDetailsPage() {
   }, [hospital]);
 
 
-  // useEffect(() => {
-  //   if (!hospital) return;
 
-  //   if (!hospital.specialities || hospital.specialities.length === 0) {
-  //     axios
-  //       .get(`${API_BASE}/api/doctors`)
-  //       .then((res) => {
-  //         if (res.data?.success) {
-  //           setDoctors(res.data.data || []);
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.error("All doctors fetch error:", err);
-  //       });
+  useEffect(() => {
+    if (!hospital) return;
 
-  //     return;
-  //   }
+    if (!hospital.specialities || hospital.specialities.length === 0) {
+      axios
+        .get(`${API_BASE}/api/doctors`)
+        .then((res) => {
+          if (res.data?.success) {
+            setDoctors(res.data.data || []);
+          }
+        })
+        .catch(console.error);
+      return;
+    }
 
-  //   const specialityId = hospital.specialities[0]?.id;
+    const specialityIds = hospital.specialities.map((s: any) => s.id);
 
-  //   if (!specialityId) return;
-
-  //   axios
-  //     .get(`${API_BASE}/api/doctors/by-speciality/${specialityId}`)
-  //     .then((res) => {
-  //       if (res.data?.success) {
-  //         setDoctors(res.data.data || []);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.error("Doctors fetch error:", err);
-  //     });
-
-  // }, [hospital]);
-
-useEffect(() => {
-  if (!hospital) return;
-
-  // ❗ Agar speciality hi nahi hai → sab doctors
-  if (!hospital.specialities || hospital.specialities.length === 0) {
-    axios
-      .get(`${API_BASE}/api/doctors`)
-      .then((res) => {
-        if (res.data?.success) {
-          setDoctors(res.data.data || []);
-        }
-      })
-      .catch(console.error);
-    return;
-  }
-
-  const specialityIds = hospital.specialities.map((s: any) => s.id);
-
-  Promise.all(
-    specialityIds.map((id: number) =>
-      axios.get(`${API_BASE}/api/doctors/by-speciality/${id}`)
+    Promise.all(
+      specialityIds.map((id: number) =>
+        axios.get(`${API_BASE}/api/doctors/by-speciality/${id}`)
+      )
     )
-  )
-    .then((responses) => {
-      // 🔹 saare doctors ko ek array me merge karo
-      const allDoctors = responses.flatMap(
-        (res) => res.data?.data || []
-      );
+      .then((responses) => {
+        // 🔹 saare doctors ko ek array me merge karo
+        const allDoctors = responses.flatMap(
+          (res) => res.data?.data || []
+        );
 
-      // 🔹 duplicate doctors hatao (agar same doctor multiple speciality me ho)
-      const uniqueDoctors = Array.from(
-        new Map(allDoctors.map((d: any) => [d.id, d])).values()
-      );
+        // 🔹 duplicate doctors hatao (agar same doctor multiple speciality me ho)
+        const uniqueDoctors = Array.from(
+          new Map(allDoctors.map((d: any) => [d.id, d])).values()
+        );
 
-      setDoctors(uniqueDoctors);
-    })
-    .catch((err) => {
-      console.error("Doctors fetch error:", err);
-    });
+        setDoctors(uniqueDoctors);
+      })
+      .catch((err) => {
+        console.error("Doctors fetch error:", err);
+      });
 
-}, [hospital]);
+  }, [hospital]);
 
   if (!hospital) return null;
 
@@ -602,6 +568,7 @@ useEffect(() => {
             <BookingForm />
           </div>
         </div>
+        <FaqWithImage faqType="hospital" />
 
         {similarHospitals.length > 0 && (
           <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} city={hospital.city}

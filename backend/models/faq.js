@@ -25,6 +25,21 @@ const FAQ = sequelize.define(
       type: DataTypes.TINYINT,
       defaultValue: 1, 
     },
+     faq_type: {
+      type: DataTypes.ENUM("home", "hospital", "doctor"),
+      allowNull: false,
+      defaultValue: "home",
+    },
+
+    hospital_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+
+    doctor_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     timestamps: true,       

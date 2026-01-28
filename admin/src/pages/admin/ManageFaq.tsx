@@ -6,7 +6,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -15,7 +14,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Plus, Edit, Trash, X } from "lucide-react";
+import { X } from "lucide-react";
 import { API_BASE } from "../../config/api";
 import { Button } from "@/components/ui/button";
 import { authHeader } from "../../utils/auth";
@@ -28,6 +27,25 @@ interface FAQ {
   answer: string;
   sort_order: number;
   status: number;
+  faq_type: "home" | "hospital" | "doctor";
+  hospital_id?: number | null;
+  doctor_id?: number | null;
+
+  hospital?: {
+    id: number;
+    name: string;
+  } | null;
+
+  doctor?: {
+    id: number;
+    name: string;
+  } | null;
+}
+
+
+interface DropdownItem {
+  id: number;
+  name: string;
 }
 
 function SortableRow({
@@ -43,10 +61,7 @@ function SortableRow({
   return (
     <tr
       ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-      }}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
       {...attributes}
       {...listeners}
       className="border-b cursor-move bg-white"
@@ -58,13 +73,30 @@ function SortableRow({
 
 export default function ManageFaq() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [hospitals, setHospitals] = useState<DropdownItem[]>([]);
+  const [doctors, setDoctors] = useState<DropdownItem[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<FAQ | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const showApiError = (error: any, fallback: string) => {
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      error?.message ||
+      fallback;
+
+    console.error("API ERROR:", error);
+    setApiError(message);
+  };
 
   const [form, setForm] = useState({
     question: "",
     answer: "",
     status: 1,
+    faq_type: "home" as "home" | "hospital" | "doctor",
+    hospital_id: null as number | null,
+    doctor_id: null as number | null,
   });
 
   const sensors = useSensors(
@@ -72,39 +104,87 @@ export default function ManageFaq() {
   );
 
   const loadFaqs = async () => {
-    const res = await axios.get(`${API_URL}/get-active-faqs`);
-    setFaqs(res.data);
+    try {
+      setLoading(true);
+      setApiError(null);
+
+      const res = await axios.get(`${API_URL}/get-active-faqs`, {
+        headers: authHeader(),
+      });
+
+      setFaqs(res.data.data);
+    } catch (error) {
+      showApiError(error, "Failed to load FAQs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+  const loadHospitals = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/faqs/hospitals/dropdown`, {
+        headers: authHeader(),
+      });
+      setHospitals(res.data.data);
+    } catch (error) {
+      showApiError(error, "Failed to load hospitals");
+    }
+  };
+
+  const loadDoctors = async () => {
+    const res = await axios.get(`${API_URL}/faqs/doctors/dropdown`);
+    setDoctors(res.data.data);
   };
 
   useEffect(() => {
     loadFaqs();
+    loadHospitals();
+    loadDoctors();
   }, []);
 
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = faqs.findIndex((f) => String(f.id) === active.id);
-    const newIndex = faqs.findIndex((f) => String(f.id) === over.id);
+    const oldIndex = faqs.findIndex(f => String(f.id) === active.id);
+    const newIndex = faqs.findIndex(f => String(f.id) === over.id);
 
-    const reordered = arrayMove(faqs, oldIndex, newIndex).map(
-      (f, index) => ({ ...f, sort_order: index + 1 })
-    );
+    const reordered = arrayMove(faqs, oldIndex, newIndex).map((f, i) => ({
+      ...f,
+      sort_order: i + 1,
+    }));
 
     setFaqs(reordered);
 
-    await Promise.all(
-      reordered.map((f) =>
-        axios.put(`${API_URL}/faqs/${f.id}`, {
-          sort_order: f.sort_order,
-        })
-      )
-    );
+    try {
+      await Promise.all(
+        reordered.map(f =>
+          axios.put(
+            `${API_URL}/faqs/${f.id}`,
+            { sort_order: f.sort_order },
+            { headers: authHeader() }
+          )
+        )
+      );
+    } catch (error) {
+      showApiError(error, "Failed to update FAQ order");
+      loadFaqs(); // rollback
+    }
   };
+
 
   const handleAdd = () => {
     setEditing(null);
-    setForm({ question: "", answer: "", status: 1 });
+    setForm({
+      question: "",
+      answer: "",
+      status: 1,
+      faq_type: "home",
+      hospital_id: null,
+      doctor_id: null,
+    });
     setOpen(true);
   };
 
@@ -114,33 +194,52 @@ export default function ManageFaq() {
       question: faq.question,
       answer: faq.answer,
       status: faq.status,
+      faq_type: faq.faq_type,
+      hospital_id: faq.hospital_id ?? null,
+      doctor_id: faq.doctor_id ?? null,
     });
     setOpen(true);
   };
 
   const handleSubmit = async () => {
-    if (editing) {
-      await axios.put(`${API_URL}/faqs/${editing.id}`, form, { headers: authHeader() });
-    } else {
-      await axios.post(`${API_URL}/faqs`, {
-        ...form,
-        sort_order: faqs.length + 1,
-      }, {
-        headers: authHeader(),
-      });
-    }
+    try {
+      setApiError(null);
 
-    setOpen(false);
-    loadFaqs();
+      const payload = {
+        ...form,
+        sort_order: editing ? undefined : faqs.length + 1,
+      };
+
+      if (editing) {
+        await axios.put(`${API_URL}/faqs/${editing.id}`, payload, {
+          headers: authHeader(),
+        });
+      } else {
+        await axios.post(`${API_URL}/faqs`, payload, {
+          headers: authHeader(),
+        });
+      }
+
+      setOpen(false);
+      loadFaqs();
+    } catch (error) {
+      showApiError(error, "Failed to save FAQ");
+    }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm("Delete FAQ?")) return;
-    await axios.delete(`${API_URL}/faqs/${id}`, {
-      headers: authHeader(),
-    });
-    loadFaqs();
+
+    try {
+      await axios.delete(`${API_URL}/faqs/${id}`, {
+        headers: authHeader(),
+      });
+      loadFaqs();
+    } catch (error) {
+      showApiError(error, "Failed to delete FAQ");
+    }
   };
+
 
   return (
     <div className="p-6">
@@ -153,6 +252,15 @@ export default function ManageFaq() {
           + Add FAQ
         </button>
       </div>
+      {apiError && (
+        <div className="mb-4 rounded bg-red-100 text-red-700 px-4 py-2">
+          {apiError}
+        </div>
+      )}
+
+      {loading && (
+        <p className="text-gray-500 mb-4">Loading FAQs...</p>
+      )}
 
       <div className="bg-white rounded shadow">
         <DndContext
@@ -167,25 +275,52 @@ export default function ManageFaq() {
             <table className="w-full">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="p-3 text-left">Order</th>
-                  <th className="p-3 text-left">Question</th>
-                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3">Order</th>
+                  <th className="p-3">Question</th>
+                  <th className="p-3">Type</th>
+                  <th className="p-3">Linked To</th>
+                  <th className="p-3">Status</th>
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
+
               <tbody>
                 {faqs.map((faq) => (
                   <SortableRow key={faq.id} faq={faq}>
                     <td className="p-3">{faq.sort_order}</td>
+
                     <td className="p-3">{faq.question}</td>
+
+                    <td className="p-3 capitalize font-medium">
+                      {faq.faq_type}
+                    </td>
+
+                    <td className="p-3">
+                      {faq.faq_type === "hospital" && (
+                        <span className="text-blue-600">
+                          {faq.hospital?.name || "—"}
+                        </span>
+                      )}
+
+                      {faq.faq_type === "doctor" && (
+                        <span className="text-green-600">
+                          {faq.doctor?.name || "—"}
+                        </span>
+                      )}
+
+                      {faq.faq_type === "home" && (
+                        <span className="text-gray-400">Home Page</span>
+                      )}
+                    </td>
+
                     <td className="p-3">
                       {faq.status === 1 ? "Active" : "Inactive"}
                     </td>
-                    <td className="p-3 text-right space-x-3">
+
+                    <td className="p-3 text-right space-x-2">
                       <Button size="sm" onClick={() => handleEdit(faq)}>
                         Edit
                       </Button>
-
                       <Button
                         size="sm"
                         variant="destructive"
@@ -197,6 +332,7 @@ export default function ManageFaq() {
                   </SortableRow>
                 ))}
               </tbody>
+
             </table>
           </SortableContext>
         </DndContext>
@@ -231,6 +367,57 @@ export default function ManageFaq() {
                 setForm({ ...form, answer: e.target.value })
               }
             />
+
+            <select
+              className="border w-full p-2 mb-2"
+              value={form.faq_type}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  faq_type: e.target.value as any,
+                  hospital_id: null,
+                  doctor_id: null,
+                })
+              }
+            >
+              <option value="home">Home</option>
+              <option value="hospital">Hospital</option>
+              <option value="doctor">Doctor</option>
+            </select>
+
+            {form.faq_type === "hospital" && (
+              <select
+                className="border w-full p-2 mb-2"
+                value={form.hospital_id ?? ""}
+                onChange={(e) =>
+                  setForm({ ...form, hospital_id: Number(e.target.value) })
+                }
+              >
+                <option value="">Select Hospital</option>
+                {hospitals.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {form.faq_type === "doctor" && (
+              <select
+                className="border w-full p-2 mb-2"
+                value={form.doctor_id ?? ""}
+                onChange={(e) =>
+                  setForm({ ...form, doctor_id: Number(e.target.value) })
+                }
+              >
+                <option value="">Select Doctor</option>
+                {doctors.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            )}
 
             <select
               className="border w-full p-2 mb-4"

@@ -7,7 +7,7 @@ import PromoSlider from "../components/PromoSlider";
 import MedicalTourism from "../components/MedicalTourism";
 import FindBySpecialisation from "../components/FindBySpecialisation";
 import TopPartnerHospitals from "../components/TopPartnerHospitals";
-import  StatsSection  from "../components/StatsSection";
+import StatsSection from "../components/StatsSection";
 import DoctorCareSlider from "../components/DoctorCareSlider";
 import TestimonialSlider from "../components/TestimonialSlider";
 import FaqWithImage from "../components/FaqWithImage";
@@ -41,7 +41,7 @@ const Home: React.FC = () => {
           <StatsSection />
           <DoctorCareSlider />
           <TestimonialSlider />
-          <FaqWithImage />
+          <FaqWithImage faqType="home" />
         </main>
         <Footer />
       </div>

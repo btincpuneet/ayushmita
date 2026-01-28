@@ -6,24 +6,10 @@ import Logo from "../assets/logo.png";
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [appointmentButton, setAppointmentButton] = useState<{
     name: string;
     linkUrl: string;
   } | null>(null);
-
-  /* ================= Google Translate helpers ================= */
-  const hideGoogleTranslate = () => {
-    const el = document.getElementById("google_translate_element");
-    if (el) el.style.display = "none";
-  };
-
-  const showGoogleTranslate = () => {
-    const el = document.getElementById("google_translate_element");
-    if (el) el.style.display = "block";
-  };
-  /* ============================================================ */
 
   const loadCategories = async () => {
     try {
@@ -73,23 +59,18 @@ const Header: React.FC = () => {
             <img src={Logo} alt="Company Logo" className="w-25" />
           </Link>
 
-          {/* Desktop Menu */}
-          <div
-            className="hidden lg:flex flex-1 justify-start"
-            style={{ marginLeft: "12%" }}
-          >
+          <div className="hidden lg:flex flex-1 justify-start" style={{ marginLeft: "12%" }}>
             <ul className="flex gap-[40px] items-center">
               {navItems.map((item) => (
                 <li key={item.id} className="relative min-w-max">
                   <NavLink
                     to={item.url}
                     className={({ isActive }) =>
-                      `relative pb-1 ${
-                        isActive ? "text-[#F0A324]" : "text-[#333333]"
+                      `relative pb-1 ${isActive ? "text-[#F0A324]" : "text-[#333333]"
                       }
-                      after:content-[''] after:absolute after:left-0 after:-bottom-1
-                      after:h-[2px] after:bg-[#F0A324] after:transition-all after:duration-300
-                      ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`
+            after:content-[''] after:absolute after:left-0 after:-bottom-1
+            after:h-[2px] after:bg-[#F0A324] after:transition-all after:duration-300
+            ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`
                     }
                     style={{
                       fontFamily: "Ubuntu, sans-serif",
@@ -105,25 +86,24 @@ const Header: React.FC = () => {
               {appointmentButton && (
                 <NavLink
                   to={appointmentButton.linkUrl}
-                  onClick={hideGoogleTranslate}
                   className={({ isActive }) =>
-                    `px-5 py-3 rounded-lg min-w-max ${
-                      isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
+                    `px-5 py-3 rounded-lg min-w-max  ${isActive ? "bg-[#d98f1f]" : "bg-[#F0A324]"
                     }`
                   }
                   style={{
                     fontFamily: "Poppins, sans-serif",
                     fontWeight: 500,
                     fontSize: "14px",
+                    letterSpacing: "2%",
                   }}
                 >
                   {appointmentButton.name}
                 </NavLink>
               )}
+
             </ul>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-2">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -133,8 +113,6 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Mobile Bottom Appointment Button */}
         {appointmentButton && (
           <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
             <Link
@@ -146,7 +124,6 @@ const Header: React.FC = () => {
           </div>
         )}
 
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="lg:hidden border-t border-gray-200 pb-4">
             <nav className="px-4 pt-4 space-y-2">

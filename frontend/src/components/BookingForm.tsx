@@ -149,7 +149,7 @@ const BookingForm: React.FC = () => {
  
   return (
     <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full top-6 sider-form-section">
-      <h3
+      <div
         className="text-[#FFFFFF] text-center"
         style={{
           fontFamily: "Ubuntu, sans-serif",
@@ -159,7 +159,7 @@ const BookingForm: React.FC = () => {
         }}
       >
         Book Your Free Consultation
-      </h3>
+      </div>
  
       <p
         className="text-[#FFFFFF] text-center mt-1 mb-6"

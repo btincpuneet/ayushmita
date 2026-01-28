@@ -268,9 +268,9 @@ const BlogDetails: React.FC = () => {
 
             {recentBlogs.length > 0 && (
               <div className="bg-[#F6F7F9] rounded-lg p-5">
-                <h3 className="mb-4 related-post-section-blog">
+                <div className="mb-4 related-post-section-blog">
                   Related Posts
-                </h3>
+                </div>
 
                 <ul className="space-y-3 ">
                   {recentBlogs.map((post) => (

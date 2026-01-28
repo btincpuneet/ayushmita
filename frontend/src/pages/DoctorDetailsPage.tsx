@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
 import useSeo from "../hooks/useSeo";
+import FaqWithImage from "../components/FaqWithImage";
 interface Speciality {
     name: string;
 }
@@ -475,6 +476,8 @@ const DoctorDetailsPage: React.FC = () => {
                         </div>
                     </Container>
                 </section>
+                <FaqWithImage faqType="doctor" />
+
 
                 <section className="py-6 similar-doctor-section-docdetails-page">
                     <Container>
