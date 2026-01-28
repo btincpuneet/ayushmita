@@ -49,7 +49,7 @@ interface Doctor {
 const emptyForm = {
   name: "",
   title: "",
-  speciality_id: "",
+  speciality_id: null as number | null,
   country: "",
   city: "",
   experience: "",
@@ -95,7 +95,6 @@ const ManageDoctors = () => {
   const [cities, setCities] = useState<string[]>([]);
   const DOCTOR_API = `${API_BASE}/api/doctors`;
   const HOSPITAL_API = `${API_BASE}/api/hospitals`;
-  const COUNTRY_API = `${API_BASE}/api/countries`;
   const CITY_API = `${API_BASE}/api/cities`;
   const [countrySearch, setCountrySearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
@@ -280,7 +279,7 @@ const ManageDoctors = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Manage Doctors</h1>
+        <h1 className="text-2xl font-bold ">Manage Doctors</h1>
         <Button onClick={handleAdd}>+ Add Doctor</Button>
       </div>
 
@@ -358,9 +357,9 @@ const ManageDoctors = () => {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-7xl">
-          <div className="max-h-[70vh] overflow-y-auto pr-2">
+          <div className="max-h-[70vh] overflow-y-auto p-6 ">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="mb-6">
                 {editing ? "Edit Doctor" : "Add Doctor"}
               </DialogTitle>
             </DialogHeader>
@@ -683,7 +682,7 @@ const ManageDoctors = () => {
             </div>
 
             <DialogFooter>
-              <Button onClick={handleSubmit}>
+              <Button onClick={handleSubmit} className="mt-4">
                 {editing ? "Update Doctor" : "Create Doctor"}
               </Button>
             </DialogFooter>

@@ -260,7 +260,7 @@ const ManageDiseases = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-6 max-h-[75vh] overflow-y-auto pr-2">
+          <div className="grid gap-6 max-h-[75vh] overflow-y-auto p-6">
 
             {/* Basic Info */}
             <div className="grid grid-cols-2 gap-4">

@@ -155,13 +155,13 @@ const ModalAppointment: React.FC<ModalAppointmentProps> = ({
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
       <div className="bg-white w-full max-w-lg shadow-xl relative rounded-2xl">
         <button
-          className="absolute top-3 right-4 text-gray-500 hover:text-black text-xl"
+          className="absolute top-3 right-4 text-gray-500 hover:text-black text-3xl"
           onClick={onClose}
         >
           ×
         </button>
 
-        <h2 className="text-xl font-semibold bg-[#F6F7F9] px-4 py-4 rounded-t-2xl">
+        <h2 className="text-xl font-semibold bg-[#F6F7F9] px-4 py-4  rounded-t-2xl book-btn-item-title">
           Book An Appointment For Treatment
         </h2>
 

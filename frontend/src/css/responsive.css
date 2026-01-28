@@ -395,6 +395,10 @@ img.rounded-xl.w-full.max-w-\[370px\].object-cover.treatment-list-image {
     .max-w-7xl.mx-auto.px-5.py-10.md\:py-10.lg\:py-10.happiness {
         padding: 0;
     }
+    .book-btn-item-title{
+      font-size: 18px;
+    }
+   
     button.chat-now-btn {
     width: 100%;
     margin-bottom: 20px;

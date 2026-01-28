@@ -2,10 +2,13 @@ import { Link, NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { API_BASE } from "../config/api";
 import Logo from "../assets/logo.png";
+import ModalAppointment from "./Treatment/ModalAppointment";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [navItems, setNavItems] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [appointmentButton, setAppointmentButton] = useState<{
     name: string;
     linkUrl: string;
@@ -115,12 +118,20 @@ const Header: React.FC = () => {
         </div>
         {appointmentButton && (
           <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
-            <Link
+            {/* <Link
               to={appointmentButton.linkUrl}
+              onClick={() => setIsModalOpen(true)} 
               className="block w-full text-center py-4 bg-[#ff4d4f] text-white font-semibold text-lg"
             >
               {appointmentButton.name}
-            </Link>
+            </Link> */}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="block w-full text-center py-4 bg-[#ff4d4f] text-white font-semibold text-lg"
+            >
+              {appointmentButton.name}
+            </button>
+
           </div>
         )}
 
@@ -137,21 +148,14 @@ const Header: React.FC = () => {
                   {item.name}
                 </Link>
               ))}
-
-              {/* {appointmentButton && (
-                <Link
-                  to={appointmentButton.linkUrl}
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full text-center mt-3 px-4 py-2 rounded-md bg-[#ff8a00] text-white"
-                >
-                  {appointmentButton.name}
-                </Link>
-              )} */}
-
             </nav>
           </div>
         )}
       </div>
+      <ModalAppointment
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </header>
   );
 };
