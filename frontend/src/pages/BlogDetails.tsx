@@ -1,158 +1,291 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import { User, Share2 } from "lucide-react";
-
-import { getBlogBySlug, getRelatedPosts } from "../data/blogData";
-import BookingForm from "../components/BookingForm";
-import RelatedPostCard from "../components/Blog/RelatedPostCard";
+import "../css/responsive.css";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Container from "../components/Container";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import SearchBar from "../components/Blog/SearchBar";
-import Container from "../components/Container";
-import Footer from "../components/Footer";
+import BookingForm from "../components/BookingForm";
+import useSeo from "../hooks/useSeo";
+
+import { API_BASE } from "../config/api";
+import ShareButton from "../components/Blog/ShareButton";
+
+interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  blog_image: string | null;
+  blog_image_alt?: string | null;
+  blog_image_title?: string | null;
+  description_html: string;
+  disease_id?: number;
+  author_name?: string;
+  published_at: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  canonical_url?: string;
+}
+
+interface Disease {
+  id: number;
+  name: string;
+}
+interface GlobalSEO {
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  caronical_url?: string;
+}
 
 const BlogDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = getBlogBySlug(slug || "");
-  const relatedPosts = getRelatedPosts(slug || "", 4);
 
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState("All");
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
+  const [diseases, setDiseases] = useState<Disease[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
-  if (!post) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
-          <Link to="/blog" className="text-primary underline">
-            Back to Blog
-          </Link>
-        </div>
-      </div>
-    );
+  const [searchQuery, setSearchQuery] = useState("");
+  const fetchGlobalSEO = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success && res.data.data) {
+        setGlobalSEO({
+          seo_title: res.data.data.seo_title,
+          seo_description: res.data.data.seo_description,
+          seo_keywords: res.data.data.seo_keywords,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch global SEO", error);
+    }
+  };
+  useEffect(() => {
+    if (!slug) return;
+    setLoading(true);
+    setBlog(null);
+    setRecentBlogs([]);
+
+
+    const fetchBlog = async () => {
+      try {
+        const res = await axios.get(
+          `${API_BASE}/api/blogs/slug/${slug}`
+        );
+
+        const data = res.data?.data;
+        const blogData: Blog = Array.isArray(data) ? data[1] : data;
+        setBlog(blogData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGlobalSEO()
+    fetchBlog();
+  }, [slug]);
+
+  const decodeHtml = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+  useEffect(() => {
+    axios
+      .get(`${API_BASE}/api/diseases`)
+      .then((res) => setDiseases(res.data.data || []))
+      .catch(console.error);
+  }, []);
+
+  const diseaseMap = useMemo<Record<number, string>>(() => {
+    const map: Record<number, string> = {};
+    diseases.forEach((d) => {
+      map[d.id] = d.name;
+    });
+    return map;
+  }, [diseases]);
+
+  useEffect(() => {
+    if (!blog?.disease_id || !blog?.id) return;
+
+    const fetchRelated = async () => {
+      try {
+        const res = await axios.get(
+          `${API_BASE}/api/blogs/recent`,
+          {
+            params: { diseaseId: blog.disease_id },
+          }
+        );
+
+        const filtered = (res.data.data || []).filter(
+          (b: Blog) => b.id !== blog.id
+        );
+
+        setRecentBlogs(filtered);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchRelated();
+  }, [blog?.disease_id, blog?.id]);
+
+  
+  const seoTitle =
+    blog?.meta_title ||
+    globalSEO?.seo_title ||
+    blog?.title ||
+    "Best Hospital";
+
+  const seoDescription =
+    blog?.meta_description ||
+    globalSEO?.seo_description ||
+    "Best healthcare services";
+
+  const seoKeywords =
+    blog?.meta_keywords ||
+    globalSEO?.seo_keywords ||
+    "hospital, healthcare";
+
+  const canonicalUrl =
+    blog?.canonical_url ||
+    (blog?.slug
+      ? `${window.location.origin}/blogs/${blog.slug}`
+      : undefined);
+
+  useSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
+
+
+
+  if (loading) {
+    return <div className="py-20 text-center">Loading...</div>;
   }
 
-  const renderContent = (content: string) =>
-    content.split("\n\n").map((section, index) => {
-      if (section.startsWith("## ")) {
-        return (
-          <h2 key={index} className="text-xl font-bold mt-8 mb-4">
-            {section.replace("## ", "")}
-          </h2>
-        );
-      }
-      if (section.startsWith("### ")) {
-        return (
-          <h3 key={index} className="text-lg font-semibold mt-6 mb-3">
-            {section.replace("### ", "")}
-          </h3>
-        );
-      }
-      if (section.startsWith("- ")) {
-        return (
-          <ul key={index} className="list-disc ml-6 space-y-2 mb-4 text-sm">
-            {section.split("\n").map((item, i) => (
-              <li key={i}>{item.replace("- ", "")}</li>
-            ))}
-          </ul>
-        );
-      }
-      return (
-        <p key={index} className="text-sm leading-relaxed mb-4">
-          {section}
-        </p>
-      );
-    });
+  if (!blog) {
+    return <div className="py-20 text-center">Blog not found</div>;
+  }
 
   return (
     <>
       <Header />
-      <TreatmentHeader  breadcrumbs={[{ label: "Home" }, { label: "Blog" }, { label: "BlogDetails" }]}>
+      <TreatmentHeader
+        breadcrumbs={[
+          { label: "Home", link: "/" },
+          { label: "Blog", link: "/blogs" },
+          { label: blog.title },
+        ]}
+      >
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          categories={diseases}
         />
       </TreatmentHeader>
-      <Container>
-        <div className="flex flex-col lg:flex-row gap-10 ">
 
-          {/* ARTICLE (WIDER) */}
+      <Container>
+
+
+        <div className="flex flex-col lg:flex-row gap-10">
+
           <article className="lg:w-[68%]">
-            {/* Author + Share */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                  <User className="w-5 h-5 text-muted-foreground" />
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="rounded-full bg-[#F6F7F9] flex items-center justify-center">
+                  <User size={21} />
                 </div>
                 <div>
-                  <p className="text-xs">
-                    written by{" "}
-                    <span className="font-medium">{post.author}</span>
+                  <p className="font-medium admin-written-by">
+                    Written by: {blog.author_name || "Admin"}
                   </p>
-                  <p className="text-xs text-muted-foreground">{post.date}</p>
+                  <p className="admin-written-date">
+                    {new Date(blog.published_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
                 </div>
               </div>
 
-              <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground bg-orange-200 p-3 rounded-md">
-                <Share2 className="w-4 h-4" />
+              {/* <button className="flex items-center bg-[#FBF6DD] gap-2 px-4 py-2 rounded-lg share-blog-btn">
+                <Share2 size={16} />
                 Share
-              </button>
-            </div>
+              </button> */}
+              <ShareButton />
 
-            {/* TITLE */}
-            <h1 className="text-2xl md:text-3xl font-bold mb-6">
-              {post.title}
+
+            </div>
+            <h1 className="page-details-section-item mb-6">
+              {blog.title}
             </h1>
+            <img
+              src={
+                blog.blog_image
+                  ? `${API_BASE}${blog.blog_image}`
+                  : "/placeholder.jpg"
+              }
+              alt={
+                blog.blog_image_alt && blog.blog_image_alt !== "null"
+                  ? blog.blog_image_alt
+                  : blog.title
+              }
+              title={
+                blog.blog_image_title && blog.blog_image_title !== "null"
+                  ? blog.blog_image_title
+                  : blog.title
+              }
+              loading="lazy"
+              className="w-full h-[360px] object-cover rounded-lg mb-6"
+            />
 
-            {/* IMAGE */}
-            <div className="rounded-lg overflow-hidden mb-8">
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-full h-[280px] md:h-[360px] object-cover"
-              />
-            </div>
 
-            {/* CONTENT */}
-            <div>{renderContent(post.content)}</div>
+            {/* {blog.disease_id && (
+              <p className="text-sm text-gray-600 mb-3">
+                Disease:{" "}
+                <strong>{diseaseMap[blog.disease_id]}</strong>
+              </p>
+            )} */}
 
-            {/* INFO BOX */}
-            <div className="mt-10 bg-secondary/10 border-l-4 border-secondary p-5 rounded-md">
-              <h3 className="font-bold text-lg mb-3">
-                How Edhacare Assists You in Turkey For Hair Transplant
-              </h3>
-              <ul className="space-y-2 text-sm">
-                <li>• Best clinics & certified surgeons</li>
-                <li>• End-to-end medical coordination</li>
-                <li>• Personalized treatment planning</li>
-                <li>• Post-procedure care & follow-up</li>
-              </ul>
-            </div>
+
+
+            <div
+              className="cms-content prose max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: decodeHtml(blog.description_html),
+              }}
+            />
           </article>
 
-          {/* SIDEBAR (NARROW) */}
           <aside className="lg:w-[32%] space-y-6">
+            <BookingForm />
 
-            {/* STICKY BOOKING */}
-            <div className="sticky top-28">
-              <BookingForm />
-            </div>
+            {recentBlogs.length > 0 && (
+              <div className="bg-[#F6F7F9] rounded-lg p-5">
+                <h3 className="mb-4 related-post-section-blog">
+                  Related Posts
+                </h3>
 
-            {/* RELATED POSTS */}
-            <div className="bg-card rounded-xl p-5 shadow-sm">
-              <h3 className="font-bold text-lg mb-4 border-b pb-3">
-                Related Posts
-              </h3>
-
-              <div className="space-y-4">
-                {relatedPosts.map((post) => (
-                  <RelatedPostCard key={post.id} post={post} />
-                ))}
+                <ul className="space-y-3 ">
+                  {recentBlogs.map((post) => (
+                    <li key={post.id} className="section-blog-related-news">
+                      <Link
+                        to={`/blogs/${post.slug}`}
+                        className="hover:underline blog-details-related "
+                      >
+                        {post.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
+            )}
           </aside>
         </div>
       </Container>

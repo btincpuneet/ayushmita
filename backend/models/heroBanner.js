@@ -29,7 +29,15 @@ const HeroBanner = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
+    image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     button_text: {
       type: DataTypes.STRING,
       allowNull: true,

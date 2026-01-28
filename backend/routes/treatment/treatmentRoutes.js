@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const {
   createTreatment,
@@ -11,10 +12,10 @@ const {
 
 const { uploadTreatment } = require("../../middleware/upload");
 
-router.post("/", uploadTreatment.single("image"), createTreatment);
+router.post("/", uploadTreatment.single("image"),authenticateToken, createTreatment);
 router.get("/single/:slug", getTreatmentBySlug);
 router.get("/disease/:diseaseId", getTreatmentsByDisease);
-router.put("/:id", uploadTreatment.single("image"), updateTreatment);
-router.delete("/:id", deleteTreatment);
+router.put("/:id", uploadTreatment.single("image"), authenticateToken ,updateTreatment);
+router.delete("/:id", authenticateToken , deleteTreatment);
 
 module.exports = router;

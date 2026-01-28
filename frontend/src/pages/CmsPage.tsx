@@ -6,6 +6,7 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import Footer from "../components/Footer";
 import "../css/aboutUs.css";
 import { API_BASE } from "../config/api";
+import "../css/footer.css";
 
 
 interface CmsPageData {
@@ -17,7 +18,7 @@ interface CmsPageData {
 }
 
 const CmsPage: React.FC = () => {
-  const { slug } = useParams(); 
+  const { slug } = useParams();
   const [page, setPage] = useState<CmsPageData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -29,7 +30,7 @@ const CmsPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await axios.get<{ data: CmsPageData }>(
-        `${API_BASE}/api/pages/about-us`
+        `${API_BASE}/api/pages/${slug}`
       );
       setPage(res.data.data);
     } catch (error) {
@@ -63,9 +64,8 @@ const CmsPage: React.FC = () => {
       <TreatmentHeader
         title={page.title}
         breadcrumbs={[
-          { label: "Home" },
-          { label: "Blog" },
-          { label: "BlogDetails" },
+          { label: "Home" , link: "/"},
+          { label: "About Us" },
         ]}
       />
 

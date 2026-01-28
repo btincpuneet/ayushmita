@@ -19,6 +19,15 @@ const Blog = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    disease_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    treatment_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     title: {
       type: DataTypes.STRING,
@@ -35,7 +44,15 @@ const Blog = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    blog_image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
+    blog_image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     short_description: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -78,6 +95,10 @@ const Blog = sequelize.define(
 
     meta_description: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    canonical_url: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
 

@@ -4,8 +4,23 @@
     margin-right: auto;
     padding: 0px 18px;
 }
+   button.inline-flex.items-center.px-7.py-3.rounded-full.bg-\[\#F0A324\] {
+    cursor: pointer;
+}
+.focus\:outline-none {
+    cursor: pointer;
+}
+.focus\:outline-none {
+    cursor: pointer;
+}
+.bg-white.rounded-2xl.border.border-gray-200.overflow-hidden.w-full.max-w-\[320px\].image-section-sli-der{
+  cursor: pointer;
+}
+button.mt-2.text-\[\#F0A324\].font-semibold.text-sm.transition-all.duration-300.hover\:underline.hover\:translate-y-\[-1px\]{
+  cursor: pointer;
+}
 .cancer-overview-container {
-  display: flex;
+  display: flex;  
   align-items: center;
   gap: 30px;
   margin-bottom: 50px;
@@ -22,10 +37,65 @@
 /* Image Box */
 .cancer-overview-image-box {
   border-radius: 12px;
-
-
 }
-
+button.mt-3.px-5.py-3.bg-\[\#F0A324\].rounded-md.hover\:bg-yellow-600.transition.book-app-sec {
+    cursor: pointer;
+}
+button.px-4.py-3.border.border-\[\#F0A324\].text-\[\#F0A324\].bg-\[\#FBF6DD\].rounded-md.font-medium.flex.items-center.gap-2.hover\:bg-orange-50.transition {
+    cursor: pointer;
+}
+button.w-full.mt-2.bg-\[\#F0A324\].text-black.py-3.rounded-lg.transition.duration-200.disabled\:opacity-70 {
+    cursor: pointer;
+}
+button.px-4.py-2.border.border-\[\#E7E6E6\].rounded-md.text-\[\#000000\].disabled\:opacity-40 {
+    cursor: pointer;
+}
+button.w-full.text-left.flex.items-center.justify-between.py-5.bg-white.fa-questions{
+  cursor: pointer;
+}button.px-4.py-2.rounded-md.border.text-sm.border-\[\#F0A324\].text-\[\#F0A324\].font-medium {
+    cursor: pointer;
+}
+button.px-4.py-2.rounded-md.border.text-sm.text-\[\#000000\].border-\[\#E7E6E6\].hover\:border-orange-400 {
+    cursor: pointer;
+}button.mt-4.inline-block.bg-\[\#F0A324\].hover\:bg-yellow-600.transition.px-4.py-3.rounded-lg {
+    cursor: pointer;
+}
+.bg-white.rounded-xl.shadow.text-center {
+    cursor: pointer;
+}
+.rounded-xl.overflow-hidden.shadow {
+    cursor: pointer;
+}
+button.bg-\[\#2A6506\].px-4.py-3.rounded {
+    cursor: pointer;
+}
+button.px-5.py-3.rounded-md.bg-\[\#25CB68\].text-white.font-medium.flex.items-center.gap-2.hover\:bg-green-600.transition.btn-sec-list {
+    cursor: pointer;
+}
+button.px-5.py-3.rounded-md.bg-\[\#F0A324\].hover\:bg-yellow-600.transition.btn-sec-list {
+    cursor: pointer;
+}
+button.px-6.py-3.bg-\[\#F0A324\].rounded-lg {
+    cursor: pointer;
+}
+button.px-6.py-3.bg-green-500.flex.gap-3.text-white.rounded-lg {
+    cursor: pointer;
+}
+.bg-white.shadow.rounded-lg.overflow-hidden {
+    cursor: pointer;
+}
+.bg-white.shadow.rounded-lg.text-center {
+    cursor: pointer;
+}
+button.bg-\[\#F0A324\].hover\:bg-orange-500.py-\[12px\].px-\[24px\].rounded-lg.transition {
+    cursor: pointer;
+}
+button.bg-\[\#25CB68\].hover\:bg-green-600.text-\[\#FFFFFF\].px-\[24px\].py-\[12px\].rounded-lg.transition {
+    cursor: pointer;
+}
+button.w-full.bg-\[\#F0A324\].py-\[12px\].rounded-md.transition.disabled\:opacity-60.contact-page-submit-btn{
+    cursor: pointer;
+}
 .cancer-overview-image {
   border-radius: 12px;
   width: 370px;
@@ -514,3 +584,521 @@ line-height: 27px;
   font-size: 16px;
   line-height: 27px;
 }
+ 
+.cancer-overview-container {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+.cancer-bile {
+    margin-bottom: 50px;
+}
+.symptoms-section-wrapper {
+    margin-bottom: 50px;
+}
+.diagnosis-section-wrapper {
+    margin-bottom: 50px;
+}
+/* Image Box */
+.cancer-overview-image-box {
+  border-radius: 12px;
+ 
+ 
+}
+ 
+.cancer-overview-image {
+  border-radius: 12px;
+  width: 370px;
+  height: 294px;
+}
+ 
+/* Content */
+.cancer-overview-content {
+  flex: 2;
+}
+ 
+.cancer-overview-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #333;
+}
+ 
+.cancer-overview-description {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+ 
+/* Buttons */
+.cancer-overview-buttons {
+  display: flex;
+  gap: 15px;
+}
+ 
+.appointment-btn {
+  background: #F0A324;
+  color: #000;
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+ 
+.chat-btn {
+  background: #36c169;
+  color: #FFFFFF;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+ 
+ 
+}
+ 
+.title {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  margin-bottom: 10px;
+  position: relative;
+}
+ 
+.title::after {
+  content: "";
+  width: 32px;
+  height: 4px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  left: 0;
+  bottom: -13px;
+  border-radius: 5px;
+}
+ 
+.desc {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  margin: 20px 0;
+}
+ 
+.cancer-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+ 
+.cancer-list li {
+  margin-bottom: 18px;
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  letter-spacing: 0%;
+ 
+  padding-left: 20px;
+  position: relative;
+}
+ 
+.cancer-list li::before {
+  content: "•";
+  color: black;
+  font-size: 24px;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+ 
+ul.cancer-list strong {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+}
+ 
+/* Heading */
+.symptoms-heading {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  position: relative;
+  margin-bottom: 14px;
+}
+ 
+.symptoms-heading::after {
+  content: "";
+  width: 32px;
+  height: 4px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  left: 0;
+  bottom: -13px;
+  border-radius: 4px;
+}
+ 
+.diagnosis-list strong {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 27px;
+  letter-spacing: 0%;
+}
+ 
+/* Grid Layout */
+.symptoms-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 80px;
+  width: 70%;
+}
+ 
+/* Lists */
+.symptoms-list {
+  list-style: none;
+  padding: 0;
+}
+ 
+.symptoms-list li {
+  padding-left: 20px;
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  position: relative;
+  margin-bottom: 14px;
+}
+ 
+.symptoms-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  font-size: 20px;
+}
+ 
+/* Heading */
+.diagnosis-heading {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  margin-bottom: 12px;
+  position: relative;
+}
+ 
+.diagnosis-heading::after {
+  content: "";
+  width: 32px;
+  height: 4px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  left: 0;
+  bottom: -13px;
+  border-radius: 4px;
+}
+ 
+/* List */
+.diagnosis-list {
+  list-style: none;
+  padding: 0;
+}
+ 
+.diagnosis-list li {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+ 
+  line-height: 27px;
+ 
+ 
+  margin-bottom: 15px;
+  padding-left: 20px;
+  position: relative;
+}
+ 
+.diagnosis-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  font-size: 22px;
+}
+ 
+.treatment-heading {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 100%;
+  margin-bottom: 14px;
+  position: relative;
+}
+ 
+.treatment-heading::after {
+  content: "";
+  width: 32px;
+  height: 4px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  left: 0;
+  bottom: -13px;
+  border-radius: 4px;
+}
+ 
+/* Section Description */
+.treatment-description {
+  font-size: 17px;
+  color: #4a4a4a;
+  margin-bottom: 28px;
+}
+ 
+/* Bullet List */
+.treatment-list {
+  list-style: none;
+  padding: 0;
+}
+ 
+.treatment-list li {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  padding-left: 20px;
+  position: relative;
+  color: #3b3b3b;
+}
+ 
+.treatment-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  font-size: 20px;
+}
+ 
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    margin: 50px auto;
+    padding: 0px 20px;
+  }
+ 
+  .symptoms-list-grid {
+    display: flex;
+    flex-direction: column;
+  }
+ 
+  .cancer-overview-container {
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .symptoms-section-wrapper{
+    margin-bottom: 10px;
+  }
+  .diagnosis-section-wrapper{
+    margin-bottom: 10px;
+  }
+.cancer-bile{
+  margin-bottom: 10px;
+}
+  .cancer-overview-buttons {
+    flex-direction: column;
+  }
+ 
+  .symptoms-list-grid {
+    gap: 0px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1020px) {
+  .container {
+    width: 100%;
+    margin: 50px auto;
+    padding: 0px 20px;
+  }
+  .cancer-overview-buttons{
+    flex-direction: column;
+  }
+  .cancer-overview-image{
+    height: auto;
+  }
+}
+ 
+ 
+ 
+/* cancer page  */
+ 
+.abroad-treatment-title::after {
+  content: "";
+  width: 50px;
+  height: 6px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  border-radius: 5px;
+}
+ 
+/* Country List */
+.abroad-treatment-country-list {
+  list-style: none;
+  padding: 0;
+}
+ 
+.abroad-treatment-country-list li {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 27px;
+  margin-bottom: 18px;
+  padding-left: 20px;
+  line-height: 1.6;
+  position: relative;
+}
+ 
+ul.abroad-treatment-country-list strong {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 27px;
+ 
+}
+ 
+.abroad-treatment-country-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-size: 20px;
+}
+ 
+.cost-comparison-title::after {
+  content: "";
+  width: 45px;
+  height: 6px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  border-radius: 4px;
+}
+ 
+ 
+/* Table Styling */
+.cost-comparison-table-wrapper {
+  overflow-x: auto;
+}
+ 
+.cost-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+ 
+.cost-comparison-table thead {
+  background: #f4f6f8;
+}
+ 
+.cost-comparison-table th {
+  text-align: left;
+  padding: 14px 12px;
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 18px;
+ 
+  line-height: 27px;
+ 
+ 
+}
+ 
+.cost-comparison-table td {
+  text-align: left;
+  padding: 14px 12px;
+  font-family: Ubuntu;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 27px;
+ 
+}
+ 
+.cost-comparison-table th {
+font-family: Ubuntu;
+font-weight: 700;
+font-size: 18px;
+line-height: 27px;
+ 
+ 
+}
+ 
+.cost-comparison-table tr:last-child td {
+  border-bottom: none;
+}
+ 
+.ayushmita-help-section {
+  width: 80%;
+}
+ 
+.ayushmita-help-title::after {
+  content: "";
+  width: 45px;
+  height: 6px;
+  background: linear-gradient(to right, #f1a339, #7ac142);
+  border-radius: 5px;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+}
+ .container-fluid.bg-white {
+    padding: 20px 0px;
+    margin: 20px 0px;
+}
+ .container-fluid.bg-white {
+    margin: 0;
+}
+ 
+/* Features List Styling */
+.ayushmita-help-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ 
+.ayushmita-help-features li {
+  font-size: 16px;
+  color: #3a3a3a;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  padding-left: 20px;
+  position: relative;
+}
+ 
+.ayushmita-help-features li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-size: 20px;
+}
+ 
+.cost-comparison-table td strong {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 27px;
+}
+ 

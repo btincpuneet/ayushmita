@@ -16,21 +16,40 @@ const createDisease = async (req, res) => {
       seo_description,
       seo_keywords,
       canonical_url,
+      image_alt,
+      image_title,
       status,
     } = req.body;
+
+    if (!name || !slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Disease name and slug are required",
+      });
+    }
+
+    const existing = await Disease.findOne({ where: { slug } });
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        message: "Slug already exists",
+      });
+    }
 
     let imageUrl = null;
 
     if (req.file) {
-      const imageName = `disease_${Date.now()}.jpg`;
       const uploadDir = path.join(__dirname, "../uploads/diseases");
 
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      const uploadPath = path.join(uploadDir, imageName);
-      fs.writeFileSync(uploadPath, req.file.buffer);
+      const imageName = `disease_${Date.now()}.jpg`;
+      fs.writeFileSync(
+        path.join(uploadDir, imageName),
+        req.file.buffer
+      );
 
       imageUrl = `/uploads/diseases/${imageName}`;
     }
@@ -39,25 +58,34 @@ const createDisease = async (req, res) => {
       name,
       slug,
       image: imageUrl,
+      image_alt,
+      image_title,
       short_description,
       description_html,
       seo_title,
       seo_description,
       seo_keywords,
       canonical_url,
-      status: Number(status) || 1
+      status: Number(status) || 1,
     });
 
     return res.status(201).json({
       success: true,
       message: "Disease created successfully",
-      disease_id: disease.id,
       data: disease,
     });
-
   } catch (error) {
-    console.error("CREATE DISEASE ERROR:", error);
-    res.status(500).json({ success: false, message: error.message });
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.errors[0].message,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create disease",
+    });
   }
 };
 
@@ -79,6 +107,26 @@ const getDiseaseById = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+const getAllDiseases = async (req, res) => {
+  try {
+    const diseases = await Disease.findAll({
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      success: true,
+      data: diseases,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch diseases",
+      error: error.message,
+    });
+  }
+};
+
 
 const getAllDiseasesWithTreatments = async (req, res) => {
   try {
@@ -138,35 +186,55 @@ const getDiseaseWithTreatments = async (req, res) => {
 
 const updateDisease = async (req, res) => {
   try {
-    const id = Number(req.params.id);
+    const disease = await Disease.findByPk(req.params.id);
 
-    const disease = await Disease.findByPk(id);
-    if (!disease)
-      return res.status(404).json({ success: false, message: "Not found" });
+    if (!disease) {
+      return res.status(404).json({
+        success: false,
+        message: "Disease not found",
+      });
+    }
 
-    let data = {};
+    const data = {};
 
     Object.keys(req.body).forEach((key) => {
-      if (req.body[key] !== "" && req.body[key] !== undefined && req.body[key] !== null) {
+      if (req.body[key] !== "" && req.body[key] !== null) {
         data[key] = req.body[key];
       }
     });
 
-    // IMAGE CHANGE
+    if (data.slug && data.slug !== disease.slug) {
+      const exists = await Disease.findOne({
+        where: {
+          slug: data.slug,
+          id: { [Op.ne]: disease.id },
+        },
+      });
+
+      if (exists) {
+        return res.status(409).json({
+          success: false,
+          message: "Slug already exists",
+        });
+      }
+    }
+
     if (req.file) {
       const uploadDir = path.join(__dirname, "../uploads/diseases");
 
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
 
       const imageName = `disease_${Date.now()}.jpg`;
-      const uploadPath = path.join(uploadDir, imageName);
+      fs.writeFileSync(
+        path.join(uploadDir, imageName),
+        req.file.buffer
+      );
 
-      fs.writeFileSync(uploadPath, req.file.buffer);
-
-      // REMOVE OLD IMAGE
       if (disease.image) {
-        const oldPath = path.join(__dirname, "..", disease.image);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        const oldImage = path.join(__dirname, "..", disease.image);
+        if (fs.existsSync(oldImage)) fs.unlinkSync(oldImage);
       }
 
       data.image = `/uploads/diseases/${imageName}`;
@@ -174,13 +242,26 @@ const updateDisease = async (req, res) => {
 
     await disease.update(data);
 
-    res.json({ success: true, message: "Disease updated", data: disease });
-
+    res.json({
+      success: true,
+      message: "Disease updated successfully",
+      data: disease,
+    });
   } catch (error) {
-    console.error("UPDATE ERROR:", error);
-    res.status(500).json({ success: false, message: error.message });
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.errors[0].message,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to update disease",
+    });
   }
 };
+
 
 const deleteDisease = async (req, res) => {
   try {
@@ -205,4 +286,5 @@ module.exports = {
   getDiseaseById,
   updateDisease,
   deleteDisease,
+  getAllDiseases
 };

@@ -59,14 +59,16 @@ const MedicalTourism: React.FC = () => {
                            bg-white rounded-xl shadow-sm hover:shadow-lg 
                            border border-gray-100 hover:border-amber-300
                            transition-all duration-200 flag-section-1"
-               
+
               >
                 <div className="w-16 h-10 rounded-md overflow-hidden bg-white flex items-center justify-center">
                   <img
                     src={c.flag}
                     alt={`${c.name} flag`}
+                    title={`${c.name} flag`}
                     className="w-full h-full object-cover"
                   />
+
                 </div>
                 <span className="c.name" style={{
                   fontFamily: 'Ubuntu',

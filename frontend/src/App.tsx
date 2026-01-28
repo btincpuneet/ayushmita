@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+
 import Home from "./pages/Home";
 import HospitalPage from "./pages/HospitalPage";
 import TreatmentsLandlingPage from "./pages/TreatmentsLandlingPage";
@@ -10,15 +11,26 @@ import HospitalDetailsPage from "./pages/HospitalDetailsPage";
 import DoctorsPage from "./pages/DoctorPage";
 import DoctorDetailsPage from "./pages/DoctorDetailsPage";
 import ScrollToTop from "./components/ScrollToTop";
+import GoogleTranslate from "./components/GoogleTranslate";
 import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
-import img from "./assets/banner-about.jpg"
+import TawkTestWidget from "./components/TawkTestWidget";
+
+
+import { useSyncRTLWithGoogleTranslate } from "./hooks/useSyncRTLWithGoogleTranslate";
+import TestimonialPage from "./pages/TestimonialPage";
+
 const App: React.FC = () => {
+  useSyncRTLWithGoogleTranslate();
+
   return (
     <HelmetProvider>
       <ScrollToTop />
+      <GoogleTranslate />
+      <TawkTestWidget />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />
@@ -29,10 +41,11 @@ const App: React.FC = () => {
         <Route path="/hospital" element={<HospitalPage />} />
         <Route path="/hospitals" element={<HospitalDetailsPage />} />
         <Route path="/blogs" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogDetails />} />
+        <Route path="/blogs/:slug" element={<BlogDetails />} />
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/about-us" element={<CmsPage />} />
+        <Route path="/:slug" element={<CmsPage />} />
+        <Route path="/testimonail" element={<TestimonialPage />} />
       </Routes>
     </HelmetProvider>
   );

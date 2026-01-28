@@ -1,69 +1,130 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import { categoryApi } from "@/services/api";
 import { Category } from "@/types/content";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DialogFooter } from "@/components/ui/dialog";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-
-import { Pencil, Trash2 } from "lucide-react";
 
 const emptyForm = {
   name: "",
   description: "",
   url: "",
-  status: "active",
+  status: "active" as "active" | "inactive",
   is_include_top_nav: true,
 };
 
+function SortableRow({
+  cat,
+  children,
+}: {
+  cat: Category;
+  children: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: String(cat.id) });
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      {...attributes}
+      {...listeners}
+      className="border-b cursor-move bg-white"
+    >
+      {children}
+    </tr>
+  );
+}
+
 export default function ManageCategory() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
-
   const [form, setForm] = useState(emptyForm);
+
   const { toast } = useToast();
 
-  // Load Categories
- const loadData = async () => {
-  setLoading(true);
-  try {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const loadData = async () => {
     const res = await categoryApi.getAll();
-
-    // ⬅ Sort so that latest item appears on TOP
-    const sorted = [...res].reverse();
-
-    setCategories(sorted);
-  } catch {
-    toast({
-      title: "Error",
-      description: "Failed to load categories",
-      variant: "destructive",
-    });
-  }
-  setLoading(false);
-};
-
+    setCategories(res);
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  // Add new
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = categories.findIndex(
+      (c) => String(c.id) === active.id
+    );
+    const newIndex = categories.findIndex(
+      (c) => String(c.id) === over.id
+    );
+
+    const reordered = arrayMove(categories, oldIndex, newIndex).map(
+      (c, i) => ({ ...c, sort_order: i + 1 })
+    );
+
+    setCategories(reordered);
+
+    await Promise.all(
+      reordered.map((c) =>
+        categoryApi.update(c.id, { sort_order: c.sort_order })
+      )
+    );
+
+    toast({ title: "Order updated successfully" });
+  };
+
   const handleAdd = () => {
-    setForm(emptyForm);
     setEditing(null);
+    setForm(emptyForm);
     setOpen(true);
   };
 
-  // Edit
   const handleEdit = (cat: Category) => {
     setEditing(cat);
     setForm({
@@ -71,166 +132,194 @@ export default function ManageCategory() {
       description: cat.description,
       url: cat.url,
       status: cat.status,
-      // image: cat.image,   // ❌ Removed image part
       is_include_top_nav: cat.is_include_top_nav,
     });
     setOpen(true);
   };
 
-  // Submit
+ 
+
   const handleSubmit = async () => {
+    // Frontend validation
+    if (!form.name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Category name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!form.status) {
+      toast({
+        title: "Validation Error",
+        description: "Please select category status",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       if (editing) {
         await categoryApi.update(editing.id, form);
-        toast({ title: "Updated", description: "Category updated successfully" });
+        toast({
+          title: "Success",
+          description: "Category updated successfully",
+        });
       } else {
         await categoryApi.create(form);
-        toast({ title: "Created", description: "Category created successfully" });
+        toast({
+          title: "Success",
+          description: "Category created successfully",
+        });
       }
 
       setOpen(false);
       loadData();
-    } catch {
-      toast({ title: "Error", description: "Failed to save category", variant: "destructive" });
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
     }
   };
 
-  // Delete
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this category?")) return;
-    try {
-      await categoryApi.delete(id);
-      toast({ title: "Deleted", description: "Category deleted" });
-      loadData();
-    } catch {
-      toast({ title: "Error", description: "Failed to delete", variant: "destructive" });
-    }
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete category?")) return;
+
+    await categoryApi.delete(id);
+    toast({ title: "Category deleted" });
+    loadData();
   };
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Categories</h1>
         <Button onClick={handleAdd}>+ Add Category</Button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3">Name</th>
-              <th className="p-3">URL</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Top Nav</th>
-              <th className="p-3 text-right">Actions</th>
-            </tr>
-          </thead>
+      <div className="bg-white rounded shadow">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={categories.map((c) => String(c.id))}
+            strategy={verticalListSortingStrategy}
+          >
+            <table className="w-full">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-3 text-left">Order</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">URL</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
 
-          <tbody>
-            {categories.map((cat) => (
-              <tr key={cat.id} className="border-b">
-                <td className="p-3">{cat.name}</td>
-                <td className="p-3">{cat.url}</td>
+              <tbody>
+                {categories.map((cat) => (
+                  <SortableRow key={cat.id} cat={cat}>
+                    <td className="p-3">{cat.sort_order}</td>
+                    <td className="p-3">{cat.name}</td>
+                    <td className="p-3">{cat.url}</td>
 
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 text-sm rounded ${
-                      cat.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {cat.status}
-                  </span>
-                </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${cat.status === "active"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-600"
+                          }`}
+                      >
+                        {cat.status}
+                      </span>
+                    </td>
 
-                <td className="p-3">{cat.is_include_top_nav ? "Yes" : "No"}</td>
+                    <td className="p-3 text-right space-x-3">
+                      <Button size="sm" onClick={() => handleEdit(cat)}>
+                        Edit
+                      </Button>
 
-                <td className="p-3 text-right flex justify-end gap-4">
-                  <button onClick={() => handleEdit(cat)} className="text-blue-600 hover:text-blue-800">
-                    {/* <Pencil size={18} /> */}
-                    Edit
-                  </button>
-
-                  <button onClick={() => handleDelete(cat.id)} className="text-red-600 hover:text-red-800">
-                    {/* <Trash2 size={18} /> */}
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {!loading && categories.length === 0 && (
-          <p className="text-center py-6 text-gray-600">No categories found.</p>
-        )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(cat.id)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </SortableRow>
+                ))}
+              </tbody>
+            </table>
+          </SortableContext>
+        </DndContext>
       </div>
 
-      {/* Modal */}
+      {/* ADD / EDIT DIALOG */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit Category" : "Add New Category"}</DialogTitle>
+            <DialogTitle>
+              {editing ? "Edit Category" : "Add Category"}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="grid gap-3">
-            <Label>Name *</Label>
+            <Label>Name</Label>
             <Input
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
             />
 
             <Label>URL</Label>
             <Input
               value={form.url}
-              onChange={(e) => setForm({ ...form, url: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, url: e.target.value })
+              }
             />
 
             <Label>Description</Label>
             <Textarea
-              rows={2}
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
             />
 
-            {/* ❌ Removed Image Input */}
-            {/* <Label>Image</Label>
-            <Input
-              value={form.image}
-              onChange={(e) => setForm({ ...form, image: e.target.value })}
-            /> */}
-            
-            {/* ❌ Removed Image Preview */}
-
-            {/* Switches */}
-            <div className="flex items-center gap-6 mt-3">
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.status === "active"}
-                  onCheckedChange={(ch) =>
-                    setForm({ ...form, status: ch ? "active" : "inactive" })
-                  }
-                />
-                <Label>Active</Label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.is_include_top_nav}
-                  onCheckedChange={(ch) =>
-                    setForm({ ...form, is_include_top_nav: ch })
-                  }
-                />
-                <Label>Top Nav</Label>
-              </div>
-            </div>
+            <Label>Status</Label>
+            <Select
+              value={form.status}
+              onValueChange={(value: "active" | "inactive") =>
+                setForm({ ...form, status: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter>
-            <Button onClick={handleSubmit}>{editing ? "Update" : "Create"}</Button>
+            <Button onClick={handleSubmit}>
+              {editing ? "Update" : "Create"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

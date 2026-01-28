@@ -39,7 +39,7 @@
 //   const login = async (email: string, password: string): Promise<boolean> => {
 //     // Mock authentication - in production, call your auth API
 //     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
 //     if (email === 'admin@example.com' && password === 'admin123') {
 //       const newState: AuthState = {
 //         user: MOCK_USER,
@@ -104,7 +104,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Login function using REAL API
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await axios.post(`${API_BASE}/api/login`, { email, password });
@@ -124,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setAuthState(newState);
+
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newState));
 
       return true;

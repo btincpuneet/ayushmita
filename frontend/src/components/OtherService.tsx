@@ -26,7 +26,6 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
       const res = await axios.get<{ treatments: Treatment[] }>(
         `${API_BASE}/api/treatments/disease/${diseaseId}`
       );
-      console.log("res", res.data.treatments)
       const filtered = res.data.treatments.filter(
         (t) => t.slug !== currentSlug
       );
@@ -54,10 +53,11 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
           lineHeight: "100%",
           letterSpacing: "0%",
         }}>
-          Other Related Treatments
+          Our Other Services
         </h2>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5
+">
           {services.map((service) => (
             <Link
               key={service.id}
@@ -71,17 +71,15 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
             >
               <div
                 className="
-   flex items-center justify-center 
+   flex items-center gap-2
   "
               >
                 <img
                   src={`${API_BASE}${service.image}`}
                   alt={service.name}
-                  className="w-[100%] h-[80px] rounded-lg object-cover"
+                  className="w-[60px] h-[60px] rounded-lg object-cover"
                 />
-              </div>
-
-              <div
+                <div
                 className="
                dot-outer
                 "
@@ -92,11 +90,14 @@ const OtherServices: React.FC<OtherServicesProps> = ({ diseaseId, currentSlug })
                   fontSize: "16px",
                   lineHeight: "27px",
                   letterSpacing: "0%",
-                  textAlign: "center",
+                  
                 }}
               >
                 {service.name}
               </div>
+              </div>
+
+              
             </Link>
           ))}
         </div>

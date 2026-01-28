@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE } from "../../config/api";
-import { Plus, Edit, Trash2, Globe, Image as ImageIcon } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Globe,
+  Image as ImageIcon,
+  Star,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -14,47 +20,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
-
-/* ================= API CONFIG ================= */
+import { API_BASE } from "../../config/api";
+import { authHeader } from "../../utils/auth";
 
 const BLOG_API = `${API_BASE}/api/blogs`;
 const DISEASE_API = `${API_BASE}/api/diseases`;
 const TREATMENT_API = `${API_BASE}/api/treatments`;
 
-/* ================= HELPERS ================= */
-
-const getImageUrl = (path?: string) => {
-  if (!path) return "";
-  return path.startsWith("/uploads")
-    ? `${API_BASE}${path}`
-    : `${API_BASE}/${path}`;
-};
-
-/* ================= FORM ================= */
-
-const emptyForm: any = {
+const emptyForm = {
   title: "",
   slug: "",
   short_description: "",
   description_html: "",
-
   disease_id: "0",
   treatment_id: "0",
-
   author_name: "Admin",
+  canonical_url: "",
   is_global: false,
   is_featured: false,
   status: "published",
-
   meta_title: "",
   meta_description: "",
   meta_keywords: "",
   tags: "",
-
-  blog_image: null,
+  blog_image: null as File | null,
+  existing_image: "",
+  remove_image: false,
+  blog_image_alt: "",
+  blog_image_title: "",
 };
-
-/* ================= COMPONENT ================= */
 
 export default function ManageBlogs() {
   const [blogs, setBlogs] = useState<any[]>([]);
@@ -64,21 +58,17 @@ export default function ManageBlogs() {
   const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState<any>(emptyForm);
 
-  /* ================= HELPERS ================= */
-
-  const generateSlug = (text: string) =>
+  const slugify = (text: string) =>
     text
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");
 
   const loadBlogs = async () => {
     const res = await axios.get(BLOG_API);
     setBlogs(res.data.data || []);
   };
-
-  /* ================= EFFECTS ================= */
 
   useEffect(() => {
     loadBlogs();
@@ -89,46 +79,54 @@ export default function ManageBlogs() {
     if (!form.is_global && form.disease_id !== "0") {
       axios
         .get(`${TREATMENT_API}/disease/${form.disease_id}`)
-        .then((r) => setTreatments(r.data.treatments || []));
+        .then((r) => {
+          setTreatments(r.data.treatments || []);
+        });
     } else {
       setTreatments([]);
     }
   }, [form.disease_id, form.is_global]);
 
-  /* ================= SUBMIT ================= */
 
   const handleSubmit = async () => {
     if (
       !form.title ||
       !form.slug ||
-      !form.short_description ||
       !form.description_html
     ) {
-      return toast.error("Required fields are missing");
+      return toast.error("Please fill all required fields");
     }
 
     if (!form.is_global && form.disease_id === "0") {
-      return toast.error("Disease is required for non-global blog");
+      return toast.error("Disease is required for non-global blogs");
     }
 
     const fd = new FormData();
 
-    Object.entries(form).forEach(([key, value]: any) => {
-      if (value !== null && key !== "blog_image") {
-        fd.append(key, value);
+    Object.entries({
+      title: form.title,
+      slug: form.slug,
+      short_description: form.short_description,
+      description_html: form.description_html,
+      author_name: form.author_name,
+      status: form.status,
+      meta_title: form.meta_title,
+      meta_description: form.meta_description,
+      meta_keywords: form.meta_keywords,
+      canonical_url: form.canonical_url,
+      tags: form.tags,
+      is_global: form.is_global ? "1" : "0",
+      is_featured: form.is_featured ? "1" : "0",
+      blog_image_alt: form.blog_image_alt,
+      blog_image_title: form.blog_image_title,
+    }).forEach(([k, v]) => fd.append(k, v));
+
+    if (!form.is_global) {
+      fd.append("disease_id", form.disease_id);
+      if (form.treatment_id !== "0") {
+        fd.append("treatment_id", form.treatment_id);
       }
-    });
-
-    fd.set("is_global", form.is_global ? "1" : "0");
-    fd.set("is_featured", form.is_featured ? "1" : "0");
-
-    fd.set("disease_id", form.is_global ? "" : String(form.disease_id));
-    fd.set(
-      "treatment_id",
-      form.is_global || form.treatment_id === "0"
-        ? ""
-        : String(form.treatment_id)
-    );
+    }
 
     if (form.blog_image) {
       fd.append("blog_image", form.blog_image);
@@ -136,37 +134,30 @@ export default function ManageBlogs() {
 
     try {
       editing
-        ? await axios.put(`${BLOG_API}/${editing.id}`, fd)
-        : await axios.post(BLOG_API, fd);
+        ? await axios.put(`${BLOG_API}/${editing.id}`, fd, { headers: authHeader() })
+        : await axios.post(BLOG_API, fd, { headers: authHeader() });
 
       toast.success(editing ? "Blog updated" : "Blog created");
-
       setOpen(false);
       setEditing(null);
       setForm(emptyForm);
       loadBlogs();
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message || "Something went wrong");
     }
   };
 
-  /* ================= DELETE ================= */
-
   const handleDelete = async (id: number) => {
-    if (!confirm("This will permanently delete the blog")) return;
-
-    await axios.delete(`${BLOG_API}/${id}`);
+    if (!confirm("Delete this blog?")) return;
+    await axios.delete(`${BLOG_API}/${id}`, { headers: authHeader() });
     toast.success("Blog deleted");
     loadBlogs();
   };
 
-  /* ================= UI ================= */
-
   return (
     <div className="p-6">
-      {/* HEADER */}
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Blog Manager</h1>
+        <h1 className="text-2xl font-bold">Manage Blogs</h1>
         <Button
           onClick={() => {
             setEditing(null);
@@ -178,156 +169,188 @@ export default function ManageBlogs() {
         </Button>
       </div>
 
-      {/* LIST */}
-      <div className="space-y-4">
-        {blogs.map((b) => (
-          <div
-            key={b.id}
-            className="flex items-center gap-4 border rounded-lg p-4"
-          >
-            <div className="w-32 h-20 bg-muted flex items-center justify-center overflow-hidden">
-              {b.blog_image ? (
-                <img
-                  src={getImageUrl(b.blog_image)}
-                  className="w-full h-full object-cover"
-                  alt={b.title}
-                />
-              ) : (
-                <ImageIcon className="w-8 h-8 opacity-40" />
-              )}
-            </div>
-
-            <div className="flex-1">
-              <h3 className="font-semibold">{b.title}</h3>
-              <p className="text-sm text-muted-foreground">
-                {b.is_global ? "Global Blog" : "Disease Based"}
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={() => {
-                  setEditing(b);
-                  setForm({
-                    ...emptyForm,
-                    ...b,
-                    disease_id: b.disease_id ? String(b.disease_id) : "0",
-                    treatment_id: b.treatment_id
-                      ? String(b.treatment_id)
-                      : "0",
-                    is_global: Boolean(b.is_global),
-                    is_featured: Boolean(b.is_featured),
-                    blog_image: null,
-                  });
-                  setOpen(true);
-                }}
-              >
-                <Edit className="w-4 h-4 mr-1" /> Edit
-              </Button>
-
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => handleDelete(b.id)}
-              >
-                <Trash2 className="w-4 h-4 mr-1" /> Delete
-              </Button>
-            </div>
+      {blogs.map((b) => (
+        <div key={b.id} className="border p-4 rounded mb-3 flex gap-4">
+          <div className="w-32 h-20 bg-muted flex items-center justify-center">
+            {b.blog_image ? (
+              <img
+                src={`${API_BASE}${b.blog_image}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <ImageIcon className="opacity-40" />
+            )}
           </div>
-        ))}
-      </div>
 
-      {/* MODAL */}
+          <div className="flex-1">
+            <h3 className="font-semibold">{b.title}</h3>
+            <p className="text-sm text-muted-foreground">
+              {b.is_global ? "🌍 Global" : `Disease ID: ${b.disease_id}`}
+              {b.treatment_id && b.treatment_id !== "0" && (
+                <> | Treatment ID: {b.treatment_id}</>
+              )}
+              {b.is_featured && " ⭐ Featured"}
+            </p>
+          </div>
+
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditing(b);
+
+                setForm({
+                  ...emptyForm,
+                  ...b,
+                  disease_id: b.disease_id ? String(b.disease_id) : "0",
+                  treatment_id: b.treatment_id ? String(b.treatment_id) : "0",
+                  blog_image: null,
+                  existing_image: b.blog_image ? `${API_BASE}${b.blog_image}` : "",
+                  remove_image: false,
+                });
+
+                setOpen(true);
+
+              }}
+            >
+              <Edit className="w-4 h-4 mr-1" /> Edit
+            </Button>
+
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => handleDelete(b.id)}
+            >
+              <Trash2 className="w-4 h-4 mr-1" /> Delete
+            </Button>
+          </div>
+        </div>
+      ))}
+
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="max-w-7xl max-h-[90vh] overflow-y-auto"
+        >
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Blog" : "Create Blog"}
             </DialogTitle>
           </DialogHeader>
 
-          {/* GLOBAL */}
-          <label className="flex items-center gap-2 mb-4">
-            <input
-              type="checkbox"
-              checked={form.is_global}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  is_global: e.target.checked,
-                  disease_id: "0",
-                  treatment_id: "0",
-                })
-              }
-            />
-            <Globe className="w-4 h-4" /> Global Blog
-          </label>
+          <div className="flex gap-6 mb-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.is_global}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    is_global: e.target.checked,
+                    disease_id: "0",
+                    treatment_id: "0",
+                  })
+                }
+              />
+              <Globe className="w-4 h-4" /> Global
+            </label>
 
-          {/* DISEASE / TREATMENT */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.is_featured}
+                onChange={(e) =>
+                  setForm({ ...form, is_featured: e.target.checked })
+                }
+              />
+              <Star className="w-4 h-4" /> Featured
+            </label>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Disease *</label>
+              <select
+                className="border rounded px-3 py-2 w-full disabled:bg-gray-100"
+                value={form.disease_id}
+                disabled={form.is_global}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    disease_id: e.target.value,
+                    treatment_id: "0",
+                  })
+                }
+              >
+                <option value="0">Select Disease</option>
+                {diseases.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1 block">Treatment</label>
+              <select
+                className="border rounded px-3 py-2 w-full disabled:bg-gray-100"
+                value={form.treatment_id}
+                disabled={form.is_global || form.disease_id === "0"}
+                onChange={(e) =>
+                  setForm({ ...form, treatment_id: e.target.value })
+                }
+              >
+                <option value="0">Select Treatment</option>
+                {treatments.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
-            <select
-              disabled={form.is_global}
-              className="border rounded px-3 py-2"
-              value={form.disease_id}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  disease_id: e.target.value,
-                  treatment_id: "0",
-                })
-              }
-            >
-              <option value="0">Select Disease *</option>
-              {diseases.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Title *</label>
+              <Input
+                value={form.title}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    title: e.target.value,
+                    slug: slugify(e.target.value),
+                  })
+                }
+              />
+            </div>
 
-            <select
-              disabled={form.is_global || form.disease_id === "0"}
-              className="border rounded px-3 py-2"
-              value={form.treatment_id}
-              onChange={(e) =>
-                setForm({ ...form, treatment_id: e.target.value })
-              }
-            >
-              <option value="0">Select Treatment</option>
-              {treatments.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Slug *</label>
+              <Input
+                value={form.slug}
+                onChange={(e) =>
+                  setForm({ ...form, slug: e.target.value })
+                }
+              />
+            </div>
           </div>
 
-          {/* TITLE / SLUG */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <Input
-              placeholder="Title *"
-              value={form.title}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  title: e.target.value,
-                  slug: generateSlug(e.target.value),
-                })
+          <div className="mt-6">
+            <label className="text-sm font-medium mb-2 block">Description *</label>
+            <RichTextEditor
+              value={form.description_html}
+              onChange={(v) =>
+                setForm({ ...form, description_html: v })
               }
-            />
-            <Input
-              placeholder="Slug *"
-              value={form.slug}
-              onChange={(e) =>
-                setForm({ ...form, slug: e.target.value })
-              }
+              minHeight={300}
             />
           </div>
 
-          {/* IMAGE */}
-          <div className="mt-4">
-            <input
+          {/* <div className="mt-6">
+            <label className="text-sm font-medium mb-1 block">Blog Image</label>
+            <Input
               type="file"
               accept="image/*"
               onChange={(e) =>
@@ -337,61 +360,156 @@ export default function ManageBlogs() {
                 })
               }
             />
+          </div> */}
+          <div className="mt-6">
+            <label className="text-sm font-medium mb-2 block">Blog Image</label>
 
-            {editing?.blog_image && (
-              <img
-                src={getImageUrl(editing.blog_image)}
-                className="mt-2 h-24 rounded object-cover"
-              />
+            {(form.blog_image || form.existing_image) && (
+              <div className="relative w-64 h-40 mb-3 border rounded overflow-hidden">
+                <img
+                  src={
+                    form.blog_image
+                      ? URL.createObjectURL(form.blog_image)
+                      : form.existing_image
+                  }
+                  className="w-full h-full object-cover"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      blog_image: null,
+                      existing_image: "",
+                      remove_image: true,
+                    })
+                  }
+                  className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+                >
+                  Remove
+                </button>
+              </div>
             )}
+
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  blog_image: e.target.files?.[0] || null,
+                  remove_image: false,
+                })
+              }
+            />
           </div>
 
-          <RichTextEditor
-            label="Full Content *"
-            value={form.description_html}
-            onChange={(v) =>
-              setForm({ ...form, description_html: v })
-            }
-            minHeight={300}
-          />
-
-          {/* SEO */}
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <Input
-              placeholder="Meta Title"
-              value={form.meta_title}
-              onChange={(e) =>
-                setForm({ ...form, meta_title: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Meta Keywords"
-              value={form.meta_keywords}
-              onChange={(e) =>
-                setForm({ ...form, meta_keywords: e.target.value })
-              }
-            />
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image Alt Text
+              </label>
+              <Input
+                value={form.blog_image_alt}
+                onChange={(e) =>
+                  setForm({ ...form, blog_image_alt: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Image Title
+              </label>
+              <Input
+                value={form.blog_image_title}
+                onChange={(e) =>
+                  setForm({ ...form, blog_image_title: e.target.value })
+                }
+              />
+            </div>
           </div>
 
-          <Input
-            className="mt-4"
-            placeholder="Meta Description"
-            value={form.meta_description}
-            onChange={(e) =>
-              setForm({ ...form, meta_description: e.target.value })
-            }
-          />
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Status</label>
+              <select
+                className="border rounded px-3 py-2 w-full"
+                value={form.status}
+                onChange={(e) =>
+                  setForm({ ...form, status: e.target.value })
+                }
+              >
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
 
-          <Input
-            className="mt-4"
-            placeholder="Tags (comma separated)"
-            value={form.tags}
-            onChange={(e) =>
-              setForm({ ...form, tags: e.target.value })
-            }
-          />
+          <div className="mt-8 border-t pt-6">
+            <h3 className="font-semibold mb-4">SEO</h3>
 
-          <DialogFooter>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">Meta Title</label>
+                <Input
+                  value={form.meta_title}
+                  onChange={(e) =>
+                    setForm({ ...form, meta_title: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Meta Keywords
+                </label>
+                <Input
+                  value={form.meta_keywords}
+                  onChange={(e) =>
+                    setForm({ ...form, meta_keywords: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">
+                Meta Description
+              </label>
+              <Input
+                value={form.meta_description}
+                onChange={(e) =>
+                  setForm({ ...form, meta_description: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">
+                Canonical URL
+              </label>
+              <Input
+                value={form.canonical_url}
+                onChange={(e) =>
+                  setForm({ ...form, canonical_url: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="text-sm font-medium mb-1 block">Tags</label>
+              <Input
+                value={form.tags}
+                onChange={(e) =>
+                  setForm({ ...form, tags: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
@@ -401,6 +519,7 @@ export default function ManageBlogs() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }

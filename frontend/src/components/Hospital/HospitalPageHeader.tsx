@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   title: string;
@@ -10,6 +11,7 @@ interface HeaderProps {
   onCountryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onCityChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
+
 
 const HospitalPageHeader: React.FC<HeaderProps> = ({
   title,
@@ -23,7 +25,6 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
   return (
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       <div className="text-center mb-9">
-        {/* Breadcrumb */}
         <p className="text-[#87898C]"
           style={{
             fontFamily: "Ubuntu, sans-serif",
@@ -33,7 +34,9 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
             lineHeight: "100%",
             letterSpacing: "0%",
           }}>
-          Home <span className="text-[#F0A324]" style={{
+          <Link to="/" className="hover:underline">
+            Home
+          </Link>{" "} <span className="text-[#F0A324]" style={{
             fontFamily: "Ubuntu, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",
@@ -43,25 +46,21 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
           }}>/ Hospitals</span>
         </p>
 
-        {/* Title */}
         <h1 className="mt-2"
-        style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 700,
-  fontStyle: "normal",
-  fontSize: "48px",
-  lineHeight: "100%",
-  letterSpacing: "0%",
-}}
+          style={{
+            fontFamily: "Ubuntu, sans-serif",
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "48px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+          }}
 
         >{title}</h1>
       </div>
 
-      {/* Filter Bar */}
       <div className="flex justify-center">
         <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl headings-search-location">
-
-          {/* Country */}
           <div className="relative w-1/2 space-placeholder">
             <select
               value={selectedCountry}
@@ -75,14 +74,11 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
                 </option>
               ))}
             </select>
-
             <ChevronDown
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
               size={18}
             />
           </div>
-
-          {/* City */}
           <div className="relative w-1/2 space-placeholder">
             <select
               value={selectedCity}
@@ -97,13 +93,11 @@ const HospitalPageHeader: React.FC<HeaderProps> = ({
                 </option>
               ))}
             </select>
-
             <ChevronDown
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
               size={18}
             />
           </div>
-
         </div>
       </div>
     </section>

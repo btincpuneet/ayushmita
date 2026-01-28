@@ -13,10 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "@/components/RichTextEditor";
+import { authHeader } from "../../utils/auth";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
-
-/* ================= TYPES ================= */
 
 interface CmsPage {
   id: number;
@@ -25,8 +24,6 @@ interface CmsPage {
   content_html: string;
   status: "active" | "inactive";
 }
-
-/* ================= COMPONENT ================= */
 
 export default function ManageCmsPage() {
   const [pages, setPages] = useState<CmsPage[]>([]);
@@ -40,8 +37,6 @@ export default function ManageCmsPage() {
     status: "active",
   });
 
-  /* ---------------- FETCH ---------------- */
-
   const fetchPages = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/cms-pages`);
@@ -54,8 +49,6 @@ export default function ManageCmsPage() {
   useEffect(() => {
     fetchPages();
   }, []);
-
-  /* ---------------- HELPERS ---------------- */
 
   const createSlug = (text: string) =>
     text
@@ -73,8 +66,6 @@ export default function ManageCmsPage() {
     });
   };
 
-  /* ---------------- SUBMIT ---------------- */
-
   const handleSubmit = async () => {
     if (!form.title || !form.slug) {
       return toast.error("Title and Slug are required");
@@ -84,11 +75,16 @@ export default function ManageCmsPage() {
       if (editing) {
         await axios.put(
           `${API_BASE}/api/cms-pages/${editing.id}`,
-          form
+          form,
+          {
+            headers: authHeader(),
+          }
         );
         toast.success("Page updated");
       } else {
-        await axios.post(`${API_BASE}/api/cms-pages`, form);
+        await axios.post(`${API_BASE}/api/cms-pages`, form, {
+          headers: authHeader(),
+        });
         toast.success("Page created");
       }
 
@@ -99,8 +95,6 @@ export default function ManageCmsPage() {
       toast.error(err?.response?.data?.message || "Save failed");
     }
   };
-
-  /* ---------------- EDIT ---------------- */
 
   const handleEdit = (page: CmsPage) => {
     setEditing(page);
@@ -113,7 +107,23 @@ export default function ManageCmsPage() {
     setOpen(true);
   };
 
-  /* ---------------- UI ---------------- */
+  const handleDelete = async (page: CmsPage) => {
+    const confirmDelete = window.confirm(
+      `This will permanently delete "${page.title}".\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API_BASE}/api/cms-pages/${page.id}`, {
+        headers: authHeader(),
+      });
+      toast.success("Page permanently deleted");
+      fetchPages();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Delete failed");
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -131,7 +141,6 @@ export default function ManageCmsPage() {
         </Button>
       </div>
 
-      {/* TABLE */}
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-100">
@@ -148,12 +157,13 @@ export default function ManageCmsPage() {
             {pages.map((page, i) => (
               <tr key={page.id} className="border-t">
                 <td className="p-3">{i + 1}</td>
+
                 <td className="p-3 font-medium">{page.title}</td>
 
                 <td className="p-3">
                   <a
-                    href={`${FRONTEND_BASE}/${page.slug}`}
-                    target="_blank"
+                    // href={`${FRONTEND_BASE}/${page.slug}`}
+                    // target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
                   >
@@ -163,23 +173,30 @@ export default function ManageCmsPage() {
 
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      page.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
+                    className={`px-2 py-1 rounded text-xs ${page.status === "active"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                      }`}
                   >
                     {page.status}
                   </span>
                 </td>
 
-                <td className="p-3">
+                <td className="p-3 space-x-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleEdit(page)}
                   >
                     Edit
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(page)}
+                  >
+                    Delete
                   </Button>
                 </td>
               </tr>
@@ -196,9 +213,8 @@ export default function ManageCmsPage() {
         </table>
       </div>
 
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[120vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit CMS Page" : "Create CMS Page"}

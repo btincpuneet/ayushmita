@@ -1,5 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+interface BreadcrumbItem {
+  label: string;
+  link?: string;
+}
+
+interface TreatmentHeaderProps {
+  title?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  children?: React.ReactNode;
+  bgColor?: string;
+  breadcrumbColor?: string;
+  highlightColor?: string;
+}
 
 const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
   title,
@@ -13,19 +26,25 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
 
   return (
     <div
-      className="relative mt-20 "
+      className="relative border border-[#FBF6DE]"
       style={{ backgroundColor: bgColor }}
     >
-      <div className="max-w-7xl mx-auto  text-center pt-10 pb-10">
+      <div className="max-w-7xl mx-auto mt-20 text-center pt-10 pb-10">
         <p className={`text-sm ${breadcrumbColor} mb-2`}>
           {breadcrumbs.map((item, index) => (
             <span key={index}>
               <span
-                className={`cursor-pointer ${item.link ? "hover:underline" : ""
+                className={`${index < breadcrumbs.length - 1
+                    ? "cursor-pointer hover:underline"
+                    : ""
                   }`}
-                style={index !== 0 ? { color: highlightColor } : {}}
-                onClick={() => item.link && navigate(item.link)}
+                style={index === breadcrumbs.length - 1 ? { color: highlightColor } : {}}
+                onClick={() =>
+                  index < breadcrumbs.length - 1 && item.link && navigate(item.link)
+                }
               >
+
+
                 {item.label}
               </span>
               {index !== breadcrumbs.length - 1 && " / "}
@@ -33,9 +52,12 @@ const TreatmentHeader: React.FC<TreatmentHeaderProps> = ({
           ))}
         </p>
 
-        <h1 className="hospital-treatment-low-price text-2xl">
-          {title}
-        </h1>
+        {title && (
+          <h1 className="hospital-treatment-low-price text-2xl">
+            {title}
+          </h1>
+        )}
+
 
         {children && (
           <div className="mt-8 flex justify-center">

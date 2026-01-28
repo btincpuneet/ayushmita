@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authHeader } from "../../utils/auth";
 
 const API_URL = `${API_BASE}/api/promo-sliders`;
 
@@ -19,9 +20,9 @@ const ManagePromoSlider = () => {
   const [sliders, setSliders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal State
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
@@ -30,18 +31,19 @@ const ManagePromoSlider = () => {
     code_text: "",
     button_text: "",
     status: "active",
+    image_alt: "",
+    image_title: "",
     image: null,
   });
 
   const [preview, setPreview] = useState(null);
 
-  // Load Data
   const loadData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(API_URL);
       setSliders(res.data.data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load");
     }
     setLoading(false);
@@ -51,7 +53,7 @@ const ManagePromoSlider = () => {
     loadData();
   }, []);
 
-  // Open Modal for Create
+  /* FIXED */
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -62,13 +64,43 @@ const ManagePromoSlider = () => {
       code_text: "",
       button_text: "",
       status: "active",
+      image_alt: "",
+      image_title: "",
       image: null,
     });
     setPreview(null);
     setOpen(true);
   };
 
-  // Open Modal for Update
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    Object.keys(form).forEach((k) => {
+      if (form[k] !== null) formData.append(k, form[k]);
+    });
+
+    try {
+      const config = {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      if (editing) {
+        await axios.put(`${API_URL}/${editing.id}`, formData, config);
+        toast.success("Slider updated!");
+      } else {
+        await axios.post(API_URL, formData, config);
+        toast.success("Slider created!");
+      }
+
+      setOpen(false);
+      loadData();
+    } catch {
+      toast.error("Error saving");
+    }
+  };
+
   const handleEdit = (item) => {
     setEditing(item);
     setForm({
@@ -79,10 +111,11 @@ const ManagePromoSlider = () => {
       code_text: item.code_text,
       button_text: item.button_text,
       status: item.status,
+      image_alt: item.image_alt || "",
+      image_title: item.image_title || "",
       image: null,
     });
 
-    // FIXED: Show image from uploads folder
     if (item.image_url) {
       setPreview(`${API_BASE}${item.image_url}`);
     }
@@ -90,36 +123,15 @@ const ManagePromoSlider = () => {
     setOpen(true);
   };
 
-  // Create or Update
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    Object.keys(form).forEach((k) => {
-      if (form[k] !== null) formData.append(k, form[k]);
-    });
-
-    try {
-      if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, formData);
-        toast.success("Slider updated!");
-      } else {
-        await axios.post(API_URL, formData);
-        toast.success("Slider created!");
-      }
-      setOpen(false);
-      loadData();
-    } catch (err) {
-      toast.error("Error saving");
-    }
-  };
-
-  // Delete
   const handleDelete = async (id) => {
     if (!confirm("Delete this slider?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: authHeader(),
+      });
       toast.success("Deleted!");
       loadData();
-    } catch (err) {
+    } catch {
       toast.error("Delete failed");
     }
   };
@@ -139,7 +151,8 @@ const ManagePromoSlider = () => {
             <tr>
               <th className="p-3">Image</th>
               <th className="p-3">Title</th>
-              <th className="p-3">Subtitle</th>
+              <th className="p-3">Alt</th>
+              <th className="p-3">Image Title</th>
               <th className="p-3">Discount</th>
               <th className="p-3">Status</th>
               <th className="p-3 text-right">Actions</th>
@@ -150,11 +163,11 @@ const ManagePromoSlider = () => {
             {sliders.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className="p-3">
-                  {/* FIXED: Now image loads correctly */}
                   {item.image_url ? (
                     <img
                       src={`${API_BASE}${item.image_url}`}
-                      alt=""
+                      alt={item.image_alt || ""}
+                      title={item.image_title || ""}
                       className="w-20 h-14 object-cover rounded"
                     />
                   ) : (
@@ -163,35 +176,34 @@ const ManagePromoSlider = () => {
                 </td>
 
                 <td className="p-3">{item.title}</td>
-                <td className="p-3">{item.subtitle}</td>
+                <td className="p-3">{item.image_alt}</td>
+                <td className="p-3">{item.image_title}</td>
                 <td className="p-3">{item.discount_text}</td>
 
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 text-sm rounded ${
-                      item.status === "active"
+                    className={`px-2 py-1 text-sm rounded ${item.status === "active"
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-600"
-                    }`}
+                      }`}
                   >
                     {item.status}
                   </span>
                 </td>
 
                 <td className="p-3 text-right">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="text-blue-600 mr-4"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="text-red-600"
-                  >
-                    Delete
-                  </button>
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" onClick={() => handleEdit(item)}>
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -203,16 +215,16 @@ const ManagePromoSlider = () => {
         )}
       </div>
 
-      {/* Modal */}
+
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Slider" : "Add New Slider"}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <Input
               placeholder="Title"
               value={form.title}
@@ -226,6 +238,7 @@ const ManagePromoSlider = () => {
             />
 
             <Textarea
+              className="col-span-2"
               placeholder="Description"
               value={form.description}
               onChange={(e) =>
@@ -244,7 +257,9 @@ const ManagePromoSlider = () => {
             <Input
               placeholder="Code Text"
               value={form.code_text}
-              onChange={(e) => setForm({ ...form, code_text: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, code_text: e.target.value })
+              }
             />
 
             <Input
@@ -255,8 +270,24 @@ const ManagePromoSlider = () => {
               }
             />
 
+            <Input
+              placeholder="Image Alt Text"
+              value={form.image_alt}
+              onChange={(e) =>
+                setForm({ ...form, image_alt: e.target.value })
+              }
+            />
+
+            <Input
+              placeholder="Image Title"
+              value={form.image_title}
+              onChange={(e) =>
+                setForm({ ...form, image_title: e.target.value })
+              }
+            />
+
             <select
-              className="border p-2 rounded"
+              className="border p-2 rounded col-span-2"
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value })}
             >
@@ -264,19 +295,14 @@ const ManagePromoSlider = () => {
               <option value="inactive">Inactive</option>
             </select>
 
-            {/* Image Upload */}
-            <div>
+            <div className="col-span-2">
               <Input
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files[0];
                   setForm({ ...form, image: file });
-
-                  if (file) {
-                    const url = URL.createObjectURL(file);
-                    setPreview(url);
-                  }
+                  if (file) setPreview(URL.createObjectURL(file));
                 }}
               />
 
@@ -296,6 +322,7 @@ const ManagePromoSlider = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };

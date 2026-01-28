@@ -26,10 +26,11 @@ const Doctor = sequelize.define(
       allowNull: true,
     },
 
-    specialty: {
-      type: DataTypes.STRING,
+    speciality_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
+
 
     experience: {
       type: DataTypes.INTEGER,
@@ -60,14 +61,26 @@ const Doctor = sequelize.define(
       type: DataTypes.TEXT("long"),
       allowNull: true,
     },
+    faq_html: {
+      type: DataTypes.TEXT("long"),
+      allowNull: true,
+    },
 
-    
+
     image_url: {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
-    
+    image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     seo_title: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -88,7 +101,6 @@ const Doctor = sequelize.define(
       allowNull: true,
     },
 
-    /* STATUS */
     status: {
       type: DataTypes.TINYINT,
       defaultValue: 1,

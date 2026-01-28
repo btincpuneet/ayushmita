@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
+import UseSeo from "../hooks/useSeo";
 
 import "../css/common.css";
 import Header from "../components/Header";
@@ -18,13 +19,25 @@ export default function TreatmentDetailsPage() {
   const [openModal, setOpenModal] = useState(false);
   const [treatment, setTreatment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
+  const fetchGlobalSettings = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/global-settings`);
+      if (res.data?.success) {
+        setWhatsAppNumber(res.data.data.whatsapp_number);
+      }
+    } catch (error) {
+      console.error("Failed to fetch WhatsApp number", error);
+    }
+  };
+
 
   const fetchTreatment = async () => {
     try {
       const res = await axios.get(
         `${API_BASE}/api/treatments/single/${slug}`
       );
-      console.log("resss",res.data.treatment?.disease.name)
+      console.log("resss", res.data.treatment?.disease.name)
       if (res.data?.success) setTreatment(res.data.treatment);
       setLoading(false);
     } catch (err) {
@@ -35,7 +48,34 @@ export default function TreatmentDetailsPage() {
 
   useEffect(() => {
     fetchTreatment();
+    fetchGlobalSettings();
+
   }, [slug]);
+
+  const seoTitle =
+    treatment?.seo_title ||
+    `${treatment?.name || "Treatment"} Treatment | Best Hospital`;
+
+  const seoDescription =
+    treatment?.seo_description ||
+    treatment?.short_description?.replace(/<[^>]+>/g, "") ||
+    "Advanced medical treatment with experienced specialists.";
+
+  const seoKeywords =
+    treatment?.seo_keywords ||
+    `${treatment?.name || "treatment"}, healthcare, hospital`;
+  const canonicalUrl =
+    treatment?.canonical_url ||
+    `${window.location.origin}/treatment/${treatment?.slug}`;
+
+  UseSeo(
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    canonicalUrl
+  );
+
+  UseSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
 
   if (loading) return <p className="p-6 text-xl">Loading...</p>;
   if (!treatment) return <p className="p-6 text-xl">Treatment not found</p>;
@@ -44,56 +84,61 @@ export default function TreatmentDetailsPage() {
     <div className="bg-white">
       <Header />
 
-     <div className="w-full">
+      <div className="w-full">
         <TreatmentHeader
-          title={treatment?.name}
+          title={treatment?.name || "Treatment"}
           breadcrumbs={[
-            { label: "Home" },
-            { label: treatment?.disease?.name || "Treatment"  },
-            { label: treatment?.name || "Treatment" ,link: "/" },
+            {
+              label: "Home",
+              link: "/",
+            },
+            {
+              label: treatment?.disease?.name || "Treatments",
+              link: treatment?.disease
+                ? `/disease/${treatment.disease.slug}`
+                : "/treatments",
+            },
+            {
+              label: treatment?.name || "Treatment",
+              link: "",
+            },
           ]}
         />
       </div>
+
 
       <div className="max-w-7xl mx-auto px-4 py-12">
 
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-                src={`${API_BASE}${treatment.image}`}
-              alt={treatment.name}
+              src={
+                treatment.image
+                  ? `${API_BASE}${treatment.image}`
+                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+              }
+              alt={
+                treatment.image_alt ||
+                `${treatment.name} Treatment`
+              }
+              title={
+                treatment.image_title ||
+                treatment.name
+              }
               className="rounded-xl w-full max-w-[370px] h-[294px] object-cover"
             />
+
           </div>
 
           <div className="w-full lg:w-[100%]">
-            <h2
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: 700,
-                fontStyle: "bold",
-                fontSize: "28px",
-                lineHeight: "100%",
-                letterSpacing: "0%"
-              }}
-            >Overview</h2>
-            <span
-              style={{
-                width: "32px",
-                height: "4px",
-                background: "linear-gradient(to right, #f1a339, #7ac142)",
-                borderRadius: "5px",
-                display: "inline-block"
-              }}
-            ></span>
             <div
-          className="prose max-w-none"
-          dangerouslySetInnerHTML={{
-            __html: treatment?.short_description || "",
-          }}
-        />
+              className="cms-content prose max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: treatment?.short_description || "",
+              }}
+            />
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-8 treat-ment-details-btns">
               <button
                 onClick={() => setOpenModal(true)}
                 className="bg-[#F0A324] hover:bg-orange-500 py-[12px] px-[24px] rounded-lg transition"
@@ -109,31 +154,43 @@ export default function TreatmentDetailsPage() {
                 Book An Appointment
               </button>
 
-              <button
-                className="bg-[#25CB68] hover:bg-green-600 text-[#FFFFFF]  px-[24px] py-[12px] rounded-lg transition"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
-                <span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_1226_557)">
-                    <path d="M7.00001 0C10.8661 0 14 3.1339 14 6.99999C14 10.8661 10.8661 14 7.00001 14C5.76293 14.0021 4.54761 13.6747 3.47901 13.0515L0.00281082 14L0.94921 10.5224C0.325481 9.45344 -0.00215714 8.23761 1.06881e-05 6.99999C1.06881e-05 3.1339 3.13391 0 7.00001 0ZM4.61441 3.71L4.47441 3.7156C4.38389 3.72183 4.29545 3.74561 4.21401 3.7856C4.13811 3.82865 4.0688 3.88241 4.00821 3.9452C3.92421 4.0243 3.87661 4.0929 3.82551 4.1594C3.56659 4.49603 3.42719 4.90932 3.42931 5.334C3.43071 5.677 3.52031 6.0109 3.66031 6.32309C3.94661 6.95449 4.41771 7.62299 5.03931 8.24249C5.18911 8.39159 5.33611 8.54139 5.49431 8.68069C6.26671 9.36067 7.1871 9.85107 8.1823 10.1129L8.5799 10.1738C8.7094 10.1808 8.8389 10.171 8.9691 10.1647C9.17293 10.1539 9.37195 10.0988 9.5522 10.003C9.6438 9.95563 9.73325 9.90425 9.8203 9.84899C9.8203 9.84899 9.84994 9.82893 9.9078 9.78599C10.0023 9.71599 10.0604 9.66629 10.1388 9.58439C10.1976 9.52373 10.2466 9.45326 10.2858 9.37299C10.3404 9.25889 10.395 9.04119 10.4174 8.85989C10.4342 8.72129 10.4293 8.64569 10.4272 8.59879C10.4244 8.52389 10.3621 8.44619 10.2942 8.41329L9.8868 8.23059C9.8868 8.23059 9.2778 7.96529 8.9054 7.79589C8.86642 7.77892 8.82467 7.7692 8.7822 7.76719C8.73431 7.76218 8.68589 7.76753 8.64024 7.78287C8.59458 7.7982 8.55276 7.82318 8.5176 7.85609C8.5141 7.85469 8.4672 7.89459 7.9611 8.50779C7.93206 8.54683 7.89204 8.57633 7.84617 8.59253C7.80029 8.60874 7.75063 8.61092 7.7035 8.59879C7.65788 8.58663 7.6132 8.57119 7.5698 8.55259C7.48301 8.51619 7.45291 8.50219 7.3934 8.47699C6.99152 8.30193 6.61951 8.06503 6.29091 7.77489C6.20271 7.69789 6.12081 7.61389 6.03681 7.53269C5.76143 7.26894 5.52143 6.97058 5.32281 6.64509L5.28151 6.57859C5.25229 6.53365 5.22833 6.4855 5.21011 6.43509C5.18351 6.33219 5.25281 6.2496 5.25281 6.2496C5.25281 6.2496 5.42291 6.0634 5.50201 5.96259C5.57901 5.86459 5.64411 5.7694 5.68611 5.7015C5.76871 5.5685 5.79461 5.432 5.75121 5.3263C5.55521 4.8475 5.35267 4.37126 5.14361 3.8976C5.10231 3.8038 4.97981 3.7366 4.86851 3.7233C4.83071 3.71863 4.79291 3.7149 4.75511 3.7121C4.66112 3.70671 4.56687 3.70764 4.47301 3.7149L4.61441 3.71Z" fill="white" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1226_557">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                </span>  Chat Now
-              </button>
+
+              {whatsAppNumber && (
+                <a
+                  href={`https://wa.me/91${whatsAppNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button
+                    className="bg-[#25CB68] hover:bg-green-600 text-white px-[24px] py-[12px] rounded-lg transition chat-now-btn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      fontFamily: "Ubuntu",
+                      fontWeight: 500,
+                      fontSize: "16px",
+                      
+                    }}
+                  >
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path
+                          d="M7 0C10.866 0 14 3.134 14 7c0 3.866-3.134 7-7 7a6.96 6.96 0 0 1-3.52-.95L0 14l.95-3.52A6.96 6.96 0 0 1 0 7C0 3.134 3.134 0 7 0Z"
+                          fill="white"
+                        />
+                      </svg>
+                    </span>
+                    Chat Now
+                  </button>
+                </a>
+              )}
+
             </div>
           </div>
         </div>
         <div
-          className="prose max-w-none"
+          className="cms-content prose max-w-none"
           dangerouslySetInnerHTML={{
             __html: treatment?.description_html || "",
           }}
@@ -144,7 +201,10 @@ export default function TreatmentDetailsPage() {
       <OtherServices diseaseId={treatment.disease_id} currentSlug={treatment.slug} />
       <ConsultationForm />
       <TestimonialSlider />
-      <BlogSection />
+      <BlogSection
+        diseaseId={treatment.disease_id}
+        treatmentId={treatment?.id || 0}
+      />
       <Footer />
 
       <ModalAppointment

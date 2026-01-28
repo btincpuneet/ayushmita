@@ -25,7 +25,15 @@ const Disease = sequelize.define(
       type: DataTypes.STRING(500),
       allowNull: true,
     },
+    image_alt: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
+    image_title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     short_description: {
       type: DataTypes.TEXT,
       allowNull: true,

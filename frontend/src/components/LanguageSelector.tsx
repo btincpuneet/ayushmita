@@ -48,6 +48,14 @@ const LanguageSelector: React.FC = () => {
     i18n.changeLanguage(code);
     const opt = LANGUAGE_OPTIONS.find((l) => l.code === code);
     if (opt) setSelected(opt);
+    // Trigger Google Translate widget (if present) to translate page and dynamic content
+    // @ts-ignore
+    if (typeof window.applyGoogleTranslate === "function") {
+      // Google Translate expects target language, sometimes in two-letter code
+      // Use the same `code` used by i18next
+      // @ts-ignore
+      window.applyGoogleTranslate(code);
+    }
   };
 
   return (
@@ -61,14 +69,14 @@ const LanguageSelector: React.FC = () => {
       >
         <img src={selected.flag} alt={selected.language} className="w-5 h-4 object-cover rounded-sm" />
         <span className="hidden sm:inline"
-        style={{
-  fontFamily: "Ubuntu, sans-serif",
-  fontWeight: 500,
-  fontStyle: "normal",
-  fontSize: "15px",
-  lineHeight: "100%",
-  letterSpacing: "0px",
-}}
+          style={{
+            fontFamily: "Ubuntu, sans-serif",
+            fontWeight: 500,
+            fontStyle: "normal",
+            fontSize: "15px",
+            lineHeight: "100%",
+            letterSpacing: "0px",
+          }}
 
         >{selected.language}</span>
         <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
@@ -89,12 +97,11 @@ const LanguageSelector: React.FC = () => {
               role="option"
               aria-selected={opt.code === selected.code}
               onClick={() => changeLanguage(opt.code)}
-              className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm hover:bg-gray-50 ${
-                opt.code === selected.code ? "bg-gray-50 font-semibold" : ""
-              }`}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm hover:bg-gray-50 ${opt.code === selected.code ? "bg-gray-50 font-semibold" : ""
+                }`}
             >
               <img src={opt.flag} alt={opt.language} className="w-5 h-4 object-cover rounded-sm" />
-              <span>{opt.language}</span>
+              <span className="language-options">{opt.language}</span>
             </li>
           ))}
         </ul>

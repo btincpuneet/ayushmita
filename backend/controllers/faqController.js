@@ -1,6 +1,5 @@
 const { FAQ } = require('../models/faq');
 console.log('FAQ Model:', FAQ);
-// CREATE FAQ
 exports.createFAQ = async (req, res) => {
   try {
     const { question, answer, sort_order, status } = req.body;
@@ -22,19 +21,38 @@ exports.createFAQ = async (req, res) => {
   }
 };
 
-// GET ALL FAQ
 exports.getFAQs = async (req, res) => {
   try {
     const data = await FAQ.findAll({
-      order: [["sort_order", "ASC"], ["id", "DESC"]],
+      where: { status: 1 },
+      order: [
+        ["sort_order", "ASC"],
+        ["id", "DESC"],
+      ],
     });
+
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+exports.getAllFAQs = async (req, res) => {
+  try {
+    const faqs = await FAQ.findAll({
+      order: [["createdAt", "DESC"]],
+    });
 
-// GET FAQ BY ID
+    res.json(faqs);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch FAQs",
+      error: error.message,
+    });
+  }
+};
+
 exports.getFAQ = async (req, res) => {
   try {
     const faq = await FAQ.findByPk(req.params.id);

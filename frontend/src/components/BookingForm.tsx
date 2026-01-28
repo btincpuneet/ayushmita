@@ -1,356 +1,154 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-
-// const BookingForm: React.FC = () => {
-//   const [form, setForm] = useState({
-//     name: "",
-//     country: "",
-//     city: "",
-//     mobile: "",
-//     requirement: "",
-//   });
-
-//   const handleChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-//   ) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       await axios.post("http://127.0.0.1:5001/api/book-consultation", form);
-//       alert("Consultation request sent successfully!");
-//       setForm({
-//         name: "",
-//         country: "",
-//         city: "",
-//         mobile: "",
-//         requirement: "",
-//       });
-//     } catch {
-//       alert("Failed to send request");
-//     }
-//   };
-
-//   return (
-//    <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full sticky top-6 sider-form-section">
-
-//       {/* Title */}
-//       <h3 className="text-[#FFFFFF] text-center"
-//       style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 700,
-//   fontStyle: "normal",
-//   fontSize: "24px",
-//   lineHeight: "32px",
-//   letterSpacing: "0%",
-// }}
-
-//       >
-//         Book Your Free Consultation
-//       </h3>
-//       <p className="text-[#FFFFFF] text-center mt-1 mb-6"
-//       style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "12px",
-//   lineHeight: "18px",
-//   letterSpacing: "0%",
-// }}
-
-//       >
-//         Our health expert will contact you within 24 hours
-//       </p>
-
-//       {/* Form */}
-//       <form className="space-y-4" onSubmit={handleSubmit}>
-//         {/* Full Name */}
-//         <div>
-//           <label className="text-[#FFFFFF] mb-1 block"
-//           style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-// }}
-
-//           >
-//             Full Name
-//           </label>
-//           <input
-//             name="name"
-//             value={form.name}
-//             onChange={handleChange}
-//             required
-//             placeholder="Enter your full name"
-//             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
-//               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-//               style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-//   color: "#33333380",
-// }}
-
-//           />
-//         </div>
-
-//         {/* Country */}
-//         <div>
-//           <label className="text-[#FFFFFF] mb-1 block"
-//           style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-// }}
-
-//           >
-//             Country
-//           </label>
-//           <select
-//             name="country"
-//             value={form.country}
-//             onChange={handleChange}
-//             required
-//             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
-//               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-//               style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-//   color: "#33333380",
-// }}
-
-//           >
-//             <option value="">Select Country</option>
-//             <option value="India">India</option>
-//             <option value="Turkey">Turkey</option>
-//             <option value="USA">USA</option>
-//           </select>
-//         </div>
-
-//         {/* City */}
-//         <div>
-//           <label className="text-[#FFFFFF] mb-1 block"
-//           style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-// }}
-// >
-//             City
-//           </label>
-//           <select
-//             name="city"
-//             value={form.city}
-//             onChange={handleChange}
-//             required
-//             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
-//               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-//               style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-//   color: "#33333380",
-// }}
-
-//           >
-//             <option value="">Select City</option>
-//             <option value="Delhi">Delhi</option>
-//             <option value="Mumbai">Mumbai</option>
-//             <option value="Istanbul">Istanbul</option>
-//           </select>
-//         </div>
-
-//         {/* Mobile */}
-//         <div>
-//           <label className="text-[#FFFFFF] mb-1 block"
-//           style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-// }}
-// >
-//             Mobile Number
-//           </label>
-//           <input
-//             name="mobile"
-//             value={form.mobile}
-//             onChange={handleChange}
-//             required
-//             placeholder="+91 XXXXX XXXXX"
-//             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 
-//               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-//               style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-//   color: "#33333380",
-// }}
-
-//           />
-//         </div>
-
-//         {/* Requirement */}
-//         <div>
-//           <label className="text-[#FFFFFF] mb-1 block"
-//           style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-// }}
-
-//           >
-//             Treatment Requirement
-//           </label>
-//           <textarea
-//             name="requirement"
-//             value={form.requirement}
-//             onChange={handleChange}
-//             rows={3}
-//             placeholder="Describe your medical concern"
-//             className="w-full px-3 py-2 rounded-lg bg-white border border-gray-300  resize-none
-//               focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-//               style={{
-//   fontFamily: "Ubuntu, sans-serif",
-//   fontWeight: 400,
-//   fontStyle: "normal",
-//   fontSize: "14px",
-//   lineHeight: "140%",
-//   letterSpacing: "0%",
-//   color: "#33333380",
-// }}
-
-//           />
-//         </div>
-
-//         {/* Submit */}
-//         <button
-//           type="submit"
-//           className="w-full mt-2 bg-[#F0A324] hover:bg-[#F0A324] text-black 
-//             py-3 rounded-lg transition duration-200 active:scale-[0.98]"
-//             style={{
-//   fontFamily: "'Open Sans', sans-serif",
-//   fontWeight: 600,
-//   fontSize: "18px",
-//   lineHeight: "100%",
-//   letterSpacing: "0%",
-// }}
-
-//         >
-//           Submit Request
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default BookingForm;
 import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import Swal from "sweetalert2";
-
-const BASE_URL = API_BASE;
-
+ 
 const BookingForm: React.FC = () => {
   const [form, setForm] = useState({
+    appointment_date: "",
     name: "",
+    email: "",
+    mobile: "",
     country: "",
     city: "",
-    mobile: "",
+    age: "",
+    gender: "",
     requirement: "",
+    hidden_url: window.location.href,
   });
-
+  const [errors, setErrors] = useState<Partial<typeof form>>({});
+ 
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const validateField = (name: string, value: string) => {
+    const trimmed = value.trim();
+ 
+    switch (name) {
+      case "appointment_date":
+        return trimmed ? "" : "Please select an appointment date.";
+ 
+      case "name":
+        if (!trimmed) return "Full name is required.";
+        if (trimmed.length < 3) return "Name must be at least 3 characters.";
+        return "";
+ 
+      case "email":
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)
+          ? ""
+          : "Enter a valid email address.";
+ 
+      case "mobile":
+        return /^[0-9]{10}$/.test(trimmed)
+          ? ""
+          : "Mobile number must be 10 digits.";
+ 
+      case "country":
+        return trimmed ? "" : "Please select a country.";
+ 
+      case "city":
+        return trimmed ? "" : "Please select a city.";
+ 
+      case "age":
+        const ageNum = Number(trimmed);
+        if (!ageNum || ageNum < 1 || ageNum > 120)
+          return "Enter a valid age.";
+        return "";
+ 
+      case "gender":
+        return trimmed ? "" : "Please select gender.";
+ 
+      case "requirement":
+        if (!trimmed) return "Requirement is required.";
+        if (trimmed.length < 10)
+          return "Minimum 10 characters required.";
+        return "";
+ 
+      default:
+        return "";
+    }
   };
-
+ 
+ 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+ 
+    setForm({ ...form, [name]: value });
+ 
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    // Show loading popup
-    Swal.fire({
-      title: "Sending Request...",
-      text: "Please wait",
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
+ 
+    const newErrors: Partial<typeof form> = {};
+    let isValid = true;
+ 
+    Object.keys(form).forEach((key) => {
+      if (key === "hidden_url") return;
+ 
+      const error = validateField(key, form[key as keyof typeof form]);
+      if (error) {
+        isValid = false;
+        newErrors[key as keyof typeof form] = error;
+      }
     });
-
+ 
+    setErrors(newErrors);
+ 
+    if (!isValid) return;
+    setLoading(true);
+ 
+    Swal.fire({
+      title: "Submitting Request",
+      text: "Please wait...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+ 
     try {
-      await axios.post(`${API_BASE}/form-submit`, {
+      await axios.post(`${API_BASE}/api/form-submit`, {
         type: "consultation",
         data: form,
       });
-
+ 
       Swal.fire({
         icon: "success",
-        title: "Request Sent!",
+        title: "Request Submitted",
         text: "Our health expert will contact you within 24 hours.",
         confirmButtonColor: "#F0A324",
       });
-
+ 
       setForm({
+        appointment_date: "",
         name: "",
+        email: "",
+        mobile: "",
         country: "",
         city: "",
-        mobile: "",
+        age: "",
+        gender: "",
         requirement: "",
+        hidden_url: window.location.href,
       });
-    } catch (error) {
-      console.error(error);
-
+ 
+      setErrors({});
+    } catch {
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
-        text: "Something went wrong. Please try again later.",
-        confirmButtonColor: "#F0A324",
+        text: "Please try again later.",
       });
     } finally {
       setLoading(false);
     }
   };
-
+ 
+ 
+ 
   return (
-    <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full sticky top-6 sider-form-section">
-      {/* Title */}
+    <div className="bg-[#2A6506] p-6 rounded-2xl shadow-2xl w-full top-6 sider-form-section">
       <h3
         className="text-[#FFFFFF] text-center"
         style={{
@@ -362,7 +160,7 @@ const BookingForm: React.FC = () => {
       >
         Book Your Free Consultation
       </h3>
-
+ 
       <p
         className="text-[#FFFFFF] text-center mt-1 mb-6"
         style={{
@@ -374,29 +172,85 @@ const BookingForm: React.FC = () => {
       >
         Our health expert will contact you within 24 hours
       </p>
-
-      {/* Form */}
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        {/* Full Name */}
+ 
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
+ 
         <div>
-          <label className="text-white mb-1 block">Full Name</label>
+          <label className="text-white block mb-1">Select appointment date</label>
+          <input
+            type="date"
+            name="appointment_date"
+            value={form.appointment_date}
+            onChange={handleChange}
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
+          />
+          {errors.appointment_date && (
+            <p className="text-red-300 text-xs mt-1">{errors.appointment_date}</p>
+          )}
+        </div>
+ 
+        <div>
+          <label className="text-white block mb-1">Full Name</label>
           <input
             name="name"
             value={form.name}
             onChange={handleChange}
-            required
             placeholder="Enter your full name"
             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
           />
+          {errors.name && (
+            <p className="text-red-300 text-xs mt-1">{errors.name}</p>
+          )}
         </div>
-
+ 
         <div>
-          <label className="text-white mb-1 block">Country</label>
+          <label className="text-white block mb-1">Your Email</label>
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Enter your email address"
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
+          />
+          {errors.email && (
+            <p className="text-red-300 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
+ 
+        <div>
+          <label className="text-white block mb-1">Mobile Number</label>
+          <input
+            type="tel"
+            name="mobile"
+            value={form.mobile}
+            inputMode="numeric"
+            maxLength={10}
+            placeholder="Enter your mobile number"
+            onChange={(e) => {
+              const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+ 
+              setForm((prev) => ({ ...prev, mobile: digits }));
+ 
+              setErrors((prev) => ({
+                ...prev,
+                mobile: validateField("mobile", digits),
+              }));
+            }}
+ 
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
+          />
+          {errors.mobile && (
+            <p className="text-red-300 text-xs mt-1">{errors.mobile}</p>
+          )}
+        </div>
+ 
+        <div>
+          <label className="text-white block mb-1">Country</label>
           <select
             name="country"
             value={form.country}
             onChange={handleChange}
-            required
             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
           >
             <option value="">Select Country</option>
@@ -404,15 +258,17 @@ const BookingForm: React.FC = () => {
             <option value="Turkey">Turkey</option>
             <option value="USA">USA</option>
           </select>
+          {errors.country && (
+            <p className="text-red-300 text-xs mt-1">{errors.country}</p>
+          )}
         </div>
-
+ 
         <div>
-          <label className="text-white mb-1 block">City</label>
+          <label className="text-white block mb-1">City</label>
           <select
             name="city"
             value={form.city}
             onChange={handleChange}
-            required
             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
           >
             <option value="">Select City</option>
@@ -420,44 +276,69 @@ const BookingForm: React.FC = () => {
             <option value="Mumbai">Mumbai</option>
             <option value="Istanbul">Istanbul</option>
           </select>
+          {errors.city && (
+            <p className="text-red-300 text-xs mt-1">{errors.city}</p>
+          )}
         </div>
-
+ 
         <div>
-          <label className="text-white mb-1 block">Mobile Number</label>
+          <label className="text-white block mb-1">Your Age</label>
           <input
-            name="mobile"
-            value={form.mobile}
+            type="number"
+            name="age"
+            value={form.age}
             onChange={handleChange}
-            required
-            placeholder="+91 XXXXX XXXXX"
+            placeholder="Enter your age"
             className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
           />
+          {errors.age && (
+            <p className="text-red-300 text-xs mt-1">{errors.age}</p>
+          )}
         </div>
-
+ 
         <div>
-          <label className="text-white mb-1 block">
-            Treatment Requirement
-          </label>
+          <label className="text-white block mb-1">Select Gender</label>
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            className="w-full h-11 px-3 rounded-lg bg-white border border-gray-300 focus:outline-none"
+          >
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          {errors.gender && (
+            <p className="text-red-300 text-xs mt-1">{errors.gender}</p>
+          )}
+        </div>
+ 
+        <div>
+          <label className="text-white block mb-1">Treatment Requirement</label>
           <textarea
             name="requirement"
             value={form.requirement}
             onChange={handleChange}
             rows={3}
-            placeholder="Describe your medical concern"
+            placeholder="Describe your medical condition or treatment requirement"
             className="w-full px-3 py-2 rounded-lg bg-white border border-gray-300 resize-none focus:outline-none"
           />
+          {errors.requirement && (
+            <p className="text-red-300 text-xs mt-1">{errors.requirement}</p>
+          )}
         </div>
-
+ 
         <button
           type="submit"
           disabled={loading}
           className="w-full mt-2 bg-[#F0A324] text-black py-3 rounded-lg transition duration-200 disabled:opacity-70"
         >
-          {loading ? "Submitting..." : "Submit Request"}
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>
   );
 };
-
+ 
 export default BookingForm;

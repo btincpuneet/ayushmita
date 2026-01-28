@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const {
   createTestimonial,
@@ -20,10 +21,10 @@ const upload = multer({
   }
 });
 
-router.post("/testimonials", upload.single("image"), createTestimonial);
+router.post("/testimonials", upload.single("image"), authenticateToken ,createTestimonial);
 router.get("/testimonials", getAllTestimonials);
 router.get("/testimonials/:id", getTestimonialById);
-router.put("/testimonials/:id", upload.single("image"), updateTestimonial);
-router.delete("/testimonials/:id", deleteTestimonial);
+router.put("/testimonials/:id", upload.single("image"), authenticateToken , updateTestimonial);
+router.delete("/testimonials/:id", authenticateToken , deleteTestimonial);
 
 module.exports = router;

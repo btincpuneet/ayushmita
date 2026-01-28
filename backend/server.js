@@ -9,7 +9,8 @@ const { sequelize } = require('./models/index.js');
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 require('./models/relations');
-
+const footerRoutes = require("./routes/footer/footer.js");
+const globalSettingRoutes = require("./routes/globalSettings/globalSetting.routes.js");
 const categoryRoutes = require('./routes/category/index.js');
 const heroBannerRoutes = require('./routes/heroBanner/index.js');
 const promoSliderRoutes = require('./routes/promoSlider/index.js');
@@ -23,15 +24,22 @@ const faqRoutes = require("./routes/faq/index.js");
 const contactUsRoutes = require("./routes/contact/contactRoutes.js")
 const blogRoutes = require("./routes/blog/index.js");
 const formRoutes = require("./routes/form/forms.js")
+const buttonAppointRoutes = require("./routes/button/buttonAppointmentRoutes.js");
+const countiesCitiesRoutes = require("./routes/countryCities/countiesCitiesRoutes.js");
+const editorUploadRoutes = require("./routes/upload/imageUpload.routes.js");
+// const specialitiesRoutes = require("./routes/specialities/index.js")
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 const corsOptions = {
   origin: [
-    'http://localhost:5174',
+    'http://13.200.3.73',
     'http://localhost:8080',
     'http://localhost:8081',
-    'http://3.110.67.235'
+    'http://13.203.47.236',
+    'http://127.0.0.1:8080',
+    'http://13.203.47.236',
+    'http://localhost:5174'
   ],
   methods: 'GET,POST,PUT,PATCH,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
@@ -59,40 +67,14 @@ app.use("/api", blogRoutes);
 app.use("/api", cmsSectionRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api", formRoutes);
+app.use("/api/footer", footerRoutes); 
+app.use("/api/button", buttonAppointRoutes); 
+app.use("/api/global-settings", globalSettingRoutes);
+app.use("/api", countiesCitiesRoutes);
+app.use("/api", editorUploadRoutes);
+// app.use("/api", specialitiesRoutes); 
 
-app.post("/api/book-consultation", async (req, res) => {
-   console.log("BODY RECEIVED:", req.body);
-  const { name, country, city, mobile, requirement } = req.body;
 
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"Consultation Form" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: "New Consultation Request",
-      html: `
-        <h3>New Booking Received</h3>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Country:</b> ${country}</p>
-        <p><b>City:</b> ${city}</p>
-        <p><b>Mobile:</b> ${mobile}</p>
-        <p><b>Requirement:</b> ${requirement}</p>
-      `,
-    });
-
-    res.status(200).json({ success: true, message: "Email sent" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Email failed" });
-  }
-});
 
 sequelize
   .sync()

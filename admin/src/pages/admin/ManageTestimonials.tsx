@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";
+import { authHeader } from "../../utils/auth";
+import { toast } from "sonner";
 
 interface Testimonial {
   id: number;
@@ -38,12 +40,10 @@ const ManageTestimonials: React.FC = () => {
     fetchTestimonials();
   }, []);
 
-  // Handle text input
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle image upload
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     if (file) {
@@ -52,7 +52,6 @@ const ManageTestimonials: React.FC = () => {
     }
   };
 
-  // Open Add Modal
   const openAddModal = () => {
     setForm({
       id: null,
@@ -65,7 +64,6 @@ const ManageTestimonials: React.FC = () => {
     setModalOpen(true);
   };
 
-  // Edit Modal
   const handleEdit = (t: Testimonial) => {
     setForm({
       id: t.id,
@@ -82,33 +80,61 @@ const ManageTestimonials: React.FC = () => {
     setModalOpen(true);
   };
 
-  // Delete
   const handleDelete = async (id: number) => {
-    if (window.confirm("Delete this testimonial?")) {
-      await axios.delete(`${API}/${id}`);
+    if (!window.confirm("Delete this testimonial?")) return;
+
+    try {
+      await axios.delete(`${API}/${id}`, {
+        headers: authHeader(),
+      });
+      toast.success("Testimonial deleted successfully");
       fetchTestimonials();
+    } catch {
+      toast.error("Delete failed");
     }
   };
 
-  // Submit Form
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
 
-    const fd = new FormData();
-    fd.append("name", form.name);
-    fd.append("rating", String(form.rating));
-    fd.append("message", form.message);
-    if (form.image) fd.append("image", form.image);
+ const handleSubmit = async (e: any) => {
+  e.preventDefault();
 
+  const fd = new FormData();
+  fd.append("name", form.name);
+  fd.append("rating", String(form.rating));
+  fd.append("message", form.message);
+  if (form.image) fd.append("image", form.image);
+
+  try {
     if (isEditing) {
-      await axios.put(`${API}/${form.id}`, fd);
+      await axios.put(`${API}/${form.id}`, fd, {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Testimonial updated successfully");
     } else {
-      await axios.post(API, fd);
+      await axios.post(API, fd, {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Testimonial added successfully");
     }
 
     setModalOpen(false);
     fetchTestimonials();
-  };
+  } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
+    }
+};
+
 
   return (
     <div className="p-6">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";
+import { authHeader } from "@/utils/auth";
 
 import {
   Dialog,
@@ -13,11 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  FileText, 
+import {
+  Plus,
+  Edit3,
+  Trash2,
+  FileText,
   Search,
   ChevronRight,
   Stethoscope,
@@ -49,7 +50,10 @@ const emptyForm = {
   canonical_url: "",
   status: "active",
   image: null as File | null,
+  image_alt: "",
+  image_title: "",
 };
+
 
 const ManageTreatments = () => {
   const [diseases, setDiseases] = useState<any[]>([]);
@@ -58,13 +62,14 @@ const ManageTreatments = () => {
     useState<number | null>(null);
   const [selectedTreatmentSlug, setSelectedTreatmentSlug] = useState("");
   const [singleTreatment, setSingleTreatment] = useState<any | null>(null);
+  const fileRef = React.useRef<HTMLInputElement | null>(null);
+  const [existingImage, setExistingImage] = useState<string | null>(null);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [preview, setPreview] = useState<string | null>(null);
 
-  /* ---------------- LOADERS ---------------- */
 
   useEffect(() => {
     loadDiseases();
@@ -82,6 +87,7 @@ const ManageTreatments = () => {
       toast.error("Failed to load diseases");
     }
   };
+
 
   const loadTreatmentsByDisease = async (id: number) => {
     try {
@@ -110,50 +116,132 @@ const ManageTreatments = () => {
   };
 
   const handleEdit = () => {
-    if (!singleTreatment) return;
+    if (!singleTreatment) {
+      toast.error("Please select a treatment to edit");
+      return;
+    }
+
+    if (!singleTreatment.disease_id) {
+      toast.error("This treatment is not linked to any disease");
+      return;
+    }
+
+    if (!singleTreatment.name) {
+      toast.error("Treatment name is missing");
+      return;
+    }
+
+    if (!singleTreatment.slug) {
+      toast.error("Treatment slug is missing");
+      return;
+    }
 
     setEditing(singleTreatment);
+
     setForm({
-      disease_id: singleTreatment.disease_id,
-      name: singleTreatment.name,
-      slug: singleTreatment.slug,
-      short_description: singleTreatment.short_description || "",
-      description_html: singleTreatment.description_html || "",
-      seo_title: singleTreatment.seo_title || "",
-      seo_description: singleTreatment.seo_description || "",
-      seo_keywords: singleTreatment.seo_keywords || "",
-      canonical_url: singleTreatment.canonical_url || "",
+      disease_id: singleTreatment.disease_id ?? null,
+      name: singleTreatment.name ?? "",
+      slug: singleTreatment.slug ?? "",
+      short_description: singleTreatment.short_description ?? "",
+      description_html: singleTreatment.description_html ?? "",
+      seo_title: singleTreatment.seo_title ?? "",
+      seo_description: singleTreatment.seo_description ?? "",
+      seo_keywords: singleTreatment.seo_keywords ?? "",
+      canonical_url: singleTreatment.canonical_url ?? "",
       status: singleTreatment.status === 1 ? "active" : "inactive",
       image: null,
+      image_alt:
+        singleTreatment.image_alt && singleTreatment.image_alt !== "null"
+          ? singleTreatment.image_alt
+          : "",
+
+      image_title:
+        singleTreatment.image_title && singleTreatment.image_title !== "null"
+          ? singleTreatment.image_title
+          : "",
     });
+    setExistingImage(
+      singleTreatment.image ? `${API_BASE}${singleTreatment.image}` : null
+    );
 
     setPreview(null);
     setOpen(true);
   };
 
+
   const handleSubmit = async () => {
     try {
+
       if (!form.disease_id) {
-        toast.error("Select a disease");
+        toast.error("Please select a disease");
         return;
       }
 
+      if (!form.name.trim()) {
+        toast.error("Treatment name is required");
+        return;
+      }
+
+      if (!form.slug.trim()) {
+        toast.error("Slug is required");
+        return;
+      }
+
+      if (!form.short_description) {
+        toast.error("Short description is required");
+        return;
+      }
+
+      if (!form.description_html) {
+        toast.error("Full description is required");
+        return;
+      }
+
+      if (!form.seo_title.trim()) {
+        toast.error("SEO title is required");
+        return;
+      }
+
+      if (!form.seo_description.trim()) {
+        toast.error("SEO description is required");
+        return;
+      }
+
+      if (!form.seo_keywords.trim()) {
+        toast.error("SEO keywords are required");
+        return;
+      }
+
+      if (!form.canonical_url.trim()) {
+        toast.error("Canonical URL is required");
+        return;
+      }
+
+
       const fd = new FormData();
 
-      Object.entries(form).forEach(([k, v]) => {
-        if (v !== null && v !== undefined) {
-          fd.append(k, v instanceof File ? v : String(v));
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          fd.append(key, value instanceof File ? value : String(value));
         }
       });
 
       fd.set("status", form.status === "active" ? "1" : "0");
 
+      const config = {
+        headers: {
+          ...authHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+
       if (editing) {
-        await axios.put(`${API_TREATMENT}/${editing.id}`, fd);
-        toast.success("Treatment updated");
+        await axios.put(`${API_TREATMENT}/${editing.id}`, fd, config);
+        toast.success("Treatment updated successfully");
       } else {
-        await axios.post(API_TREATMENT, fd);
-        toast.success("Treatment created");
+        await axios.post(API_TREATMENT, fd, config);
+        toast.success("Treatment created successfully");
       }
 
       setOpen(false);
@@ -161,17 +249,26 @@ const ManageTreatments = () => {
       if (selectedDiseaseForFilter) {
         loadTreatmentsByDisease(selectedDiseaseForFilter);
       }
-    } catch {
-      toast.error("Save failed");
+    } catch (error: any) {
+
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+
+      toast.error(message);
     }
   };
+
 
   const handleDelete = async () => {
     if (!singleTreatment) return;
     if (!window.confirm("Delete this treatment?")) return;
 
     try {
-      await axios.delete(`${API_TREATMENT}/${singleTreatment.id}`);
+      await axios.delete(`${API_TREATMENT}/${singleTreatment.id}`, {
+        headers: authHeader(),
+      });
       toast.success("Deleted");
       setSingleTreatment(null);
       setSelectedTreatmentSlug("");
@@ -183,7 +280,7 @@ const ManageTreatments = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      
+
       <header className="sticky top-0 z-40 bg-card border-b shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -205,13 +302,13 @@ const ManageTreatments = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8 space-y-6">
-        
+
         <div className="bg-card rounded-xl shadow-card border p-6 animate-fade-in">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-4 h-4 text-muted-foreground" />
             <h2 className="text-sm font-semibold text-foreground">Filter Treatments</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Select Disease</Label>
@@ -255,10 +352,8 @@ const ManageTreatments = () => {
           </div>
         </div>
 
-        {/* Treatment Details View */}
         {singleTreatment && (
           <div className="bg-card rounded-xl shadow-card border overflow-hidden animate-fade-in">
-            {/* Treatment Header */}
             <div className="bg-gradient-to-r from-primary/5 to-accent/50 p-6 border-b">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
@@ -275,11 +370,10 @@ const ManageTreatments = () => {
                   )}
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        singleTreatment.status === 1 
-                          ? "bg-success/10 text-success" 
-                          : "bg-muted text-muted-foreground"
-                      }`}>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${singleTreatment.status === 1
+                        ? "bg-success/10 text-success"
+                        : "bg-muted text-muted-foreground"
+                        }`}>
                         {singleTreatment.status === 1 ? "Active" : "Inactive"}
                       </span>
                     </div>
@@ -308,7 +402,7 @@ const ManageTreatments = () => {
                 <FileText className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-semibold text-foreground">Content Preview</h3>
               </div>
-              
+
               <div
                 className="cms-content bg-muted/30 rounded-lg p-6 border"
                 dangerouslySetInnerHTML={{
@@ -335,9 +429,8 @@ const ManageTreatments = () => {
           </div>
         )}
       </main>
-  {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {editing ? <Edit3 className="w-5 h-5 text-primary" /> : <Plus className="w-5 h-5 text-primary" />}
@@ -346,7 +439,6 @@ const ManageTreatments = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-            {/* Disease Selection */}
             <div className="col-span-2 space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Disease *</Label>
               <select
@@ -365,7 +457,6 @@ const ManageTreatments = () => {
               </select>
             </div>
 
-            {/* Name & Slug */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Treatment Name *</Label>
               <Input
@@ -388,14 +479,29 @@ const ManageTreatments = () => {
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">URL Slug</Label>
               <Input
-                placeholder="e.g., chemotherapy"
-                value={form.slug}
-                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="e.g., Chemotherapy"
+                value={form.name}
+                onChange={(e) => {
+                  const name = e.target.value;
+
+                  setForm((prev) => ({
+                    ...prev,
+                    name,
+                    slug:
+
+                      e.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-"),
+                  }))
+                }}
               />
+
             </div>
 
-            {/* SHORT DESCRIPTION */}
             <div className="col-span-2">
+              <label className="text-sm font-medium mb-2 block">
+                Short Description
+              </label>
               <RichTextEditor
                 label="Short Description"
                 value={form.short_description}
@@ -407,8 +513,10 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* FULL DESCRIPTION */}
             <div className="col-span-2">
+              <label className="text-sm font-medium mb-2 block">
+                Full Description
+              </label>
               <RichTextEditor
                 label="Full Description (HTML with Image Alignment)"
                 value={form.description_html}
@@ -420,7 +528,6 @@ const ManageTreatments = () => {
               />
             </div>
 
-            {/* SEO Fields */}
             <div className="col-span-2 pt-4 border-t">
               <h4 className="text-sm font-semibold text-foreground mb-4">SEO Settings</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -470,7 +577,6 @@ const ManageTreatments = () => {
               </div>
             </div>
 
-            {/* Status & Image */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Status</Label>
               <select
@@ -488,6 +594,7 @@ const ManageTreatments = () => {
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Featured Image</Label>
               <Input
+                ref={fileRef}
                 type="file"
                 accept="image/*"
                 className="cursor-pointer"
@@ -499,18 +606,73 @@ const ManageTreatments = () => {
                 }}
               />
             </div>
+            {(preview || existingImage) && (
+              <div className="col-span-2 mt-4 space-y-3">
+                <div className="relative w-fit">
+                  <img
+                    src={preview || existingImage!}
+                    alt={form.image_alt || "Treatment image"}
+                    title={form.image_title || ""}
+                    className="max-w-xs rounded-lg border shadow"
+                  />
 
-            {/* Image Preview */}
-            {(preview || editing?.image) && (
-              <div className="col-span-2">
-                <Label className="text-xs font-medium text-muted-foreground mb-2 block">Image Preview</Label>
-                <img
-                  src={preview || `${API_BASE}${editing.image}`}
-                  className="w-48 h-32 object-cover rounded-lg border shadow-sm"
-                  alt="Preview"
-                />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    className="absolute -top-2 -right-2"
+                    onClick={() => {
+                      setPreview(null);
+                      setExistingImage(null);
+                      setForm({ ...form, image: null });
+
+                      if (fileRef.current) {
+                        fileRef.current.value = "";
+                      }
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
+
+                {!preview && (
+                  <p className="text-xs text-muted-foreground">
+                    Existing image (upload a new one to replace)
+                  </p>
+                )}
               </div>
             )}
+
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Image Alt Text
+              </Label>
+              <Input
+                placeholder="Describe the image for accessibility"
+                value={form.image_alt || ""}
+                onChange={(e) =>
+                  setForm({ ...form, image_alt: e.target.value })
+                }
+              />
+
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Image Title
+              </Label>
+              <Input
+                placeholder="Image title"
+                value={form.image_title || ""}
+                onChange={(e) =>
+                  setForm({ ...form, image_title: e.target.value })
+                }
+              />
+
+            </div>
+
+
           </div>
 
           <DialogFooter>

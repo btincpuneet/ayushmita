@@ -1,5 +1,4 @@
 
-// export default ManageDiseases;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../../config/api";
@@ -15,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authHeader } from "../../utils/auth";
 
 import RichTextEditor from "@/components/RichTextEditor";
 
@@ -34,19 +34,21 @@ const ManageDiseases = () => {
     seo_title: "",
     seo_description: "",
     seo_keywords: "",
+    canonical_url: "",
+    image_alt: "",
+    image_title: "",
     status: 1,
     image: null,
   });
 
-  const [preview, setPreview] = useState(null);
 
-  // ----------------------------------------
-  // Fetch Diseases
-  // ----------------------------------------
+  const [preview, setPreview] = useState(null);
+  const fileRef = React.useRef<HTMLInputElement | null>(null);
+
   const loadDiseases = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API_URL);
+      const res = await axios.get(`${API_URL}/get-active-disease`);
       setDiseases(res.data?.data || []);
     } catch {
       toast.error("Failed to load diseases");
@@ -59,9 +61,7 @@ const ManageDiseases = () => {
     loadDiseases();
   }, []);
 
-  // ----------------------------------------
-  // Helpers
-  // ----------------------------------------
+
   const updateForm = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -73,9 +73,7 @@ const ManageDiseases = () => {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
 
-  // ----------------------------------------
-  // Add
-  // ----------------------------------------
+
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -86,16 +84,18 @@ const ManageDiseases = () => {
       seo_title: "",
       seo_description: "",
       seo_keywords: "",
+      canonical_url: "",
+      image_alt: "",
+      image_title: "",
       status: 1,
       image: null,
     });
+
     setPreview(null);
     setOpen(true);
   };
 
-  // ----------------------------------------
-  // Edit
-  // ----------------------------------------
+
   const handleEdit = (item) => {
     setEditing(item);
     setForm({
@@ -106,44 +106,64 @@ const ManageDiseases = () => {
       seo_title: item.seo_title,
       seo_description: item.seo_description,
       seo_keywords: item.seo_keywords,
+      canonical_url: item.canonical_url,
+      image_alt: item.image_alt,
+      image_title: item.image_title,
       status: item.status,
       image: null,
     });
+
     setPreview(item.image ? `${API_BASE}${item.image}` : null);
     setOpen(true);
   };
 
-  // ----------------------------------------
-  // Submit
-  // ----------------------------------------
+
   const handleSubmit = async () => {
     const fd = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) fd.append(key, value);
     });
-
     try {
       if (editing) {
-        await axios.put(`${API_URL}/${editing.id}`, fd);
+        await axios.put(`${API_URL}/${editing.id}`, fd, {
+          headers: {
+            ...authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Disease updated");
       } else {
-        await axios.post(API_URL, fd);
+        await axios.post(API_URL, fd, {
+          headers: {
+            ...authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Disease added");
       }
+
       setOpen(false);
       loadDiseases();
-    } catch {
-      toast.error("Save failed");
+
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
     }
+
   };
 
-  // ----------------------------------------
-  // Delete
-  // ----------------------------------------
+
   const handleDelete = async (id) => {
     if (!confirm("Delete this disease?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: authHeader(),
+      });
+
       toast.success("Deleted successfully");
       loadDiseases();
     } catch {
@@ -153,18 +173,20 @@ const ManageDiseases = () => {
 
   return (
     <div className="p-6">
-      {/* Header */}
+
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Manage Diseases</h1>
         <Button onClick={handleAdd}>+ Add Disease</Button>
       </div>
 
-      {/* Table */}
+
       <div className="bg-white shadow rounded">
         <table className="w-full text-left">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-3">Image</th>
+              <th className="p-3">Image Alt</th>
+              <th className="p-3">Image Title</th>
               <th className="p-3">Name</th>
               <th className="p-3">Slug</th>
               <th className="p-3">Status</th>
@@ -184,6 +206,17 @@ const ManageDiseases = () => {
                     <div className="w-20 h-20 bg-gray-200 rounded" />
                   )}
                 </td>
+                <td className="p-3 text-sm">
+                  {d.image_alt || (
+                    <span className="text-gray-400 italic">Not set</span>
+                  )}
+                </td>
+
+                <td className="p-3 text-sm">
+                  {d.image_title || (
+                    <span className="text-gray-400 italic">Not set</span>
+                  )}
+                </td>
                 <td className="p-3">{d.name}</td>
                 <td className="p-3">{d.slug}</td>
                 <td className="p-3">
@@ -193,19 +226,18 @@ const ManageDiseases = () => {
                     <span className="text-red-600 font-semibold">Inactive</span>
                   )}
                 </td>
-                <td className="p-3 text-right">
-                  <button
-                    className="text-blue-600 mr-3"
-                    onClick={() => handleEdit(d)}
-                  >
+                <td className="p-3 space-x-3 text-right">
+                  <Button size="sm" onClick={() => handleEdit(d)}>
                     Edit
-                  </button>
-                  <button
-                    className="text-red-600"
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
                     onClick={() => handleDelete(d.id)}
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -219,40 +251,51 @@ const ManageDiseases = () => {
         )}
       </div>
 
-      {/* Dialog */}
+
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Disease" : "Add New Disease"}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-4 max-h-[75vh] overflow-y-auto pr-2">
-            <Input
-              placeholder="Disease Name"
-              value={form.name}
-              onChange={(e) => {
-                updateForm("name", e.target.value);
-                updateForm("slug", generateSlug(e.target.value));
-              }}
-            />
+          <div className="grid gap-6 max-h-[75vh] overflow-y-auto p-6">
 
-            <Input
-              placeholder="Slug"
-              value={form.slug}
-              onChange={(e) => updateForm("slug", e.target.value)}
-            />
+            {/* Basic Info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Disease Name</label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => {
+                    updateForm("name", e.target.value);
+                    updateForm("slug", generateSlug(e.target.value));
+                  }}
+                />
+              </div>
 
-            <Textarea
-              placeholder="Short Description"
-              value={form.short_description}
-              onChange={(e) =>
-                updateForm("short_description", e.target.value)
-              }
-            />
+              <div>
+                <label className="text-sm font-medium">Slug</label>
+                <Input
+                  value={form.slug}
+                  onChange={(e) => updateForm("slug", e.target.value)}
+                />
+              </div>
+            </div>
 
-            {/* ✅ Rich Text Editor */}
+            {/* Short Description */}
+            <div>
+              <label className="text-sm font-medium">Short Description</label>
+              <Textarea
+                value={form.short_description}
+                onChange={(e) =>
+                  updateForm("short_description", e.target.value)
+                }
+              />
+            </div>
+
+            {/* Detailed Description */}
             <RichTextEditor
               label="Detailed Description"
               value={form.description_html}
@@ -260,42 +303,69 @@ const ManageDiseases = () => {
               minHeight={300}
             />
 
-            <Input
-              placeholder="SEO Title"
-              value={form.seo_title}
-              onChange={(e) => updateForm("seo_title", e.target.value)}
-            />
+            {/* SEO Section */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">SEO Title</label>
+                <Input
+                  value={form.seo_title}
+                  onChange={(e) => updateForm("seo_title", e.target.value)}
+                />
+              </div>
 
-            <Textarea
-              placeholder="SEO Description"
-              value={form.seo_description}
-              onChange={(e) =>
-                updateForm("seo_description", e.target.value)
-              }
-            />
+              <div>
+                <label className="text-sm font-medium">SEO Keywords</label>
+                <Input
+                  value={form.seo_keywords}
+                  onChange={(e) =>
+                    updateForm("seo_keywords", e.target.value)
+                  }
+                />
+              </div>
+            </div>
 
-            <Input
-              placeholder="SEO Keywords"
-              value={form.seo_keywords}
-              onChange={(e) =>
-                updateForm("seo_keywords", e.target.value)
-              }
-            />
-
-            <select
-              className="border p-2 rounded"
-              value={form.status}
-              onChange={(e) =>
-                updateForm("status", Number(e.target.value))
-              }
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
-
-            {/* Image */}
             <div>
+              <label className="text-sm font-medium">SEO Description</label>
+              <Textarea
+                value={form.seo_description}
+                onChange={(e) =>
+                  updateForm("seo_description", e.target.value)
+                }
+              />
+            </div>
+
+            {/* Canonical + Status */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Canonical URL</label>
+                <Input
+                  value={form.canonical_url}
+                  onChange={(e) =>
+                    updateForm("canonical_url", e.target.value)
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Status</label>
+                <select
+                  className="border p-2 rounded w-full"
+                  value={form.status}
+                  onChange={(e) =>
+                    updateForm("status", Number(e.target.value))
+                  }
+                >
+                  <option value={1}>Active</option>
+                  <option value={0}>Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="text-sm font-medium">Disease Image</label>
               <Input
+                ref={fileRef}
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
@@ -304,14 +374,58 @@ const ManageDiseases = () => {
                   if (file) setPreview(URL.createObjectURL(file));
                 }}
               />
-              {preview && (
-                <img
-                  src={preview}
-                  className="w-40 mt-3 rounded"
-                />
+
+              {(preview || editing?.image) && (
+                <div className="mt-3">
+                  <img
+                    src={preview ? preview : `${API_BASE}${editing.image}`}
+                    className="w-40 rounded border"
+                    alt="Disease"
+                  />
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => {
+                      setPreview(null);
+                      updateForm("image", null);
+                      if (editing) setEditing({ ...editing, image: null });
+                      if (fileRef.current) fileRef.current.value = "";
+                    }}
+                  >
+                    Remove Image
+                  </Button>
+                </div>
               )}
             </div>
+
+            {/* Image SEO */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Image Alt Text</label>
+                <Input
+                  value={form.image_alt}
+                  onChange={(e) =>
+                    updateForm("image_alt", e.target.value)
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Image Title</label>
+                <Input
+                  value={form.image_title}
+                  onChange={(e) =>
+                    updateForm("image_title", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
           </div>
+
 
           <DialogFooter>
             <Button onClick={handleSubmit}>
