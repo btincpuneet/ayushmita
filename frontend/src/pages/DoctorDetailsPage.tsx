@@ -476,7 +476,7 @@ const DoctorDetailsPage: React.FC = () => {
                         </div>
                     </Container>
                 </section>
-                <FaqWithImage faqType="doctor" />
+                <FaqWithImage faqType="doctor" doctorId={doctor.id}/>
 
 
                 <section className="py-6 similar-doctor-section-docdetails-page">
