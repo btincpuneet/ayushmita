@@ -39,6 +39,7 @@ const ManageNewsEvents = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<NewsEvent | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -81,6 +82,7 @@ const ManageNewsEvents = () => {
       existingImage: null,
       removeImage: false,
     });
+    setPreviewImage(null);
   };
 
   /* ---------------- ADD ---------------- */
@@ -102,6 +104,7 @@ const ManageNewsEvents = () => {
       existingImage: item.image || null,
       removeImage: false,
     });
+    setPreviewImage(null);
     setOpen(true);
   };
 
@@ -235,7 +238,6 @@ const ManageNewsEvents = () => {
         )}
       </div>
 
-      {/* MOBILE CARDS */}
       <div className="md:hidden space-y-4">
         {items.map((item) => (
           <div key={item.id} className="bg-white shadow rounded p-4 space-y-2">
@@ -332,15 +334,31 @@ const ManageNewsEvents = () => {
                 type="file"
                 accept="image/*"
                 disabled={form.removeImage}
-                onChange={(e) =>
-                  updateForm("image", e.target.files?.[0] || null)
-                }
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  updateForm("image", file);
+
+                  if (file) {
+                    setPreviewImage(URL.createObjectURL(file));
+                  } else {
+                    setPreviewImage(null);
+                  }
+                }}
               />
 
-              {form.existingImage && !form.removeImage && (
+              {previewImage && !form.removeImage && (
+                <img
+                  src={previewImage}
+                  className="h-24 rounded border"
+                  alt="Preview"
+                />
+              )}
+
+              {!previewImage && form.existingImage && !form.removeImage && (
                 <img
                   src={`${API_BASE}/${form.existingImage}`}
                   className="h-24 rounded border"
+                  alt="Existing"
                 />
               )}
 
