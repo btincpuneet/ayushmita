@@ -568,7 +568,10 @@ export default function HospitalDetailsPage() {
             <BookingForm />
           </div>
         </div>
-        <FaqWithImage faqType="hospital" />
+        <FaqWithImage
+          faqType="hospital"
+          hospitalId={hospital.id}
+        />
 
         {similarHospitals.length > 0 && (
           <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} city={hospital.city}

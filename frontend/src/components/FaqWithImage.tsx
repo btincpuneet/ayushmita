@@ -28,18 +28,23 @@ interface ApiResponse {
 }
 
 interface FaqWithImageProps {
-  faqType?: string;
+  faqType?: "home" | "doctor" | "hospital";
+  doctorId?: number;
+  hospitalId?: number;
   imageUrl?: string;
   highlight?: Highlight;
 }
 
-/* ---------- Component ---------- */
+
 
 const FaqWithImage: React.FC<FaqWithImageProps> = ({
   faqType = "home",
+  doctorId,
+  hospitalId,
   imageUrl = faqImage,
   highlight = { count: "84k+", label: "Happy Patients" },
 }) => {
+
   const [faqs, setFaqs] = useState<FaqItem[]>([]);
   const [open, setOpen] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,21 +56,32 @@ const FaqWithImage: React.FC<FaqWithImageProps> = ({
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
+        const params = new URLSearchParams();
+        params.append("faq_type", faqType);
+
+        if (faqType === "doctor" && doctorId) {
+          params.append("doctor_id", doctorId.toString());
+        }
+
+        if (faqType === "hospital" && hospitalId) {
+          params.append("hospital_id", hospitalId.toString());
+        }
+
         const response = await fetch(
-          `${API_BASE}/api/active/faqs?faq_type=${faqType}`,
+          `${API_BASE}/api/active/faqs?${params.toString()}`,
           { cache: "no-store" }
         );
 
         const result: ApiResponse = await response.json();
 
         if (result.success) {
-          const formatted: FaqItem[] = result.data.map((item) => ({
-            id: item.id,
-            q: item.question,
-            a: item.answer,
-          }));
-
-          setFaqs(formatted);
+          setFaqs(
+            result.data.map((item) => ({
+              id: item.id,
+              q: item.question,
+              a: item.answer,
+            }))
+          );
         }
       } catch (error) {
         console.error("Error fetching FAQs:", error);
@@ -75,7 +91,8 @@ const FaqWithImage: React.FC<FaqWithImageProps> = ({
     };
 
     fetchFAQs();
-  }, [faqType]);
+  }, [faqType, doctorId, hospitalId]);
+
 
   if (loading) {
     return (
@@ -84,7 +101,9 @@ const FaqWithImage: React.FC<FaqWithImageProps> = ({
       </div>
     );
   }
-
+  if (faqs.length === 0) {
+    return null;
+  }
   return (
     <section className="relative bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 py-12 md:py-16 lg:py-10">
