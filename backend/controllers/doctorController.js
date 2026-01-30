@@ -309,6 +309,8 @@ const deleteDoctor = async (req, res) => {
       where: { doctor_id: doctor.id },
     });
 
+    
+
     await doctor.destroy();
 
     res.json({

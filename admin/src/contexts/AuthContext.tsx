@@ -74,7 +74,8 @@
 import { User, AuthState } from "@/types/content";
 import axios from "axios";
 import { API_BASE } from "../config/api";
-import { useContext, useEffect, useState, createContext } from "react";
+import { useContext, useEffect, useState, createContext, useRef } from "react";
+import { isTokenExpired, parseJwt } from "@/utils/jwt";
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
@@ -90,6 +91,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: false,
     token: undefined,
   });
+  const expiryTimeoutRef = useRef<number | null>(null);
+
+  const clearExpiryTimeout = () => {
+    if (expiryTimeoutRef.current) {
+      window.clearTimeout(expiryTimeoutRef.current);
+      expiryTimeoutRef.current = null;
+    }
+  };
+
+  const logoutAndRedirect = () => {
+    clearExpiryTimeout();
+    setAuthState({ user: null, isAuthenticated: false, token: undefined });
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    window.location.href = "/adminui/login";
+  };
 
   // Load from localStorage (auto-login)
   useEffect(() => {
@@ -98,10 +114,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const parsed = JSON.parse(stored);
         setAuthState(parsed);
+
+        if (parsed.token) {
+          if (isTokenExpired(parsed.token)) {
+            logoutAndRedirect();
+            return;
+          }
+
+          const decoded = parseJwt(parsed.token);
+          if (decoded && decoded.exp) {
+            const msUntilExpiry = decoded.exp * 1000 - Date.now();
+            expiryTimeoutRef.current = window.setTimeout(() => {
+              logoutAndRedirect();
+            }, msUntilExpiry + 1000);
+          }
+        }
       } catch {
         localStorage.removeItem(AUTH_STORAGE_KEY);
       }
     }
+    return () => clearExpiryTimeout();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -126,6 +158,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newState));
 
+      // schedule auto-logout when token expires
+      if (newState.token) {
+        clearExpiryTimeout();
+        if (isTokenExpired(newState.token)) {
+          logoutAndRedirect();
+        } else {
+          const decoded = parseJwt(newState.token);
+          if (decoded && decoded.exp) {
+            const msUntilExpiry = decoded.exp * 1000 - Date.now();
+            expiryTimeoutRef.current = window.setTimeout(() => {
+              logoutAndRedirect();
+            }, msUntilExpiry + 1000);
+          }
+        }
+      }
+
       return true;
     } catch (error) {
       console.error("Login API Error:", error);
@@ -134,8 +182,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    setAuthState({ user: null, isAuthenticated: false, token: undefined });
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    // explicit logout should also redirect
+    logoutAndRedirect();
   };
 
   return (

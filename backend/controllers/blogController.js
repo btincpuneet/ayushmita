@@ -4,12 +4,10 @@ const { Blog } = require("../models/blog");
 const { Disease } = require("../models/disease");
 const { Treatment } = require("../models/treatment");
 
-
 exports.createBlog = async (req, res) => {
   try {
     const { title, slug } = req.body;
 
-    // 🔒 Validate required fields
     if (!title || !slug) {
       return res.status(400).json({
         success: false,
@@ -17,7 +15,6 @@ exports.createBlog = async (req, res) => {
       });
     }
 
-    // ❌ Prevent duplicate TITLE
     const existingTitle = await Blog.findOne({
       where: { title },
     });
@@ -29,7 +26,6 @@ exports.createBlog = async (req, res) => {
       });
     }
 
-    // ❌ Prevent duplicate SLUG
     const existingSlug = await Blog.findOne({
       where: { slug },
     });
@@ -41,7 +37,6 @@ exports.createBlog = async (req, res) => {
       });
     }
 
-    // 📸 Image upload
     let imageUrl = null;
 
     if (req.file) {
@@ -52,10 +47,7 @@ exports.createBlog = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      fs.writeFileSync(
-        path.join(uploadDir, imageName),
-        req.file.buffer
-      );
+      fs.writeFileSync(path.join(uploadDir, imageName), req.file.buffer);
 
       imageUrl = `/uploads/${imageName}`;
     }
@@ -75,7 +67,6 @@ exports.createBlog = async (req, res) => {
       treatmentName = treatment?.name || null;
     }
 
-    // ✅ CREATE BLOG
     const blog = await Blog.create({
       title,
       slug,
@@ -100,9 +91,7 @@ exports.createBlog = async (req, res) => {
           : req.body.treatment_id,
 
       treatment_name:
-        isGlobal || req.body.treatment_id === "0"
-          ? null
-          : treatmentName,
+        isGlobal || req.body.treatment_id === "0" ? null : treatmentName,
 
       canonical_url: req.body.canonical_url,
       meta_title: req.body.meta_title,
@@ -119,7 +108,6 @@ exports.createBlog = async (req, res) => {
       message: "Blog created successfully",
       data: blog,
     });
-
   } catch (err) {
     console.error("Create Blog Error:", err);
     res.status(500).json({
@@ -142,7 +130,6 @@ exports.updateBlog = async (req, res) => {
       });
     }
 
-    // ❌ Prevent duplicate TITLE (ignore same blog)
     if (title) {
       const titleExists = await Blog.findOne({
         where: {
@@ -159,7 +146,6 @@ exports.updateBlog = async (req, res) => {
       }
     }
 
-    // ❌ Prevent duplicate SLUG (ignore same blog)
     if (slug) {
       const slugExists = await Blog.findOne({
         where: {
@@ -176,7 +162,6 @@ exports.updateBlog = async (req, res) => {
       }
     }
 
-    // 📸 Image upload
     let imageUrl = blog.blog_image;
 
     if (req.file) {
@@ -187,10 +172,7 @@ exports.updateBlog = async (req, res) => {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
 
-      fs.writeFileSync(
-        path.join(uploadDir, imageName),
-        req.file.buffer
-      );
+      fs.writeFileSync(path.join(uploadDir, imageName), req.file.buffer);
 
       imageUrl = `/uploads/${imageName}`;
     }
@@ -210,7 +192,6 @@ exports.updateBlog = async (req, res) => {
       treatmentName = treatment?.name || null;
     }
 
-    // ✅ UPDATE BLOG
     await blog.update({
       title,
       slug,
@@ -246,7 +227,6 @@ exports.updateBlog = async (req, res) => {
       message: "Blog updated successfully",
       data: blog,
     });
-
   } catch (err) {
     console.error("Update Blog Error:", err);
     res.status(500).json({
@@ -255,7 +235,6 @@ exports.updateBlog = async (req, res) => {
     });
   }
 };
-
 
 exports.getAllBlogs = async (_req, res) => {
   try {
@@ -270,7 +249,6 @@ exports.getAllBlogs = async (_req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
 
 exports.getBlogById = async (req, res) => {
   try {
@@ -306,17 +284,12 @@ exports.deleteBlog = async (req, res) => {
     }
 
     if (blog.blog_image) {
-      const imagePath = path.join(
-        __dirname,
-        "..",
-        blog.blog_image
-      );
+      const imagePath = path.join(__dirname, "..", blog.blog_image);
 
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
     }
-
 
     await blog.destroy();
 
@@ -371,7 +344,6 @@ exports.getBlogBySlug = async (req, res) => {
   }
 };
 
-
 exports.getRecentBlogs = async (req, res) => {
   try {
     const { diseaseId, treatmentId } = req.query;
@@ -403,7 +375,6 @@ exports.getRecentBlogs = async (req, res) => {
       success: true,
       data: blogs,
     });
-
   } catch (error) {
     console.error("getRecentBlogs ERROR:", error);
     res.status(500).json({

@@ -18,9 +18,12 @@ import ContactUs from "./pages/ContactUs";
 import CmsPage from "./pages/CmsPage";
 import TawkTestWidget from "./components/TawkTestWidget";
 
-
 import { useSyncRTLWithGoogleTranslate } from "./hooks/useSyncRTLWithGoogleTranslate";
 import TestimonialPage from "./pages/TestimonialPage";
+import VideoTestimonialsPage from "./pages/VideoTestimonialsPage";
+import VideoTestimonialDetailsPage from "./pages/VideoTestimonialDetailsPage";
+import AllNewsEvents from "./pages/AllNewsEvents";
+import NewsEventDetails from "./pages/NewsEventDetails";
 
 const App: React.FC = () => {
   useSyncRTLWithGoogleTranslate();
@@ -34,7 +37,10 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatment" element={<TreatmentsLandlingPage />} />
-        <Route path="/treatment-details/:slug" element={<TreatMentDetailsPage />} />
+        <Route
+          path="/treatment-details/:slug"
+          element={<TreatMentDetailsPage />}
+        />
         <Route path="/disease/:slug" element={<DiseaseDetailsPage />} />
         <Route path="/doctor/:slug" element={<DoctorDetailsPage />} />
         <Route path="/hospitals/:slug" element={<HospitalDetailsPage />} />
@@ -46,6 +52,13 @@ const App: React.FC = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/:slug" element={<CmsPage />} />
         <Route path="/testimonail" element={<TestimonialPage />} />
+        <Route path="/video-testimonail" element={<VideoTestimonialsPage />} />
+        <Route
+          path="/video-testimonials/:slug"
+          element={<VideoTestimonialDetailsPage />}
+        />
+        <Route path="/news-events" element={<AllNewsEvents />} />
+        <Route path="/news-events/:slug" element={<NewsEventDetails />} />
       </Routes>
     </HelmetProvider>
   );

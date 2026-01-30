@@ -263,19 +263,40 @@ const updateDisease = async (req, res) => {
 };
 
 
+
+
 const deleteDisease = async (req, res) => {
   try {
     const disease = await Disease.findByPk(req.params.id);
-    if (!disease)
-      return res.status(404).json({ success: false, message: "Not found" });
+
+    if (!disease) {
+      return res.status(404).json({
+        success: false,
+        message: "Disease not found",
+      });
+    }
+
+    if (disease.image) {
+      const imagePath = path.join(__dirname, "..", disease.image);
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
 
     await disease.destroy();
 
-    res.json({ success: true, message: "Deleted successfully" });
+    res.json({
+      success: true,
+      message: "Disease and image deleted successfully",
+    });
 
   } catch (error) {
     console.error("DELETE ERROR:", error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

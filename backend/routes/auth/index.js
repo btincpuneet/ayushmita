@@ -210,6 +210,7 @@ const { User } = require('../../models');
 const { authenticateToken } = require('../../middleware/authMiddleware');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'erewrewrwr4445';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
 
 router.post('/login', async (req, res) => {
@@ -229,7 +230,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
     res.json({

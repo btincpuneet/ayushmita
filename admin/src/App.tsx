@@ -23,6 +23,8 @@ import ManageFooter from "./pages/admin/ManageFooter";
 import ManageFaq from "./pages/admin/ManageFaq";
 import ManageButtonName from "./pages/admin/ManageButtonName";
 import ManageConfiguration from "./pages/admin/ManageConfiguration";
+import ManageVideoTestimonials from "./pages/admin/ManageVideoTestimonials";
+import ManageNewsEvents from "./pages/admin/ManageNewsEvents";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,7 @@ const App = () => (
               <Route path="manage-doctor" element={<ManageDoctors />} />
               <Route path="topartnerDetails" element={<ManageTopPartnerHospitals />} />
               <Route path="testimonials" element={<ManageTestimonials />} />
+              <Route path="video-testimonials" element={<ManageVideoTestimonials />} />
               <Route path="manage-disease" element={<ManageDiseases />} />
               <Route path="manage-treatment" element={<ManageTreatments/>} />
               <Route path="manage-blogs" element={<ManageBlogs/>} />
@@ -60,6 +63,7 @@ const App = () => (
               <Route path="manage-faq" element={<ManageFaq/>} />
               <Route path="manage-button-name" element={<ManageButtonName/>} />
               <Route path="manage-configuration" element={<ManageConfiguration/>} />
+              <Route path="manage-newevents" element={<ManageNewsEvents/>} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

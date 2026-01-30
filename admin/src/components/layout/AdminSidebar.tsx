@@ -12,7 +12,7 @@ export function AdminSidebar() {
     <aside
       className={cn(
         "fixed left-0 top-0 h-screen z-50 bg-[#0B1221] text-white border-r border-white/10 flex flex-col transition-all duration-300",
-        collapsed ? "w-20" : "w-64"
+        collapsed ? "w-20" : "w-64",
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 border-b border-white/10">
@@ -28,17 +28,17 @@ export function AdminSidebar() {
         </button>
       </div>
 
-
       <nav className="flex-1 space-y-1 p-4">
-
         <NavLink
           to="/admin"
           end
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -51,8 +51,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -64,8 +66,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -77,8 +81,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -91,8 +97,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -105,8 +113,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -119,22 +129,55 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Testimonials</span>}
         </NavLink>
-
+        <NavLink
+          to="/admin/video-testimonials"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage Video Testimonials</span>}
+        </NavLink>
+        <NavLink
+          to="/admin/manage-newEvents"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
+            )
+          }
+        >
+          <FolderOpen size={20} />
+          {!collapsed && <span>Manage News & Events</span>}
+        </NavLink>
         <NavLink
           to="/admin/manage-disease"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -146,8 +189,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -160,8 +205,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -182,14 +229,15 @@ export function AdminSidebar() {
           {!collapsed && <span>Manage FamilyStats</span>}
         </NavLink> */}
 
-
         <NavLink
           to="/admin/manage-blogs"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -202,8 +250,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -215,8 +265,10 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -228,21 +280,25 @@ export function AdminSidebar() {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
           <FolderOpen size={20} />
           {!collapsed && <span>Manage Footer</span>}
         </NavLink>
-         <NavLink
+        <NavLink
           to="/admin/manage-configuration"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all",
-              isActive ? "bg-blue-600 text-white shadow-md" : "text-gray-300 hover:bg-white/10",
-              collapsed && "justify-center"
+              isActive
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-300 hover:bg-white/10",
+              collapsed && "justify-center",
             )
           }
         >
@@ -264,7 +320,7 @@ export function AdminSidebar() {
           onClick={logout}
           className={cn(
             "flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-red-500 text-sm font-medium hover:bg-white/10 transition",
-            collapsed && "justify-center"
+            collapsed && "justify-center",
           )}
         >
           <LogOut size={20} />

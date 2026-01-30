@@ -11,17 +11,12 @@ exports.createCategory = async (req, res) => {
       is_include_top_nav,
     } = req.body;
 
-    /* ===============================
-       Basic Required Field Validation
-    ================================ */
     if (!name || typeof name !== "string" || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: "Category name is required and must be a valid string",
       });
     }
-
-    
 
     if (
       is_include_top_nav !== undefined &&
@@ -44,15 +39,11 @@ exports.createCategory = async (req, res) => {
       });
     }
 
-    /* ===============================
-       Sort Order Logic
-    ================================ */
+   
     const maxOrder = await Category.max("sort_order");
     const sort_order = maxOrder ? maxOrder + 1 : 1;
 
-    /* ===============================
-       Create Category
-    ================================ */
+    
     const category = await Category.create({
       name: name.trim(),
       description: description || null,
@@ -205,7 +196,6 @@ exports.deleteCategory = async (req, res) => {
 
     await category.destroy();
 
-    // 🔁 Reorder remaining
     const remaining = await Category.findAll({
       order: [["sort_order", "ASC"]],
     });
