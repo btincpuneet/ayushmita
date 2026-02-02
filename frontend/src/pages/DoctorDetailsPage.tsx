@@ -306,7 +306,7 @@ const DoctorDetailsPage: React.FC = () => {
                             <div className="lg:col-span-2  p-6 ">
                                 <div className="flex flex-col md:flex-row gap-6 items-start">
 
-                                    <div className="flex-shrink-0 ">
+                                    <div className="flex-shrink-0 border ">
                                         <img
                                             src={
                                                 doctor?.image_url
@@ -498,7 +498,7 @@ const DoctorDetailsPage: React.FC = () => {
                                 {similarDoctors.map((d) => (
                                     <div key={d.id} className="px-3">
                                         <Link to={`/doctor/${d.slug}`}>
-                                            <div className="bg-white rounded-xl shadow text-center">
+                                            <div className="bg-white rounded-xl shadow text-center ">
                                                 <img
                                                     src={d.image_url ? `${API_BASE}${d.image_url}` : image}
                                                     alt={d.image_alt || d.name}

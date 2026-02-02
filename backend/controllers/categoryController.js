@@ -2,14 +2,8 @@ const { Category } = require("../models/category");
 
 exports.createCategory = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      status,
-      image,
-      url,
-      is_include_top_nav,
-    } = req.body;
+    const { name, description, status, image, url, is_include_top_nav } =
+      req.body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
       return res.status(400).json({
@@ -39,11 +33,9 @@ exports.createCategory = async (req, res) => {
       });
     }
 
-   
     const maxOrder = await Category.max("sort_order");
     const sort_order = maxOrder ? maxOrder + 1 : 1;
 
-    
     const category = await Category.create({
       name: name.trim(),
       description: description || null,
@@ -69,7 +61,6 @@ exports.createCategory = async (req, res) => {
     });
   }
 };
-
 
 exports.getAllCategories = async (req, res) => {
   try {
@@ -116,7 +107,6 @@ exports.updateCategory = async (req, res) => {
       sort_order,
     } = req.body;
 
-   
     if (name !== undefined) {
       if (typeof name !== "string" || !name.trim()) {
         return res.status(400).json({
@@ -142,11 +132,22 @@ exports.updateCategory = async (req, res) => {
       category.name = name.trim();
     }
 
-
-    
     if (description !== undefined) category.description = description;
     if (image !== undefined) category.image = image;
     if (url !== undefined) category.url = url;
+    if (status !== undefined) {
+  const allowedStatus = ["active", "inactive"];
+
+  if (typeof status !== "string" || !allowedStatus.includes(status)) {
+    return res.status(400).json({
+      success: false,
+      message: "Status must be either 'active' or 'inactive'",
+    });
+  }
+
+  category.status = status;
+}
+
 
     if (is_include_top_nav !== undefined) {
       if (typeof is_include_top_nav !== "boolean") {
@@ -186,7 +187,6 @@ exports.updateCategory = async (req, res) => {
     });
   }
 };
-
 
 exports.deleteCategory = async (req, res) => {
   try {

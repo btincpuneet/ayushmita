@@ -116,7 +116,6 @@ const AllNewsEvents: React.FC = () => {
               )}
             </div>
 
-            {/* RIGHT: BOOKING FORM */}
             <div className="lg:col-span-1">
               <div className="sticky top-28">
                 <BookingForm />

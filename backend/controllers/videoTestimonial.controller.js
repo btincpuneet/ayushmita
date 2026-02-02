@@ -1,26 +1,34 @@
 const { Op } = require("sequelize");
 const { VideoTestimonial } = require("../models/videotestimonial");
 
-const generateSlug = (text) => {
-  return text
+const generateSlug = (text) =>
+  text
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
-};
 
 const createVideoTestimonial = async (req, res) => {
   try {
-    const { name, slug, editor_content, status } = req.body;
+    const {
+      name,
+      slug,
+      editor_content,
+      status,
+      seo_title,
+      seo_description,
+      seo_keywords,
+      canonical_url,
+    } = req.body;
 
-    if (!name) {
+    if (!name || !editor_content) {
       return res.status(400).json({
         success: false,
-        message: "Name is required",
+        message: "Name and content are required",
       });
     }
 
-    const finalSlug = slug ? slug : generateSlug(name);
+    const finalSlug = slug ? generateSlug(slug) : generateSlug(name);
 
     const exists = await VideoTestimonial.findOne({
       where: { slug: finalSlug },
@@ -38,6 +46,11 @@ const createVideoTestimonial = async (req, res) => {
       slug: finalSlug,
       editor_content,
       status: status || "active",
+
+      seo_title: seo_title || name,
+      seo_description,
+      seo_keywords,
+      canonical_url,
     });
 
     res.status(201).json({
@@ -65,6 +78,8 @@ const getAllVideoTestimonials = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// 🔹 GET ACTIVE
 const getActiveVideoTestimonials = async (req, res) => {
   try {
     const data = await VideoTestimonial.findAll({
@@ -72,24 +87,19 @@ const getActiveVideoTestimonials = async (req, res) => {
       order: [["id", "DESC"]],
     });
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
 
 const getVideoTestimonialBySlug = async (req, res) => {
   try {
     const testimonial = await VideoTestimonial.findOne({
-      where: { slug: req.params.slug },
+      where: {
+        slug: req.params.slug,
+        status: "active",
+      },
     });
 
     if (!testimonial) {
@@ -123,8 +133,10 @@ const updateVideoTestimonial = async (req, res) => {
       }
     });
 
-    // slug uniqueness check
-    if (data.slug && data.slug !== testimonial.slug) {
+    // slug handling
+    if (data.slug) {
+      data.slug = generateSlug(data.slug);
+
       const exists = await VideoTestimonial.findOne({
         where: {
           slug: data.slug,
@@ -152,6 +164,7 @@ const updateVideoTestimonial = async (req, res) => {
   }
 };
 
+// 🔹 DELETE
 const deleteVideoTestimonial = async (req, res) => {
   try {
     const testimonial = await VideoTestimonial.findByPk(req.params.id);
@@ -174,7 +187,6 @@ const deleteVideoTestimonial = async (req, res) => {
   }
 };
 
-
 module.exports = {
   createVideoTestimonial,
   getAllVideoTestimonials,
@@ -182,5 +194,4 @@ module.exports = {
   getVideoTestimonialBySlug,
   updateVideoTestimonial,
   deleteVideoTestimonial,
-  
 };

@@ -14,8 +14,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { authHeader } from "../../utils/auth";
 import RichTextEditor from "@/components/RichTextEditor";
+
 const API_URL = `${API_BASE}/api/news-events`;
-const DUMMY_IMAGE = "https://via.placeholder.com/150x150?text=No+Image";
+const DUMMY_IMAGE = "https://via.placeholder.com/300x200?text=No+Image";
 
 const generateSlug = (text: string) =>
   text
@@ -24,16 +25,26 @@ const generateSlug = (text: string) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
-/* ---------------- TYPES ---------------- */
+/* ================= TYPES ================= */
 interface NewsEvent {
   id: number;
   title: string;
   slug: string;
   editor_content: string;
   image?: string | null;
+
+  image_alt?: string | null;
+  image_title?: string | null;
+
+  seo_title?: string | null;
+  seo_description?: string | null;
+  seo_keywords?: string | null;
+  canonical_url?: string | null;
+
   status: "active" | "inactive";
 }
 
+/* ================= COMPONENT ================= */
 const ManageNewsEvents = () => {
   const [items, setItems] = useState<NewsEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,12 +57,21 @@ const ManageNewsEvents = () => {
     slug: "",
     editor_content: "",
     status: "active",
+
     image: null as File | null,
     existingImage: null as string | null,
     removeImage: false,
+
+    image_alt: "",
+    image_title: "",
+
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+    canonical_url: "",
   });
 
-  /* ---------------- FETCH ---------------- */
+  /* ================= FETCH ================= */
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -78,21 +98,30 @@ const ManageNewsEvents = () => {
       slug: "",
       editor_content: "",
       status: "active",
+
       image: null,
       existingImage: null,
       removeImage: false,
+
+      image_alt: "",
+      image_title: "",
+
+      seo_title: "",
+      seo_description: "",
+      seo_keywords: "",
+      canonical_url: "",
     });
     setPreviewImage(null);
   };
 
-  /* ---------------- ADD ---------------- */
+  /* ================= ADD ================= */
   const handleAdd = () => {
     setEditing(null);
     resetForm();
     setOpen(true);
   };
 
-  /* ---------------- EDIT ---------------- */
+  /* ================= EDIT ================= */
   const handleEdit = (item: NewsEvent) => {
     setEditing(item);
     setForm({
@@ -100,26 +129,43 @@ const ManageNewsEvents = () => {
       slug: item.slug,
       editor_content: item.editor_content,
       status: item.status,
+
       image: null,
       existingImage: item.image || null,
       removeImage: false,
+
+      image_alt: item.image_alt || "",
+      image_title: item.image_title || "",
+
+      seo_title: item.seo_title || "",
+      seo_description: item.seo_description || "",
+      seo_keywords: item.seo_keywords || "",
+      canonical_url: item.canonical_url || "",
     });
     setPreviewImage(null);
     setOpen(true);
   };
 
-  /* ---------------- SUBMIT ---------------- */
+  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
     try {
       if (!form.title) return toast.error("Title is required");
       if (!form.editor_content) return toast.error("Content is required");
 
       const formData = new FormData();
-      formData.append("title", form.title);
-      formData.append("slug", form.slug);
-      formData.append("editor_content", form.editor_content);
-      formData.append("status", form.status);
-      formData.append("removeImage", String(form.removeImage));
+      Object.entries({
+        title: form.title,
+        slug: form.slug,
+        editor_content: form.editor_content,
+        status: form.status,
+        image_alt: form.image_alt,
+        image_title: form.image_title,
+        seo_title: form.seo_title,
+        seo_description: form.seo_description,
+        seo_keywords: form.seo_keywords,
+        canonical_url: form.canonical_url,
+        removeImage: String(form.removeImage),
+      }).forEach(([k, v]) => formData.append(k, v));
 
       if (form.image) {
         formData.append("image", form.image);
@@ -127,12 +173,12 @@ const ManageNewsEvents = () => {
 
       if (editing) {
         await axios.put(`${API_URL}/${editing.id}`, formData, {
-          headers: { ...authHeader() },
+          headers: authHeader(),
         });
         toast.success("News/Event updated");
       } else {
         await axios.post(API_URL, formData, {
-          headers: { ...authHeader() },
+          headers: authHeader(),
         });
         toast.success("News/Event created");
       }
@@ -144,7 +190,7 @@ const ManageNewsEvents = () => {
     }
   };
 
-  /* ---------------- DELETE ---------------- */
+  /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this news/event?")) return;
 
@@ -160,44 +206,35 @@ const ManageNewsEvents = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-        <h1 className="text-xl sm:text-2xl font-bold">Manage News & Events</h1>
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Manage News & Events</h1>
         <Button onClick={handleAdd}>+ Add News/Event</Button>
       </div>
 
-      {/* DESKTOP TABLE */}
-      <div className="hidden md:block bg-white shadow rounded overflow-x-auto">
+      <div className="bg-white shadow rounded overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3 text-left">Image</th>
+              <th className="p-3">Image</th>
               <th className="p-3 text-left">Title</th>
               <th className="p-3 text-left">Slug</th>
-              <th className="p-3 text-left">Status</th>
+              <th className="p-3">Status</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {items.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className="p-3">
                   <img
                     src={item.image ? `${API_BASE}/${item.image}` : DUMMY_IMAGE}
-                    alt={item.title}
-                    className="h-12 w-12 rounded object-cover border"
-                    onError={(e) =>
-                      ((e.target as HTMLImageElement).src = DUMMY_IMAGE)
-                    }
+                    className="h-14 w-20 object-cover rounded border"
                   />
                 </td>
-
                 <td className="p-3 font-medium">{item.title}</td>
                 <td className="p-3 text-xs text-gray-500">{item.slug}</td>
-
-                <td className="p-3">
+                <td className="p-3 text-center">
                   <span
                     className={
                       item.status === "active"
@@ -208,24 +245,24 @@ const ManageNewsEvents = () => {
                     {item.status}
                   </span>
                 </td>
-
-                <td className="p-3 text-right">
-                  <div className="flex justify-end gap-3">
-                    <button
+                <td className="p-3">
+                  <div className="flex flex-col-2 items-end gap-2">
+                    <Button
+                      size="sm"
+                      className="w-20"
                       onClick={() => handleEdit(item)}
-                      className="p-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
-                      title="Edit"
                     >
                       Edit
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="w-20"
                       onClick={() => handleDelete(item.id)}
-                      className="p-2 rounded bg-red-500 hover:bg-red-600 text-white"
-                      title="Delete"
                     >
-                      Delete{" "}
-                    </button>
+                      Delete
+                    </Button>
                   </div>
                 </td>
               </tr>
@@ -238,66 +275,16 @@ const ManageNewsEvents = () => {
         )}
       </div>
 
-      <div className="md:hidden space-y-4">
-        {items.map((item) => (
-          <div key={item.id} className="bg-white shadow rounded p-4 space-y-2">
-            <img
-              src={item.image ? `${API_BASE}/${item.image}` : DUMMY_IMAGE}
-              alt={item.title}
-              className="h-40 w-full rounded object-cover"
-              onError={(e) =>
-                ((e.target as HTMLImageElement).src = DUMMY_IMAGE)
-              }
-            />
-
-            <h3 className="font-semibold">{item.title}</h3>
-            <p className="text-xs text-gray-500 break-all">{item.slug}</p>
-
-            <p className="text-sm">
-              Status:{" "}
-              <span
-                className={
-                  item.status === "active"
-                    ? "text-green-600 font-semibold"
-                    : "text-red-600 font-semibold"
-                }
-              >
-                {item.status}
-              </span>
-            </p>
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                size="sm"
-                className="flex-1"
-                onClick={() => handleEdit(item)}
-              >
-                Edit
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                className="flex-1"
-                onClick={() => handleDelete(item.id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-[95vw] max-w-6xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="max-w-6xl p-0">
+          <DialogHeader className="px-6 py-4 border-b">
             <DialogTitle>
               {editing ? "Edit News/Event" : "Add News/Event"}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-6 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="max-h-[70vh] overflow-y-auto px-6 py-4 space-y-6">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium">Title</label>
                 <Input
@@ -318,18 +305,19 @@ const ManageNewsEvents = () => {
               </div>
             </div>
 
+            {/* Content */}
             <div>
               <label className="text-sm font-medium">Content</label>
               <RichTextEditor
                 value={form.editor_content}
-                onChange={(html) => updateForm("editor_content", html)}
+                onChange={(v) => updateForm("editor_content", v)}
                 minHeight={250}
               />
             </div>
 
-            <div className="space-y-2">
+            {/* Image */}
+            <div>
               <label className="text-sm font-medium">Image</label>
-
               <Input
                 type="file"
                 accept="image/*"
@@ -337,45 +325,70 @@ const ManageNewsEvents = () => {
                 onChange={(e) => {
                   const file = e.target.files?.[0] || null;
                   updateForm("image", file);
-
-                  if (file) {
-                    setPreviewImage(URL.createObjectURL(file));
-                  } else {
-                    setPreviewImage(null);
-                  }
+                  setPreviewImage(file ? URL.createObjectURL(file) : null);
                 }}
               />
 
-              {previewImage && !form.removeImage && (
+              {(previewImage || form.existingImage) && !form.removeImage && (
                 <img
-                  src={previewImage}
-                  className="h-24 rounded border"
+                  src={previewImage || `${API_BASE}/${form.existingImage}`}
+                  className="mt-3 h-32 rounded border object-cover"
                   alt="Preview"
                 />
               )}
-
-              {!previewImage && form.existingImage && !form.removeImage && (
-                <img
-                  src={`${API_BASE}/${form.existingImage}`}
-                  className="h-24 rounded border"
-                  alt="Existing"
-                />
-              )}
-
-              {form.existingImage && (
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={form.removeImage}
-                    onChange={(e) =>
-                      updateForm("removeImage", e.target.checked)
-                    }
-                  />
-                  Remove existing image
-                </label>
-              )}
             </div>
 
+            {/* Image Meta */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Image Alt Text</label>
+                <Input
+                  value={form.image_alt}
+                  onChange={(e) => updateForm("image_alt", e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Image Title</label>
+                <Input
+                  value={form.image_title}
+                  onChange={(e) => updateForm("image_title", e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* SEO */}
+            <div className="border rounded p-4 bg-gray-50 space-y-4">
+              <h3 className="font-semibold">SEO Settings</h3>
+
+              <Input
+                placeholder="SEO Title"
+                value={form.seo_title}
+                onChange={(e) => updateForm("seo_title", e.target.value)}
+              />
+
+              <textarea
+                rows={3}
+                className="w-full border rounded px-3 py-2"
+                placeholder="SEO Description"
+                value={form.seo_description}
+                onChange={(e) => updateForm("seo_description", e.target.value)}
+              />
+
+              <Input
+                placeholder="SEO Keywords"
+                value={form.seo_keywords}
+                onChange={(e) => updateForm("seo_keywords", e.target.value)}
+              />
+
+              <Input
+                placeholder="Canonical URL"
+                value={form.canonical_url}
+                onChange={(e) => updateForm("canonical_url", e.target.value)}
+              />
+            </div>
+
+            {/* Status */}
             <div>
               <label className="text-sm font-medium">Status</label>
               <select
@@ -389,7 +402,8 @@ const ManageNewsEvents = () => {
             </div>
           </div>
 
-          <DialogFooter>
+          {/* FOOTER */}
+          <DialogFooter className="px-6 py-4 border-t">
             <Button onClick={handleSubmit}>
               {editing ? "Update" : "Create"}
             </Button>

@@ -17,6 +17,7 @@ import RichTextEditor from "@/components/RichTextEditor";
 
 const API_URL = `${API_BASE}/api/video-testimonials`;
 
+// 🔹 Slug generator
 const generateSlug = (text: string) =>
   text
     .toLowerCase()
@@ -30,6 +31,11 @@ interface VideoTestimonial {
   slug: string;
   editor_content: string;
   status: "active" | "inactive";
+
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  canonical_url?: string;
 }
 
 const ManageVideoTestimonials = () => {
@@ -43,12 +49,18 @@ const ManageVideoTestimonials = () => {
     slug: "",
     editor_content: "",
     status: "active",
+
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+    canonical_url: "",
   });
 
+  // 🔹 Fetch list
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}`);
+      const res = await axios.get(API_URL);
       setItems(res.data?.data || []);
     } catch {
       toast.error("Failed to load video testimonials");
@@ -65,6 +77,7 @@ const ManageVideoTestimonials = () => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  // 🔹 Add
   const handleAdd = () => {
     setEditing(null);
     setForm({
@@ -72,10 +85,16 @@ const ManageVideoTestimonials = () => {
       slug: "",
       editor_content: "",
       status: "active",
+
+      seo_title: "",
+      seo_description: "",
+      seo_keywords: "",
+      canonical_url: "",
     });
     setOpen(true);
   };
 
+  // 🔹 Edit
   const handleEdit = (item: VideoTestimonial) => {
     setEditing(item);
     setForm({
@@ -83,10 +102,16 @@ const ManageVideoTestimonials = () => {
       slug: item.slug,
       editor_content: item.editor_content,
       status: item.status,
+
+      seo_title: item.seo_title || "",
+      seo_description: item.seo_description || "",
+      seo_keywords: item.seo_keywords || "",
+      canonical_url: item.canonical_url || "",
     });
     setOpen(true);
   };
 
+  // 🔹 Submit
   const handleSubmit = async () => {
     try {
       if (!form.name) {
@@ -118,6 +143,7 @@ const ManageVideoTestimonials = () => {
     }
   };
 
+  // 🔹 Delete
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this video testimonial?")) return;
 
@@ -187,6 +213,7 @@ const ManageVideoTestimonials = () => {
         )}
       </div>
 
+      {/* MODAL */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -196,14 +223,20 @@ const ManageVideoTestimonials = () => {
           </DialogHeader>
 
           <div className="space-y-6 p-4">
+            {/* BASIC INFO */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium">Name</label>
                 <Input
                   value={form.name}
                   onChange={(e) => {
-                    updateForm("name", e.target.value);
-                    updateForm("slug", generateSlug(e.target.value));
+                    const value = e.target.value;
+                    updateForm("name", value);
+                    updateForm("slug", generateSlug(value));
+
+                    if (!editing) {
+                      updateForm("seo_title", value);
+                    }
                   }}
                 />
               </div>
@@ -237,6 +270,55 @@ const ManageVideoTestimonials = () => {
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
+            </div>
+
+            <div className="border-t pt-6 space-y-4">
+              <h3 className="text-lg font-semibold">SEO Settings</h3>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">SEO Title</label>
+                  <Input
+                    value={form.seo_title}
+                    onChange={(e) =>
+                      updateForm("seo_title", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Canonical URL</label>
+                  <Input
+                    value={form.canonical_url}
+                    onChange={(e) =>
+                      updateForm("canonical_url", e.target.value)
+                    }
+                    placeholder="https://example.com/video-testimonial/slug"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">SEO Description</label>
+                <textarea
+                  className="w-full border rounded px-3 py-2 min-h-[90px]"
+                  value={form.seo_description}
+                  onChange={(e) =>
+                    updateForm("seo_description", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">SEO Keywords</label>
+                <Input
+                  value={form.seo_keywords}
+                  onChange={(e) =>
+                    updateForm("seo_keywords", e.target.value)
+                  }
+                  placeholder="keyword1, keyword2"
+                />
+              </div>
             </div>
           </div>
 

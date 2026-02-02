@@ -85,6 +85,7 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
         "|",
 
       ],
+      iframe: true,
 
       uploader: {
         url: API_URL,

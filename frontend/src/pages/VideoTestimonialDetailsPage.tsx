@@ -6,6 +6,8 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import Footer from "../components/Footer";
 import { API_BASE } from "../config/api";
 import BookingForm from "../components/BookingForm";
+import UseSeo from "../hooks/useSeo";
+import useSeo from "../hooks/useSeo";
 
 interface VideoTestimonial {
   id: number;
@@ -18,6 +20,21 @@ const VideoTestimonialDetailsPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [item, setItem] = useState<VideoTestimonial | null>(null);
   const [loading, setLoading] = useState(true);
+  const seoTitle = item?.name
+    ? `${item.name} | Video Testimonial`
+    : "Video Testimonial";
+
+  const seoDescription =
+    item?.editor_content?.replace(/<[^>]+>/g, "")?.substring(0, 160) ||
+    "Watch real patient video testimonials and experiences.";
+
+  const seoKeywords = item?.name
+    ? `${item.name}, video testimonial, patient experience`
+    : "video testimonial, patient review";
+
+  const canonicalUrl = item?.slug
+    ? `${window.location.origin}/video-testimonials/${item.slug}`
+    : window.location.href;
 
   useEffect(() => {
     fetchItem();
@@ -35,6 +52,7 @@ const VideoTestimonialDetailsPage: React.FC = () => {
       setLoading(false);
     }
   };
+  useSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
 
   if (loading) {
     return (
@@ -72,7 +90,7 @@ const VideoTestimonialDetailsPage: React.FC = () => {
               <h1 className="text-2xl font-bold mb-6">{item.name}</h1>
 
               <div
-                className="prose max-w-none"
+                className="cms-content prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{
                   __html: item.editor_content,
                 }}
