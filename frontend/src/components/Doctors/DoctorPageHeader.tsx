@@ -33,13 +33,12 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
   return (
     <section className="bg-[#fef9e8] py-10 border-b border-gray-200 mt-20">
       <div className="text-center mb-9">
-
         <p className="text-sm mb-2 text-[#87898C]">
           {breadcrumbs.map((item, index) => (
             <span key={index}>
               <span
-                className={`${
-                  item.link ? "hover:underline" : ""
+                className={`cursor-pointer ${
+                  item.link ? "hover: underline" : ""
                 }`}
                 style={index !== 0 ? { color: "#F0A324" } : {}}
                 onClick={() => item.link && navigate(item.link)}
@@ -67,7 +66,6 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
 
       <div className="flex justify-center">
         <div className="bg-[#F0A324] px-6 py-3 rounded-lg flex gap-4 items-center w-full max-w-2xl headings-search-location">
-
           <div className="relative w-1/2">
             <select
               value={selectedCountry}
@@ -106,7 +104,6 @@ const DoctorPageHeader: React.FC<DoctorPageHeaderProps> = ({
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
             />
           </div>
-
         </div>
       </div>
     </section>

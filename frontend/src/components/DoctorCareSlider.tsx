@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
 interface Doctor {
   name: string;
   specialty: string;
@@ -17,7 +16,6 @@ interface Doctor {
 interface ArrowProps {
   onClick?: () => void;
 }
-
 
 const NextArrow: React.FC<ArrowProps> = ({ onClick }) => (
   <button
@@ -43,7 +41,6 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick }) => (
   </button>
 );
 
-
 const DoctorCareSlider: React.FC = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -56,14 +53,12 @@ const DoctorCareSlider: React.FC = () => {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
 
   useEffect(() => {
     axios
@@ -82,7 +77,6 @@ const DoctorCareSlider: React.FC = () => {
   }, []);
 
   if (doctors.length === 0) return null;
-
 
   const settings: Settings = {
     dots: true,
@@ -117,7 +111,6 @@ const DoctorCareSlider: React.FC = () => {
     ),
   };
 
-
   return (
     <section className="py-10 bg-white mb-8">
       <div className="max-w-6xl mx-auto px-5 text-center">
@@ -125,18 +118,12 @@ const DoctorCareSlider: React.FC = () => {
           Professional Care Provider
         </h2>
 
-        <p
-          className="mt-2 mb-10 text-[16px]"
-          style={{ fontFamily: "Ubuntu" }}
-        >
+        <p className="mt-2 mb-10 text-[16px]" style={{ fontFamily: "Ubuntu" }}>
           Meet our expert doctors providing world-class medical care.
         </p>
 
         <div className="relative">
-          <Slider
-            {...settings}
-            key={`${doctors.length}-${isMobile}`}
-          >
+          <Slider {...settings} key={`${doctors.length}-${isMobile}`}>
             {doctors.map((d, i) => (
               <div key={i} className="flex justify-center">
                 <div
@@ -154,12 +141,8 @@ const DoctorCareSlider: React.FC = () => {
                   </div>
 
                   <div className="p-5 text-center">
-                    <h3 className="text-[22px] font-semibold">
-                      {d.name}
-                    </h3>
-                    <p className="text-[#F0A324] mt-1">
-                      {d.specialty}
-                    </p>
+                    <h3 className="text-[22px] font-semibold">{d.name}</h3>
+                    <p className="text-[#F0A324] mt-1">{d.specialty}</p>
                   </div>
                 </div>
               </div>

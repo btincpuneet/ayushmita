@@ -45,7 +45,7 @@ const TestimonialPage: React.FC = () => {
 
   const paginatedTestimonials = testimonials.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   const renderStars = (rating: number) =>
@@ -72,10 +72,7 @@ const TestimonialPage: React.FC = () => {
 
       <TreatmentHeader
         title="Testimonials"
-        breadcrumbs={[
-          { label: "Home", link: "/" },
-          { label: "Testimonials" },
-        ]}
+        breadcrumbs={[{ label: "Home", link: "/" }, { label: "Testimonials" }]}
       />
 
       <section className="max-w-7xl mx-auto px-4 py-12">
@@ -98,7 +95,12 @@ const TestimonialPage: React.FC = () => {
                   <div className="flex justify-center mb-4">
                     {item.image_url ? (
                       <img
-                        src={`${API_BASE}${item?.image_url}`}
+                        src={
+                          item?.image_url
+                            ? `${API_BASE}${item.image_url}`
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
+
+                        }
                         alt={item?.name}
                         title={item?.name}
                         className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-100"
