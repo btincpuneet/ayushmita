@@ -19,6 +19,7 @@ import Container from "../components/Container";
 import BookingForm from "../components/BookingForm";
 import useSeo from "../hooks/useSeo";
 import FaqWithImage from "../components/FaqWithImage";
+import { NotFound } from "./NotFound";
 interface Speciality {
   name: string;
 }
@@ -111,6 +112,7 @@ const DoctorDetailsPage: React.FC = () => {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [similarDoctors, setSimilarDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [similarHospitals, setSimilarHospitals] = useState<Hospital[]>([]);
   const [isMobile, setIsMobile] = useState(false);
@@ -174,6 +176,7 @@ const DoctorDetailsPage: React.FC = () => {
         }
       } catch (error) {
         console.error("Doctor details error:", error);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -212,16 +215,8 @@ const DoctorDetailsPage: React.FC = () => {
     );
   }
 
-  if (!doctor) {
-    return (
-      <>
-        <Header />
-        <main className="mt-[90px] py-20 text-center text-red-500">
-          Doctor not found
-        </main>
-        <Footer />
-      </>
-    );
+  if (error || !doctor) {
+    return <NotFound />;
   }
 
   const image = doctor.image_url

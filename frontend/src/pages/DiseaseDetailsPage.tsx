@@ -12,6 +12,7 @@ import "../css/common.css";
 import "../css/doctor.css";
 import UseSeo from "../hooks/useSeo";
 import ModalAppointment from "../components/Treatment/ModalAppointment";
+import { NotFound } from "./NotFound";
 
 interface Treatment {
   id: number;
@@ -48,6 +49,7 @@ const DiseaseDetailsPage = () => {
   const { slug } = useParams();
   const [disease, setDisease] = useState<Disease | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,6 +79,8 @@ const DiseaseDetailsPage = () => {
       }
       setLoading(false);
     } catch (err) {
+      console.error(err);
+      setError(true);
       setLoading(false);
     }
   };
@@ -126,7 +130,7 @@ const DiseaseDetailsPage = () => {
   if (loading)
     return <p className="text-center py-20 text-lg font-semibold">Loading...</p>;
 
-  if (!disease) return <p className="text-center py-20">Disease Not Found</p>;
+  if (error || !disease) return <NotFound />;
   const diseaseImageAlt =
     disease.image_alt ||
     `${disease.name} Disease`;

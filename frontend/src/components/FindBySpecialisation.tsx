@@ -53,8 +53,8 @@ const FindBySpecialisation: React.FC = () => {
 
   if (!page) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-red-500">
-        Page not found
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+       <NotFound /> 
       </div>
     );
   }

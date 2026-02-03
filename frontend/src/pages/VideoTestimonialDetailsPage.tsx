@@ -8,6 +8,7 @@ import { API_BASE } from "../config/api";
 import BookingForm from "../components/BookingForm";
 import UseSeo from "../hooks/useSeo";
 import useSeo from "../hooks/useSeo";
+import { NotFound } from "./NotFound";
 
 interface VideoTestimonial {
   id: number;
@@ -20,6 +21,7 @@ const VideoTestimonialDetailsPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [item, setItem] = useState<VideoTestimonial | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const seoTitle = item?.name
     ? `${item.name} | Video Testimonial`
     : "Video Testimonial";
@@ -47,6 +49,7 @@ const VideoTestimonialDetailsPage: React.FC = () => {
       setItem(res.data?.data);
     } catch (error) {
       console.error("Failed to load video testimonial", error);
+      setError(true);
       setItem(null);
     } finally {
       setLoading(false);
@@ -62,12 +65,8 @@ const VideoTestimonialDetailsPage: React.FC = () => {
     );
   }
 
-  if (!item) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
-        Testimonial not found
-      </div>
-    );
+  if (error || !item) {
+    return <NotFound />;
   }
 
   return (

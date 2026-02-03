@@ -24,6 +24,7 @@ import { Map as MapIcon } from "lucide-react";
 
 import ModalAppointment from "../components/Treatment/ModalAppointment";
 import FaqWithImage from "../components/FaqWithImage";
+import { NotFound } from "./NotFound";
 
 interface ArrowProps {
   onClick?: () => void;
@@ -448,6 +449,7 @@ function DoctorsSection({
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
   const [hospital, setHospital] = useState<any>(null);
+  const [error, setError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [similarHospitals, setSimilarHospitals] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -465,7 +467,10 @@ export default function HospitalDetailsPage() {
     axios
       .get(`${API_BASE}/api/hospitals/${slug}`)
       .then((res) => setHospital(res.data.data))
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+      });
   }, [slug]);
 
   useEffect(() => {
@@ -535,7 +540,7 @@ export default function HospitalDetailsPage() {
 
   }, [hospital]);
 
-  if (!hospital) return null;
+  if (!hospital) return <NotFound />;
 
 
   return (

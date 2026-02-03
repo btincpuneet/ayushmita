@@ -9,6 +9,7 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 
 import useSeo from "../hooks/useSeo";
 import { API_BASE } from "../config/api";
+import { NotFound } from "./NotFound";
 
 interface NewsEvent {
   title: string;
@@ -21,6 +22,7 @@ const NewsEventDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [event, setEvent] = useState<NewsEvent | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     if (slug) fetchEvent();
@@ -33,6 +35,7 @@ const NewsEventDetails: React.FC = () => {
       setEvent(res.data?.data);
     } catch (error) {
       console.error("Failed to fetch event details", error);
+      setError(true);
       setEvent(null);
     } finally {
       setLoading(false);
@@ -73,12 +76,8 @@ const NewsEventDetails: React.FC = () => {
     );
   }
 
-  if (!event) {
-    return (
-      <div className="py-24 text-center text-gray-500">
-        News/Event not found
-      </div>
-    );
+  if (error || !event) {
+    return <NotFound />;
   }
 
   return (

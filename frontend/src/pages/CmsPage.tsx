@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import "../css/aboutUs.css";
 import { API_BASE } from "../config/api";
 import "../css/footer.css";
+import { NotFound } from "./NotFound";
 
 
 interface CmsPageData {
@@ -21,6 +22,7 @@ const CmsPage: React.FC = () => {
   const { slug } = useParams();
   const [page, setPage] = useState<CmsPageData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     fetchPage();
@@ -35,6 +37,7 @@ const CmsPage: React.FC = () => {
       setPage(res.data.data);
     } catch (error) {
       console.error(error);
+      setError(true);
       setPage(null);
     } finally {
       setLoading(false);
@@ -49,12 +52,8 @@ const CmsPage: React.FC = () => {
     );
   }
 
-  if (!page) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-red-500">
-        Page not found
-      </div>
-    );
+  if (error || !page) {
+    return <NotFound />;
   }
 
   return (

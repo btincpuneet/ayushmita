@@ -24,6 +24,7 @@ import VideoTestimonialsPage from "./pages/VideoTestimonialsPage";
 import VideoTestimonialDetailsPage from "./pages/VideoTestimonialDetailsPage";
 import AllNewsEvents from "./pages/AllNewsEvents";
 import NewsEventDetails from "./pages/NewsEventDetails";
+import { NotFound } from "./pages/NotFound";
 
 const App: React.FC = () => {
   useSyncRTLWithGoogleTranslate();
@@ -59,6 +60,7 @@ const App: React.FC = () => {
         />
         <Route path="/news-events" element={<AllNewsEvents />} />
         <Route path="/news-events/:slug" element={<NewsEventDetails />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </HelmetProvider>
   );

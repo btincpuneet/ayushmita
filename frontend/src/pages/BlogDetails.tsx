@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { User, Share2 } from "lucide-react";
+import { User } from "lucide-react";
 import "../css/responsive.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -10,9 +10,9 @@ import TreatmentHeader from "../components/Treatment/TreatmentHeader";
 import SearchBar from "../components/Blog/SearchBar";
 import BookingForm from "../components/BookingForm";
 import useSeo from "../hooks/useSeo";
-
 import { API_BASE } from "../config/api";
 import ShareButton from "../components/Blog/ShareButton";
+import { NotFound } from "./NotFound";
 
 interface Blog {
   id: number;
@@ -49,6 +49,7 @@ const BlogDetails: React.FC = () => {
   const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,6 +85,7 @@ const BlogDetails: React.FC = () => {
         setBlog(blogData);
       } catch (err) {
         console.error(err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -168,8 +170,8 @@ const BlogDetails: React.FC = () => {
     return <div className="py-20 text-center">Loading...</div>;
   }
 
-  if (!blog) {
-    return <div className="py-20 text-center">Blog not found</div>;
+  if (error || !blog) {
+    return <NotFound />;
   }
 
   return (

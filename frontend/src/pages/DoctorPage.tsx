@@ -10,6 +10,7 @@ import DoctorPageHeader from "../components/Doctors/DoctorPageHeader";
 import DoctorCard from "../components/Doctors/DoctorCard";
 import BookingForm from "../components/BookingForm";
 import Pagination from "../components/Pagination";
+import { NotFound } from "./NotFound";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -28,6 +29,7 @@ const DoctorsPage: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
@@ -42,6 +44,7 @@ const DoctorsPage: React.FC = () => {
         setDoctors(list);
       } catch {
         setError("Failed to load doctors");
+        setHasError(true);
       } finally {
         setLoading(false);
       }

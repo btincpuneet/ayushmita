@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Slider from "react-slick";
@@ -14,6 +13,7 @@ import BookingForm from "../components/BookingForm";
 import SearchBar from "../components/Blog/SearchBar";
 
 import { API_BASE } from "../config/api";
+import { NotFound } from "./NotFound";
 
 interface Blog {
   id: number;
@@ -71,6 +71,7 @@ const Blog: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [categories, setCategories] = useState<Disease[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [globalSEO, setGlobalSEO] = useState<GlobalSEO | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -102,11 +103,12 @@ const Blog: React.FC = () => {
     try {
       const res = await axios.get(`${API_BASE}/api/blogs`);
       const published = (res.data?.data || []).filter(
-        (b: Blog) => b.status === "published"
+        (b: Blog) => b.status === "published",
       );
       setBlogs(published);
     } catch (err) {
       console.error(err);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -143,9 +145,7 @@ const Blog: React.FC = () => {
     slidesToScroll: 1,
     arrows: !isMobile,
 
-    slidesToShow: isMobile
-      ? 1
-      : Math.min(3, filteredBlogs.length),
+    slidesToShow: isMobile ? 1 : Math.min(3, filteredBlogs.length),
 
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
@@ -156,19 +156,25 @@ const Blog: React.FC = () => {
     ],
   };
 
-  const seoTitle =
-    globalSEO?.seo_title || "Best Hospital";
+  const seoTitle = globalSEO?.seo_title || "Best Hospital";
 
   const seoDescription =
     globalSEO?.seo_description || "Best healthcare services";
 
-  const seoKeywords =
-    globalSEO?.seo_keywords || "hospital, Test ,healthcare";
+  const seoKeywords = globalSEO?.seo_keywords || "hospital, Test ,healthcare";
 
   useSeo(seoTitle, seoDescription, seoKeywords);
 
   if (loading) {
-    return <div className="py-20 text-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="h-14 w-14 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error || blogs.length === 0) {
+    return <NotFound />;
   }
 
   return (
@@ -176,10 +182,7 @@ const Blog: React.FC = () => {
       <Header />
       <TreatmentHeader
         title="Blog"
-        breadcrumbs={[
-          { label: "Home", link: "/" },
-          { label: "Blog" },
-        ]}
+        breadcrumbs={[{ label: "Home", link: "/" }, { label: "Blog" }]}
       >
         <SearchBar
           searchQuery={searchQuery}
@@ -193,12 +196,13 @@ const Blog: React.FC = () => {
       <Container>
         {filteredBlogs.length > 0 && (
           <section className="mb-12">
-            <h2 className="text-xl font-bold mb-4 tips-about-health">Latest Health Tips</h2>
+            <h2 className="text-xl font-bold mb-4 tips-about-health">
+              Latest Health Tips
+            </h2>
             <Slider
               {...sliderSettings}
               key={`${filteredBlogs.length}-${isMobile}`}
             >
-
               {filteredBlogs.map((post) => (
                 <div key={post.id} className="px-2">
                   <Link to={`/blogs/${post.slug}`}>

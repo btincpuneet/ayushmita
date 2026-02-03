@@ -13,12 +13,14 @@ import TestimonialSlider from "../components/TestimonialSlider";
 import ConsultationForm from "../components/ConsulatForm";
 import OtherServices from "../components/OtherService";
 import TreatmentHeader from "../components/Treatment/TreatmentHeader";
+import { NotFound } from "./NotFound";
 
 export default function TreatmentDetailsPage() {
   const { slug } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [treatment, setTreatment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
   const fetchGlobalSettings = async () => {
     try {
@@ -42,6 +44,7 @@ export default function TreatmentDetailsPage() {
       setLoading(false);
     } catch (err) {
       console.error(err);
+      setError(true);
       setLoading(false);
     }
   };
@@ -78,7 +81,7 @@ export default function TreatmentDetailsPage() {
   UseSeo(seoTitle, seoDescription, seoKeywords, canonicalUrl);
 
   if (loading) return <p className="p-6 text-xl">Loading...</p>;
-  if (!treatment) return <p className="p-6 text-xl">Treatment not found</p>;
+  if (error || !treatment) return <NotFound />;
 
   return (
     <div className="bg-white">
@@ -105,10 +108,7 @@ export default function TreatmentDetailsPage() {
           ]}
         />
       </div>
-
-
       <div className="max-w-7xl mx-auto px-4 py-12">
-
         <div className="flex flex-col-reverse lg:flex-row items-center items-start mb-20">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
