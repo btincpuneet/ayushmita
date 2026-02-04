@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Edit3, Trash2, FileText, Layout } from "lucide-react";
 import RichTextEditor from "../../components/RichTextEditor";
 import { footerService } from "../../services/footer";
+import { Label } from "@/components/ui/label";
 
 const emptyForm = {
   title: "",
@@ -165,46 +166,69 @@ const ManageFooter = () => {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <Input
-              placeholder="Title *"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
-
-            <RichTextEditor
-              value={form.content_html}
-              onChange={(val) => setForm({ ...form, content_html: val })}
-              minHeight={200}
-            />
-
-            <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="footer-title">Title <span className="text-red-500">*</span></Label>
               <Input
-                placeholder="SEO Title"
-                value={form.seo_title}
-                onChange={(e) => setForm({ ...form, seo_title: e.target.value })}
-              />
-              <Input
-                placeholder="SEO Keywords"
-                value={form.seo_keywords}
-                onChange={(e) => setForm({ ...form, seo_keywords: e.target.value })}
+                id="footer-title"
+                placeholder="e.g., Quick Links, Company Info"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
             </div>
 
-            <textarea
-              className="w-full min-h-[80px] px-3 py-2 border rounded-lg"
-              placeholder="SEO Description"
-              value={form.seo_description}
-              onChange={(e) => setForm({ ...form, seo_description: e.target.value })}
-            />
+            <div>
+              <Label htmlFor="footer-content">Content</Label>
+              <RichTextEditor
+                value={form.content_html}
+                onChange={(val) => setForm({ ...form, content_html: val })}
+                minHeight={200}
+              />
+            </div>
 
-            <select
-              className="w-full h-10 px-3 rounded-lg border"
-              value={form.status}
-              onChange={(e) => setForm({ ...form, status: e.target.value })}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="footer-seo-title">SEO Title</Label>
+                <Input
+                  id="footer-seo-title"
+                  placeholder="e.g., Company Footer - Contact Information"
+                  value={form.seo_title}
+                  onChange={(e) => setForm({ ...form, seo_title: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="footer-seo-kw">SEO Keywords</Label>
+                <Input
+                  id="footer-seo-kw"
+                  placeholder="e.g., contact, company, information"
+                  value={form.seo_keywords}
+                  onChange={(e) => setForm({ ...form, seo_keywords: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="footer-seo-desc">SEO Description</Label>
+              <textarea
+                id="footer-seo-desc"
+                className="w-full min-h-[80px] px-3 py-2 border rounded-lg"
+                placeholder="Meta description for search engines..."
+                value={form.seo_description}
+                onChange={(e) => setForm({ ...form, seo_description: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="footer-status">Status</Label>
+              <select
+                id="footer-status"
+                className="w-full h-10 px-3 rounded-lg border"
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
           </div>
 
           <DialogFooter>

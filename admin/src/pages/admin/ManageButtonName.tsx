@@ -183,31 +183,36 @@ export default function ManageButtonName() {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-4">
-            <div>
-              <Label>Name</Label>
-              <Input
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-                placeholder="Enter button name"
-              />
-            </div>
-            <div>
-              <Label>Link URL</Label>
-              <Input
-                value={form.linkUrl}
-                onChange={(e) =>
-                  setForm({ ...form, linkUrl: e.target.value })
-                }
-                placeholder="/book-appointment"
-              />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="btn-name">Name <span className="text-red-500">*</span></Label>
+                <Input
+                  id="btn-name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm({ ...form, name: e.target.value })
+                  }
+                  placeholder="e.g., Book Appointment"
+                />
+              </div>
+              <div>
+                <Label htmlFor="btn-url">Link URL <span className="text-red-500">*</span></Label>
+                <Input
+                  id="btn-url"
+                  value={form.linkUrl}
+                  onChange={(e) =>
+                    setForm({ ...form, linkUrl: e.target.value })
+                  }
+                  placeholder="e.g., /book-appointment"
+                />
+              </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <Label>Status</Label>
+            <div className="flex items-center justify-between pt-2 border-t">
+              <Label htmlFor="btn-status">Status</Label>
               <Switch
+                id="btn-status"
                 checked={form.status}
                 onCheckedChange={(v) =>
                   setForm({ ...form, status: v })

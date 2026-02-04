@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Links } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import Slider from "react-slick";
@@ -13,7 +13,6 @@ import {
   Calendar,
   Bed,
   Building2,
-
   Globe,
   Check,
   ArrowRight,
@@ -25,10 +24,6 @@ import { Map as MapIcon } from "lucide-react";
 import ModalAppointment from "../components/Treatment/ModalAppointment";
 import FaqWithImage from "../components/FaqWithImage";
 import { NotFound } from "./NotFound";
-
-interface ArrowProps {
-  onClick?: () => void;
-}
 
 interface ArrowProps {
   onClick?: () => void;
@@ -50,9 +45,18 @@ function PrevArrow() {
   return <span />;
 }
 
-
-function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
+function HospitalInfoCard({ hospital, onBookAppointment }: any) {
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
+  const navigate = useNavigate();
+
+  const handleDepartmentClick = (dept: any) => {
+    const name = dept?.slug || dept?.name || String(dept);
+    const slug = String(name)
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
+    navigate(`/disease/${encodeURIComponent(slug)}`);
+  };
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -71,7 +75,7 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
 
   if (!whatsAppNumber) return null;
   return (
-    <div className="bg-white">
+    <div className="bg-white mb-6">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         <img
           src={
@@ -79,23 +83,17 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
               ? `${API_BASE}${hospital.image_url}`
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwCJYSnbBLMEGWKfSnWRGC_34iCCKkxePpg&s"
           }
-          alt={
-            hospital.image_alt ||
-            `${hospital.name} Hospital`
-          }
-          title={
-            hospital.image_title ||
-            hospital.name
-          }
+          alt={hospital.image_alt || `${hospital.name} Hospital`}
+          title={hospital.image_title || hospital.name}
           className="w-full lg:w-[370px] h-[276px] object-cover rounded-xl"
         />
-
 
         <div className="flex-1 details-page-section-description">
           {/* <h1 className="text-2xl font-bold mb-4">{hospital.name}</h1> */}
 
           <ul className="space-y-3">
-            <li className="flex gap-3"
+            <li
+              className="flex gap-3"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 400,
@@ -109,7 +107,8 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
               {hospital.address}
             </li>
 
-            <li className="flex gap-3"
+            <li
+              className="flex gap-3"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 400,
@@ -130,11 +129,13 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                   lineHeight: "26px",
                   letterSpacing: "0%",
                 }}
-
-              >{new Date().getFullYear() - hospital.founded_year}+ Years</b>
+              >
+                {new Date().getFullYear() - hospital.founded_year}+ Years
+              </b>
             </li>
 
-            <li className="flex gap-3"
+            <li
+              className="flex gap-3"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 400,
@@ -143,10 +144,10 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                 lineHeight: "26px",
                 letterSpacing: "0%",
               }}
-
             >
               <Bed size={18} className="text-[#F0A324]" />
-              Hospital Beds: <b
+              Hospital Beds:{" "}
+              <b
                 style={{
                   fontFamily: "Ubuntu, sans-serif",
                   fontWeight: 700,
@@ -155,8 +156,9 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                   lineHeight: "26px",
                   letterSpacing: "0%",
                 }}
-
-              >{hospital.hospital_beds}</b>
+              >
+                {hospital.hospital_beds}
+              </b>
             </li>
 
             {/* <li className="flex gap-3"
@@ -183,25 +185,74 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
 
               >Multi Specialty</b>
             </li> */}
-            <li className="flex gap-3" style={{
-              fontFamily: "Ubuntu, sans-serif",
-              fontWeight: 400,
-              fontStyle: "normal",
-              fontSize: "14px",
-              lineHeight: "26px",
-              letterSpacing: "0%",
-            }}>
-              <Building2 size={18} className="text-[#F0A324]" />
-              Specialty:
+            <li
+              className="flex gap-3"
+              style={{
+                fontFamily: "Ubuntu, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "26px",
+                letterSpacing: "0%",
+              }}
+            >
+              {/* <Building2 size={18} className="text-[#F0A324]" />
+              Department:
               <b className="ml-1">
                 {hospital.specialities && hospital.specialities.length > 0
                   ? hospital.specialities.map((s: any) => s.name).join(", ")
                   : "N/A"}
+              </b> */}
+              <Building2 size={18} className="text-[#F0A324]" />
+              <span className="ml-1">Department:</span>
+
+              {hospital.specialities && hospital.specialities.length > 0 ? (
+                <b className="ml-1">
+                  {hospital.specialities.map((s: any, idx: number) => (
+                    <span
+                      key={s.id || s.name}
+                      className="cursor-pointer text-[#F0A324] hover:underline"
+                      onClick={() => handleDepartmentClick(s)}
+                    >
+                      {s.name}
+                      {idx < hospital.specialities.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </b>
+              ) : (
+                <b className="ml-1">N/A</b>
+              )}
+            </li>
+
+            <li
+              className="flex gap-3"
+              style={{
+                fontFamily: "Ubuntu, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "14px",
+                lineHeight: "26px",
+                letterSpacing: "0%",
+              }}
+            >
+              <MapIcon size={18} className="text-[#F0A324]" />
+              City:{" "}
+              <b
+                style={{
+                  fontFamily: "Ubuntu, sans-serif",
+                  fontWeight: 700,
+                  fontStyle: "normal",
+                  fontSize: "14px",
+                  lineHeight: "26px",
+                  letterSpacing: "0%",
+                }}
+              >
+                {hospital.city}
               </b>
             </li>
 
-
-            <li className="flex gap-3"
+            <li
+              className="flex gap-3"
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 400,
@@ -210,35 +261,10 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                 lineHeight: "26px",
                 letterSpacing: "0%",
               }}
-            >
-
-              <MapIcon size={18} className="text-[#F0A324]" />
-              City: <b
-                style={{
-                  fontFamily: "Ubuntu, sans-serif",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "26px",
-                  letterSpacing: "0%",
-                }}
-
-              >{hospital.city}</b>
-            </li>
-
-            <li className="flex gap-3"
-              style={{
-                fontFamily: "Ubuntu, sans-serif",
-                fontWeight: 400,
-                fontStyle: "normal",
-                fontSize: "14px",
-                lineHeight: "26px",
-                letterSpacing: "0%",
-              }}
-
             >
               <Globe size={18} className="text-[#F0A324]" />
-              Country: <b
+              Country:{" "}
+              <b
                 style={{
                   fontFamily: "Ubuntu, sans-serif",
                   fontWeight: 700,
@@ -247,13 +273,16 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                   lineHeight: "26px",
                   letterSpacing: "0%",
                 }}
-
-              >{hospital.country}</b>
+              >
+                {hospital.country}
+              </b>
             </li>
           </ul>
 
           <div className="flex gap-4 mt-6 details-pgs-btn-1">
-            <button onClick={onBookAppointment} className="px-6 py-3 bg-[#F0A324] rounded-lg "
+            <button
+              onClick={onBookAppointment}
+              className="px-6 py-3 bg-[#F0A324] rounded-lg "
               style={{
                 fontFamily: "Ubuntu, sans-serif",
                 fontWeight: 500,
@@ -262,7 +291,6 @@ function HospitalInfoCard({ hospital, onBookAppointment, }: any) {
                 lineHeight: "100%",
                 letterSpacing: "2%",
               }}
-
             >
               Book Appointment
             </button>
@@ -307,14 +335,13 @@ function ContentSection({ html }: { html: string }) {
       className="cms-content leading-relaxed"
       dangerouslySetInnerHTML={{ __html: html }}
     />
-
   );
 }
 
 function SimilarHospitals({
   hospitals,
   isMobile,
-  city
+  city,
 }: {
   hospitals: any[];
   isMobile: boolean;
@@ -341,13 +368,12 @@ function SimilarHospitals({
 
   return (
     <div className="mt-16">
-      <h2 className="mb-6 text-[28px] font-bold"> Similar Hospitals in {city}
+      <h2 className="mb-6 text-[28px] font-bold">
+        {" "}
+        Similar Hospitals in {city}
       </h2>
 
-      <Slider
-        {...settings}
-        key={`${hospitals.length}-${isMobile}`}
-      >
+      <Slider {...settings} key={`${hospitals.length}-${isMobile}`}>
         {hospitals.map((h) => (
           <div key={h.id} className="pr-6">
             <Link to={`/hospitals/${h.slug}`}>
@@ -369,14 +395,12 @@ function SimilarHospitals({
                 </div>
               </div>
             </Link>
-
           </div>
         ))}
       </Slider>
     </div>
   );
 }
-
 
 function DoctorsSection({
   doctors,
@@ -387,7 +411,6 @@ function DoctorsSection({
   isMobile: boolean;
   city: string;
 }) {
-
   if (!doctors.length) return null;
   const settings = {
     dots: false,
@@ -410,14 +433,9 @@ function DoctorsSection({
 
   return (
     <div className="mt-16">
-      <h2 className="mb-6 text-[28px] font-bold">
-        Similar Doctors in {city}
-      </h2>
+      <h2 className="mb-6 text-[28px] font-bold">Similar Doctors in {city}</h2>
 
-      <Slider
-        {...settings}
-        key={`${doctors.length}-${isMobile}`}
-      >
+      <Slider {...settings} key={`${doctors.length}-${isMobile}`}>
         {doctors.map((d) => (
           <div key={d.id} className="pr-6 mb-20">
             <Link to={`/doctor/${d.slug}`}>
@@ -435,7 +453,6 @@ function DoctorsSection({
                 <p className="text-[#F0A324] font-bold pb-3">
                   {d.speciality?.name || "Specialist"}
                 </p>
-
               </div>
             </Link>
           </div>
@@ -444,7 +461,6 @@ function DoctorsSection({
     </div>
   );
 }
-
 
 export default function HospitalDetailsPage() {
   const { slug } = useParams();
@@ -476,18 +492,16 @@ export default function HospitalDetailsPage() {
   useEffect(() => {
     if (!hospital?.id || !hospital?.city || !hospital?.country) return;
 
-    const citySlug = hospital.city
-      .replace(/%20/g, "")
-      .replace(/\s+/g, "");
+    const citySlug = hospital.city.replace(/%20/g, "").replace(/\s+/g, "");
 
     axios
       .get(
-        `${API_BASE}/api/hospitals/by-city/${citySlug}?country=${encodeURIComponent(hospital.country)}`
+        `${API_BASE}/api/hospitals/by-city/${citySlug}?country=${encodeURIComponent(hospital.country)}`,
       )
       .then((res) => {
         if (res.data?.success && Array.isArray(res.data.data)) {
           const filtered = res.data.data.filter(
-            (h: any) => h.id !== hospital.id
+            (h: any) => h.id !== hospital.id,
           );
           setSimilarHospitals(filtered);
         }
@@ -496,8 +510,6 @@ export default function HospitalDetailsPage() {
         console.error("Similar hospitals fetch error:", err);
       });
   }, [hospital]);
-
-
 
   useEffect(() => {
     if (!hospital) return;
@@ -518,18 +530,16 @@ export default function HospitalDetailsPage() {
 
     Promise.all(
       specialityIds.map((id: number) =>
-        axios.get(`${API_BASE}/api/doctors/by-speciality/${id}`)
-      )
+        axios.get(`${API_BASE}/api/doctors/by-speciality/${id}`),
+      ),
     )
       .then((responses) => {
         // 🔹 saare doctors ko ek array me merge karo
-        const allDoctors = responses.flatMap(
-          (res) => res.data?.data || []
-        );
+        const allDoctors = responses.flatMap((res) => res.data?.data || []);
 
         // 🔹 duplicate doctors hatao (agar same doctor multiple speciality me ho)
         const uniqueDoctors = Array.from(
-          new Map(allDoctors.map((d: any) => [d.id, d])).values()
+          new Map(allDoctors.map((d: any) => [d.id, d])).values(),
         );
 
         setDoctors(uniqueDoctors);
@@ -537,11 +547,9 @@ export default function HospitalDetailsPage() {
       .catch((err) => {
         console.error("Doctors fetch error:", err);
       });
-
   }, [hospital]);
 
   if (!hospital) return <NotFound />;
-
 
   return (
     <>
@@ -563,28 +571,28 @@ export default function HospitalDetailsPage() {
               onBookAppointment={() => setIsModalOpen(true)}
             />
             <div className="space-y-12">
-              <ContentSection
-                html={hospital.description_html}
-              />
-
+              <ContentSection html={hospital.description_html} />
             </div>
           </div>
           <div className="lg:col-span-1 sticky top-24">
             <BookingForm />
           </div>
         </div>
-        <FaqWithImage
-          faqType="hospital"
-          hospitalId={hospital.id}
-        />
+        <FaqWithImage faqType="hospital" hospitalId={hospital.id} />
 
         {similarHospitals.length > 0 && (
-          <SimilarHospitals hospitals={similarHospitals} isMobile={isMobile} city={hospital.city}
+          <SimilarHospitals
+            hospitals={similarHospitals}
+            isMobile={isMobile}
+            city={hospital.city}
           />
         )}
 
-        <DoctorsSection doctors={doctors} isMobile={isMobile} city={hospital.city} />
-
+        <DoctorsSection
+          doctors={doctors}
+          isMobile={isMobile}
+          city={hospital.city}
+        />
       </div>
       <ModalAppointment
         isOpen={isModalOpen}

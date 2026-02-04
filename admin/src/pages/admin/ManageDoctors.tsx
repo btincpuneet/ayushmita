@@ -333,11 +333,12 @@ const ManageDoctors = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium mb-1 block">
-                  Doctor Name *
+                  Doctor Name <span className="text-red-500">*</span>
                 </label>
                 <Input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="e.g., Dr. John Smith"
                 />
               </div>
 
@@ -348,6 +349,7 @@ const ManageDoctors = () => {
                 <Input
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  placeholder="e.g., Senior Cardiologist"
                 />
               </div>
 
@@ -437,6 +439,7 @@ const ManageDoctors = () => {
                   onKeyDown={(e) => {
                     if (e.key === "-" || e.key === "e") e.preventDefault();
                   }}
+                  placeholder="e.g., 10 years"
                 />
               </div>
 
@@ -511,6 +514,7 @@ const ManageDoctors = () => {
                     setPreview(URL.createObjectURL(file));
                   }}
                   name="filename"
+                  placeholder="Select doctor photo"
                 />
               </div>
 
@@ -530,6 +534,7 @@ const ManageDoctors = () => {
                   onChange={(e) =>
                     setForm({ ...form, image_alt: e.target.value })
                   }
+                  placeholder="e.g., Dr. John Smith, Cardiologist"
                 />
               </div>
 
@@ -542,30 +547,7 @@ const ManageDoctors = () => {
                   onChange={(e) =>
                     setForm({ ...form, image_title: e.target.value })
                   }
-                />
-              </div>
-
-              <div className="col-span-2">
-                <label className="text-sm font-medium mb-1 block">
-                  Short Description
-                </label>
-                <Textarea
-                  value={form.short_description}
-                  onChange={(e) =>
-                    setForm({ ...form, short_description: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="col-span-2">
-                <label className="text-sm font-medium mb-1 block">
-                  Description
-                </label>
-                <Textarea
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
+                  placeholder="e.g., Dr. John Smith Profile"
                 />
               </div>
 
@@ -583,21 +565,6 @@ const ManageDoctors = () => {
                 />
               </div>
 
-              <div className="col-span-2">
-                <label className="text-sm font-medium mb-1 block">
-                  Doctor FAQ
-                </label>
-                <RichTextEditor
-                  value={form.faq_html}
-                  onChange={(html) =>
-                    setForm({ ...form, faq_html: html })
-                  }
-                  minHeight={200}
-                  showWordCount
-                />
-              </div>
-
-
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   SEO Title
@@ -607,6 +574,7 @@ const ManageDoctors = () => {
                   onChange={(e) =>
                     setForm({ ...form, seo_title: e.target.value })
                   }
+                  placeholder="e.g., Dr. John Smith - Best Cardiologist"
                 />
               </div>
 
@@ -619,6 +587,7 @@ const ManageDoctors = () => {
                   onChange={(e) =>
                     setForm({ ...form, canonical_url: e.target.value })
                   }
+                  placeholder="https://example.com/doctor/john-smith"
                 />
               </div>
 
@@ -631,6 +600,7 @@ const ManageDoctors = () => {
                   onChange={(e) =>
                     setForm({ ...form, seo_description: e.target.value })
                   }
+                  placeholder="Brief description for search engines (50-160 characters)..."
                 />
               </div>
 

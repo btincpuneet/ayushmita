@@ -224,59 +224,86 @@ const ManagePromoSlider = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <div>
+              <Label htmlFor="promo-title">Title <span className="text-red-500">*</span></Label>
+              <Input
+                id="promo-title"
+                placeholder="e.g., Summer Sale"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+            </div>
 
-            <Input
-              placeholder="Subtitle"
-              value={form.subtitle}
-              onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
-            />
+            <div>
+              <Label htmlFor="promo-subtitle">Subtitle</Label>
+              <Input
+                id="promo-subtitle"
+                placeholder="e.g., Get 50% Off Now"
+                value={form.subtitle}
+                onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
+              />
+            </div>
 
-            <Textarea
-              className="col-span-2"
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-            />
+            <div className="col-span-2">
+              <Label htmlFor="promo-desc">Description</Label>
+              <Textarea
+                id="promo-desc"
+                placeholder="Brief description of the promotion..."
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Discount Text"
-              value={form.discount_text}
-              onChange={(e) =>
-                setForm({ ...form, discount_text: e.target.value })
-              }
-            />
+            <div>
+              <Label htmlFor="promo-discount">Discount Text</Label>
+              <Input
+                id="promo-discount"
+                placeholder="e.g., SAVE50"
+                value={form.discount_text}
+                onChange={(e) =>
+                  setForm({ ...form, discount_text: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Code Text"
-              value={form.code_text}
-              onChange={(e) =>
-                setForm({ ...form, code_text: e.target.value })
-              }
-            />
+            <div>
+              <Label htmlFor="promo-code">Code Text</Label>
+              <Input
+                id="promo-code"
+                placeholder="e.g., Use Code: SAVE50"
+                value={form.code_text}
+                onChange={(e) =>
+                  setForm({ ...form, code_text: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Button Text"
-              value={form.button_text}
-              onChange={(e) =>
-                setForm({ ...form, button_text: e.target.value })
-              }
-            />
+            <div>
+              <Label htmlFor="promo-btn">Button Text</Label>
+              <Input
+                id="promo-btn"
+                placeholder="e.g., Shop Now"
+                value={form.button_text}
+                onChange={(e) =>
+                  setForm({ ...form, button_text: e.target.value })
+                }
+              />
+            </div>
 
-            <Input
-              placeholder="Image Alt Text"
-              value={form.image_alt}
-              onChange={(e) =>
-                setForm({ ...form, image_alt: e.target.value })
-              }
-            />
+            <div>
+              <Label htmlFor="promo-alt">Image Alt Text</Label>
+              <Input
+                id="promo-alt"
+                placeholder="e.g., Summer sale banner image"
+                value={form.image_alt}
+                onChange={(e) =>
+                  setForm({ ...form, image_alt: e.target.value })
+                }
+              />
+            </div>
 
             <Input
               placeholder="Image Title"

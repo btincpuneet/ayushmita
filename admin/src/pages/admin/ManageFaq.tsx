@@ -351,8 +351,8 @@ export default function ManageFaq() {
             </div>
 
             <input
-              className="border w-full p-2 mb-2"
-              placeholder="Question"
+              className="border w-full p-2 mb-2 rounded"
+              placeholder="e.g., What are the opening hours?"
               value={form.question}
               onChange={(e) =>
                 setForm({ ...form, question: e.target.value })
@@ -360,8 +360,9 @@ export default function ManageFaq() {
             />
 
             <textarea
-              className="border w-full p-2 mb-2"
-              placeholder="Answer"
+              className="border w-full p-2 mb-2 rounded"
+              placeholder="e.g., We are open from 9 AM to 6 PM, Monday to Friday..."
+              rows={5}
               value={form.answer}
               onChange={(e) =>
                 setForm({ ...form, answer: e.target.value })

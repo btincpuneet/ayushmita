@@ -265,33 +265,36 @@ const ManageDiseases = () => {
             {/* Basic Info */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Disease Name</label>
+                <label className="text-sm font-medium block mb-2">Disease Name <span className="text-red-500">*</span></label>
                 <Input
                   value={form.name}
                   onChange={(e) => {
                     updateForm("name", e.target.value);
                     updateForm("slug", generateSlug(e.target.value));
                   }}
+                  placeholder="e.g., Cancer"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium">Slug</label>
+                <label className="text-sm font-medium block mb-2">Slug</label>
                 <Input
                   value={form.slug}
                   onChange={(e) => updateForm("slug", e.target.value)}
+                  placeholder="e.g., cancer"
                 />
               </div>
             </div>
 
             {/* Short Description */}
             <div>
-              <label className="text-sm font-medium">Short Description</label>
+              <label className="text-sm font-medium block mb-2">Short Description</label>
               <Textarea
                 value={form.short_description}
                 onChange={(e) =>
                   updateForm("short_description", e.target.value)
                 }
+                placeholder="Brief overview of the disease..."
               />
             </div>
 
@@ -306,50 +309,54 @@ const ManageDiseases = () => {
             {/* SEO Section */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">SEO Title</label>
+                <label className="text-sm font-medium block mb-2">SEO Title</label>
                 <Input
                   value={form.seo_title}
                   onChange={(e) => updateForm("seo_title", e.target.value)}
+                  placeholder="e.g., Understanding Cancer - Symptoms & Treatment"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium">SEO Keywords</label>
+                <label className="text-sm font-medium block mb-2">SEO Keywords</label>
                 <Input
                   value={form.seo_keywords}
                   onChange={(e) =>
                     updateForm("seo_keywords", e.target.value)
                   }
+                  placeholder="cancer, oncology, treatment, symptoms"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">SEO Description</label>
+              <label className="text-sm font-medium block mb-2">SEO Description</label>
               <Textarea
                 value={form.seo_description}
                 onChange={(e) =>
                   updateForm("seo_description", e.target.value)
                 }
+                placeholder="Meta description for search engines (50-160 characters)..."
               />
             </div>
 
             {/* Canonical + Status */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Canonical URL</label>
+                <label className="text-sm font-medium block mb-2">Canonical URL</label>
                 <Input
                   value={form.canonical_url}
                   onChange={(e) =>
                     updateForm("canonical_url", e.target.value)
                   }
+                  placeholder="https://example.com/disease/cancer"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium">Status</label>
+                <label className="text-sm font-medium block mb-2">Status</label>
                 <select
-                  className="border p-2 rounded w-full"
+                  className="border p-2 rounded w-full bg-white text-sm"
                   value={form.status}
                   onChange={(e) =>
                     updateForm("status", Number(e.target.value))
@@ -363,7 +370,7 @@ const ManageDiseases = () => {
 
             {/* Image Upload */}
             <div>
-              <label className="text-sm font-medium">Disease Image</label>
+              <label className="text-sm font-medium block mb-2">Disease Image</label>
               <Input
                 ref={fileRef}
                 type="file"
@@ -373,6 +380,7 @@ const ManageDiseases = () => {
                   updateForm("image", file);
                   if (file) setPreview(URL.createObjectURL(file));
                 }}
+                placeholder="Select disease image"
               />
 
               {(preview || editing?.image) && (

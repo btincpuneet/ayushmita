@@ -212,10 +212,10 @@ const ManageTreatments = () => {
         return;
       }
 
-      if (!form.canonical_url.trim()) {
-        toast.error("Canonical URL is required");
-        return;
-      }
+      // if (!form.canonical_url.trim()) {
+      //   toast.error("Canonical URL is required");
+      //   return;
+      // }
 
 
       const fd = new FormData();

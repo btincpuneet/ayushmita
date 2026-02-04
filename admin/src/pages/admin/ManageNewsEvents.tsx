@@ -286,8 +286,9 @@ const ManageNewsEvents = () => {
           <div className="max-h-[70vh] overflow-y-auto px-6 py-4 space-y-6">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Title</label>
+                <label className="text-sm font-medium">Title <span className="text-red-500">*</span></label>
                 <Input
+                  placeholder="e.g., Hospital Opens New Wing"
                   value={form.title}
                   onChange={(e) => {
                     updateForm("title", e.target.value);
@@ -299,6 +300,7 @@ const ManageNewsEvents = () => {
               <div>
                 <label className="text-sm font-medium">Slug</label>
                 <Input
+                  placeholder="e.g., hospital-opens-new-wing"
                   value={form.slug}
                   onChange={(e) => updateForm("slug", e.target.value)}
                 />
@@ -307,7 +309,7 @@ const ManageNewsEvents = () => {
 
             {/* Content */}
             <div>
-              <label className="text-sm font-medium">Content</label>
+              <label className="text-sm font-medium">Content <span className="text-red-500">*</span></label>
               <RichTextEditor
                 value={form.editor_content}
                 onChange={(v) => updateForm("editor_content", v)}
@@ -321,6 +323,7 @@ const ManageNewsEvents = () => {
               <Input
                 type="file"
                 accept="image/*"
+                placeholder="Select image file"
                 disabled={form.removeImage}
                 onChange={(e) => {
                   const file = e.target.files?.[0] || null;

@@ -313,7 +313,7 @@ export default function ManageBlogs() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 block">Title *</label>
+              <label className="text-sm font-medium mb-1 block">Title <span className="text-red-500">*</span></label>
               <Input
                 value={form.title}
                 onChange={(e) =>
@@ -323,16 +323,18 @@ export default function ManageBlogs() {
                     slug: slugify(e.target.value),
                   })
                 }
+                placeholder="e.g., Understanding Heart Disease"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-1 block">Slug *</label>
+              <label className="text-sm font-medium mb-1 block">Slug <span className="text-red-500">*</span></label>
               <Input
                 value={form.slug}
                 onChange={(e) =>
                   setForm({ ...form, slug: e.target.value })
                 }
+                placeholder="e.g., understanding-heart-disease"
               />
             </div>
           </div>
@@ -415,6 +417,7 @@ export default function ManageBlogs() {
                 onChange={(e) =>
                   setForm({ ...form, blog_image_alt: e.target.value })
                 }
+                placeholder="e.g., Heart disease awareness"
               />
             </div>
 
@@ -427,6 +430,7 @@ export default function ManageBlogs() {
                 onChange={(e) =>
                   setForm({ ...form, blog_image_title: e.target.value })
                 }
+                placeholder="e.g., Blog Post Hero Image"
               />
             </div>
           </div>
@@ -458,6 +462,7 @@ export default function ManageBlogs() {
                   onChange={(e) =>
                     setForm({ ...form, meta_title: e.target.value })
                   }
+                  placeholder="e.g., Heart Disease: Symptoms & Treatment Guide"
                 />
               </div>
 
@@ -470,6 +475,7 @@ export default function ManageBlogs() {
                   onChange={(e) =>
                     setForm({ ...form, meta_keywords: e.target.value })
                   }
+                  placeholder="heart disease, treatment, symptoms, health"
                 />
               </div>
             </div>
@@ -483,6 +489,7 @@ export default function ManageBlogs() {
                 onChange={(e) =>
                   setForm({ ...form, meta_description: e.target.value })
                 }
+                placeholder="Brief meta description (50-160 characters)..."
               />
             </div>
 
@@ -495,6 +502,7 @@ export default function ManageBlogs() {
                 onChange={(e) =>
                   setForm({ ...form, canonical_url: e.target.value })
                 }
+                placeholder="https://example.com/blog/understanding-heart-disease"
               />
             </div>
 

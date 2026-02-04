@@ -219,38 +219,55 @@ const ManageTestimonials: React.FC = () => {
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Name"
-                className="border p-2 w-full"
-                required
-              />
+              <div>
+                <label className="text-sm font-medium block mb-2">Name <span className="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="e.g., John Doe"
+                  className="border p-2 w-full rounded"
+                  required
+                />
+              </div>
 
-              <input
-                type="number"
-                name="rating"
-                value={form.rating}
-                onChange={handleChange}
-                min={1}
-                max={5}
-                className="border p-2 w-full"
-                required
-              />
+              <div>
+                <label className="text-sm font-medium block mb-2">Rating <span className="text-red-500">*</span></label>
+                <input
+                  type="number"
+                  name="rating"
+                  value={form.rating}
+                  onChange={handleChange}
+                  min={1}
+                  max={5}
+                  className="border p-2 w-full rounded"
+                  required
+                />
+              </div>
 
-              <textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Message"
-                className="border p-2 w-full"
-                rows={3}
-                required
-              ></textarea>
+              <div>
+                <label className="text-sm font-medium block mb-2">Message <span className="text-red-500">*</span></label>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder="Share your experience..."
+                  className="border p-2 w-full rounded"
+                  rows={4}
+                  required
+                ></textarea>
+              </div>
 
-              <input type="file" accept="image/*" onChange={handleImage} />
+              <div>
+                <label className="text-sm font-medium block mb-2">Image</label>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleImage}
+                  className="border p-2 w-full rounded"
+                />
+              </div>
 
               {previewImage && (
                 <img

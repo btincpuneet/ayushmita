@@ -226,8 +226,9 @@ const ManageVideoTestimonials = () => {
             {/* BASIC INFO */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium">Name <span className="text-red-500">*</span></label>
                 <Input
+                  placeholder="e.g., John Doe"
                   value={form.name}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -244,6 +245,7 @@ const ManageVideoTestimonials = () => {
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium">Slug</label>
                 <Input
+                  placeholder="e.g., john-doe"
                   value={form.slug}
                   onChange={(e) => updateForm("slug", e.target.value)}
                 />
@@ -251,7 +253,7 @@ const ManageVideoTestimonials = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">Testimonial Content</label>
+              <label className="text-sm font-medium">Testimonial Content <span className="text-red-500">*</span></label>
               <RichTextEditor
                 value={form.editor_content}
                 onChange={(html) => updateForm("editor_content", html)}

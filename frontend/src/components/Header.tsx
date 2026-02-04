@@ -209,14 +209,11 @@ const Header: React.FC = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4">
-        {/* TOP BAR */}
         <div className="h-20 flex items-center justify-between">
-          {/* LOGO */}
           <Link to="/" className="flex items-center">
             <img src={Logo} alt="Company Logo" className="w-28" />
           </Link>
 
-          {/* DESKTOP NAV */}
           <nav className="hidden lg:flex flex-1 justify-center">
             <ul className="flex gap-10 items-center">
               {visibleNavItems.map((item) => (
@@ -247,7 +244,7 @@ const Header: React.FC = () => {
                     onClick={() => setIsMoreOpen((prev) => !prev)}
                     className="text-sm text-[#333333] flex items-center gap-1"
                   >
-                    More
+                    Gallery
                     <span
                       className={`transition-transform ${isMoreOpen ? "rotate-180" : ""}`}
                     >
@@ -298,7 +295,6 @@ const Header: React.FC = () => {
         {isOpen && (
           <div className="lg:hidden border-t border-gray-200 pb-4">
             <nav className="px-4 pt-4 space-y-2">
-              {/* Visible items */}
               {visibleNavItems.map((item) => (
                 <Link
                   key={item.id}
@@ -310,7 +306,6 @@ const Header: React.FC = () => {
                 </Link>
               ))}
 
-              {/* MORE button */}
               {overflowNavItems.length > 0 && (
                 <>
                   <button

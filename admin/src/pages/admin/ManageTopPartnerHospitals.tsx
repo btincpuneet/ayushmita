@@ -324,8 +324,17 @@ export default function ManageTopPartnerHospitals() {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <Input name="name" placeholder="Hospital Name" value={form.name} onChange={handleChange} />
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="hospital-name">Hospital Name <span className="text-red-500">*</span></Label>
+              <Input 
+                id="hospital-name"
+                name="name" 
+                placeholder="e.g., Apollo Hospital" 
+                value={form.name} 
+                onChange={handleChange} 
+              />
+            </div>
             {/* 
             <div className="grid grid-cols-2 gap-3">
               <select

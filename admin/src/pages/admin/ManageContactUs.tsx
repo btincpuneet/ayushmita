@@ -168,46 +168,70 @@ const handleEdit = (item: any) => {
 
           <div className="space-y-4 py-4">
             <div>
-              <Label>Title *</Label>
-              <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+              <Label htmlFor="contact-title">Title <span className="text-red-500">*</span></Label>
+              <Input 
+                id="contact-title"
+                placeholder="e.g., Get in Touch"
+                value={form.title} 
+                onChange={(e) => setForm({ ...form, title: e.target.value })} 
+              />
             </div>
 
-            <RichTextEditor
-              key={editing?.id || "new"}
-              label="Content *"
-              value={form.content_html}
-              onChange={(val) => setForm({ ...form, content_html: val })}
-              minHeight={250}
-            />
+            <div>
+              <Label>Content <span className="text-red-500">*</span></Label>
+              <RichTextEditor
+                key={editing?.id || "new"}
+                label="Content"
+                value={form.content_html}
+                onChange={(val) => setForm({ ...form, content_html: val })}
+                minHeight={250}
+              />
+            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                placeholder="SEO Title"
-                value={form.seo_title}
-                onChange={(e) => setForm({ ...form, seo_title: e.target.value })}
-              />
-              <Input
-                placeholder="SEO Keywords"
-                value={form.seo_keywords}
-                onChange={(e) => setForm({ ...form, seo_keywords: e.target.value })}
+              <div>
+                <Label htmlFor="contact-seo-title">SEO Title</Label>
+                <Input
+                  id="contact-seo-title"
+                  placeholder="e.g., Contact Us - Get Help from Our Team"
+                  value={form.seo_title}
+                  onChange={(e) => setForm({ ...form, seo_title: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="contact-seo-kw">SEO Keywords</Label>
+                <Input
+                  id="contact-seo-kw"
+                  placeholder="e.g., contact, support, help"
+                  value={form.seo_keywords}
+                  onChange={(e) => setForm({ ...form, seo_keywords: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="contact-seo-desc">SEO Description</Label>
+              <textarea
+                id="contact-seo-desc"
+                className="w-full min-h-[90px] px-3 py-2 border rounded-lg"
+                placeholder="Meta description for search engines..."
+                value={form.seo_description}
+                onChange={(e) => setForm({ ...form, seo_description: e.target.value })}
               />
             </div>
 
-            <textarea
-              className="w-full min-h-[90px] px-3 py-2 border rounded-lg"
-              placeholder="SEO Description"
-              value={form.seo_description}
-              onChange={(e) => setForm({ ...form, seo_description: e.target.value })}
-            />
-
-            <select
-              className="w-full h-10 px-3 rounded-lg border"
-              value={form.status}
-              onChange={(e) => setForm({ ...form, status: e.target.value })}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+            <div>
+              <Label htmlFor="contact-status">Status</Label>
+              <select
+                id="contact-status"
+                className="w-full h-10 px-3 rounded-lg border"
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
           </div>
 
           <DialogFooter>

@@ -16,6 +16,7 @@ import RichTextEditor from "@/components/RichTextEditor";
 import { authHeader } from "../../utils/auth";
 
 import { API_BASE, FRONTEND_BASE } from "@/config/api";
+import { Label } from "@/components/ui/label";
 
 interface CmsPage {
   id: number;
@@ -221,34 +222,45 @@ export default function ManageCmsPage() {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <Input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  title: e.target.value,
-                  slug: createSlug(e.target.value),
-                })
-              }
-            />
-
-            <Input
-              placeholder="Slug"
-              value={form.slug}
-              onChange={(e) =>
-                setForm({ ...form, slug: e.target.value })
-              }
-            />
-
-            <div className="h-[350px] overflow-y-auto border rounded">
-              <RichTextEditor
-                value={form.content_html}
-                onChange={(val: string) =>
-                  setForm({ ...form, content_html: val })
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="cms-title">Title <span className="text-red-500">*</span></Label>
+              <Input
+                id="cms-title"
+                placeholder="e.g., Privacy Policy"
+                value={form.title}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    title: e.target.value,
+                    slug: createSlug(e.target.value),
+                  })
                 }
               />
+            </div>
+
+            <div>
+              <Label htmlFor="cms-slug">Slug</Label>
+              <Input
+                id="cms-slug"
+                placeholder="e.g., privacy-policy"
+                value={form.slug}
+                onChange={(e) =>
+                  setForm({ ...form, slug: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
+              <Label>Content <span className="text-red-500">*</span></Label>
+              <div className="h-[350px] overflow-y-auto border rounded">
+                <RichTextEditor
+                  value={form.content_html}
+                  onChange={(val: string) =>
+                    setForm({ ...form, content_html: val })
+                  }
+                />
+              </div>
             </div>
           </div>
 

@@ -274,46 +274,61 @@ export default function ManageCategory() {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-3">
-            <Label>Name</Label>
-            <Input
-              value={form.name}
-              onChange={(e) =>
-                setForm({ ...form, name: e.target.value })
-              }
-            />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="cat-name">Name <span className="text-red-500">*</span></Label>
+                <Input
+                  id="cat-name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm({ ...form, name: e.target.value })
+                  }
+                  placeholder="e.g., Cardiology"
+                />
+              </div>
+              <div>
+                <Label htmlFor="cat-url">URL <span className="text-red-500">*</span></Label>
+                <Input
+                  id="cat-url"
+                  value={form.url}
+                  onChange={(e) =>
+                    setForm({ ...form, url: e.target.value })
+                  }
+                  placeholder="e.g., /cardiology"
+                />
+              </div>
+            </div>
 
-            <Label>URL</Label>
-            <Input
-              value={form.url}
-              onChange={(e) =>
-                setForm({ ...form, url: e.target.value })
-              }
-            />
+            <div>
+              <Label htmlFor="cat-desc">Description</Label>
+              <Textarea
+                id="cat-desc"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+                placeholder="Brief description of this category..."
+              />
+            </div>
 
-            <Label>Description</Label>
-            <Textarea
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-            />
-
-            <Label>Status</Label>
-            <Select
-              value={form.status}
-              onValueChange={(value: "active" | "inactive") =>
-                setForm({ ...form, status: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
+            <div>
+              <Label htmlFor="cat-status">Status</Label>
+              <Select
+                value={form.status}
+                onValueChange={(value: "active" | "inactive") =>
+                  setForm({ ...form, status: value })
+                }
+              >
+                <SelectTrigger id="cat-status">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <DialogFooter>

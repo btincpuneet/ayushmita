@@ -121,7 +121,7 @@ export function AdminSidebar() {
           }
         >
           <FolderOpen size={20} />
-          {!collapsed && <span>Manage Partner Hospitals</span>}
+          {!collapsed && <span>Manage Hospitals</span>}
         </NavLink>
 
         <NavLink
