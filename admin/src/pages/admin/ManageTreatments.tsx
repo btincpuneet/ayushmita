@@ -22,7 +22,7 @@ import {
   Search,
   ChevronRight,
   Stethoscope,
-  Image as ImageIcon
+  Image as ImageIcon,
 } from "lucide-react";
 
 import RichTextEditor from "@/components/RichTextEditor";
@@ -54,12 +54,12 @@ const emptyForm = {
   image_title: "",
 };
 
-
 const ManageTreatments = () => {
   const [diseases, setDiseases] = useState<any[]>([]);
   const [filteredTreatments, setFilteredTreatments] = useState<any[]>([]);
-  const [selectedDiseaseForFilter, setSelectedDiseaseForFilter] =
-    useState<number | null>(null);
+  const [selectedDiseaseForFilter, setSelectedDiseaseForFilter] = useState<
+    number | null
+  >(null);
   const [selectedTreatmentSlug, setSelectedTreatmentSlug] = useState("");
   const [singleTreatment, setSingleTreatment] = useState<any | null>(null);
   const fileRef = React.useRef<HTMLInputElement | null>(null);
@@ -69,7 +69,13 @@ const ManageTreatments = () => {
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [preview, setPreview] = useState<string | null>(null);
-
+  const slugify = (text: string) =>
+    text
+      .trim()
+      .replace(/([a-z])([A-Z])/g, "$1-$2") // camelCase → camel-Case
+      .replace(/[^a-zA-Z0-9]+/g, "-") // spaces & symbols → -
+      .replace(/^-+|-+$/g, "") // trim -
+      .toLowerCase();
 
   useEffect(() => {
     loadDiseases();
@@ -88,7 +94,6 @@ const ManageTreatments = () => {
     }
   };
 
-
   const loadTreatmentsByDisease = async (id: number) => {
     try {
       const res = await axios.get(`${API_TREATMENT}/disease/${id}`);
@@ -106,7 +111,6 @@ const ManageTreatments = () => {
       toast.error("Failed to load treatment");
     }
   };
-
 
   const handleAdd = () => {
     setEditing(null);
@@ -161,17 +165,15 @@ const ManageTreatments = () => {
           : "",
     });
     setExistingImage(
-      singleTreatment.image ? `${API_BASE}${singleTreatment.image}` : null
+      singleTreatment.image ? `${API_BASE}${singleTreatment.image}` : null,
     );
 
     setPreview(null);
     setOpen(true);
   };
 
-
   const handleSubmit = async () => {
     try {
-
       if (!form.disease_id) {
         toast.error("Please select a disease");
         return;
@@ -217,7 +219,6 @@ const ManageTreatments = () => {
       //   return;
       // }
 
-
       const fd = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
@@ -235,10 +236,10 @@ const ManageTreatments = () => {
         },
       };
 
-
       if (editing) {
         await axios.put(`${API_TREATMENT}/${editing.id}`, fd, config);
         toast.success("Treatment updated successfully");
+        await loadSingleTreatment(form.slug);
       } else {
         await axios.post(API_TREATMENT, fd, config);
         toast.success("Treatment created successfully");
@@ -250,7 +251,6 @@ const ManageTreatments = () => {
         loadTreatmentsByDisease(selectedDiseaseForFilter);
       }
     } catch (error: any) {
-
       const message =
         error?.response?.data?.message ||
         error?.message ||
@@ -259,7 +259,6 @@ const ManageTreatments = () => {
       toast.error(message);
     }
   };
-
 
   const handleDelete = async () => {
     if (!singleTreatment) return;
@@ -277,10 +276,8 @@ const ManageTreatments = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-background">
-
       <header className="sticky top-0 z-40 bg-card border-b shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -289,8 +286,12 @@ const ManageTreatments = () => {
                 <Stethoscope className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Manage Treatments</h1>
-                <p className="text-xs text-muted-foreground">CMS Content Management</p>
+                <h1 className="text-xl font-bold text-foreground">
+                  Manage Treatments
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  CMS Content Management
+                </p>
               </div>
             </div>
             <Button onClick={handleAdd} className="gap-2 shadow-card">
@@ -302,16 +303,19 @@ const ManageTreatments = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8 space-y-6">
-
         <div className="bg-card rounded-xl shadow-card border p-6 animate-fade-in">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-4 h-4 text-muted-foreground" />
-            <h2 className="text-sm font-semibold text-foreground">Filter Treatments</h2>
+            <h2 className="text-sm font-semibold text-foreground">
+              Filter Treatments
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Select Disease</Label>
+              <Label className="text-xs font-medium text-muted-foreground">
+                Select Disease
+              </Label>
               <select
                 className="w-full h-10 px-3 rounded-lg border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={selectedDiseaseForFilter ?? ""}
@@ -334,7 +338,9 @@ const ManageTreatments = () => {
 
             {selectedDiseaseForFilter && (
               <div className="space-y-2 animate-slide-in">
-                <Label className="text-xs font-medium text-muted-foreground">Select Treatment</Label>
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Select Treatment
+                </Label>
                 <select
                   className="w-full h-10 px-3 rounded-lg border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   value={selectedTreatmentSlug}
@@ -370,14 +376,19 @@ const ManageTreatments = () => {
                   )}
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${singleTreatment.status === 1
-                        ? "bg-success/10 text-success"
-                        : "bg-muted text-muted-foreground"
-                        }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          singleTreatment.status === 1
+                            ? "bg-success/10 text-success"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
                         {singleTreatment.status === 1 ? "Active" : "Inactive"}
                       </span>
                     </div>
-                    <h2 className="text-2xl font-bold text-foreground">{singleTreatment.name}</h2>
+                    <h2 className="text-2xl font-bold text-foreground">
+                      {singleTreatment.name}
+                    </h2>
                     <p className="text-sm text-muted-foreground flex items-center gap-1">
                       <ChevronRight className="w-3 h-3" />
                       {singleTreatment.slug}
@@ -385,11 +396,19 @@ const ManageTreatments = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={handleEdit} className="gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleEdit}
+                    className="gap-2"
+                  >
                     <Edit3 className="w-4 h-4" />
                     Edit
                   </Button>
-                  <Button variant="destructive" onClick={handleDelete} className="gap-2">
+                  <Button
+                    variant="destructive"
+                    onClick={handleDelete}
+                    className="gap-2"
+                  >
                     <Trash2 className="w-4 h-4" />
                     Delete
                   </Button>
@@ -400,7 +419,9 @@ const ManageTreatments = () => {
             <div className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <FileText className="w-4 h-4 text-primary" />
-                <h3 className="text-sm font-semibold text-foreground">Content Preview</h3>
+                <h3 className="text-sm font-semibold text-foreground">
+                  Content Preview
+                </h3>
               </div>
 
               <div
@@ -413,34 +434,44 @@ const ManageTreatments = () => {
           </div>
         )}
 
-        {!singleTreatment && selectedDiseaseForFilter && filteredTreatments.length === 0 && (
-          <div className="bg-card rounded-xl shadow-card border p-12 text-center animate-fade-in">
-            <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-              <FileText className="w-8 h-8 text-muted-foreground" />
+        {!singleTreatment &&
+          selectedDiseaseForFilter &&
+          filteredTreatments.length === 0 && (
+            <div className="bg-card rounded-xl shadow-card border p-12 text-center animate-fade-in">
+              <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                <FileText className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                No treatments found
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                No treatments are available for the selected disease.
+              </p>
+              <Button onClick={handleAdd} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Add First Treatment
+              </Button>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">No treatments found</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              No treatments are available for the selected disease.
-            </p>
-            <Button onClick={handleAdd} className="gap-2">
-              <Plus className="w-4 h-4" />
-              Add First Treatment
-            </Button>
-          </div>
-        )}
+          )}
       </main>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              {editing ? <Edit3 className="w-5 h-5 text-primary" /> : <Plus className="w-5 h-5 text-primary" />}
+              {editing ? (
+                <Edit3 className="w-5 h-5 text-primary" />
+              ) : (
+                <Plus className="w-5 h-5 text-primary" />
+              )}
               {editing ? "Edit Treatment" : "Add New Treatment"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="col-span-2 space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Disease *</Label>
+              <Label className="text-xs font-medium text-muted-foreground">
+                Disease *
+              </Label>
               <select
                 className="w-full h-10 px-3 rounded-lg border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={form.disease_id ?? ""}
@@ -458,26 +489,9 @@ const ManageTreatments = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Treatment Name *</Label>
-              <Input
-                placeholder="e.g., Chemotherapy"
-                value={form.name}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    name: e.target.value,
-                    slug:
-                      p.slug ||
-                      e.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-"),
-                  }))
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">URL Slug</Label>
+              <Label className="text-xs font-medium text-muted-foreground">
+                Treatment Name *
+              </Label>
               <Input
                 placeholder="e.g., Chemotherapy"
                 value={form.name}
@@ -487,15 +501,26 @@ const ManageTreatments = () => {
                   setForm((prev) => ({
                     ...prev,
                     name,
-                    slug:
-
-                      e.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-"),
-                  }))
+                    slug: slugify(name),
+                  }));
                 }}
               />
+            </div>
 
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">
+                URL Slug
+              </Label>
+              <Input
+                placeholder="e.g., Chemotherapy"
+                value={form.slug}
+                onChange={(e) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    slug: slugify(e.target.value),
+                  }));
+                }}
+              />
             </div>
 
             <div className="col-span-2">
@@ -505,9 +530,7 @@ const ManageTreatments = () => {
               <RichTextEditor
                 label="Short Description"
                 value={form.short_description}
-                onChange={(val) =>
-                  setForm({ ...form, short_description: val })
-                }
+                onChange={(val) => setForm({ ...form, short_description: val })}
                 placeholder="Enter a brief description..."
                 minHeight={120}
               />
@@ -520,19 +543,21 @@ const ManageTreatments = () => {
               <RichTextEditor
                 label="Full Description (HTML with Image Alignment)"
                 value={form.description_html}
-                onChange={(val) =>
-                  setForm({ ...form, description_html: val })
-                }
+                onChange={(val) => setForm({ ...form, description_html: val })}
                 placeholder="Enter full treatment description with images..."
                 minHeight={250}
               />
             </div>
 
             <div className="col-span-2 pt-4 border-t">
-              <h4 className="text-sm font-semibold text-foreground mb-4">SEO Settings</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-4">
+                SEO Settings
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground">SEO Title</Label>
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    SEO Title
+                  </Label>
                   <Input
                     placeholder="Page title for search engines"
                     value={form.seo_title}
@@ -543,7 +568,9 @@ const ManageTreatments = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground">SEO Keywords</Label>
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    SEO Keywords
+                  </Label>
                   <Input
                     placeholder="keyword1, keyword2, keyword3"
                     value={form.seo_keywords}
@@ -554,7 +581,9 @@ const ManageTreatments = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground">SEO Description</Label>
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    SEO Description
+                  </Label>
                   <Input
                     placeholder="Brief description for search results"
                     value={form.seo_description}
@@ -565,7 +594,9 @@ const ManageTreatments = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium text-muted-foreground">Canonical URL</Label>
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    Canonical URL
+                  </Label>
                   <Input
                     placeholder="https://example.com/treatment"
                     value={form.canonical_url}
@@ -578,13 +609,13 @@ const ManageTreatments = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Status</Label>
+              <Label className="text-xs font-medium text-muted-foreground">
+                Status
+              </Label>
               <select
                 className="w-full h-10 px-3 rounded-lg border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={form.status}
-                onChange={(e) =>
-                  setForm({ ...form, status: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
               >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
@@ -592,7 +623,9 @@ const ManageTreatments = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Featured Image</Label>
+              <Label className="text-xs font-medium text-muted-foreground">
+                Featured Image
+              </Label>
               <Input
                 ref={fileRef}
                 type="file"
@@ -613,7 +646,7 @@ const ManageTreatments = () => {
                     src={preview || existingImage!}
                     alt={form.image_alt || "Treatment image"}
                     title={form.image_title || ""}
-                    className="max-w-xs rounded-lg border shadow"
+                    className="max-w-xs rounded-lg border shadow mr-[100px]"
                   />
 
                   <Button
@@ -643,7 +676,6 @@ const ManageTreatments = () => {
               </div>
             )}
 
-
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">
                 Image Alt Text
@@ -655,7 +687,6 @@ const ManageTreatments = () => {
                   setForm({ ...form, image_alt: e.target.value })
                 }
               />
-
             </div>
 
             <div className="space-y-2">
@@ -669,10 +700,7 @@ const ManageTreatments = () => {
                   setForm({ ...form, image_title: e.target.value })
                 }
               />
-
             </div>
-
-
           </div>
 
           <DialogFooter>
