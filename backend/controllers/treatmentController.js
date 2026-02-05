@@ -2,104 +2,6 @@ const { Treatment } = require("../models/treatment");
 const { Disease } = require("../models/disease");
 const { Op } = require("sequelize");
 
-
-// const createTreatment = async (req, res) => {
-//   try {
-//     const {
-//       disease_id,
-//       name,
-//       slug,
-//       short_description,
-//       description_html,
-//       seo_title,
-//       seo_description,
-//       seo_keywords,
-//       canonical_url,
-//       status,
-//     } = req.body;
-
-
-//     if (!disease_id)
-//       return res.status(400).json({ success: false, message: "Disease is required" });
-
-//     if (!name || !name.trim())
-//       return res.status(400).json({ success: false, message: "Treatment name is required" });
-
-//     if (!slug || !slug.trim())
-//       return res.status(400).json({ success: false, message: "Slug is required" });
-
-//     if (!short_description)
-//       return res.status(400).json({ success: false, message: "Short description is required" });
-
-//     if (!description_html)
-//       return res.status(400).json({ success: false, message: "Description is required" });
-
-//     if (!seo_title)
-//       return res.status(400).json({ success: false, message: "SEO title is required" });
-
-//     if (!seo_description)
-//       return res.status(400).json({ success: false, message: "SEO description is required" });
-
-//     if (!seo_keywords)
-//       return res.status(400).json({ success: false, message: "SEO keywords are required" });
-
-//     if (!canonical_url)
-//       return res.status(400).json({ success: false, message: "Canonical URL is required" });
-
-
-
-
-//     const disease = await Disease.findByPk(disease_id);
-//     if (!disease) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Selected disease does not exist",
-//       });
-//     }
-
-
-//     const existingSlug = await Treatment.findOne({ where: { slug } });
-//     if (existingSlug) {
-//       return res.status(409).json({
-//         success: false,
-//         message: "Treatment with this slug already exists",
-//       });
-//     }
-
-
-//     const image = req.file ? `/uploads/treatments/${req.file.filename}` : null;
-
-
-//     const treatment = await Treatment.create({
-//       disease_id: Number(disease_id),
-//       name: name.trim(),
-//       slug: slug.trim(),
-//       image,
-//       image_alt: image_alt || null,
-//       image_title: image_title || null,
-//       short_description,
-//       description_html,
-//       seo_title,
-//       seo_description,
-//       seo_keywords,
-//       canonical_url,
-//       status: Number(status),
-//     });
-
-//     return res.status(201).json({
-//       success: true,
-//       message: "Treatment created successfully",
-//       data: treatment,
-//     });
-//   } catch (error) {
-//     console.error("Create Treatment Error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error",
-//     });
-//   }
-// };
-
 const createTreatment = async (req, res) => {
   try {
     const {
@@ -141,8 +43,8 @@ const createTreatment = async (req, res) => {
     if (!seo_keywords)
       return res.status(400).json({ success: false, message: "SEO keywords are required" });
 
-    if (!canonical_url)
-      return res.status(400).json({ success: false, message: "Canonical URL is required" });
+    // if (!canonical_url)
+    //   return res.status(400).json({ success: false, message: "Canonical URL is required" });
 
     const disease = await Disease.findByPk(disease_id);
     if (!disease) {
