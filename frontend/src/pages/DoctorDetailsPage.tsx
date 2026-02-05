@@ -339,7 +339,7 @@ const DoctorDetailsPage: React.FC = () => {
                           letterSpacing: "0%",
                         }}
                       >
-                        Department:{" "}
+                        Speciality:{" "}
                         <strong
                           style={{
                             fontFamily: "Ubuntu, sans-serif",

@@ -273,16 +273,17 @@ export default function ManageFaq() {
             strategy={verticalListSortingStrategy}
           >
             <table className="w-full">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="p-3">Order</th>
-                  <th className="p-3">Question</th>
-                  <th className="p-3">Type</th>
-                  <th className="p-3">Linked To</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3 text-right">Actions</th>
-                </tr>
-              </thead>
+             <thead className="bg-gray-50 ">
+  <tr>
+    <th className="px-4 py-3 text-left w-16">Order</th>
+    <th className="px-4 py-3 text-left">Question</th>
+    <th className="px-4 py-3 text-left w-28">Type</th>
+    <th className="px-4 py-3 text-left w-56">Linked To</th>
+    <th className="px-4 py-3 text-left w-24">Status</th>
+    <th className="px-4 py-3 text-right w-32">Actions</th>
+  </tr>
+</thead>
+
 
               <tbody>
                 {faqs.map((faq) => (
@@ -317,7 +318,7 @@ export default function ManageFaq() {
                       {faq.status === 1 ? "Active" : "Inactive"}
                     </td>
 
-                    <td className="p-3 text-right space-x-2">
+                    <td className="p-3 text-right space-x-2 flex">
                       <Button size="sm" onClick={() => handleEdit(faq)}>
                         Edit
                       </Button>

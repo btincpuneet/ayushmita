@@ -209,7 +209,7 @@ const Header: React.FC = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="h-20 flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img src={Logo} alt="Company Logo" className="w-28" />
           </Link>
