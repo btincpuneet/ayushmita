@@ -1,0 +1,793 @@
+{% doc %}
+  @prompt
+    Left Side (Content Area):
+    Main Header (bold, attention-grabbing)
+    Subtext (supporting urgency message)
+    Keep text clean, minimal, and conversion-focused
+    
+    Example structure:
+    
+    Header: “Limited Time Offer”
+    Subtext: “Hurry! This deal refreshes every 24 hours.”
+    Right Side (Timer Area):
+    Large digital countdown clock (HH : MM : SS)
+    Must be visually dominant and easy to read
+    Styled like a premium digital display (not basic text)
+    Timer Behavior (CRITICAL):
+    Countdown starts from 24:00:00
+    When it reaches 0:00:00, it must:
+    instantly reset back to 24:00:00
+    continue looping infinitely
+    Must not require page refresh
+    Must use real-time system logic (not drift-prone animation only)
+    Visual Design Style:
+    Premium, modern Shopify aesthetic
+    Soft gradients or subtle glassmorphism allowed
+    Balanced spacing between left and right columns
+    High contrast for readability
+    Rounded container with soft shadow
+    Animation & Motion:
+    Timer digits should have subtle tick or fade transition
+    Entire timer block can have a very light breathing pulse glow
+    Left text remains static and clean (no animation overload)
+    CTA Option (Optional but recommended):
+    
+    Include a button under left text:
+    
+    “Shop Now” / “Grab Deal”
+    
+    Smooth hover animation (slight scale + glow)
+    Redirects to collection or product page
+    Responsiveness:
+    Desktop: 2-column layout (text left, timer right)
+    Mobile: stacked layout (timer above or below text)
+    Must remain clean and readable on small screens
+    
+    timer must have a option to stop, add padding adjusment for both left and right up and down, no color background
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-countdown-timer-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    padding-left: {{ block.settings.padding_left }}px;
+    padding-right: {{ block.settings.padding_right }}px;
+  }
+
+  .ai-countdown-timer__container-{{ ai_gen_id }} {
+    background: transparent;
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.inner_padding }}px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-countdown-timer__content-{{ ai_gen_id }} {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-countdown-timer__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-countdown-timer__subtext-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtext_size }}px;
+    color: {{ block.settings.subtext_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ai-countdown-timer__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    width: fit-content;
+  }
+
+  .ai-countdown-timer__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-countdown-timer__timer-area-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-countdown-timer__digit-group-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-countdown-timer__digits-{{ ai_gen_id }} {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ai-countdown-timer__digit-{{ ai_gen_id }} {
+    background: {{ block.settings.timer_bg_color }};
+    color: {{ block.settings.timer_text_color }};
+    font-size: {{ block.settings.timer_size }}px;
+    font-weight: 700;
+    padding: 16px 12px;
+    border-radius: {{ block.settings.timer_border_radius }}px;
+    min-width: 60px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .ai-countdown-timer__digit-{{ ai_gen_id }}.tick {
+    transform: scale(1.05);
+  }
+
+  .ai-countdown-timer__label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .ai-countdown-timer__separator-{{ ai_gen_id }} {
+    font-size: {{ block.settings.timer_size }}px;
+    color: {{ block.settings.timer_text_color }};
+    font-weight: 700;
+    padding: 0 4px;
+  }
+
+  {% if block.settings.enable_glow %}
+    @keyframes ai-countdown-timer-pulse-{{ ai_gen_id }} {
+      0%, 100% {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        box-shadow: 0 10px 40px rgba({{ block.settings.glow_color | color_extract: 'red' }}, {{ block.settings.glow_color | color_extract: 'green' }}, {{ block.settings.glow_color | color_extract: 'blue' }}, 0.3);
+      }
+    }
+
+    .ai-countdown-timer__container-{{ ai_gen_id }} {
+      animation: ai-countdown-timer-pulse-{{ ai_gen_id }} 3s ease-in-out infinite;
+    }
+  {% endif %}
+
+  @media screen and (max-width: 768px) {
+    .ai-countdown-timer-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top | times: 0.7 }}px;
+      padding-bottom: {{ block.settings.padding_bottom | times: 0.7 }}px;
+      padding-left: {{ block.settings.padding_left | times: 0.7 }}px;
+      padding-right: {{ block.settings.padding_right | times: 0.7 }}px;
+    }
+
+    .ai-countdown-timer__container-{{ ai_gen_id }} {
+      flex-direction: {{ block.settings.mobile_layout }};
+      gap: 24px;
+      padding: {{ block.settings.inner_padding | times: 0.7 }}px;
+    }
+
+    .ai-countdown-timer__content-{{ ai_gen_id }} {
+      text-align: {{ block.settings.mobile_text_align }};
+      align-items: {{ block.settings.mobile_text_align }};
+    }
+
+    .ai-countdown-timer__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-countdown-timer__subtext-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtext_size | times: 0.9 }}px;
+    }
+
+    .ai-countdown-timer__digit-{{ ai_gen_id }} {
+      font-size: {{ block.settings.timer_size | times: 0.7 }}px;
+      padding: 12px 8px;
+      min-width: 45px;
+    }
+
+    .ai-countdown-timer__separator-{{ ai_gen_id }} {
+      font-size: {{ block.settings.timer_size | times: 0.7 }}px;
+    }
+
+    .ai-countdown-timer__label-{{ ai_gen_id }} {
+      font-size: {{ block.settings.label_size | times: 0.8 }}px;
+    }
+
+    .ai-countdown-timer__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size | times: 0.9 }}px;
+      padding: 12px 24px;
+    }
+  }
+{% endstyle %}
+
+<countdown-timer-{{ ai_gen_id }}
+  class="ai-countdown-timer-{{ ai_gen_id }}"
+  data-duration="{{ block.settings.countdown_duration }}"
+  data-auto-start="{{ block.settings.auto_start }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-countdown-timer__container-{{ ai_gen_id }}">
+    <div class="ai-countdown-timer__content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-countdown-timer__heading-{{ ai_gen_id }}">
+          {{ block.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if block.settings.subtext != blank %}
+        <p class="ai-countdown-timer__subtext-{{ ai_gen_id }}">
+          {{ block.settings.subtext }}
+        </p>
+      {% endif %}
+
+      {% if block.settings.show_button and block.settings.button_text != blank %}
+        <a
+          href="{{ block.settings.button_link }}"
+          class="ai-countdown-timer__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-countdown-timer__timer-area-{{ ai_gen_id }}">
+      <div class="ai-countdown-timer__digit-group-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-hours-tens>0</div>
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-hours-ones>0</div>
+        </div>
+        <span class="ai-countdown-timer__label-{{ ai_gen_id }}">Hours</span>
+      </div>
+
+      <span class="ai-countdown-timer__separator-{{ ai_gen_id }}">:</span>
+
+      <div class="ai-countdown-timer__digit-group-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-minutes-tens>0</div>
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-minutes-ones>0</div>
+        </div>
+        <span class="ai-countdown-timer__label-{{ ai_gen_id }}">Minutes</span>
+      </div>
+
+      <span class="ai-countdown-timer__separator-{{ ai_gen_id }}">:</span>
+
+      <div class="ai-countdown-timer__digit-group-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-seconds-tens>0</div>
+          <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-seconds-ones>0</div>
+        </div>
+        <span class="ai-countdown-timer__label-{{ ai_gen_id }}">Seconds</span>
+      </div>
+    </div>
+  </div>
+</countdown-timer-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CountdownTimer{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.duration = parseInt(this.dataset.duration) * 3600;
+        this.autoStart = this.dataset.autoStart === 'true';
+        this.timeRemaining = this.duration;
+        this.isRunning = false;
+        this.intervalId = null;
+        this.lastUpdateTime = null;
+      }
+
+      connectedCallback() {
+        this.digitElements = {
+          hoursTens: this.querySelector('[data-hours-tens]'),
+          hoursOnes: this.querySelector('[data-hours-ones]'),
+          minutesTens: this.querySelector('[data-minutes-tens]'),
+          minutesOnes: this.querySelector('[data-minutes-ones]'),
+          secondsTens: this.querySelector('[data-seconds-tens]'),
+          secondsOnes: this.querySelector('[data-seconds-ones]')
+        };
+
+        this.loadState();
+        this.updateDisplay();
+
+        if (this.autoStart && !this.isRunning) {
+          this.start();
+        }
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && this.isRunning) {
+            this.syncTime();
+          }
+        });
+      }
+
+      loadState() {
+        const storageKey = 'countdown_timer_{{ ai_gen_id }}';
+        const saved = localStorage.getItem(storageKey);
+
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            const now = Date.now();
+            const elapsed = Math.floor((now - data.timestamp) / 1000);
+
+            if (data.isRunning) {
+              this.timeRemaining = Math.max(0, data.timeRemaining - elapsed);
+              this.isRunning = true;
+
+              if (this.timeRemaining === 0) {
+                this.reset();
+              }
+            } else {
+              this.timeRemaining = data.timeRemaining;
+              this.isRunning = false;
+            }
+          } catch (e) {
+            this.timeRemaining = this.duration;
+          }
+        }
+      }
+
+      saveState() {
+        const storageKey = 'countdown_timer_{{ ai_gen_id }}';
+        const data = {
+          timeRemaining: this.timeRemaining,
+          isRunning: this.isRunning,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      }
+
+      start() {
+        if (this.isRunning) return;
+
+        this.isRunning = true;
+        this.lastUpdateTime = Date.now();
+        this.saveState();
+
+        this.intervalId = setInterval(() => {
+          const now = Date.now();
+          const deltaSeconds = Math.floor((now - this.lastUpdateTime) / 1000);
+
+          if (deltaSeconds >= 1) {
+            this.lastUpdateTime = now;
+            this.timeRemaining = Math.max(0, this.timeRemaining - deltaSeconds);
+
+            this.updateDisplay();
+            this.saveState();
+
+            if (this.timeRemaining === 0) {
+              this.reset();
+            }
+          }
+        }, 100);
+      }
+
+      stop() {
+        if (!this.isRunning) return;
+
+        this.isRunning = false;
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+        this.saveState();
+      }
+
+      reset() {
+        this.stop();
+        this.timeRemaining = this.duration;
+        this.updateDisplay();
+        this.saveState();
+
+        if (this.autoStart) {
+          setTimeout(() => this.start(), 100);
+        }
+      }
+
+      syncTime() {
+        this.loadState();
+        this.updateDisplay();
+
+        if (this.isRunning && !this.intervalId) {
+          this.start();
+        }
+      }
+
+      updateDisplay() {
+        const hours = Math.floor(this.timeRemaining / 3600);
+        const minutes = Math.floor((this.timeRemaining % 3600) / 60);
+        const seconds = this.timeRemaining % 60;
+
+        const hoursTens = Math.floor(hours / 10);
+        const hoursOnes = hours % 10;
+        const minutesTens = Math.floor(minutes / 10);
+        const minutesOnes = minutes % 10;
+        const secondsTens = Math.floor(seconds / 10);
+        const secondsOnes = seconds % 10;
+
+        this.updateDigit(this.digitElements.hoursTens, hoursTens);
+        this.updateDigit(this.digitElements.hoursOnes, hoursOnes);
+        this.updateDigit(this.digitElements.minutesTens, minutesTens);
+        this.updateDigit(this.digitElements.minutesOnes, minutesOnes);
+        this.updateDigit(this.digitElements.secondsTens, secondsTens);
+        this.updateDigit(this.digitElements.secondsOnes, secondsOnes);
+      }
+
+      updateDigit(element, value) {
+        if (element.textContent !== value.toString()) {
+          element.textContent = value;
+          element.classList.add('tick');
+          setTimeout(() => element.classList.remove('tick'), 300);
+        }
+      }
+
+      disconnectedCallback() {
+        this.stop();
+      }
+    }
+
+    customElements.define('countdown-timer-{{ ai_gen_id }}', CountdownTimer{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Countdown timer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Limited Time Offer"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Hurry! This deal refreshes every 24 hours."
+    },
+    {
+      "type": "header",
+      "content": "Timer settings"
+    },
+    {
+      "type": "range",
+      "id": "countdown_duration",
+      "label": "Countdown duration",
+      "min": 1,
+      "max": 48,
+      "step": 1,
+      "unit": "h",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_start",
+      "label": "Auto-start timer",
+      "default": true,
+      "info": "Uncheck to stop the timer"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "column",
+          "label": "Timer below text"
+        },
+        {
+          "value": "column-reverse",
+          "label": "Timer above text"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_align",
+      "label": "Mobile text alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Left padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "Right padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inner_padding",
+      "label": "Inner padding",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "timer_bg_color",
+      "label": "Timer background",
+      "default": "#1c1d1d"
+    },
+    {
+      "type": "color",
+      "id": "timer_text_color",
+      "label": "Timer text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtext_size",
+      "label": "Subtext size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "timer_size",
+      "label": "Timer size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Container border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "timer_border_radius",
+      "label": "Timer border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_glow",
+      "label": "Enable breathing glow",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#ab2237"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown timer"
+    }
+  ]
+}
+{% endschema %}

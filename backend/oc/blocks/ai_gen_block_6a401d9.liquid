@@ -1,0 +1,707 @@
+{% doc %}
+  @prompt
+    Layout: Two-column
+    
+    Left Column:
+    
+    Video (embedded or uploaded)
+    
+    Subheader (small descriptive text above the main header)
+    
+    Header (clickable; when clicked, it changes the right column video to the one assigned to this header)
+    
+    Text (optional description or supporting content)
+    
+    Right Column:
+    
+    Subheader (optional small text above the header)
+    
+    Header (updates dynamically when left header is clicked, showing the new title for the selected video)
+    
+    Video (updates dynamically when left header is clicked)
+    
+    Behavior:
+    
+    Clicking a header in the left column triggers the right column to update:
+    
+    The video changes to the one assigned to the clicked header.
+    
+    The subheader and header in the right column update accordingly.
+    
+    Left column headers can have multiple assigned videos (if you want multiple clickable options).
+    
+    Additional Notes:
+    
+    Make sure the block supports dynamic linking between left headers and right videos.
+    
+    Keep spacing and padding consistent for mobile and desktop responsiveness.
+    
+    Optional: Add hover effect on left column headers to indicate they are clickable.
+    
+    Mobile Layout Concept (Responsive)
+    
+    Stacked Layout:
+    
+    Top Section (Left Column Content)
+    
+    Video
+    
+    Subheader
+    
+    Header (clickable)
+    
+    Text
+    
+    Bottom Section (Right Column Content)
+    
+    Subheader (updates when header clicked)
+    
+    Header (updates when header clicked)
+    
+    Video (updates when header clicked)
+    
+    Behavior:
+    
+    On mobile, the left “headers” section can be shown as a scrollable horizontal list of clickable headers (like a tab menu), or stacked vertically above the video.
+    
+    Clicking a header updates the bottom section video and titles dynamically.
+    
+    Text should wrap properly, videos should scale to screen width (use width: 100%), and padding should remain consistent., Layout (Desktop):
+    
+    Left Column:
+    
+    Up to 5 clickable titles (headers).
+    
+    Each title corresponds to one unique video.
+    
+    Right Column:
+    
+    Video display area that updates when a left title is clicked.
+    
+    Layout (Mobile):
+    
+    Stacked vertically:
+    
+    Clickable titles on top.
+    
+    Video display area below, updates dynamically when a title is clicked.
+    
+    Behavior:
+    
+    Clicking a title loads its assigned video in the display area.
+    
+    Only one video plays at a time.
+    
+    Supports up to 5 videos.
+    
+    Responsive: Desktop uses left/right columns; mobile stacks titles above the video.
+    
+    Design Notes:
+    
+    Titles must be touch-friendly (large enough to tap).
+    
+    Video should scale to screen width (width: 100%; height: auto).
+    
+    Maintain consistent spacing and padding.
+    
+    Smooth transition when switching videos., left column is not showing
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-multi-video-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-multi-video-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: {{ block.settings.column_gap }}px;
+    padding: {{ block.settings.section_padding }}px;
+  }
+
+  .ai-multi-video-titles-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.title_spacing }}px;
+  }
+
+  .ai-multi-video-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    background-color: {{ block.settings.title_bg_color }};
+    padding: {{ block.settings.title_padding }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0;
+    border: 2px solid transparent;
+    text-align: left;
+  }
+
+  .ai-multi-video-title-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.title_hover_bg_color }};
+    color: {{ block.settings.title_hover_color }};
+    transform: translateX(5px);
+  }
+
+  .ai-multi-video-title-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.title_active_bg_color }};
+    color: {{ block.settings.title_active_color }};
+    border-color: {{ block.settings.title_active_border_color }};
+  }
+
+  .ai-multi-video-display-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.video_spacing }}px;
+  }
+
+  .ai-multi-video-header-{{ ai_gen_id }} {
+    font-size: {{ block.settings.header_size }}px;
+    color: {{ block.settings.header_color }};
+    margin: 0;
+  }
+
+  .ai-multi-video-subheader-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheader_size }}px;
+    color: {{ block.settings.subheader_color }};
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-multi-video-player-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000000;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-multi-video-player-{{ ai_gen_id }}.transitioning {
+    opacity: 0;
+  }
+
+  .ai-multi-video-player-{{ ai_gen_id }} iframe,
+  .ai-multi-video-player-{{ ai_gen_id }} video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-multi-video-empty-{{ ai_gen_id }} {
+    color: #666666;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-multi-video-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_spacing }}px;
+    }
+
+    .ai-multi-video-titles-{{ ai_gen_id }} {
+      order: 1;
+    }
+
+    .ai-multi-video-display-{{ ai_gen_id }} {
+      order: 2;
+    }
+
+    .ai-multi-video-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.9 }}px;
+      padding: {{ block.settings.title_padding | times: 1.2 }}px;
+    }
+
+    .ai-multi-video-title-{{ ai_gen_id }}:hover {
+      transform: none;
+    }
+  }
+{% endstyle %}
+
+<multi-video-switcher-{{ ai_gen_id }} class="ai-multi-video-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-multi-video-container-{{ ai_gen_id }}">
+    <div class="ai-multi-video-titles-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign title_key = 'video_' | append: i | append: '_title'
+          assign url_key = 'video_' | append: i | append: '_url'
+          assign subheader_key = 'video_' | append: i | append: '_subheader'
+          assign header_key = 'video_' | append: i | append: '_header'
+          
+          assign title = block.settings[title_key]
+          assign url = block.settings[url_key]
+          assign subheader = block.settings[subheader_key]
+          assign header = block.settings[header_key]
+        %}
+        
+        {% if title != blank %}
+          <h3
+            class="ai-multi-video-title-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-video-url="{{ url }}"
+            data-subheader="{{ subheader }}"
+            data-header="{{ header }}"
+            data-index="{{ i }}"
+          >
+            {{ title }}
+          </h3>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-multi-video-display-{{ ai_gen_id }}">
+      {% if block.settings.video_1_subheader != blank %}
+        <p class="ai-multi-video-subheader-{{ ai_gen_id }}" data-display-subheader>
+          {{ block.settings.video_1_subheader }}
+        </p>
+      {% endif %}
+
+      {% if block.settings.video_1_header != blank %}
+        <h2 class="ai-multi-video-header-{{ ai_gen_id }}" data-display-header>
+          {{ block.settings.video_1_header }}
+        </h2>
+      {% endif %}
+
+      <div class="ai-multi-video-player-{{ ai_gen_id }}" data-video-player>
+        {% if block.settings.video_1_url != blank %}
+          {% if block.settings.video_1_url contains 'youtube.com' or block.settings.video_1_url contains 'youtu.be' %}
+            {% assign video_id = block.settings.video_1_url | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          {% elsif block.settings.video_1_url contains 'vimeo.com' %}
+            {% assign video_id = block.settings.video_1_url | split: '/' | last %}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          {% else %}
+            <video controls>
+              <source src="{{ block.settings.video_1_url }}" type="video/mp4">
+            </video>
+          {% endif %}
+        {% else %}
+          <div class="ai-multi-video-empty-{{ ai_gen_id }}">
+            Add a video URL to get started
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</multi-video-switcher-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class MultiVideoSwitcher{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.titles = this.querySelectorAll('.ai-multi-video-title-{{ ai_gen_id }}');
+        this.videoPlayer = this.querySelector('[data-video-player]');
+        this.displayHeader = this.querySelector('[data-display-header]');
+        this.displaySubheader = this.querySelector('[data-display-subheader]');
+
+        this.titles.forEach(title => {
+          title.addEventListener('click', this.handleTitleClick.bind(this));
+        });
+      }
+
+      handleTitleClick(event) {
+        const clickedTitle = event.currentTarget;
+        const videoUrl = clickedTitle.getAttribute('data-video-url');
+        const subheader = clickedTitle.getAttribute('data-subheader');
+        const header = clickedTitle.getAttribute('data-header');
+
+        this.titles.forEach(title => title.classList.remove('active'));
+        clickedTitle.classList.add('active');
+
+        this.videoPlayer.classList.add('transitioning');
+
+        setTimeout(() => {
+          if (videoUrl) {
+            this.updateVideo(videoUrl);
+          } else {
+            this.videoPlayer.innerHTML = '<div class="ai-multi-video-empty-{{ ai_gen_id }}">Add a video URL for this title</div>';
+          }
+
+          if (this.displaySubheader) {
+            if (subheader) {
+              this.displaySubheader.textContent = subheader;
+              this.displaySubheader.style.display = 'block';
+            } else {
+              this.displaySubheader.style.display = 'none';
+            }
+          }
+
+          if (this.displayHeader) {
+            if (header) {
+              this.displayHeader.textContent = header;
+              this.displayHeader.style.display = 'block';
+            } else {
+              this.displayHeader.style.display = 'none';
+            }
+          }
+
+          setTimeout(() => {
+            this.videoPlayer.classList.remove('transitioning');
+          }, 50);
+        }, 300);
+      }
+
+      updateVideo(url) {
+        let videoHTML = '';
+
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+          const videoId = url.split('v=').pop().split('/').pop().split('&')[0];
+          videoHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        } else if (url.includes('vimeo.com')) {
+          const videoId = url.split('/').pop();
+          videoHTML = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+        } else {
+          videoHTML = `<video controls><source src="${url}" type="video/mp4"></video>`;
+        }
+
+        this.videoPlayer.innerHTML = videoHTML;
+      }
+    }
+
+    customElements.define('multi-video-switcher-{{ ai_gen_id }}', MultiVideoSwitcher{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Multi video switcher",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "video_spacing",
+      "label": "Video spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing",
+      "label": "Mobile spacing",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Title style"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "title_padding",
+      "label": "Title padding",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "title_bg_color",
+      "label": "Title background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "title_hover_color",
+      "label": "Title hover color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_hover_bg_color",
+      "label": "Title hover background",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "title_active_color",
+      "label": "Active title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_active_bg_color",
+      "label": "Active title background",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "title_active_border_color",
+      "label": "Active title border",
+      "default": "#ab2237"
+    },
+    {
+      "type": "header",
+      "content": "Display area style"
+    },
+    {
+      "type": "range",
+      "id": "subheader_size",
+      "label": "Subheader size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_size",
+      "label": "Header size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "subheader_color",
+      "label": "Subheader color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "header_color",
+      "label": "Header color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "text",
+      "id": "video_1_title",
+      "label": "Title",
+      "default": "Video 1"
+    },
+    {
+      "type": "text",
+      "id": "video_1_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "video_1_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "text",
+      "id": "video_1_header",
+      "label": "Header",
+      "default": "Featured Video 1"
+    },
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "text",
+      "id": "video_2_title",
+      "label": "Title",
+      "default": "Video 2"
+    },
+    {
+      "type": "text",
+      "id": "video_2_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "video_2_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "text",
+      "id": "video_2_header",
+      "label": "Header",
+      "default": "Featured Video 2"
+    },
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "text",
+      "id": "video_3_title",
+      "label": "Title",
+      "default": "Video 3"
+    },
+    {
+      "type": "text",
+      "id": "video_3_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "video_3_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "text",
+      "id": "video_3_header",
+      "label": "Header",
+      "default": "Featured Video 3"
+    },
+    {
+      "type": "header",
+      "content": "Video 4"
+    },
+    {
+      "type": "text",
+      "id": "video_4_title",
+      "label": "Title",
+      "default": "Video 4"
+    },
+    {
+      "type": "text",
+      "id": "video_4_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "video_4_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "text",
+      "id": "video_4_header",
+      "label": "Header",
+      "default": "Featured Video 4"
+    },
+    {
+      "type": "header",
+      "content": "Video 5"
+    },
+    {
+      "type": "text",
+      "id": "video_5_title",
+      "label": "Title",
+      "default": "Video 5"
+    },
+    {
+      "type": "text",
+      "id": "video_5_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "video_5_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "text",
+      "id": "video_5_header",
+      "label": "Header",
+      "default": "Featured Video 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi video switcher"
+    }
+  ]
+}
+{% endschema %}

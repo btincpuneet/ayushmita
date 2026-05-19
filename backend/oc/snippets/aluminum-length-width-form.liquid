@@ -1,0 +1,433 @@
+{% assign minimum-width = product.metafields.canadamats.extra_details.minimum-width %}
+{% assign minimum-length = product.metafields.canadamats.extra_details.minimum-length %}
+{% assign maximum-width = product.metafields.canadamats.extra_details.maximum-width %}
+{% assign maximum-length = product.metafields.canadamats.extra_details.maximum-length %}
+{% assign roll-width = product.metafields.canadamats.extra_details.roll-width %}
+{% assign wastagemultiplier = product.metafields.canadamats.extra_details.wastage %}
+{% assign edgingmultiplier = product.metafields.canadamats.extra_details.edging %}
+
+
+<div id="custom-size-form-field-container">
+  <div id="custom-size-form-hidden-field-container">
+    <div></div>
+  </div>
+
+  <div class="product-form--atc">
+    
+    <div style="float:left">
+      <label>Width</label>
+      <div class="form-field">
+        <input
+          id="full-width"
+          class="form-field-input form-field-text form-field-filled dimension-input"
+          type="number"
+          min="{{minimum-width}}"
+          max="{{maximum-width}}"
+          step="1"
+          value="{{minimum-width}}"
+        >
+        <label class="form-field-title">(feet)</label>
+      </div>
+
+      <div class="product-form--atc-qty form-fields--qty" data-quantity-wrapper>
+        <div class="form-field form-field--qty-select visible">
+          <div class="form-field-select-wrapper">
+            <select
+              id="partial-width"
+              class="form-field-input form-field-select form-field-filled dimension-input"
+              data-quantity-select
+            >
+              {% render 'partial-size-select-options' %}
+            </select>
+            <label class="form-field-title">(inches)</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="float:left">
+      <label>Length</label>
+      <div class="form-field">
+        <input
+          id="full-length"
+          class="form-field-input form-field-text form-field-filled dimension-input"
+          type="number"
+          min="{{minimum-length}}"
+          max="{{maximum-length}}"
+          step="1"
+          value="{{minimum-length}}"
+        >
+        <label class="form-field-title">(feet)</label>
+      </div>
+
+      <div class="product-form--atc-qty form-fields--qty" data-quantity-wrapper>
+        <div class="form-field form-field--qty-select visible">
+          <div class="form-field-select-wrapper">
+            <select
+              id="partial-length"
+              class="form-field-input form-field-select form-field-filled dimension-input"
+              data-quantity-select
+            >
+              {% render 'partial-size-select-options' %}
+            </select>
+            <label class="form-field-title">(inches)</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+    <div style="display:block;clear:both;margin-bottom:9px;"></div>
+  
+    <div class="product-form--atc" {% if edgingmultiplier <= 0 %} style="display:none;"  {% endif %}>
+      <label>Aluminum Frame</label>
+      <select id="edging-selection"  class="form-field-input form-field-select form-field-filled">
+        <option value="no" selected>No</option>
+        <option value="yes">Yes</option>
+      </select>
+    </div>  
+  <br>
+</div>
+
+<script>
+   // query the artificial quantity field we need for the the number of mats
+   function getMultiplier() {
+      return parseInt($("#multiplier").val(), 10); // how many mats does the customer want
+   }
+
+   // get the edging selection. If yes, add some multiple to the cost by increasing the units
+   function getEdging() {
+     var edging = $("#edging-selection").val();
+     return (edging == 'yes') ? true : false;
+   }
+
+   // returns an integer representing the width in feet
+   // 1 + .125 returns 2
+   function getWidth() {
+     var fullWidth = parseInt($("#full-width").val(), 10);
+     var partialWidth = parseFloat($("#partial-width").val() / 12.0);
+     return fullWidth + partialWidth;
+   }
+
+   // returns an integer representing the desired length in feet
+   // 1 + .125 returns 2
+   function getLength() {
+     var fullLength = parseInt($("#full-length").val(), 10);
+     var partialLength = parseFloat($("#partial-length").val() / 12.0);
+     return fullLength + partialLength;
+   }
+
+   // rounded up number representing total number of square feet of material in question
+   function getUnits() {
+     //var fullLength = parseInt($("#full-length").val(), 10);
+
+     //var fullWidth = parseInt($("#full-width").val(), 10);
+     //var partialLength = parseFloat($("#partial-length").val() / 12.0);
+     //var partialWidth = parseFloat($("#partial-width").val() / 12.0);
+     console.log('units ',parseInt(Math.ceil(getLength()) * Math.ceil(getWidth()), 10));
+     return parseInt(Math.ceil(getLength()) * Math.ceil(getWidth()), 10);
+   }
+
+   // Wastage
+  function getWastage(width) {
+    console.log("Customer selected width: %d", width);
+    var wastage = 0;
+    if(width > 6.5) {
+      wastage = 13.0 - width;
+      if (wastage > 3.0) {
+        wastage = 0;
+        console.log("we reset the wastage to zero as it is more than 3', it was %f", parseFloat(13.0 - width));
+      }
+      console.log("Wastage is %f on a width of %f from a 13 foot roll", wastage, width);
+    } else if(width > 7) {
+      wastage = parseFloat(6.5 - width);
+      if (wastage > 3.0) {
+        wastage = 0;
+        console.log("we reset the wastage to zero as it is more than 3', it was %f", parseFloat(6.5 - width));
+      } 
+      console.log("Wastage is %f on a width of %f from a 6.5 foot roll", wastage, width);
+    } else {
+      console.log("The customer width %f does not incur a wastage charge using smallest roll of 3'", width);
+    }
+    
+    return wastage;
+  }
+
+   function setLimitForPartialLength() {
+   	    var fullLength1 = parseInt($("#full-length").val(), 10);
+         var partialLength1 = parseFloat($("#partial-length").val(),10);
+
+         var maximum_length = {{ maximum-length }};
+         var partial_maximum_length = maximum_length-parseInt(maximum_length);
+         var limitPartialLength = partial_maximum_length*12;
+         //console.log('fullWidth1----'+fullWidth1);
+         //console.log('maximum_width----'+parseInt(maximum_width));
+         //console.log('limitPartialWidth----'+limitPartialWidth);
+         //console.log('partialWidth1----'+partialWidth1);
+
+         if(fullLength1 == parseInt(maximum_length))
+         {
+            $('#partial-length option').each(function() {
+              currentItem = $(this).attr("value");
+
+              if (currentItem > limitPartialLength) {
+                $(this).hide();
+
+              }
+
+            });
+           if(partialLength1 > limitPartialLength)
+           {
+             $("#partial-length").val(0).trigger('change');
+           }
+
+         }else{
+           $('#partial-length option').each(function() {
+              currentItem = $(this).attr("value");
+
+                $(this).show();
+
+            });
+         }
+     }
+
+   function setLimitForPartialWidth() {
+   	    var fullWidth1 = parseInt($("#full-width").val(), 10);
+         var partialWidth1 = parseFloat($("#partial-width").val(),10);
+
+         var maximum_width = {{ maximum-width }};
+         var partial_maximum_width = maximum_width-parseInt(maximum_width);
+         var limitPartialWidth = partial_maximum_width*12;
+         //console.log('fullWidth1----'+fullWidth1);
+         //console.log('maximum_width----'+parseInt(maximum_width));
+         //console.log('limitPartialWidth----'+limitPartialWidth);
+         //console.log('partialWidth1----'+partialWidth1);
+
+         if(fullWidth1 == parseInt(maximum_width))
+         {
+            $('#partial-width option').each(function() {
+              currentItem = $(this).attr("value");
+
+              if (currentItem > limitPartialWidth) {
+                $(this).hide();
+
+              }
+
+            });
+           if(partialWidth1 > limitPartialWidth)
+           {
+             $("#partial-width").val(0).trigger('change');
+           }
+
+         }else{
+
+           $('#partial-width option').each(function() {
+              currentItem = $(this).attr("value");
+
+                $(this).show();
+
+            });
+         }
+     }
+
+     $(document).ready(function () {
+       updateSubtotal(getEdging());
+         // any customer changes to dimensions affects the cart subtotal
+           function updateSubtotal(edging) {
+
+             setLimitForPartialLength();
+             setLimitForPartialWidth();
+
+  			 var cart_item_count = parseInt({{cart.item_count}});
+             var variant_id = $("select[name=id]").val();
+
+             console.log(variant_id)
+
+             var product = {{ product | json }};
+
+             $.each(product.variants, function (i, v) {
+               if (v.id == variant_id) {
+                 price = v.price;
+               }
+             });
+
+
+            var selectSizeVariant = $(".variant-input-wrap option[value~='Custom Sizes']:selected").val();
+
+             if(selectSizeVariant != undefined && selectSizeVariant == 'Custom Sizes') {
+                $("#custom-size-form-field-container").show();
+                $("#custom-size-form-hidden-field-container").html('<div><input type="hidden" id="mat-shipping-info" name="properties[Estimated to Ship by]" value="1"><input type="hidden" id="quantity" name="quantity" value=""><input type="hidden" id="mat-width" name="properties[Width]" value=""><input type="hidden" id="mat-length" name="properties[Length]" value=""><input type="hidden" id="mat-quantity" name="properties[Quantity of Mats]" value=""><input type="hidden" id="mat-aluminum-selected" name="properties[Aluminum Frame Selected]" value=""><input type="hidden" id="mat-wastage" name="properties[_wastage]" value=""><input type="hidden" id="mat-edging" name="properties[_edging]" value=""><input type="hidden" id="separator" name="properties[_custom_item_separator]" value="1"></div>');
+                $("#js-qty_input_wrapper-original").hide();
+                $(".product__quantity .js-qty__wrapper .js-qty__num").hide();
+                $(".product__quantity .js-qty__wrapper .js-qty__num").removeAttr('name');
+                $("#js-qty_input_wrapper-custom").show();
+             } else {
+               $("#custom-size-form-field-container").hide();
+               $("#custom-size-form-hidden-field-container").empty();
+               $("#js-qty_input_wrapper-original").show();
+               $(".product__quantity .js-qty__wrapper .js-qty__num").attr('name','quantity');
+               $("#js-qty_input_wrapper-custom").hide();
+               
+               return false;
+             }
+
+             //var price = {{selected_variant.price}};
+
+             var subtotal = 0;
+             var units = getUnits();
+
+             var multiplier = getMultiplier();
+             //var price = {{ selected_variant.price }};
+             // decide which wastage variant comes into play
+             var wastage = getWastage(getWidth());
+             var length = getLength();
+             var wastageUnits = Math.ceil(wastage * length * {{wastagemultiplier}}); // add this many units times the wastage factor to the units
+             // decide how edging comes into play
+             if(edging) {
+               edgingUnits = Math.ceil((getWidth()*2 + getLength()*2) * {{edgingmultiplier}});
+             } else {
+               edgingUnits = 0;
+             }
+
+
+             subtotal = theme.Currency.formatMoney(price * (units + wastageUnits + edgingUnits) * multiplier, theme.Currency.money_format);
+
+             console.log(price, units , wastageUnits , edgingUnits, multiplier);
+             console.log('subtotal',subtotal);
+             console.log('ttt',price * (units + wastageUnits + edgingUnits) * multiplier);
+             console.log('qty');
+             console.log('qty',(units + wastageUnits + edgingUnits));
+
+             console.log('multiplier');
+             console.log('multiplier',multiplier);
+
+
+             //console.log("New price for base units %f is %o with wastage %f resulting in %f wastageUnits and %f edging units added on", units, subtotal, wastage, wastageUnits, edgingUnits);
+
+            $("[data-product-price]").attr("data-currency-usd", subtotal + " " + theme.Currency.active);
+            $("[data-product-price]").text(subtotal);
+            $("#quantity").val((units + wastageUnits + edgingUnits) * multiplier);
+            $("#mat-width").val($("#full-width").val() + "' " + $("#partial-width").val() + "\"");
+            $("#mat-length").val($("#full-length").val() + "' " + $("#partial-length").val() + "\"");
+            $("#mat-quantity").val(multiplier);
+            $("#mat-aluminum-selected").val($("#edging-selection").val());
+            $("#mat-wastage").val(wastageUnits);
+            $("#mat-edging").val(edgingUnits);
+            let shipInfo = $('#shipping_dynamic_date').text();
+             let shipdateRage = $('#shipping_dynamic_date').data('daterange');
+
+             //let updatedText = shippingDiv.html().replace(/Custom made & Estimated to Ship by:/g, "A");
+             $("#mat-shipping-info").val(shipInfo.replace(/Custom made & Estimated to Ship by:/g, " "));
+             //$("#mat-shipping-info_range").val(shipdateRage);
+          }
+
+         // ensure customer keeps the dimensions in the good zone
+           $("#full-length,#full-width").on('change', function (e) {
+             e.preventDefault();
+             var currentValue = parseInt($(this).val(), 10);
+             var min = parseInt(this.min, 10);
+             var max = parseInt(this.max, 10);
+             if (!this.checkValidity() && currentValue > max) {
+              $(this).val(max);
+             } else if (!this.checkValidity() && currentValue < min) {
+               $(this).val(min);
+             } else {
+               updateSubtotal(getEdging());
+             }
+           });
+
+  		$(".js-qty__adjust").click(function(e){
+             	e.preventDefault();
+             	updateSubtotal(getEdging());
+             });
+
+             $("#full-length,#full-width,#partial-length,#partial-width,#edging-selection,#multiplier").on('change', function (e) {
+              e.preventDefault();
+
+             // if full-width is maxed out, ensure the partial inches control element for width is disabled as we cannot accept anything wider than the max width
+             if (this.id == 'full-width' && $(this).val() == this.max) {
+               $("#partial-width").val(0).prop("disabled", true);
+             } else if (this.id == 'full-width' && $(this).val() < this.max) {
+               $("#partial-width").prop("disabled", false);
+             }
+
+             updateSubtotal(getEdging()); // false tells us there is no edging to add to subtotal
+           });
+
+          $(".add-to-cart").on('click',function(){
+              
+              if($("#separator").length > 0){
+                var separator = Math.floor((Math.random() * 999) + 2); 
+                $("#separator").val( separator );
+              }
+              
+            console.log(separator);
+            });
+       
+         function usePushState(handler){
+             function track (fn, handler, before) {
+                 return function interceptor () {
+                     if (before) {
+                         handler.apply(this, arguments);
+                         return fn.apply(this, arguments);
+                     } else {
+                         var result = fn.apply(this, arguments);
+                         handler.apply(this, arguments);
+                         return result;
+                     }
+                 };
+             }
+
+             var currentVariantId = null;
+             function variantHandler () {
+                 var selectedVariantId = window.location.search.replace(/.*variant=(\d+).*/, '$1');
+                 console.log('checking variant change to '+ selectedVariantId);
+                 if(!selectedVariantId) return;
+                 if(selectedVariantId != currentVariantId){
+                     currentVariantId = selectedVariantId;
+                     handler(selectedVariantId);
+                 }
+              }
+
+
+             window.history.pushState = track(history.pushState, variantHandler);
+             window.history.replaceState = track(history.replaceState, variantHandler);
+             window.addEventListener('popstate', variantHandler);
+         }
+
+
+         usePushState(function(variantId){
+
+           var selectSizeVariant = $.trim($('[data-handle="size"] select option[value~="Custom Sizes"]:selected,[data-handle="sizes"] select option[value~="Custom Sizes"]:selected').val());
+
+           if(selectSizeVariant != undefined && selectSizeVariant == 'Custom Sizes') {
+               $("#custom-size-form-field-container").show();
+               $("#custom-size-form-hidden-field-container").html('<div><input type="hidden" id="mat-shipping-info" name="properties[Estimated to Ship by]" value="1"><input type="hidden" id="quantity" name="quantity" value=""><input type="hidden" id="mat-width" name="properties[Width]" value=""><input type="hidden" id="mat-length" name="properties[Length]" value=""><input type="hidden" id="mat-quantity" name="properties[Quantity of Mats]" value=""><input type="hidden" id="mat-aluminum-selected" name="properties[Aluminum Frame Selected]" value=""><input type="hidden" id="mat-wastage" name="properties[_wastage]" value=""><input type="hidden" id="mat-edging" name="properties[_edging]" value=""><input type="hidden" id="separator" name="properties[_custom_item_separator]" value="1"></div>');
+               $("#js-qty_input_wrapper-original").hide();
+               $(".product__quantity .js-qty__wrapper .js-qty__num").removeAttr('name');
+               $("#js-qty_input_wrapper-custom").show();
+               updateSubtotal(getEdging());
+             }else{
+               $("#custom-size-form-field-container").hide();
+               $("#custom-size-form-hidden-field-container").empty();
+               $("#js-qty_input_wrapper-original").show();
+               $(".product__quantity .js-qty__wrapper .js-qty__num").attr('name','quantity');
+               $("#js-qty_input_wrapper-custom").hide();
+               var product = {{ product | json }};
+               $.each(product.variants, function (i, v) {
+                 if (v.id == variantId) {
+                   price = v.price;
+                 }
+               });
+               $("[data-product-price]").text(theme.Currency.formatMoney(price, theme.Currency.money_format));
+               console.log('icon',theme.Currency.formatMoney(price, theme.Currency.money_format))
+             }
+
+         });
+      });
+</script>
+
+<style>
+  .js-qty__num {
+      display: block !important;
+  }
+</style>

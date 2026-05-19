@@ -1,0 +1,1179 @@
+{% doc %}
+  @prompt
+    Create a Shopify custom section called 'Image Hotspot with Side Preview' with these features:
+    
+    Main image with multiple hotspots (allow ~5 dynamic blocks).
+    
+    Each hotspot has: x/y position, URL, optional label, optional side image or details.
+    
+    Clicking a hotspot shows the corresponding side image/details and navigates to its URL.
+    
+    Include a setting to place the main image left or right, with side image/details on the opposite side.
+    
+    Clean, modern, professional style.
+    
+    Fully mobile-friendly and responsive., label on hotspot appears only on hover (not static) 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-hotspot-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-hotspot-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  {% if block.settings.layout == 'image_left' %}
+    .ai-hotspot-container-{{ ai_gen_id }} {
+      flex-direction: row;
+    }
+  {% else %}
+    .ai-hotspot-container-{{ ai_gen_id }} {
+      flex-direction: row-reverse;
+    }
+  {% endif %}
+
+  .ai-hotspot-main-image-wrapper-{{ ai_gen_id }} {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+
+  .ai-hotspot-main-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-hotspot-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-hotspot-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .ai-hotspot-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+  }
+
+  .ai-hotspot-point-{{ ai_gen_id }} {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .ai-hotspot-button-{{ ai_gen_id }} {
+    width: {{ block.settings.hotspot_size }}px;
+    height: {{ block.settings.hotspot_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.hotspot_color }};
+    border: 3px solid {{ block.settings.hotspot_border_color }};
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 0;
+  }
+
+  .ai-hotspot-button-{{ ai_gen_id }}:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ai-hotspot-button-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.hotspot_active_color }};
+    transform: scale(1.15);
+  }
+
+  .ai-hotspot-pulse-{{ ai_gen_id }} {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: {{ block.settings.hotspot_color }};
+    opacity: 0.6;
+    animation: ai-hotspot-pulse-{{ ai_gen_id }} 2s infinite;
+  }
+
+  @keyframes ai-hotspot-pulse-{{ ai_gen_id }} {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  .ai-hotspot-label-{{ ai_gen_id }} {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: {{ block.settings.label_bg_color }};
+    color: {{ block.settings.label_text_color }};
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+  }
+
+  .ai-hotspot-point-{{ ai_gen_id }}:hover .ai-hotspot-label-{{ ai_gen_id }} {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-hotspot-side-panel-{{ ai_gen_id }} {
+    flex: 0 0 {{ block.settings.side_panel_width }}%;
+    background-color: {{ block.settings.side_panel_bg_color }};
+    border-radius: {{ block.settings.side_panel_border_radius }}px;
+    padding: 40px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ai-hotspot-side-content-{{ ai_gen_id }} {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-hotspot-side-content-{{ ai_gen_id }}.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .ai-hotspot-side-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.side_image_border_radius }}px;
+    margin-bottom: 24px;
+  }
+
+  .ai-hotspot-side-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.side_image_border_radius }}px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hotspot-side-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-hotspot-side-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.side_title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.side_text_color }};
+    margin: 0 0 16px;
+    line-height: 1.3;
+  }
+
+  .ai-hotspot-side-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.side_description_size }}px;
+    color: {{ block.settings.side_text_color }};
+    line-height: 1.6;
+    margin: 0 0 24px;
+  }
+
+  .ai-hotspot-side-link-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 28px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .ai-hotspot-side-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-hotspot-default-content-{{ ai_gen_id }} {
+    text-align: center;
+    color: {{ block.settings.side_text_color }};
+    opacity: 0.6;
+  }
+
+  .ai-hotspot-default-content-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-hotspot-container-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .ai-hotspot-side-panel-{{ ai_gen_id }} {
+      flex: 1;
+      width: 100%;
+      padding: 30px;
+      min-height: 300px;
+    }
+
+    .ai-hotspot-button-{{ ai_gen_id }} {
+      width: calc({{ block.settings.hotspot_size }}px * 0.85);
+      height: calc({{ block.settings.hotspot_size }}px * 0.85);
+    }
+
+    .ai-hotspot-label-{{ ai_gen_id }} {
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hotspot-section-{{ ai_gen_id }} {
+      padding: 30px 15px;
+    }
+
+    .ai-hotspot-side-panel-{{ ai_gen_id }} {
+      padding: 24px;
+    }
+
+    .ai-hotspot-side-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.side_title_size }}px * 0.85);
+    }
+
+    .ai-hotspot-side-description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.side_description_size }}px * 0.9);
+    }
+
+    .ai-hotspot-button-{{ ai_gen_id }} {
+      width: calc({{ block.settings.hotspot_size }}px * 0.75);
+      height: calc({{ block.settings.hotspot_size }}px * 0.75);
+    }
+  }
+{% endstyle %}
+
+<image-hotspot-{{ ai_gen_id }} class="ai-hotspot-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-hotspot-container-{{ ai_gen_id }}">
+    <div class="ai-hotspot-main-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.main_image %}
+        <img
+          src="{{ block.settings.main_image | image_url: width: 1400 }}"
+          alt="{{ block.settings.main_image.alt | escape }}"
+          class="ai-hotspot-main-image-{{ ai_gen_id }}"
+          loading="lazy"
+          width="{{ block.settings.main_image.width }}"
+          height="{{ block.settings.main_image.height }}"
+        >
+      {% else %}
+        <div class="ai-hotspot-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+          <div class="ai-hotspot-empty-state-{{ ai_gen_id }}">
+            Add your main image to get started
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_1 %}
+        <div
+          class="ai-hotspot-point-{{ ai_gen_id }}"
+          style="left: {{ block.settings.hotspot_1_x }}%; top: {{ block.settings.hotspot_1_y }}%;"
+        >
+          <button
+            class="ai-hotspot-button-{{ ai_gen_id }} active"
+            aria-label="View {{ block.settings.hotspot_1_label | default: 'hotspot 1 details' }}"
+            data-hotspot-trigger="1"
+          >
+            {% if block.settings.show_pulse %}
+              <span class="ai-hotspot-pulse-{{ ai_gen_id }}"></span>
+            {% endif %}
+          </button>
+          {% if block.settings.hotspot_1_label != blank and block.settings.show_labels %}
+            <span class="ai-hotspot-label-{{ ai_gen_id }}">{{ block.settings.hotspot_1_label }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_2 %}
+        <div
+          class="ai-hotspot-point-{{ ai_gen_id }}"
+          style="left: {{ block.settings.hotspot_2_x }}%; top: {{ block.settings.hotspot_2_y }}%;"
+        >
+          <button
+            class="ai-hotspot-button-{{ ai_gen_id }}"
+            aria-label="View {{ block.settings.hotspot_2_label | default: 'hotspot 2 details' }}"
+            data-hotspot-trigger="2"
+          >
+            {% if block.settings.show_pulse %}
+              <span class="ai-hotspot-pulse-{{ ai_gen_id }}"></span>
+            {% endif %}
+          </button>
+          {% if block.settings.hotspot_2_label != blank and block.settings.show_labels %}
+            <span class="ai-hotspot-label-{{ ai_gen_id }}">{{ block.settings.hotspot_2_label }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_3 %}
+        <div
+          class="ai-hotspot-point-{{ ai_gen_id }}"
+          style="left: {{ block.settings.hotspot_3_x }}%; top: {{ block.settings.hotspot_3_y }}%;"
+        >
+          <button
+            class="ai-hotspot-button-{{ ai_gen_id }}"
+            aria-label="View {{ block.settings.hotspot_3_label | default: 'hotspot 3 details' }}"
+            data-hotspot-trigger="3"
+          >
+            {% if block.settings.show_pulse %}
+              <span class="ai-hotspot-pulse-{{ ai_gen_id }}"></span>
+            {% endif %}
+          </button>
+          {% if block.settings.hotspot_3_label != blank and block.settings.show_labels %}
+            <span class="ai-hotspot-label-{{ ai_gen_id }}">{{ block.settings.hotspot_3_label }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_4 %}
+        <div
+          class="ai-hotspot-point-{{ ai_gen_id }}"
+          style="left: {{ block.settings.hotspot_4_x }}%; top: {{ block.settings.hotspot_4_y }}%;"
+        >
+          <button
+            class="ai-hotspot-button-{{ ai_gen_id }}"
+            aria-label="View {{ block.settings.hotspot_4_label | default: 'hotspot 4 details' }}"
+            data-hotspot-trigger="4"
+          >
+            {% if block.settings.show_pulse %}
+              <span class="ai-hotspot-pulse-{{ ai_gen_id }}"></span>
+            {% endif %}
+          </button>
+          {% if block.settings.hotspot_4_label != blank and block.settings.show_labels %}
+            <span class="ai-hotspot-label-{{ ai_gen_id }}">{{ block.settings.hotspot_4_label }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_5 %}
+        <div
+          class="ai-hotspot-point-{{ ai_gen_id }}"
+          style="left: {{ block.settings.hotspot_5_x }}%; top: {{ block.settings.hotspot_5_y }}%;"
+        >
+          <button
+            class="ai-hotspot-button-{{ ai_gen_id }}"
+            aria-label="View {{ block.settings.hotspot_5_label | default: 'hotspot 5 details' }}"
+            data-hotspot-trigger="5"
+          >
+            {% if block.settings.show_pulse %}
+              <span class="ai-hotspot-pulse-{{ ai_gen_id }}"></span>
+            {% endif %}
+          </button>
+          {% if block.settings.hotspot_5_label != blank and block.settings.show_labels %}
+            <span class="ai-hotspot-label-{{ ai_gen_id }}">{{ block.settings.hotspot_5_label }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hotspot-side-panel-{{ ai_gen_id }}">
+      {% if block.settings.enable_hotspot_1 %}
+        <div class="ai-hotspot-side-content-{{ ai_gen_id }} active" data-hotspot-content="1">
+          {% if block.settings.side_image_1 %}
+            <img
+              src="{{ block.settings.side_image_1 | image_url: width: 800 }}"
+              alt="{{ block.settings.side_image_1.alt | escape }}"
+              class="ai-hotspot-side-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-hotspot-side-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.side_title_1 != blank %}
+            <h3 class="ai-hotspot-side-title-{{ ai_gen_id }}">{{ block.settings.side_title_1 }}</h3>
+          {% endif %}
+
+          {% if block.settings.side_description_1 != blank %}
+            <div class="ai-hotspot-side-description-{{ ai_gen_id }}">
+              {{ block.settings.side_description_1 }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.hotspot_url_1 != blank %}
+            <a href="{{ block.settings.hotspot_url_1 }}" class="ai-hotspot-side-link-{{ ai_gen_id }}">
+              {{ block.settings.button_text_1 | default: 'Learn More' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_2 %}
+        <div class="ai-hotspot-side-content-{{ ai_gen_id }}" data-hotspot-content="2">
+          {% if block.settings.side_image_2 %}
+            <img
+              src="{{ block.settings.side_image_2 | image_url: width: 800 }}"
+              alt="{{ block.settings.side_image_2.alt | escape }}"
+              class="ai-hotspot-side-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-hotspot-side-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.side_title_2 != blank %}
+            <h3 class="ai-hotspot-side-title-{{ ai_gen_id }}">{{ block.settings.side_title_2 }}</h3>
+          {% endif %}
+
+          {% if block.settings.side_description_2 != blank %}
+            <div class="ai-hotspot-side-description-{{ ai_gen_id }}">
+              {{ block.settings.side_description_2 }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.hotspot_url_2 != blank %}
+            <a href="{{ block.settings.hotspot_url_2 }}" class="ai-hotspot-side-link-{{ ai_gen_id }}">
+              {{ block.settings.button_text_2 | default: 'Learn More' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_3 %}
+        <div class="ai-hotspot-side-content-{{ ai_gen_id }}" data-hotspot-content="3">
+          {% if block.settings.side_image_3 %}
+            <img
+              src="{{ block.settings.side_image_3 | image_url: width: 800 }}"
+              alt="{{ block.settings.side_image_3.alt | escape }}"
+              class="ai-hotspot-side-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-hotspot-side-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.side_title_3 != blank %}
+            <h3 class="ai-hotspot-side-title-{{ ai_gen_id }}">{{ block.settings.side_title_3 }}</h3>
+          {% endif %}
+
+          {% if block.settings.side_description_3 != blank %}
+            <div class="ai-hotspot-side-description-{{ ai_gen_id }}">
+              {{ block.settings.side_description_3 }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.hotspot_url_3 != blank %}
+            <a href="{{ block.settings.hotspot_url_3 }}" class="ai-hotspot-side-link-{{ ai_gen_id }}">
+              {{ block.settings.button_text_3 | default: 'Learn More' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_4 %}
+        <div class="ai-hotspot-side-content-{{ ai_gen_id }}" data-hotspot-content="4">
+          {% if block.settings.side_image_4 %}
+            <img
+              src="{{ block.settings.side_image_4 | image_url: width: 800 }}"
+              alt="{{ block.settings.side_image_4.alt | escape }}"
+              class="ai-hotspot-side-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-hotspot-side-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.side_title_4 != blank %}
+            <h3 class="ai-hotspot-side-title-{{ ai_gen_id }}">{{ block.settings.side_title_4 }}</h3>
+          {% endif %}
+
+          {% if block.settings.side_description_4 != blank %}
+            <div class="ai-hotspot-side-description-{{ ai_gen_id }}">
+              {{ block.settings.side_description_4 }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.hotspot_url_4 != blank %}
+            <a href="{{ block.settings.hotspot_url_4 }}" class="ai-hotspot-side-link-{{ ai_gen_id }}">
+              {{ block.settings.button_text_4 | default: 'Learn More' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.enable_hotspot_5 %}
+        <div class="ai-hotspot-side-content-{{ ai_gen_id }}" data-hotspot-content="5">
+          {% if block.settings.side_image_5 %}
+            <img
+              src="{{ block.settings.side_image_5 | image_url: width: 800 }}"
+              alt="{{ block.settings.side_image_5.alt | escape }}"
+              class="ai-hotspot-side-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-hotspot-side-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.side_title_5 != blank %}
+            <h3 class="ai-hotspot-side-title-{{ ai_gen_id }}">{{ block.settings.side_title_5 }}</h3>
+          {% endif %}
+
+          {% if block.settings.side_description_5 != blank %}
+            <div class="ai-hotspot-side-description-{{ ai_gen_id }}">
+              {{ block.settings.side_description_5 }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.hotspot_url_5 != blank %}
+            <a href="{{ block.settings.hotspot_url_5 }}" class="ai-hotspot-side-link-{{ ai_gen_id }}">
+              {{ block.settings.button_text_5 | default: 'Learn More' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% unless block.settings.enable_hotspot_1 or block.settings.enable_hotspot_2 or block.settings.enable_hotspot_3 or block.settings.enable_hotspot_4 or block.settings.enable_hotspot_5 %}
+        <div class="ai-hotspot-default-content-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <p>Enable hotspots to get started</p>
+        </div>
+      {% endunless %}
+    </div>
+  </div>
+</image-hotspot-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageHotspot{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.triggers = this.querySelectorAll('[data-hotspot-trigger]');
+        this.contents = this.querySelectorAll('[data-hotspot-content]');
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.triggers.forEach((trigger) => {
+          trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            const hotspotId = trigger.getAttribute('data-hotspot-trigger');
+            this.activateHotspot(hotspotId);
+          });
+        });
+      }
+
+      activateHotspot(hotspotId) {
+        this.triggers.forEach((trigger) => {
+          trigger.classList.remove('active');
+        });
+
+        this.contents.forEach((content) => {
+          content.classList.remove('active');
+        });
+
+        const activeTrigger = this.querySelector(`[data-hotspot-trigger="${hotspotId}"]`);
+        const activeContent = this.querySelector(`[data-hotspot-content="${hotspotId}"]`);
+
+        if (activeTrigger) {
+          activeTrigger.classList.add('active');
+        }
+
+        if (activeContent) {
+          activeContent.classList.add('active');
+        }
+      }
+    }
+
+    customElements.define('image-hotspot-{{ ai_gen_id }}', ImageHotspot{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hotspot side preview",
+  "tag": null,
+  "class": "ai-hotspot-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Left"
+        },
+        {
+          "value": "image_right",
+          "label": "Right"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "range",
+      "id": "side_panel_width",
+      "label": "Side panel width",
+      "min": 30,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Hotspot style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pulse",
+      "label": "Show pulse animation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show labels",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_size",
+      "label": "Size",
+      "min": 24,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "hotspot_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_border_color",
+      "label": "Border",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_active_color",
+      "label": "Active color",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "label_bg_color",
+      "label": "Label background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_text_color",
+      "label": "Label text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Side panel"
+    },
+    {
+      "type": "color",
+      "id": "side_panel_bg_color",
+      "label": "Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "range",
+      "id": "side_panel_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "side_image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "color",
+      "id": "side_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "side_title_size",
+      "label": "Title size",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "side_description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hotspot_1",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "hotspot_1_label",
+      "label": "Label"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image_1",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_title_1",
+      "label": "Side title"
+    },
+    {
+      "type": "richtext",
+      "id": "side_description_1",
+      "label": "Side description"
+    },
+    {
+      "type": "url",
+      "id": "hotspot_url_1",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hotspot_2",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "text",
+      "id": "hotspot_2_label",
+      "label": "Label"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image_2",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_title_2",
+      "label": "Side title"
+    },
+    {
+      "type": "richtext",
+      "id": "side_description_2",
+      "label": "Side description"
+    },
+    {
+      "type": "url",
+      "id": "hotspot_url_2",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hotspot_3",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "text",
+      "id": "hotspot_3_label",
+      "label": "Label"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image_3",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_title_3",
+      "label": "Side title"
+    },
+    {
+      "type": "richtext",
+      "id": "side_description_3",
+      "label": "Side description"
+    },
+    {
+      "type": "url",
+      "id": "hotspot_url_3",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text_3",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hotspot_4",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "hotspot_4_label",
+      "label": "Label"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image_4",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_title_4",
+      "label": "Side title"
+    },
+    {
+      "type": "richtext",
+      "id": "side_description_4",
+      "label": "Side description"
+    },
+    {
+      "type": "url",
+      "id": "hotspot_url_4",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text_4",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hotspot_5",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "hotspot_5_label",
+      "label": "Label"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image_5",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_title_5",
+      "label": "Side title"
+    },
+    {
+      "type": "richtext",
+      "id": "side_description_5",
+      "label": "Side description"
+    },
+    {
+      "type": "url",
+      "id": "hotspot_url_5",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text_5",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hotspot side preview"
+    }
+  ]
+}
+{% endschema %}

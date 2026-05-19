@@ -1,0 +1,1431 @@
+{% doc %}
+  @prompt
+    Create a Shopify block that displays a responsive table. The table should:
+    
+    Features:
+    
+    Include a heading and subheading (optional)
+    
+    Support icons in the first column or any column as specified
+    
+    Be fully responsive on desktop and mobile (scrollable horizontally or stacked rows on small screens)
+    
+    Have adjustable padding for rows and cells
+    
+    Include clear borders or alternating row colors for readability
+    
+    Include alt text for accessibility
+    
+    Table Inputs:
+    
+    Column headers: [List the headers you want]
+    
+    Row data: [Provide your data in a list format]
+    
+    Icons: [Specify icons for each row or column if needed]
+    
+    Padding preferences: [Specify padding values if desired]
+    
+    Optional styles: font size, background color, border style, row striping, etc.
+    Make it mobile-friendly with adjustable padding and readable text
+    
+    Include icons inline with text where specified, Create a Shopify block that displays a responsive table. The table should:
+    
+    Features:
+    
+    Include a heading and subheading (optional)
+    
+    Support icons in any column as specified
+    
+    Be fully responsive on desktop and mobile:
+    
+    On desktop, display a normal table
+    
+    On mobile, stack rows or allow horizontal scrolling
+    
+    Include adjustable padding for cells and rows
+    
+    Use clear borders or alternating row colors for readability
+    
+    Include alt text for icons for accessibility
+    
+    Table Inputs:
+    
+    Column headers: [List your headers]
+    
+    Row data: [Provide your data in a list or spreadsheet-style format]
+    
+    Icons: [Specify icons for each row or column if needed]
+    
+    Padding preferences: [Specify top/bottom and left/right padding]
+    
+    Optional styles: font size, background color, border style, row striping, etc.
+    
+    Output Instructions:
+    
+    Provide HTML and CSS code that can be directly inserted into Shopify blocks
+    
+    Ensure responsive design, proper padding, and icon placement
+    
+    Include mobile-specific adjustments so content is readable and accessible
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-responsive-table-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-responsive-table__header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_align }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-responsive-table__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.subheading_spacing }}px 0;
+    font-weight: 600;
+  }
+
+  .ai-responsive-table__subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+  }
+
+  .ai-responsive-table__wrapper-{{ ai_gen_id }} {
+    {% if block.settings.mobile_layout == 'scroll' %}
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    {% endif %}
+    background-color: {{ block.settings.table_background }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-responsive-table__table-{{ ai_gen_id }} {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: {{ block.settings.table_font_size }}px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-responsive-table__table-{{ ai_gen_id }} thead {
+    background-color: {{ block.settings.header_bg_color }};
+  }
+
+  .ai-responsive-table__table-{{ ai_gen_id }} th {
+    padding: {{ block.settings.header_padding_vertical }}px {{ block.settings.header_padding_horizontal }}px;
+    text-align: {{ block.settings.header_text_align }};
+    font-weight: 600;
+    color: {{ block.settings.header_text_color }};
+    {% if block.settings.show_borders %}
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+    {% endif %}
+  }
+
+  .ai-responsive-table__table-{{ ai_gen_id }} td {
+    padding: {{ block.settings.cell_padding_vertical }}px {{ block.settings.cell_padding_horizontal }}px;
+    text-align: {{ block.settings.cell_text_align }};
+    {% if block.settings.show_borders %}
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+    {% endif %}
+  }
+
+  {% if block.settings.enable_row_striping %}
+    .ai-responsive-table__table-{{ ai_gen_id }} tbody tr:nth-child(even) {
+      background-color: {{ block.settings.stripe_color }};
+    }
+    .ai-responsive-table__table-{{ ai_gen_id }} tbody tr:nth-child(odd) {
+      background-color: {{ block.settings.row_bg_color }};
+    }
+  {% else %}
+    .ai-responsive-table__table-{{ ai_gen_id }} tbody tr {
+      background-color: {{ block.settings.row_bg_color }};
+    }
+  {% endif %}
+
+  .ai-responsive-table__table-{{ ai_gen_id }} tbody tr:hover {
+    background-color: {{ block.settings.row_hover_color }};
+  }
+
+  .ai-responsive-table__icon-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin-right: {{ block.settings.icon_spacing }}px;
+    vertical-align: middle;
+  }
+
+  .ai-responsive-table__icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  .ai-responsive-table__cell-content-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    {% if block.settings.mobile_layout == 'stack' %}
+      .ai-responsive-table__table-{{ ai_gen_id }},
+      .ai-responsive-table__table-{{ ai_gen_id }} thead,
+      .ai-responsive-table__table-{{ ai_gen_id }} tbody,
+      .ai-responsive-table__table-{{ ai_gen_id }} th,
+      .ai-responsive-table__table-{{ ai_gen_id }} td,
+      .ai-responsive-table__table-{{ ai_gen_id }} tr {
+        display: block;
+      }
+
+      .ai-responsive-table__table-{{ ai_gen_id }} thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      .ai-responsive-table__table-{{ ai_gen_id }} tr {
+        margin-bottom: 15px;
+        border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+        border-radius: {{ block.settings.border_radius }}px;
+      }
+
+      .ai-responsive-table__table-{{ ai_gen_id }} td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+      }
+
+      .ai-responsive-table__table-{{ ai_gen_id }} td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: {{ block.settings.cell_padding_horizontal }}px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+        color: {{ block.settings.header_text_color }};
+      }
+    {% else %}
+      .ai-responsive-table__table-{{ ai_gen_id }} {
+        min-width: 600px;
+      }
+    {% endif %}
+
+    .ai-responsive-table__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-responsive-table__subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+
+    .ai-responsive-table__table-{{ ai_gen_id }} {
+      font-size: {{ block.settings.table_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<responsive-table-{{ ai_gen_id }} class="ai-responsive-table-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank or block.settings.subheading != blank %}
+    <div class="ai-responsive-table__header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-responsive-table__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      {% if block.settings.subheading != blank %}
+        <p class="ai-responsive-table__subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="ai-responsive-table__wrapper-{{ ai_gen_id }}">
+    <table class="ai-responsive-table__table-{{ ai_gen_id }}">
+      <thead>
+        <tr>
+          {% if block.settings.col1_header != blank %}
+            <th>{{ block.settings.col1_header }}</th>
+          {% endif %}
+          {% if block.settings.col2_header != blank %}
+            <th>{{ block.settings.col2_header }}</th>
+          {% endif %}
+          {% if block.settings.col3_header != blank %}
+            <th>{{ block.settings.col3_header }}</th>
+          {% endif %}
+          {% if block.settings.col4_header != blank %}
+            <th>{{ block.settings.col4_header }}</th>
+          {% endif %}
+          {% if block.settings.col5_header != blank %}
+            <th>{{ block.settings.col5_header }}</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in (1..10) %}
+          {% liquid
+            assign row_col1_key = 'row' | append: i | append: '_col1'
+            assign row_col2_key = 'row' | append: i | append: '_col2'
+            assign row_col3_key = 'row' | append: i | append: '_col3'
+            assign row_col4_key = 'row' | append: i | append: '_col4'
+            assign row_col5_key = 'row' | append: i | append: '_col5'
+            assign row_icon_key = 'row' | append: i | append: '_icon'
+            assign row_icon_col_key = 'row' | append: i | append: '_icon_column'
+            assign row_icon_alt_key = 'row' | append: i | append: '_icon_alt'
+
+            assign col1_value = block.settings[row_col1_key]
+            assign col2_value = block.settings[row_col2_key]
+            assign col3_value = block.settings[row_col3_key]
+            assign col4_value = block.settings[row_col4_key]
+            assign col5_value = block.settings[row_col5_key]
+            assign icon_type = block.settings[row_icon_key]
+            assign icon_column = block.settings[row_icon_col_key]
+            assign icon_alt = block.settings[row_icon_alt_key]
+          %}
+
+          {% if col1_value != blank or col2_value != blank or col3_value != blank or col4_value != blank or col5_value != blank %}
+            <tr>
+              {% if block.settings.col1_header != blank %}
+                <td data-label="{{ block.settings.col1_header }}">
+                  {% if icon_column == '1' and icon_type != 'none' %}
+                    <div class="ai-responsive-table__cell-content-{{ ai_gen_id }}">
+                      <span class="ai-responsive-table__icon-{{ ai_gen_id }}" role="img" aria-label="{{ icon_alt }}">
+                        {% if icon_type == 'check' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {% elsif icon_type == 'cross' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        {% elsif icon_type == 'star' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        {% elsif icon_type == 'info' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        {% elsif icon_type == 'arrow-right' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        {% endif %}
+                      </span>
+                      <span>{{ col1_value }}</span>
+                    </div>
+                  {% else %}
+                    {{ col1_value }}
+                  {% endif %}
+                </td>
+              {% endif %}
+
+              {% if block.settings.col2_header != blank %}
+                <td data-label="{{ block.settings.col2_header }}">
+                  {% if icon_column == '2' and icon_type != 'none' %}
+                    <div class="ai-responsive-table__cell-content-{{ ai_gen_id }}">
+                      <span class="ai-responsive-table__icon-{{ ai_gen_id }}" role="img" aria-label="{{ icon_alt }}">
+                        {% if icon_type == 'check' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {% elsif icon_type == 'cross' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        {% elsif icon_type == 'star' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        {% elsif icon_type == 'info' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        {% elsif icon_type == 'arrow-right' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        {% endif %}
+                      </span>
+                      <span>{{ col2_value }}</span>
+                    </div>
+                  {% else %}
+                    {{ col2_value }}
+                  {% endif %}
+                </td>
+              {% endif %}
+
+              {% if block.settings.col3_header != blank %}
+                <td data-label="{{ block.settings.col3_header }}">
+                  {% if icon_column == '3' and icon_type != 'none' %}
+                    <div class="ai-responsive-table__cell-content-{{ ai_gen_id }}">
+                      <span class="ai-responsive-table__icon-{{ ai_gen_id }}" role="img" aria-label="{{ icon_alt }}">
+                        {% if icon_type == 'check' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {% elsif icon_type == 'cross' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        {% elsif icon_type == 'star' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        {% elsif icon_type == 'info' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        {% elsif icon_type == 'arrow-right' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        {% endif %}
+                      </span>
+                      <span>{{ col3_value }}</span>
+                    </div>
+                  {% else %}
+                    {{ col3_value }}
+                  {% endif %}
+                </td>
+              {% endif %}
+
+              {% if block.settings.col4_header != blank %}
+                <td data-label="{{ block.settings.col4_header }}">
+                  {% if icon_column == '4' and icon_type != 'none' %}
+                    <div class="ai-responsive-table__cell-content-{{ ai_gen_id }}">
+                      <span class="ai-responsive-table__icon-{{ ai_gen_id }}" role="img" aria-label="{{ icon_alt }}">
+                        {% if icon_type == 'check' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {% elsif icon_type == 'cross' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        {% elsif icon_type == 'star' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        {% elsif icon_type == 'info' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        {% elsif icon_type == 'arrow-right' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        {% endif %}
+                      </span>
+                      <span>{{ col4_value }}</span>
+                    </div>
+                  {% else %}
+                    {{ col4_value }}
+                  {% endif %}
+                </td>
+              {% endif %}
+
+              {% if block.settings.col5_header != blank %}
+                <td data-label="{{ block.settings.col5_header }}">
+                  {% if icon_column == '5' and icon_type != 'none' %}
+                    <div class="ai-responsive-table__cell-content-{{ ai_gen_id }}">
+                      <span class="ai-responsive-table__icon-{{ ai_gen_id }}" role="img" aria-label="{{ icon_alt }}">
+                        {% if icon_type == 'check' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {% elsif icon_type == 'cross' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        {% elsif icon_type == 'star' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        {% elsif icon_type == 'info' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        {% elsif icon_type == 'arrow-right' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        {% endif %}
+                      </span>
+                      <span>{{ col5_value }}</span>
+                    </div>
+                  {% else %}
+                    {{ col5_value }}
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</responsive-table-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ResponsiveTable{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.init();
+      }
+
+      init() {
+        const wrapper = this.querySelector('.ai-responsive-table__wrapper-{{ ai_gen_id }}');
+        if (wrapper && wrapper.scrollWidth > wrapper.clientWidth) {
+          wrapper.setAttribute('tabindex', '0');
+          wrapper.setAttribute('role', 'region');
+          wrapper.setAttribute('aria-label', 'Scrollable table');
+        }
+      }
+    }
+
+    customElements.define('responsive-table-{{ ai_gen_id }}', ResponsiveTable{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Responsive table",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Space below heading",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing",
+      "label": "Space between heading and subheading",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Table columns"
+    },
+    {
+      "type": "text",
+      "id": "col1_header",
+      "label": "Column 1 header",
+      "default": "Feature"
+    },
+    {
+      "type": "text",
+      "id": "col2_header",
+      "label": "Column 2 header",
+      "default": "Basic"
+    },
+    {
+      "type": "text",
+      "id": "col3_header",
+      "label": "Column 3 header",
+      "default": "Pro"
+    },
+    {
+      "type": "text",
+      "id": "col4_header",
+      "label": "Column 4 header"
+    },
+    {
+      "type": "text",
+      "id": "col5_header",
+      "label": "Column 5 header"
+    },
+    {
+      "type": "header",
+      "content": "Row 1"
+    },
+    {
+      "type": "text",
+      "id": "row1_col1",
+      "label": "Column 1",
+      "default": "Support"
+    },
+    {
+      "type": "text",
+      "id": "row1_col2",
+      "label": "Column 2",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "row1_col3",
+      "label": "Column 3",
+      "default": "24/7 Phone"
+    },
+    {
+      "type": "text",
+      "id": "row1_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row1_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row1_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row1_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row1_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 2"
+    },
+    {
+      "type": "text",
+      "id": "row2_col1",
+      "label": "Column 1",
+      "default": "Storage"
+    },
+    {
+      "type": "text",
+      "id": "row2_col2",
+      "label": "Column 2",
+      "default": "10GB"
+    },
+    {
+      "type": "text",
+      "id": "row2_col3",
+      "label": "Column 3",
+      "default": "100GB"
+    },
+    {
+      "type": "text",
+      "id": "row2_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row2_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row2_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row2_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row2_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 3"
+    },
+    {
+      "type": "text",
+      "id": "row3_col1",
+      "label": "Column 1",
+      "default": "Users"
+    },
+    {
+      "type": "text",
+      "id": "row3_col2",
+      "label": "Column 2",
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row3_col3",
+      "label": "Column 3",
+      "default": "Unlimited"
+    },
+    {
+      "type": "text",
+      "id": "row3_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row3_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row3_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row3_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row3_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 4"
+    },
+    {
+      "type": "text",
+      "id": "row4_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row4_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row4_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row4_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row4_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row4_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row4_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row4_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 5"
+    },
+    {
+      "type": "text",
+      "id": "row5_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row5_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row5_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row5_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row5_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row5_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row5_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row5_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 6"
+    },
+    {
+      "type": "text",
+      "id": "row6_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row6_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row6_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row6_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row6_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row6_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row6_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row6_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 7"
+    },
+    {
+      "type": "text",
+      "id": "row7_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row7_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row7_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row7_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row7_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row7_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row7_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row7_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 8"
+    },
+    {
+      "type": "text",
+      "id": "row8_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row8_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row8_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row8_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row8_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row8_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row8_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row8_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 9"
+    },
+    {
+      "type": "text",
+      "id": "row9_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row9_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row9_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row9_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row9_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row9_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row9_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row9_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Row 10"
+    },
+    {
+      "type": "text",
+      "id": "row10_col1",
+      "label": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "row10_col2",
+      "label": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "row10_col3",
+      "label": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "row10_col4",
+      "label": "Column 4"
+    },
+    {
+      "type": "text",
+      "id": "row10_col5",
+      "label": "Column 5"
+    },
+    {
+      "type": "select",
+      "id": "row10_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "cross", "label": "Cross" },
+        { "value": "star", "label": "Star" },
+        { "value": "info", "label": "Info" },
+        { "value": "arrow-right", "label": "Arrow right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "row10_icon_column",
+      "label": "Icon column",
+      "options": [
+        { "value": "1", "label": "Column 1" },
+        { "value": "2", "label": "Column 2" },
+        { "value": "3", "label": "Column 3" },
+        { "value": "4", "label": "Column 4" },
+        { "value": "5", "label": "Column 5" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "row10_icon_alt",
+      "label": "Icon alt text",
+      "default": "Icon"
+    },
+    {
+      "type": "header",
+      "content": "Table style"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "table_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "table_background",
+      "label": "Table background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Header row"
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "header_text_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "header_padding_vertical",
+      "label": "Vertical padding",
+      "min": 4,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Table cells"
+    },
+    {
+      "type": "select",
+      "id": "cell_text_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_vertical",
+      "label": "Vertical padding",
+      "min": 4,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Row colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_row_striping",
+      "label": "Enable alternating row colors",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "row_bg_color",
+      "label": "Row background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "stripe_color",
+      "label": "Alternate row background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "row_hover_color",
+      "label": "Row hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "header",
+      "content": "Borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "Show borders",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "dashed", "label": "Dashed" },
+        { "value": "dotted", "label": "Dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Space after icon",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile display",
+      "options": [
+        { "value": "scroll", "label": "Horizontal scroll" },
+        { "value": "stack", "label": "Stack rows" }
+      ],
+      "default": "stack"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Responsive table"
+    }
+  ]
+}
+{% endschema %}

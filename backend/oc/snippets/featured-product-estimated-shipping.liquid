@@ -1,0 +1,19 @@
+
+{% comment %}
+{% if product.available %}
+ {% endcomment %}
+<div id="shipping_dynamic_date" data-variant-id="" class="variant_shipping_info" style="display: none;color: green;" data-daterange="" data-instockdate="">
+  
+</div>
+<div id="next_avilable_msg" class="variant_shipping_info divHidden" style="color: green;"></div>
+{% comment %}
+{% endif %}
+ {% endcomment %}
+ 
+{% capture 'meta_data' %}
+  {% for variant in product.variants %}
+    {{variant.id}}:[{{ variant.metafields.custom.estimated_ship_days_weeks | json }},"{{ variant.metafields.custom.variant_instock_date}}"]{% unless forloop.last %},{% endunless %}
+ 
+  {% endfor %}
+{% endcapture %}
+

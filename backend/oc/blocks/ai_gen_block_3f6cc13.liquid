@@ -1,0 +1,559 @@
+{% doc %}
+  @prompt
+    Create a highly flexible, modular content block section for an eCommerce store.
+    
+    Build a section with independent components that can be enabled or disabled individually without breaking layout.
+    
+    Each component must work both:
+    
+    As part of a full section
+    Or as a standalone block when others are turned off
+    
+    . Header (Optional Toggle)
+    Large, bold heading text
+    Primary attention element
+    Must support empty state (if disabled, layout adjusts smoothly)
+    2. Subheader (Optional Toggle)
+    Smaller supporting headline under header
+    Used for emphasis or campaign messaging
+    Should collapse spacing if disabled
+    3. Body Text (Optional Toggle)
+    Paragraph or short description
+    Supports multi-line text
+    Clean readability, max width for better UX
+    4. Button (Optional Toggle)
+    Primary CTA button (e.g. “Shop Now”)
+    Smooth hover animation (scale + soft glow)
+    Fully configurable link URL
+    Can be disabled without breaking layout
+    
+    Padding can be adjusted up and down
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-modular-content-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    padding-left: {{ block.settings.padding_horizontal }}px;
+    padding-right: {{ block.settings.padding_horizontal }}px;
+    background-color: {{ block.settings.background_color }};
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-modular-content__inner-{{ ai_gen_id }} {
+    max-width: {{ block.settings.content_max_width }}px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.element_spacing }}px;
+  }
+
+  .ai-modular-content__header-{{ ai_gen_id }} {
+    font-size: {{ block.settings.header_size }}px;
+    font-weight: {{ block.settings.header_weight }};
+    color: {{ block.settings.header_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-modular-content__subheader-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheader_size }}px;
+    font-weight: {{ block.settings.subheader_weight }};
+    color: {{ block.settings.subheader_color }};
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .ai-modular-content__body-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_size }}px;
+    color: {{ block.settings.body_color }};
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-modular-content__button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: {{ block.settings.button_alignment }};
+  }
+
+  .ai-modular-content__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: {{ block.settings.button_font_weight }};
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-modular-content__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    transform: scale({{ block.settings.button_hover_scale }});
+    box-shadow: 0 {{ block.settings.button_glow_size }}px {{ block.settings.button_glow_size | times: 2 }}px {{ block.settings.button_glow_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-modular-content-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.padding_horizontal | times: 0.6 }}px;
+      padding-right: {{ block.settings.padding_horizontal | times: 0.6 }}px;
+    }
+
+    .ai-modular-content__header-{{ ai_gen_id }} {
+      font-size: {{ block.settings.header_size | times: 0.7 }}px;
+    }
+
+    .ai-modular-content__subheader-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheader_size | times: 0.8 }}px;
+    }
+
+    .ai-modular-content__body-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-modular-content-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-modular-content__inner-{{ ai_gen_id }}">
+    {% if block.settings.enable_header and block.settings.header_text != blank %}
+      <h2 class="ai-modular-content__header-{{ ai_gen_id }}">
+        {{ block.settings.header_text }}
+      </h2>
+    {% endif %}
+
+    {% if block.settings.enable_subheader and block.settings.subheader_text != blank %}
+      <h3 class="ai-modular-content__subheader-{{ ai_gen_id }}">
+        {{ block.settings.subheader_text }}
+      </h3>
+    {% endif %}
+
+    {% if block.settings.enable_body and block.settings.body_text != blank %}
+      <div class="ai-modular-content__body-{{ ai_gen_id }}">
+        {{ block.settings.body_text }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.enable_button and block.settings.button_text != blank %}
+      <div class="ai-modular-content__button-wrapper-{{ ai_gen_id }}">
+        <a
+          href="{{ block.settings.button_link }}"
+          class="ai-modular-content__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Modular content",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "element_spacing",
+      "label": "Spacing between elements",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_header",
+      "label": "Enable header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "header_text",
+      "label": "Header text",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "range",
+      "id": "header_size",
+      "label": "Font size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "header_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "header_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Subheader"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subheader",
+      "label": "Enable subheader",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subheader_text",
+      "label": "Subheader text",
+      "default": "Discover amazing products"
+    },
+    {
+      "type": "range",
+      "id": "subheader_size",
+      "label": "Font size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "subheader_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "subheader_color",
+      "label": "Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Body text"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_body",
+      "label": "Enable body text",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "Browse our curated collection of premium products designed to enhance your lifestyle."
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_button",
+      "label": "Enable button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_alignment",
+      "label": "Button alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Vertical padding",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_hover_scale",
+      "label": "Hover scale",
+      "min": 1,
+      "max": 1.2,
+      "step": 0.1,
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "button_glow_size",
+      "label": "Hover glow size",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "button_glow_color",
+      "label": "Hover glow color",
+      "default": "rgba(171, 34, 55, 0.3)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Modular content"
+    }
+  ]
+}
+{% endschema %}

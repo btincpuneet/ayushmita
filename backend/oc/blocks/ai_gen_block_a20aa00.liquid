@@ -1,0 +1,578 @@
+{% doc %}
+  @prompt
+    Create a Shopify Liquid section file for a full-width hero section for a sports mat store. The hero has a dark navy background (#1a2a35). At the top, display a small pill-shaped badge that reads "Professional-grade sports mats" with a teal border and teal text. Below it, a large heading that reads "Serious mats for serious athletes." Under the heading, a short subheading: "Built for gyms, dojos, arenas & training facilities. Custom sizing · Bulk pricing · Ships in 3–5 days." Below the subheading, display 5 gold stars followed by an italic verified buyer quote: "High-quality construction. The mat is exactly like I expected." — Thomas S., Verified Buyer. Below the quote, display two CTA buttons side by side: a solid red-orange "Shop by sport" button and a ghost/outline "Request bulk quote" button. Both buttons, when clicked, should smoothly scroll the page down to a section with the id "shop-section" using JavaScript scrollIntoView with smooth behavior, and briefly flash a light blue highlight on that section on arrival. At the bottom of the hero, include a small animated bouncing down-arrow in teal that also scrolls to the same section on click. Include a schema at the bottom of the Liquid file with editable settings for: heading text, subheading text, badge text, quote text, quote author name, primary button label, and secondary button label. Make all colors and text fully editable via the Shopify theme editor., i need to add a background image or video
+    
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sports-hero-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-sports-hero-background-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .ai-sports-hero-background-{{ ai_gen_id }} img,
+  .ai-sports-hero-background-{{ ai_gen_id }} video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-sports-hero-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 1;
+  }
+
+  .ai-sports-hero-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 60px 20px;
+    text-align: center;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-sports-hero-badge-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 2px solid {{ block.settings.badge_border_color }};
+    border-radius: 50px;
+    color: {{ block.settings.badge_text_color }};
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-sports-hero-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 20px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-sports-hero-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    line-height: 1.6;
+    margin: 0 0 32px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.9;
+  }
+
+  .ai-sports-hero-review-{{ ai_gen_id }} {
+    margin-bottom: 40px;
+  }
+
+  .ai-sports-hero-stars-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .ai-sports-hero-stars-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: {{ block.settings.star_color }};
+  }
+
+  .ai-sports-hero-quote-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+    opacity: 0.95;
+  }
+
+  .ai-sports-hero-quote-author-{{ ai_gen_id }} {
+    font-size: 14px;
+    margin-top: 8px;
+    opacity: 0.8;
+  }
+
+  .ai-sports-hero-buttons-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+  }
+
+  .ai-sports-hero-button-{{ ai_gen_id }} {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .ai-sports-hero-button-primary-{{ ai_gen_id }} {
+    background-color: {{ block.settings.primary_button_color }};
+    color: {{ block.settings.primary_button_text_color }};
+    border: 2px solid {{ block.settings.primary_button_color }};
+  }
+
+  .ai-sports-hero-button-primary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.primary_button_hover_color }};
+    border-color: {{ block.settings.primary_button_hover_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-sports-hero-button-secondary-{{ ai_gen_id }} {
+    background-color: transparent;
+    color: {{ block.settings.secondary_button_text_color }};
+    border: 2px solid {{ block.settings.secondary_button_border_color }};
+  }
+
+  .ai-sports-hero-button-secondary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.secondary_button_hover_bg }};
+    border-color: {{ block.settings.secondary_button_hover_border }};
+    transform: translateY(-2px);
+  }
+
+  .ai-sports-hero-arrow-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .ai-sports-hero-arrow-{{ ai_gen_id }} svg {
+    width: 32px;
+    height: 32px;
+    stroke: {{ block.settings.arrow_color }};
+    animation: ai-sports-hero-bounce-{{ ai_gen_id }} 2s infinite;
+  }
+
+  @keyframes ai-sports-hero-bounce-{{ ai_gen_id }} {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .ai-sports-hero-highlight-{{ ai_gen_id }} {
+    transition: background-color 0.6s ease;
+  }
+
+  .ai-sports-hero-highlight-{{ ai_gen_id }}.ai-sports-hero-flash-{{ ai_gen_id }} {
+    background-color: {{ block.settings.highlight_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-sports-hero-{{ ai_gen_id }} {
+      min-height: 80vh;
+    }
+
+    .ai-sports-hero-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.6 }}px;
+    }
+
+    .ai-sports-hero-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+
+    .ai-sports-hero-buttons-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .ai-sports-hero-button-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<sports-hero-{{ ai_gen_id }} class="ai-sports-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-sports-hero-background-{{ ai_gen_id }}">
+    {% if block.settings.background_video != blank %}
+      <video autoplay muted loop playsinline>
+        {% for source in block.settings.background_video.sources %}
+          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+        {% endfor %}
+      </video>
+    {% elsif block.settings.background_image %}
+      <img
+        src="{{ block.settings.background_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.background_image.alt | escape }}"
+        loading="eager"
+        width="{{ block.settings.background_image.width }}"
+        height="{{ block.settings.background_image.height }}"
+      >
+    {% endif %}
+  </div>
+
+  <div class="ai-sports-hero-overlay-{{ ai_gen_id }}"></div>
+
+  <div class="ai-sports-hero-content-{{ ai_gen_id }}">
+    {% if block.settings.badge_text != blank %}
+      <div class="ai-sports-hero-badge-{{ ai_gen_id }}">
+        {{ block.settings.badge_text }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.heading != blank %}
+      <h1 class="ai-sports-hero-heading-{{ ai_gen_id }}">
+        {{ block.settings.heading }}
+      </h1>
+    {% endif %}
+
+    {% if block.settings.subheading != blank %}
+      <div class="ai-sports-hero-subheading-{{ ai_gen_id }}">
+        {{ block.settings.subheading }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_review %}
+      <div class="ai-sports-hero-review-{{ ai_gen_id }}">
+        <div class="ai-sports-hero-stars-{{ ai_gen_id }}">
+          {% for i in (1..5) %}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          {% endfor %}
+        </div>
+        {% if block.settings.quote_text != blank %}
+          <div class="ai-sports-hero-quote-{{ ai_gen_id }}">
+            "{{ block.settings.quote_text }}"
+            {% if block.settings.quote_author != blank %}
+              <div class="ai-sports-hero-quote-author-{{ ai_gen_id }}">
+                — {{ block.settings.quote_author }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-sports-hero-buttons-{{ ai_gen_id }}">
+      <button
+        class="ai-sports-hero-button-{{ ai_gen_id }} ai-sports-hero-button-primary-{{ ai_gen_id }}"
+        data-scroll-target="shop-section"
+      >
+        {{ block.settings.primary_button_label }}
+      </button>
+      <button
+        class="ai-sports-hero-button-{{ ai_gen_id }} ai-sports-hero-button-secondary-{{ ai_gen_id }}"
+        data-scroll-target="shop-section"
+      >
+        {{ block.settings.secondary_button_label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-sports-hero-arrow-{{ ai_gen_id }}" data-scroll-target="shop-section">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+</sports-hero-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SportsHero{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.setupScrollHandlers();
+      }
+
+      setupScrollHandlers() {
+        const scrollElements = this.querySelectorAll('[data-scroll-target]');
+
+        scrollElements.forEach((element) => {
+          element.addEventListener('click', () => {
+            const targetId = element.getAttribute('data-scroll-target');
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+
+              targetElement.classList.add('ai-sports-hero-highlight-{{ ai_gen_id }}');
+              targetElement.classList.add('ai-sports-hero-flash-{{ ai_gen_id }}');
+
+              setTimeout(() => {
+                targetElement.classList.remove('ai-sports-hero-flash-{{ ai_gen_id }}');
+              }, 600);
+
+              setTimeout(() => {
+                targetElement.classList.remove('ai-sports-hero-highlight-{{ ai_gen_id }}');
+              }, 1200);
+            }
+          });
+        });
+      }
+    }
+
+    customElements.define('sports-hero-{{ ai_gen_id }}', SportsHero{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sports mat hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "background_video",
+      "label": "Background video"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#1a2a35"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Professional-grade sports mats"
+    },
+    {
+      "type": "color",
+      "id": "badge_border_color",
+      "label": "Badge border color",
+      "default": "#14b8a6"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text color",
+      "default": "#14b8a6"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Serious mats for serious athletes."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Built for gyms, dojos, arenas & training facilities. Custom sizing · Bulk pricing · Ships in 3–5 days."
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Review"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_review",
+      "label": "Show review",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "Quote text",
+      "default": "High-quality construction. The mat is exactly like I expected."
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Quote author",
+      "default": "Thomas S., Verified Buyer"
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Label",
+      "default": "Shop by sport"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_color",
+      "label": "Background color",
+      "default": "#ea580c"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_hover_color",
+      "label": "Hover background color",
+      "default": "#c2410c"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Label",
+      "default": "Request bulk quote"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border_color",
+      "label": "Border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_hover_bg",
+      "label": "Hover background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_hover_border",
+      "label": "Hover border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#14b8a6"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Scroll highlight color",
+      "default": "#bfdbfe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sports mat hero"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

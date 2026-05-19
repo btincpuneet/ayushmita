@@ -1,0 +1,637 @@
+{% doc %}
+  @prompt
+    Create a large image with text box section that supports dynamic metafield objects as the image source. The section should include a large image display area with an accompanying text box for content. The image should be configurable to pull from either a standard image upload or a dynamic metafield object reference, making it flexible for content that uses metaobjects. Include settings for text content, positioning, and styling options.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-text-box-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-image-text-box__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    background-color: {{ block.settings.image_bg_color }};
+  }
+
+  .ai-image-text-box__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ block.settings.image_fit }};
+  }
+
+  .ai-image-text-box__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+    position: relative;
+  }
+
+  .ai-image-text-box__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-image-text-box__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-image-text-box__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .ai-image-text-box__content-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    {% if block.settings.text_position == 'top-left' %}
+      top: {{ block.settings.text_padding }}px;
+      left: {{ block.settings.text_padding }}px;
+    {% elsif block.settings.text_position == 'top-center' %}
+      top: {{ block.settings.text_padding }}px;
+      left: 50%;
+      transform: translateX(-50%);
+    {% elsif block.settings.text_position == 'top-right' %}
+      top: {{ block.settings.text_padding }}px;
+      right: {{ block.settings.text_padding }}px;
+    {% elsif block.settings.text_position == 'center-left' %}
+      top: 50%;
+      left: {{ block.settings.text_padding }}px;
+      transform: translateY(-50%);
+    {% elsif block.settings.text_position == 'center' %}
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    {% elsif block.settings.text_position == 'center-right' %}
+      top: 50%;
+      right: {{ block.settings.text_padding }}px;
+      transform: translateY(-50%);
+    {% elsif block.settings.text_position == 'bottom-left' %}
+      bottom: {{ block.settings.text_padding }}px;
+      left: {{ block.settings.text_padding }}px;
+    {% elsif block.settings.text_position == 'bottom-center' %}
+      bottom: {{ block.settings.text_padding }}px;
+      left: 50%;
+      transform: translateX(-50%);
+    {% elsif block.settings.text_position == 'bottom-right' %}
+      bottom: {{ block.settings.text_padding }}px;
+      right: {{ block.settings.text_padding }}px;
+    {% endif %}
+    max-width: {{ block.settings.text_box_width }}px;
+    z-index: 2;
+  }
+
+  .ai-image-text-box__text-box-{{ ai_gen_id }} {
+    background-color: {{ block.settings.text_box_bg_color }};
+    padding: {{ block.settings.text_box_padding }}px;
+    border-radius: {{ block.settings.text_box_border_radius }}px;
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-image-text-box__heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-image-text-box__text-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-image-text-box__text-{{ ai_gen_id }} p {
+    margin: 0 0 {{ block.settings.text_spacing }}px 0;
+  }
+
+  .ai-image-text-box__text-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-image-text-box__button-{{ ai_gen_id }} {
+    display: inline-block;
+    margin-top: {{ block.settings.button_spacing }}px;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-image-text-box__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-image-text-box__image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height_mobile }}px;
+    }
+
+    .ai-image-text-box__content-wrapper-{{ ai_gen_id }} {
+      max-width: calc(100% - {{ block.settings.text_padding | times: 2 }}px);
+    }
+
+    .ai-image-text-box__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-image-text-box__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-image-text-box-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-image-text-box__image-wrapper-{{ ai_gen_id }}">
+    {% liquid
+      assign image_source = null
+      
+      if block.settings.image_source == 'metaobject' and block.settings.metaobject_image != blank
+        assign metaobject_data = metaobjects[block.settings.metaobject_image]
+        if metaobject_data.image != blank
+          assign image_source = metaobject_data.image
+        endif
+      elsif block.settings.image_source == 'upload' and block.settings.image != blank
+        assign image_source = block.settings.image
+      endif
+    %}
+
+    {% if image_source != blank %}
+      <img
+        src="{{ image_source | image_url: width: 2000 }}"
+        alt="{{ image_source.alt | escape }}"
+        loading="lazy"
+        width="{{ image_source.width }}"
+        height="{{ image_source.height }}"
+        class="ai-image-text-box__image-{{ ai_gen_id }}"
+      >
+    {% else %}
+      <div class="ai-image-text-box__placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-image-text-box__empty-state-{{ ai_gen_id }}">
+          {% if block.settings.image_source == 'metaobject' %}
+            Next, select a metaobject with an image
+          {% else %}
+            Next, add an image
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_overlay %}
+      <div class="ai-image-text-box__overlay-{{ ai_gen_id }}"></div>
+    {% endif %}
+
+    {% if block.settings.heading != blank or block.settings.text != blank %}
+      <div class="ai-image-text-box__content-wrapper-{{ ai_gen_id }}">
+        <div class="ai-image-text-box__text-box-{{ ai_gen_id }}">
+          {% if block.settings.heading != blank %}
+            <h2 class="ai-image-text-box__heading-{{ ai_gen_id }}">
+              {{ block.settings.heading }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.text != blank %}
+            <div class="ai-image-text-box__text-{{ ai_gen_id }}">
+              {{ block.settings.text }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+            <a
+              href="{{ block.settings.button_link }}"
+              class="ai-image-text-box__button-{{ ai_gen_id }}"
+            >
+              {{ block.settings.button_text }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image source"
+    },
+    {
+      "type": "select",
+      "id": "image_source",
+      "label": "Image source",
+      "options": [
+        {
+          "value": "upload",
+          "label": "Upload image"
+        },
+        {
+          "value": "metaobject",
+          "label": "Metaobject"
+        }
+      ],
+      "default": "upload"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "metaobject_image",
+      "label": "Metaobject reference"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        },
+        {
+          "value": "fill",
+          "label": "Fill"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Image height (desktop)",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Image height (mobile)",
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "image_bg_color",
+      "label": "Background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Large image with text"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Add descriptive text to complement your image and engage your audience.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Text box position"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top left"
+        },
+        {
+          "value": "top-center",
+          "label": "Top center"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right"
+        },
+        {
+          "value": "center-left",
+          "label": "Center left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "center-right",
+          "label": "Center right"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom-center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Distance from edge",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Text box style"
+    },
+    {
+      "type": "range",
+      "id": "text_box_width",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "text_box_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_box_padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "text_box_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Heading style"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Paragraph spacing",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text box"
+    }
+  ]
+}
+{% endschema %}

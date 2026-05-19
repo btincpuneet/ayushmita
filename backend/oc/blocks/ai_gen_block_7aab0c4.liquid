@@ -1,0 +1,815 @@
+{% doc %}
+  @prompt
+    Create a page similar to this layout: https://www.geggus.com/products/specification-guides, let's make this block in carousel in mobile, when on mobile the first block should be center
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-spec-guide-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-spec-guide-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-spec-guide-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-spec-guide-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+
+  .ai-spec-guide-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ai-spec-guide-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: {{ block.settings.grid_gap }}px;
+    margin-top: {{ block.settings.grid_spacing }}px;
+  }
+
+  .ai-spec-guide-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: {{ block.settings.card_padding }}px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-spec-guide-card-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.card_hover_border }};
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .ai-spec-guide-icon-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.icon_background }};
+    border-radius: {{ block.settings.icon_border_radius }}px;
+    padding: 16px;
+  }
+
+  .ai-spec-guide-icon-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-spec-guide-card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+
+  .ai-spec-guide-card-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_description_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 20px;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .ai-spec-guide-download-btn-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-spec-guide-download-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+  }
+
+  .ai-spec-guide-download-icon-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+  }
+
+  .ai-spec-guide-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-spec-guide-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding }}px 0;
+    }
+
+    .ai-spec-guide-header-{{ ai_gen_id }} {
+      padding: 0 20px;
+    }
+
+    .ai-spec-guide-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-spec-guide-carousel-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-spec-guide-grid-{{ ai_gen_id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding: 0 calc((100vw - 280px) / 2) 20px;
+      scrollbar-width: thin;
+      scrollbar-color: {{ block.settings.card_hover_border }} transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ai-spec-guide-grid-{{ ai_gen_id }}::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .ai-spec-guide-grid-{{ ai_gen_id }}::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .ai-spec-guide-grid-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+      background-color: {{ block.settings.card_hover_border }};
+      border-radius: 3px;
+    }
+
+    .ai-spec-guide-card-{{ ai_gen_id }} {
+      min-width: 280px;
+      max-width: 280px;
+      scroll-snap-align: center;
+      flex-shrink: 0;
+    }
+
+    .ai-spec-guide-dots-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+
+    .ai-spec-guide-dot-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: {{ block.settings.card_border_color }};
+      transition: background-color 0.3s ease, width 0.3s ease;
+    }
+
+    .ai-spec-guide-dot-{{ ai_gen_id }}.active {
+      background-color: {{ block.settings.card_hover_border }};
+      width: 24px;
+      border-radius: 4px;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .ai-spec-guide-dots-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<spec-guide-carousel-{{ ai_gen_id }} class="ai-spec-guide-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-spec-guide-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank or block.settings.description != blank %}
+      <div class="ai-spec-guide-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-spec-guide-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <div class="ai-spec-guide-description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% assign has_guides = false %}
+    {% assign guide_count = 0 %}
+    {% for i in (1..6) %}
+      {% liquid
+        assign guide_title_key = 'guide_' | append: i | append: '_title'
+        assign guide_title = block.settings[guide_title_key]
+        if guide_title != blank
+          assign has_guides = true
+          assign guide_count = guide_count | plus: 1
+        endif
+      %}
+    {% endfor %}
+
+    {% if has_guides %}
+      <div class="ai-spec-guide-carousel-wrapper-{{ ai_gen_id }}">
+        <div class="ai-spec-guide-grid-{{ ai_gen_id }}" data-carousel>
+          {% for i in (1..6) %}
+            {% liquid
+              assign guide_title_key = 'guide_' | append: i | append: '_title'
+              assign guide_description_key = 'guide_' | append: i | append: '_description'
+              assign guide_file_key = 'guide_' | append: i | append: '_file'
+              assign guide_button_key = 'guide_' | append: i | append: '_button_text'
+
+              assign guide_title = block.settings[guide_title_key]
+              assign guide_description = block.settings[guide_description_key]
+              assign guide_file = block.settings[guide_file_key]
+              assign guide_button = block.settings[guide_button_key]
+            %}
+
+            {% if guide_title != blank %}
+              <div class="ai-spec-guide-card-{{ ai_gen_id }}" data-card>
+                <div class="ai-spec-guide-icon-wrapper-{{ ai_gen_id }}">
+                  <svg class="ai-spec-guide-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+
+                <h3 class="ai-spec-guide-card-title-{{ ai_gen_id }}">{{ guide_title }}</h3>
+
+                {% if guide_description != blank %}
+                  <div class="ai-spec-guide-card-description-{{ ai_gen_id }}">{{ guide_description }}</div>
+                {% endif %}
+
+                {% if guide_file != blank %}
+                  <a href="{{ guide_file }}" class="ai-spec-guide-download-btn-{{ ai_gen_id }}" download>
+                    <svg class="ai-spec-guide-download-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    {% if guide_button != blank %}
+                      {{ guide_button }}
+                    {% else %}
+                      Download PDF
+                    {% endif %}
+                  </a>
+                {% else %}
+                  <span class="ai-spec-guide-download-btn-{{ ai_gen_id }}" style="opacity: 0.5; cursor: not-allowed;">
+                    <svg class="ai-spec-guide-download-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Add file
+                  </span>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="ai-spec-guide-dots-{{ ai_gen_id }}" data-dots>
+          {% for i in (1..guide_count) %}
+            <div class="ai-spec-guide-dot-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}" data-dot="{{ forloop.index0 }}"></div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="ai-spec-guide-empty-state-{{ ai_gen_id }}">
+        <p>Next, add specification guide titles and files in the block settings</p>
+      </div>
+    {% endif %}
+  </div>
+</spec-guide-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SpecGuideCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.carousel = null;
+        this.dots = null;
+        this.cards = null;
+        this.currentIndex = 0;
+      }
+
+      connectedCallback() {
+        if (window.innerWidth <= 768) {
+          this.initCarousel();
+        }
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth <= 768 && !this.carousel) {
+            this.initCarousel();
+          }
+        });
+      }
+
+      initCarousel() {
+        this.carousel = this.querySelector('[data-carousel]');
+        this.dots = this.querySelectorAll('[data-dot]');
+        this.cards = this.querySelectorAll('[data-card]');
+
+        if (!this.carousel || this.dots.length === 0) return;
+
+        this.carousel.addEventListener('scroll', () => {
+          this.updateActiveDot();
+        });
+
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            this.scrollToCard(index);
+          });
+        });
+      }
+
+      updateActiveDot() {
+        if (!this.carousel || this.dots.length === 0) return;
+
+        const scrollLeft = this.carousel.scrollLeft;
+        const containerWidth = this.carousel.offsetWidth;
+        const cardWidth = this.cards[0].offsetWidth + 16;
+        const centerOffset = (containerWidth - this.cards[0].offsetWidth) / 2;
+        const newIndex = Math.round((scrollLeft - centerOffset) / cardWidth);
+
+        const clampedIndex = Math.max(0, Math.min(newIndex, this.cards.length - 1));
+
+        if (clampedIndex !== this.currentIndex) {
+          this.currentIndex = clampedIndex;
+          this.dots.forEach((dot, index) => {
+            if (index === this.currentIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      scrollToCard(index) {
+        if (!this.carousel || !this.cards[index]) return;
+
+        const cardWidth = this.cards[0].offsetWidth + 16;
+        const containerWidth = this.carousel.offsetWidth;
+        const centerOffset = (containerWidth - this.cards[0].offsetWidth) / 2;
+        
+        this.carousel.scrollTo({
+          left: (cardWidth * index) - centerOffset,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    customElements.define('spec-guide-carousel-{{ ai_gen_id }}', SpecGuideCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Specification guides",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Specification Guides"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Download our comprehensive specification guides for detailed product information and installation instructions."
+    },
+    {
+      "type": "header",
+      "content": "Guide 1"
+    },
+    {
+      "type": "text",
+      "id": "guide_1_title",
+      "label": "Title",
+      "default": "Installation Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_1_description",
+      "label": "Description",
+      "default": "Complete installation instructions and best practices"
+    },
+    {
+      "type": "url",
+      "id": "guide_1_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_1_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Guide 2"
+    },
+    {
+      "type": "text",
+      "id": "guide_2_title",
+      "label": "Title",
+      "default": "Product Specifications"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_2_description",
+      "label": "Description",
+      "default": "Detailed technical specifications and dimensions"
+    },
+    {
+      "type": "url",
+      "id": "guide_2_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_2_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Guide 3"
+    },
+    {
+      "type": "text",
+      "id": "guide_3_title",
+      "label": "Title",
+      "default": "Maintenance Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_3_description",
+      "label": "Description",
+      "default": "Care and maintenance recommendations"
+    },
+    {
+      "type": "url",
+      "id": "guide_3_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_3_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Guide 4"
+    },
+    {
+      "type": "text",
+      "id": "guide_4_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_4_description",
+      "label": "Description"
+    },
+    {
+      "type": "url",
+      "id": "guide_4_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_4_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Guide 5"
+    },
+    {
+      "type": "text",
+      "id": "guide_5_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_5_description",
+      "label": "Description"
+    },
+    {
+      "type": "url",
+      "id": "guide_5_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_5_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Guide 6"
+    },
+    {
+      "type": "text",
+      "id": "guide_6_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_6_description",
+      "label": "Description"
+    },
+    {
+      "type": "url",
+      "id": "guide_6_file",
+      "label": "File URL"
+    },
+    {
+      "type": "text",
+      "id": "guide_6_button_text",
+      "label": "Button text",
+      "default": "Download PDF"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Grid spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border",
+      "label": "Card hover border",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Card title size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_description_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Card description size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon border radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Specification guides"
+    }
+  ]
+}
+{% endschema %}

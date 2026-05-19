@@ -1,0 +1,636 @@
+{% doc %}
+  @prompt
+    A case study page full of images of the project. The purpose of this is to encourage customers to partner with us for their projcts.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-case-study-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-case-study-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-case-study-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-case-study-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ai-case-study-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 12px;
+    line-height: 1.6;
+  }
+
+  .ai-case-study-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .ai-case-study-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: {{ block.settings.grid_spacing }}px;
+  }
+
+  .ai-case-study-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    background-color: #f4f4f4;
+  }
+
+  .ai-case-study-image-wrapper-{{ ai_gen_id }}--featured {
+    grid-column: span {{ block.settings.columns_desktop }};
+  }
+
+  .ai-case-study-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-case-study-image-wrapper-{{ ai_gen_id }}:hover .ai-case-study-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-case-study-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-case-study-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    opacity: 0.3;
+  }
+
+  .ai-case-study-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-case-study-caption-{{ ai_gen_id }} {
+    margin-top: 12px;
+    font-size: {{ block.settings.caption_size }}px;
+    color: {{ block.settings.text_color }};
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .ai-case-study-cta-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: {{ block.settings.cta_spacing }}px;
+  }
+
+  .ai-case-study-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-case-study-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-case-study-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+
+    .ai-case-study-image-wrapper-{{ ai_gen_id }}--featured {
+      grid-column: span {{ block.settings.columns_tablet }};
+    }
+
+    .ai-case-study-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+
+    .ai-case-study-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-case-study-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.6 }}px 16px;
+    }
+
+    .ai-case-study-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+      gap: {{ block.settings.grid_gap | times: 0.7 }}px;
+    }
+
+    .ai-case-study-image-wrapper-{{ ai_gen_id }}--featured {
+      grid-column: span {{ block.settings.columns_mobile }};
+    }
+
+    .ai-case-study-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.7);
+    }
+
+    .ai-case-study-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.85);
+    }
+
+    .ai-case-study-description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-case-study-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-case-study-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank or block.settings.subtitle != blank or block.settings.description != blank %}
+      <div class="ai-case-study-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-case-study-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <div class="ai-case-study-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <div class="ai-case-study-description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-case-study-grid-{{ ai_gen_id }}">
+      {% if block.settings.featured_image != blank %}
+        <div class="ai-case-study-image-wrapper-{{ ai_gen_id }} ai-case-study-image-wrapper-{{ ai_gen_id }}--featured">
+          <img
+            src="{{ block.settings.featured_image | image_url: width: 2000 }}"
+            alt="{{ block.settings.featured_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.featured_image.width }}"
+            height="{{ block.settings.featured_image.height }}"
+            class="ai-case-study-image-{{ ai_gen_id }}"
+          >
+          {% if block.settings.featured_caption != blank %}
+            <div class="ai-case-study-caption-{{ ai_gen_id }}">{{ block.settings.featured_caption }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% for i in (1..8) %}
+        {% liquid
+          assign image_key = 'image_' | append: i
+          assign caption_key = 'caption_' | append: i
+          assign image = block.settings[image_key]
+          assign caption = block.settings[caption_key]
+        %}
+
+        {% if image != blank %}
+          <div class="ai-case-study-image-wrapper-{{ ai_gen_id }}">
+            <img
+              src="{{ image | image_url: width: 1000 }}"
+              alt="{{ image.alt | escape }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+              class="ai-case-study-image-{{ ai_gen_id }}"
+            >
+            {% if caption != blank %}
+              <div class="ai-case-study-caption-{{ ai_gen_id }}">{{ caption }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if block.settings.featured_image == blank %}
+        {% assign has_images = false %}
+        {% for i in (1..8) %}
+          {% liquid
+            assign image_key = 'image_' | append: i
+            assign image = block.settings[image_key]
+          %}
+          {% if image != blank %}
+            {% assign has_images = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        {% unless has_images %}
+          <div class="ai-case-study-image-wrapper-{{ ai_gen_id }} ai-case-study-image-wrapper-{{ ai_gen_id }}--featured">
+            <div class="ai-case-study-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+              <div class="ai-case-study-empty-state-{{ ai_gen_id }}">
+                Add project images to showcase your work
+              </div>
+            </div>
+          </div>
+        {% endunless %}
+      {% endif %}
+    </div>
+
+    {% if block.settings.cta_text != blank and block.settings.cta_link != blank %}
+      <div class="ai-case-study-cta-{{ ai_gen_id }}">
+        <a href="{{ block.settings.cta_link }}" class="ai-case-study-button-{{ ai_gen_id }}">
+          {{ block.settings.cta_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Case study gallery",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Project showcase"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Custom mat installation for commercial space"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>See how we transformed this space with our premium mat solutions. Partner with us for your next project.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Featured image"
+    },
+    {
+      "type": "image_picker",
+      "id": "featured_image",
+      "label": "Featured image"
+    },
+    {
+      "type": "text",
+      "id": "featured_caption",
+      "label": "Featured caption"
+    },
+    {
+      "type": "header",
+      "content": "Gallery images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "text",
+      "id": "caption_1",
+      "label": "Caption 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "text",
+      "id": "caption_2",
+      "label": "Caption 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "text",
+      "id": "caption_3",
+      "label": "Caption 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "text",
+      "id": "caption_4",
+      "label": "Caption 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    },
+    {
+      "type": "text",
+      "id": "caption_5",
+      "label": "Caption 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6"
+    },
+    {
+      "type": "text",
+      "id": "caption_6",
+      "label": "Caption 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Image 7"
+    },
+    {
+      "type": "text",
+      "id": "caption_7",
+      "label": "Caption 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Image 8"
+    },
+    {
+      "type": "text",
+      "id": "caption_8",
+      "label": "Caption 8"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Partner with us"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "grid_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid bottom spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on tablet",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Caption size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Background color",
+      "default": "#ab2237"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background color",
+      "default": "#8a1b2c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cta_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Button top spacing",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Case study gallery"
+    }
+  ]
+}
+{% endschema %}

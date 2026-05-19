@@ -1,0 +1,181 @@
+
+{% comment %}
+{% if product.available %}
+ {% endcomment %}
+<div id="shipping_dynamic_date" class="variant_shipping_info" style="display: none;color: green;" data-daterange="" data-instockdate="">
+  
+</div>
+{% comment %}
+{% endif %}
+ {% endcomment %}
+ 
+{% capture 'meta_data' %}
+  {% for variant in product.variants %}
+    {{variant.id}}:[{{ variant.metafields.custom.estimated_ship_days_weeks | json }},"{{ variant.metafields.custom.variant_instock_date}}"]{% unless forloop.last %},{% endunless %}
+ 
+  {% endfor %}
+{% endcapture %}
+
+<script>
+    const currentVariantId = {{ product.selected_or_first_available_variant.id }};
+   // alert(currentVariantId);
+    const metaData = { {{ meta_data }} };
+   
+    const shippingInfo = (id, available) => {
+      
+      var selector = document.getElementById('shipping_dynamic_date');
+     // alert(id);
+     // alirt(available);
+      if (available) {
+     
+        selector.dataset.instockdate = metaData[id][1];
+    
+          selector.dataset.daterange = metaData[id][0];
+      
+        selector.style.display = 'block';
+      } else {
+        selector.style.display = 'none';
+      }
+    }
+
+    shippingInfo(currentVariantId, {{ product.selected_or_first_available_variant.available }});
+
+    document.addEventListener('variant:change', function(event){
+        var variant = event.detail.variant;
+        shippingInfo(variant.id, variant.available);
+        setShippingDate();
+    });
+
+    class WeeksAfterDates {
+      constructor(firstParam, secondParam) {
+        this.firstDate = this.calculateWeeksAfter(firstParam);
+        this.secondDate = this.calculateWeeksAfter(secondParam);
+      }
+
+      calculateWeeksAfter(days) {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + (days));
+        currentDate.setHours(0, 0, 0, 0);
+        return currentDate;
+      }
+
+      getFirstDate() {
+        return this.firstDate;
+      }
+
+      getSecondDate() {
+        return this.secondDate;
+      }
+    }
+
+    function setShippingDate() {
+      let msgContainer = document.getElementById('shipping_dynamic_date');
+      if (!msgContainer || msgContainer.style.display === 'none') return;
+
+      let rangeVal = msgContainer.dataset.daterange.trim();
+      //let range = rangeVal.split("-");
+      let range = rangeVal.split(/[-–—]/).map(val => val.trim());
+      console.log("pune>>>"+range);
+      let instockDate = msgContainer.dataset.instockdate.trim();
+      let constdisplay = true;
+      //alert(instockDate.length);
+      console.log('>>>'+instockDate.length);
+      if(instockDate.length >0){
+        const today = new Date();
+        const inStockDate = new Date(instockDate);
+      // Remove time for accurate day comparison
+        today.setHours(0, 0, 0, 0);
+        inStockDate.setHours(0, 0, 0, 0);
+        if (inStockDate < today) {
+        msgContainer.innerText = 'In Stock ';
+      constdisplay = false;
+        }else{
+          //let startDate = new Date(inStockDate);
+            //  startDate.setDate(inStockDate.getDate() - 14);
+              let startDate = new Date(inStockDate);
+               const dateToday = new Date(today);
+              const diffTime = startDate - dateToday; // difference in milliseconds
+             const diffDaysOne = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // alert(startDate+">>>>"+dateToday+">>>>>"+diffDaysOne);
+          
+          {% comment %} 1.check different between today date and start date {% endcomment %}
+         
+         
+          const dateStartDate = new Date(startDate);
+          const diffDays = Math.abs((dateStartDate - dateToday) / (1000 * 60 * 60 * 24));
+          let diffDaysMinusOneDay =0;
+           if( diffDaysOne >14){
+            diffDaysMinusOneDay = 14;
+          }else
+          if(diffDaysOne >2){
+           diffDaysMinusOneDay = diffDays - 2;
+          }else if(diffDaysOne == 1){
+            diffDaysMinusOneDay = diffDays - 1;
+          }else{
+             diffDaysMinusOneDay = diffDays - 1;
+          }
+        //  const nextInterval  = 14 - diffDaysMinusOneDay;
+         // alert(nextInterval+"----"+diffDays);
+          startDate.setDate(inStockDate.getDate() - diffDaysMinusOneDay);
+          let endDate = new Date(inStockDate);
+          const formatDate = (date) => {
+                        return date.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "2-digit"
+                          
+                        });
+                      };
+          let startFormatted = formatDate(startDate);
+          let endFormatted = formatDate(endDate);
+          let dateRange = `${startFormatted} - ${endFormatted}`;
+           msgContainer.innerText = 'Estimated to Ship by: '+dateRange;
+          constdisplay = false;
+        }
+      }
+        else{
+           constdisplay = true;
+        }
+     
+      if(constdisplay){
+       // alert('dddd');
+       console.log("bbbbbb>>"+typeof range);
+     // let range = rangeVal.split("-");
+   //  let range = (rangeVal || "").toString().split("-");
+ console.log("yyyy>>>"+range);
+console.log('fffffLLL>>>>'+rangeVal.length);
+      let minRange = Number(range[0]);
+      let maxRange = Number(range[1]);
+      console.log('fffff>>>'+minRange);
+      console.log('ttt>>>'+maxRange);
+      const weeksAfter = new WeeksAfterDates(minRange, maxRange);
+      let firstDate = weeksAfter.getFirstDate().toLocaleDateString("en-US", { month:"short",day:"numeric", });
+      let secondDate = weeksAfter.getSecondDate().toLocaleDateString("en-US", { month:"short",day:"numeric"});
+console.log('>>>'+firstDate);
+console.log('>>>'+secondDate);
+      if(firstDate === 'Invalid Date' || secondDate === 'Invalid Date') {
+        msgContainer.innerText = 'In Stock';
+        document.getElementById('mat-shipping-info_range').value = 0;
+      } else {
+        let shippingMsg = `<span class="custom-texts"></span> Estimated to Ship by: ${firstDate} - ${secondDate}`;
+        msgContainer.innerHTML = shippingMsg;
+        if(minRange >0 && maxRange >0 ){
+  document.getElementById('mat-shipping-info_range').disabled = false;
+  document.getElementById('mat-shipping-info').disabled = false;
+  document.getElementById('mat-shipping-info').value = `${firstDate} - ${secondDate}`;
+  document.getElementById('mat-shipping-info_range').value = rangeVal;
+  }
+}
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      setShippingDate();
+    });
+$(document).on('click', '.cart__checkout', function (e) {
+    e.preventDefault(); // stop app's default action if needed
+  //  alert('hi');
+    window.location.href = '/cart'; // go to Cart page
+});
+  //  btn cart__checkout p_a_t_ch check__btn
+</script>

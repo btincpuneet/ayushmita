@@ -1,0 +1,329 @@
+{% doc %}
+  @prompt
+    Create a clean, centered Warning Block for Canada Mats.
+    The block should include:
+    
+    A bold warning header with an icon: “⚠️ Safety & Use Warning”
+    
+    Center-aligned text
+    
+    customizable background 
+    
+    customizable color with customizable corners
+    
+    Comfortable padding on all sides
+    
+    Two paragraphs of text
+    
+    Ensure everything is fully centered on both desktop and mobile (header + text + block).
+    
+    The entire block should look clean, modern, and consistent with Canada Mats branding., please add:
+    
+    Option to have a border or no border.
+    
+    Customizable border color.
+    
+    Adjustable top and bottom padding.
+    
+    The block should remain visually balanced whether the border is enabled or disabled.
+    
+    Ensure text inside the block is properly aligned and spaced according to the padding settings.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-warning-block-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .ai-warning-block__container-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.padding_top }}px {{ block.settings.padding_horizontal }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_horizontal }}px;
+    text-align: center;
+    width: 100%;
+    max-width: {{ block.settings.max_width }}px;
+    {% if block.settings.show_border %}
+      border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    {% else %}
+      border: none;
+    {% endif %}
+  }
+
+  .ai-warning-block__header-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.header_size }}px;
+    font-weight: 700;
+    margin: 0 0 {{ block.settings.spacing_after_header }}px 0;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .ai-warning-block__icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.icon_size }}px;
+    line-height: 1;
+  }
+
+  .ai-warning-block__paragraph-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.6;
+    margin: 0 0 {{ block.settings.spacing_between_paragraphs }}px 0;
+  }
+
+  .ai-warning-block__paragraph-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-warning-block-{{ ai_gen_id }} {
+      padding: 15px;
+    }
+
+    .ai-warning-block__container-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top | times: 0.8 }}px {{ block.settings.padding_horizontal | times: 0.8 }}px {{ block.settings.padding_bottom | times: 0.8 }}px {{ block.settings.padding_horizontal | times: 0.8 }}px;
+    }
+
+    .ai-warning-block__header-{{ ai_gen_id }} {
+      font-size: {{ block.settings.header_size | times: 0.85 }}px;
+      gap: 8px;
+    }
+
+    .ai-warning-block__icon-{{ ai_gen_id }} {
+      font-size: {{ block.settings.icon_size | times: 0.85 }}px;
+    }
+
+    .ai-warning-block__paragraph-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-warning-block-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-warning-block__container-{{ ai_gen_id }}">
+    {% if block.settings.show_header %}
+      <h2 class="ai-warning-block__header-{{ ai_gen_id }}">
+        <span class="ai-warning-block__icon-{{ ai_gen_id }}">{{ block.settings.warning_icon }}</span>
+        <span>{{ block.settings.header_text }}</span>
+      </h2>
+    {% endif %}
+
+    {% if block.settings.paragraph_1 != blank %}
+      <div class="ai-warning-block__paragraph-{{ ai_gen_id }}">
+        {{ block.settings.paragraph_1 }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.paragraph_2 != blank %}
+      <div class="ai-warning-block__paragraph-{{ ai_gen_id }}">
+        {{ block.settings.paragraph_2 }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Safety warning block",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "header_text",
+      "label": "Header text",
+      "default": "Safety & Use Warning"
+    },
+    {
+      "type": "text",
+      "id": "warning_icon",
+      "label": "Warning icon",
+      "default": "⚠️"
+    },
+    {
+      "type": "range",
+      "id": "header_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Header size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph_1",
+      "label": "First paragraph",
+      "default": "<p>Please read all safety instructions carefully before using this product. Improper use may result in injury or damage.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph_2",
+      "label": "Second paragraph",
+      "default": "<p>Keep this product away from heat sources and ensure proper installation according to manufacturer guidelines.</p>"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fff3cd"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#856404"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#856404"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "spacing_after_header",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space after header",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing_between_paragraphs",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between paragraphs",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Safety warning block"
+    }
+  ]
+}
+{% endschema %}

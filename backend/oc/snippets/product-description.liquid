@@ -1,0 +1,15 @@
+{% capture description %}
+  {%- if product.empty? -%}
+    {{ 'home_page.onboarding.product_description' | t }}
+  {%- else -%}
+    {% render 'product-description-tabs', product: product %}
+  {%- endif -%}
+{% endcapture %}
+{%- if is_tab -%}
+  {% assign title = 'products.product.description' | t %}
+  {%- render 'tab', id: id, title: title, content: description -%}
+{%- else -%}
+  <div class="rte">
+    {% render 'product-description-tabs' with description %}
+  </div>
+{%- endif -%}

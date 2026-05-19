@@ -1,0 +1,35 @@
+{% if product.available %}
+<div id="shipping_dynamic_dates" class="variant_shipping_info" style="display: none;color: green;" data-daterange=""></div>
+{% endif %}
+{% capture 'meta_datas' %}
+  {% for variant in product.variants %}
+    {{variant.id}}:{{ variant.metafields.custom.product_spec | json }}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+{% endcapture %}
+<script>
+
+   
+           
+    const currentVariantIds = {{ product.selected_or_first_available_variant.id }};
+    const metaDatas = { {{ meta_datas }} };
+
+    const shippingInfos = (id) => {
+     var selector = document.getElementById('shipping_dynamic_dates');
+console.log(selector);
+       selector.dataset.daterange = metaDatas[id];
+       selector.style.display = 'block'
+       selector.innerHTML = metaDatas[id];
+    }
+    shippingInfos(currentVariantIds);
+    document.addEventListener('variant:change', function(evt){
+        var variants = event.detail.variant;
+        var id = variants.id
+        shippingInfos(id);
+
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', function(){
+      setShippingDate();
+    });
+</script>

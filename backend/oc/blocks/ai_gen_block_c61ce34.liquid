@@ -1,0 +1,196 @@
+{% doc %}
+  @prompt
+    Create a Shopify Liquid section file for a slim full-width announcement bar designed to sit above the hero banner. The bar has a dark navy background (#1a2a35) with a single row of content centered horizontally using flexbox. Display a phone number and an email address side by side, each preceded by a small inline icon (phone and envelope respectively), in 12px light-gray text (#9ab0bb). Separate the two items with a thin vertical divider line (1px, semi-transparent white at 20% opacity) and 16px horizontal spacing on each side of the divider. The overall bar height should be compact — around 36–40px tall — with 16px horizontal padding. On desktop, both items are centered side by side in one row. On mobile, stack the phone number and email address vertically, centered, with 4px gap between them, and reduce the bar's font size to 11px so it stays compact and does not overflow. Include a schema at the bottom of the Liquid file with editable settings for: phone number, email address, icon color, text color, and background color. Make all content fully editable via the Shopify theme editor without touching code.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: 0 16px;
+  }
+
+  .ai-announcement-bar__content-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 36px;
+    max-height: 40px;
+    gap: 16px;
+  }
+
+  .ai-announcement-bar__item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.2;
+  }
+
+  .ai-announcement-bar__icon-{{ ai_gen_id }} {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  .ai-announcement-bar__icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ai-announcement-bar__divider-{{ ai_gen_id }} {
+    width: 1px;
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+  }
+
+  .ai-announcement-bar__link-{{ ai_gen_id }} {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ai-announcement-bar__link-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__content-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 0;
+      min-height: auto;
+      max-height: none;
+    }
+
+    .ai-announcement-bar__item-{{ ai_gen_id }} {
+      font-size: 11px;
+    }
+
+    .ai-announcement-bar__divider-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<announcement-bar-{{ ai_gen_id }}
+  class="ai-announcement-bar-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-announcement-bar__content-{{ ai_gen_id }}">
+    {% if block.settings.phone_number != blank %}
+      <a
+        href="tel:{{ block.settings.phone_number | replace: ' ', '' | replace: '-', '' | replace: '(', '' | replace: ')', '' }}"
+        class="ai-announcement-bar__item-{{ ai_gen_id }} ai-announcement-bar__link-{{ ai_gen_id }}"
+      >
+        <span class="ai-announcement-bar__icon-{{ ai_gen_id }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </span>
+        <span>{{ block.settings.phone_number }}</span>
+      </a>
+    {% endif %}
+
+    {% if block.settings.phone_number != blank and block.settings.email_address != blank %}
+      <span class="ai-announcement-bar__divider-{{ ai_gen_id }}"></span>
+    {% endif %}
+
+    {% if block.settings.email_address != blank %}
+      <a
+        href="mailto:{{ block.settings.email_address }}"
+        class="ai-announcement-bar__item-{{ ai_gen_id }} ai-announcement-bar__link-{{ ai_gen_id }}"
+      >
+        <span class="ai-announcement-bar__icon-{{ ai_gen_id }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </span>
+        <span>{{ block.settings.email_address }}</span>
+      </a>
+    {% endif %}
+  </div>
+</announcement-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('announcement-bar-{{ ai_gen_id }}', AnnouncementBar{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Contact announcement bar",
+  "tag": null,
+  "class": "announcement-bar-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contact information"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "default": "1-800-123-4567"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Email address",
+      "default": "info@example.com"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#1a2a35"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#9ab0bb"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#9ab0bb"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact announcement bar"
+    }
+  ]
+}
+{% endschema %}
